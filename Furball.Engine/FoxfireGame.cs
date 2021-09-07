@@ -1,9 +1,9 @@
-﻿using Foxfire.Engine.Engine;
+﻿using Furball.Engine.Engine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace Foxfire.Engine {
+namespace Furball.Engine {
     public class FoxfireGame : Game {
         private GraphicsDeviceManager _graphics;
         private IGameComponent        _running;

@@ -1,7 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Foxfire.Engine.Engine.Drawables {
+namespace Furball.Engine.Engine.Drawables {
     public abstract class BaseDrawable {
         public Vector2       Position;
         public Vector2       Size;

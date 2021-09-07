@@ -2,12 +2,12 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Foxfire.Engine.Engine.Drawables {
-    public class DrawableManager {
+namespace Furball.Engine.Engine.Drawables {
+    public class DrawableManager : UnmanagedDrawable {
         private List<UnmanagedDrawable> _unmanagedDrawables = new();
         private List<ManagedDrawable>   _managedDrawables   = new();
 
-        public void Draw(GameTime time, SpriteBatch batch) {
+        public override void Draw(GameTime time, SpriteBatch batch) {
             batch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
 
             lock (this._managedDrawables) {
@@ -29,7 +29,7 @@ namespace Foxfire.Engine.Engine.Drawables {
             }
         }
 
-        public void Update(GameTime time) {
+        public override void Update(GameTime time) {
             lock (this._managedDrawables) {
                 for (int i = 0; i != this._managedDrawables.Count; i++) {
                     ManagedDrawable currentDrawable = this._managedDrawables[i];

@@ -1,7 +1,7 @@
-using Foxfire.Engine.Engine.Drawables;
+using Furball.Engine.Engine.Drawables;
 using Microsoft.Xna.Framework;
 
-namespace Foxfire.Engine.Engine {
+namespace Furball.Engine.Engine {
     public class Screen : DrawableGameComponent {
         private DrawableManager _manager = new();
         public Screen() : base(FoxfireGame.Instance) {}

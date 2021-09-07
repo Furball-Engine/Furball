@@ -1,7 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Foxfire.Engine.Engine.Drawables {
+namespace Furball.Engine.Engine.Drawables {
     /// <summary>
     /// A Basic Drawable that gets passed in an Already Started SpriteBatch,
     /// Do not use this for Drawables that require Effects, or other Special SpriteBatch behaviour,
