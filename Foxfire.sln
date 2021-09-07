@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Foxfire.Engine", "Foxfire.Engine\Foxfire.Engine.csproj", "{E83B6828-8CF3-4DE3-8F2F-AFD748615706}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Foxfire.Game", "Foxfire.Game\Foxfire.Game.csproj", "{2BA8D1D2-3680-4654-8339-8485D4237DB7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E83B6828-8CF3-4DE3-8F2F-AFD748615706}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E83B6828-8CF3-4DE3-8F2F-AFD748615706}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E83B6828-8CF3-4DE3-8F2F-AFD748615706}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E83B6828-8CF3-4DE3-8F2F-AFD748615706}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2BA8D1D2-3680-4654-8339-8485D4237DB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2BA8D1D2-3680-4654-8339-8485D4237DB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2BA8D1D2-3680-4654-8339-8485D4237DB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2BA8D1D2-3680-4654-8339-8485D4237DB7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
