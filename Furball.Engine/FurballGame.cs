@@ -4,14 +4,14 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 namespace Furball.Engine {
-    public class FoxfireGame : Game {
+    public class FurballGame : Game {
         private GraphicsDeviceManager _graphics;
         private IGameComponent        _running;
 
         public static Game        Instance;
         public static SpriteBatch SpriteBatch;
 
-        public FoxfireGame(Screen startScreen) {
+        public FurballGame(Screen startScreen) {
             this._graphics             = new GraphicsDeviceManager(this);
             this.Content.RootDirectory = "Content";
             this.IsMouseVisible           = true;
