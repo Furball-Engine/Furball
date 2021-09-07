@@ -8,9 +8,9 @@ namespace Foxfire.Game {
         private SpriteBatch           _spriteBatch;
 
         public FoxfireTestGame() {
-            _graphics             = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "Content";
-            IsMouseVisible        = true;
+            this._graphics             = new GraphicsDeviceManager(this);
+            this.Content.RootDirectory = "Content";
+            this.IsMouseVisible           = true;
         }
 
         protected override void Initialize() {
@@ -20,14 +20,14 @@ namespace Foxfire.Game {
         }
 
         protected override void LoadContent() {
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
+            this._spriteBatch = new SpriteBatch(this.GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
         }
 
         protected override void Update(GameTime gameTime) {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
+                this.Exit();
 
             // TODO: Add your update logic here
 
@@ -35,7 +35,7 @@ namespace Foxfire.Game {
         }
 
         protected override void Draw(GameTime gameTime) {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            this.GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
 
