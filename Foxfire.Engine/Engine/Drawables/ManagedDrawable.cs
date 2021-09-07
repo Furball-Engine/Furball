@@ -11,7 +11,7 @@ namespace Foxfire.Engine.Engine.Drawables {
     /// Basic Drawables get drawn before UnmanagedDrawables.
     /// </remarks>
     /// </summary>
-    public abstract class ManagedDrawable {
+    public abstract class ManagedDrawable : BaseDrawable {
         /// <summary>
         /// Method for Drawing the Drawable,
         /// Gets called every Draw

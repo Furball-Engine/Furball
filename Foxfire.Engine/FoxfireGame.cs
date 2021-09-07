@@ -7,9 +7,9 @@ namespace Foxfire.Engine {
     public class FoxfireGame : Game {
         private GraphicsDeviceManager _graphics;
         private IGameComponent        _running;
-        private SpriteBatch           _spriteBatch;
 
-        public static Game Instance;
+        public static Game        Instance;
+        public static SpriteBatch SpriteBatch;
 
         public FoxfireGame(Screen startScreen) {
             this._graphics             = new GraphicsDeviceManager(this);
@@ -37,7 +37,7 @@ namespace Foxfire.Engine {
         }
 
         protected override void LoadContent() {
-            this._spriteBatch = new SpriteBatch(this.GraphicsDevice);
+            SpriteBatch = new SpriteBatch(this.GraphicsDevice);
         }
 
         protected override void Update(GameTime gameTime) {

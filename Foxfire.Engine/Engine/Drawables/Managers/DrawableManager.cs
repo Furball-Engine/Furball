@@ -46,5 +46,8 @@ namespace Foxfire.Engine.Engine.Drawables {
                 }
             }
         }
+
+        public void Add(ManagedDrawable drawable) => this._managedDrawables.Add(drawable);
+        public void Add(UnmanagedDrawable drawable) => this._unmanagedDrawables.Add(drawable);
     }
 }
