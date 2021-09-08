@@ -4,7 +4,7 @@ namespace Foxfire.Game {
     public static class Program {
         [STAThread]
         static void Main() {
-            using (var game = new FoxfireTestGame())
+            using (var game = new FurballTestGame())
                 game.Run();
         }
     }
