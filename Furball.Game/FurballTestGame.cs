@@ -8,6 +8,6 @@ using Microsoft.Xna.Framework.Input;
 namespace Foxfire.Game {
     public class FoxfireTestGame : FurballGame {
         public FoxfireTestGame() : base(new BasicTestScreen()) {}
-    }
 
+    }
 }
