@@ -1,13 +1,13 @@
-﻿using Foxfire.Game.Screens;
-using Furball.Engine;
+﻿using Furball.Engine;
 using Furball.Engine.Engine;
+using Furball.Game.Screens;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace Foxfire.Game {
-    public class FoxfireTestGame : FurballGame {
-        public FoxfireTestGame() : base(new BasicTestScreen()) {}
+namespace Furball.Game {
+    public class FurballTestGame : FurballGame {
+        public FurballTestGame() : base(new BasicTestScreen()) {}
 
     }
 }

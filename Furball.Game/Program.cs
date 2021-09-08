@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Foxfire.Game {
+namespace Furball.Game {
     public static class Program {
         [STAThread]
         static void Main() {

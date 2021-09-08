@@ -4,7 +4,7 @@
         <TargetFramework>net5.0</TargetFramework>
         <PublishReadyToRun>false</PublishReadyToRun>
         <TieredCompilation>false</TieredCompilation>
-        <RootNamespace>Foxfire.Game</RootNamespace>
+        <RootNamespace>Furball.Game</RootNamespace>
     </PropertyGroup>
     <PropertyGroup>
         <ApplicationManifest>app.manifest</ApplicationManifest>
