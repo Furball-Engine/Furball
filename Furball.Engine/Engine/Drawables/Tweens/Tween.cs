@@ -19,7 +19,7 @@ namespace Furball.Engine.Engine.Drawables.Tweens {
         protected float CalculateCurrent(float start, float end) => (float) this.CalculateCurrent((double) start, (double) end);
 
         protected double CalculateCurrent(double start, double end) {
-            double progress = (this.TimeNow - this.StartTime) / this.Duration;
+            double progress = ((double)this.TimeNow - (double)this.StartTime) / (double)this.Duration;
 
             return this.Easing switch {
                 Easing.In        => MathHelper.Lerp(end, start, (1 - progress) * (1 - progress)),

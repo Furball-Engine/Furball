@@ -5,11 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="239e36a4-ff1e-4736-ac73-293a954e7704" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Furball.Game/Content/Corbel.spritefont" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Furball/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Furball/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Furball.Engine/FurballGame.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Furball.Engine/FurballGame.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Furball.Game/Content/Content.mgcb" beforeDir="false" afterPath="$PROJECT_DIR$/Furball.Game/Content/Content.mgcb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Furball.Game/Screens/BasicTestScreen.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Furball.Game/Screens/BasicTestScreen.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Furball.Engine/Engine/Drawables/Tweens/Tween.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Furball.Engine/Engine/Drawables/Tweens/Tween.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -79,7 +75,7 @@
       <option name="presentableId" value="Default" />
       <updated>1631046727277</updated>
       <workItem from="1631046732396" duration="314000" />
-      <workItem from="1631184100696" duration="6260000" />
+      <workItem from="1631184100696" duration="6622000" />
     </task>
     <task id="LOCAL-00001" summary="furball sounds cuter ngl">
       <created>1631046748940</created>
@@ -115,6 +111,23 @@
     <option name="LAST_COMMIT_MESSAGE" value="furball sounds cuter ngl" />
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Furball.Engine/Engine/Drawables/Tweens/Tween.cs</url>
+          <line>38</line>
+          <properties documentPath="$PROJECT_DIR$/Furball.Engine/Engine/Drawables/Tweens/Tween.cs" initialLine="38" containingFunctionPresentation="method 'Update'">
+            <startOffsets>
+              <option value="1674" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1723" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="6" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
     <watches-manager>
       <configuration name="DotNetProject">
         <watch expression="this.TimeSource.GetCurrentTime()" language="C#" />
