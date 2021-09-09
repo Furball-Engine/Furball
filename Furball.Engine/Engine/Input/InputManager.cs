@@ -85,21 +85,24 @@ namespace Furball.Engine.Engine.Input {
 
 			#region OnKeyUp/Down
 
-			IEnumerable<Keys> diffKeysPressed  = this.HeldKeys.Except(oldKeys);
-			IEnumerable<Keys> diffKeysReleased = oldKeys.Except(this.HeldKeys);
+			List<Keys> diffKeysPressed  = this.HeldKeys.Except(oldKeys).ToList();
+			List<Keys> diffKeysReleased = oldKeys.Except(this.HeldKeys).ToList();
 
-			foreach (Keys key in diffKeysPressed)
-				this.OnKeyDown?.Invoke(this, key);
+			for (var i = 0; i < diffKeysPressed.Count; i++)
+				this.OnKeyDown?.Invoke(this, diffKeysPressed[i]);
 
-			foreach (Keys key in diffKeysReleased)
-				this.OnKeyUp?.Invoke(this, key);
+			for (var i = 0; i < diffKeysReleased.Count; i++)
+				this.OnKeyUp?.Invoke(this, diffKeysReleased[i]);
 
 			#endregion
 
 			#region OnMouseUp/Down/Move/Scroll
 
-			foreach (MouseState oldState in oldCursorStates) {
-				foreach (MouseState newState in this.CursorStates.Where(newState => oldState.Name == newState.Name)) {
+			for (var i = 0; i < oldCursorStates.Count; i++) {
+				MouseState oldState = oldCursorStates[i];
+				List<MouseState> filteredStates = this.CursorStates.Where(newState => oldState.Name == newState.Name).ToList();
+				for (var i1 = 0; i1 < filteredStates.Count; i1++) {
+					MouseState newState = filteredStates[i];
 					if (oldState.State.Position != newState.State.Position)
 						this.OnMouseMove?.Invoke(this, new(newState.State.Position, newState.Name));
 
