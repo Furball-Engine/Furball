@@ -23,7 +23,7 @@ namespace Furball.Engine {
         public FurballGame(Screen startScreen) {
             this._graphics             = new GraphicsDeviceManager(this);
             this.Content.RootDirectory = "Content";
-            this.IsMouseVisible           = true;
+            this.IsMouseVisible        = true;
 
 
             GameTimeSource = new GameTimeSource();
@@ -57,6 +57,10 @@ namespace Furball.Engine {
             SpriteBatch = new SpriteBatch(this.GraphicsDevice);
 
             this._debugSpriteFont = this.Content.Load<SpriteFont>("Corbel");
+
+            this._graphics.PreferredBackBufferWidth = 1280;
+            this._graphics.PreferredBackBufferHeight = 720;
+            this._graphics.ApplyChanges();
         }
 
         protected override void Update(GameTime gameTime) {
