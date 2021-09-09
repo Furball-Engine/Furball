@@ -4,7 +4,7 @@ namespace Furball.Game {
     public static class Program {
         [STAThread]
         static void Main() {
-            using (var game = new FurballTestGame())
+            using (FurballTestGame game = new FurballTestGame())
                 game.Run();
         }
     }
