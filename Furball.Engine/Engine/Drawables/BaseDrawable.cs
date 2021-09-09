@@ -41,6 +41,18 @@ namespace Furball.Engine.Engine.Drawables {
                         if (scaleTween != null)
                             this.Scale = scaleTween.GetCurrent();
                         break;
+                    case TweenType.Rotation:
+                        FloatTween rotationTween = currentTween as FloatTween;
+
+                        if (rotationTween != null)
+                            this.Rotation = rotationTween.GetCurrent();
+                        break;
+                    case TweenType.Fade:
+                        FloatTween fadeTween = currentTween as FloatTween;
+
+                        if (fadeTween != null)
+                            this.ColorOverride.A = (byte) (255 * fadeTween.GetCurrent());
+                        break;
                 }
             }
         }
