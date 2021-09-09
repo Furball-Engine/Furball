@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Furball.Engine.Engine.Drawables.Tweens;
 using Furball.Engine.Engine.Drawables.Tweens.TweenTypes;
+using Furball.Engine.Engine.Timing;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -12,6 +13,7 @@ namespace Furball.Engine.Engine.Drawables {
         public float         Rotation;
         public Vector2       Scale;
         public SpriteEffects SpriteEffect;
+        public ITimeSource   TimeSource = FurballGame.GameTimeSource;
 
         public List<Tween> Tweens = new();
 
@@ -21,6 +23,8 @@ namespace Furball.Engine.Engine.Drawables {
         public void UpdateTweens() {
             for (int i = 0; i != this.Tweens.Count; i++) {
                 Tween currentTween = this.Tweens[i];
+
+                currentTween.Update(this.TimeSource.GetCurrentTime());
 
                 switch (currentTween.TweenType) {
                     case TweenType.Color:
