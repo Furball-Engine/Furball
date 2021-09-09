@@ -4,12 +4,15 @@ using Microsoft.Xna.Framework.Graphics;
 namespace Furball.Engine.Engine.Drawables {
     public class TexturedDrawable : ManagedDrawable {
         private Texture2D _texture;
+
+        public  bool      UseCrop = false;
         private Rectangle _cropped;
 
         public TexturedDrawable(Texture2D texture, Vector2 position) {
             this.Position      = position;
             this.Rotation      = 0f;
             this.ColorOverride = Color.White;
+            this.Scale         = new Vector2(1,             1);
             this.Size          = new Vector2(texture.Width, texture.Height);
 
             this._texture = texture;
@@ -26,7 +29,7 @@ namespace Furball.Engine.Engine.Drawables {
         public override void Draw(GameTime time, SpriteBatch batch) {
             //TODO: origin
             //TODO: depth
-            batch.Draw(this._texture, this.Position, this._cropped, this.ColorOverride, this.Rotation, Vector2.Zero, this.Scale, this.SpriteEffect, 0f);
+            batch.Draw(this._texture, this.Position, this.UseCrop ? this._cropped : null, this.ColorOverride, this.Rotation, Vector2.Zero, this.Scale, this.SpriteEffect, 0f);
         }
 
         public void ChangeCropping(Rectangle crop) => this._cropped = crop;
