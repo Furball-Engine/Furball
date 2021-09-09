@@ -4,17 +4,17 @@ using Microsoft.Xna.Framework;
 
 namespace Furball.Engine.Engine {
     public class Screen : DrawableGameComponent {
-        private DrawableManager _manager = new();
+        protected DrawableManager Manager = new();
         public Screen() : base(FurballGame.Instance) {}
 
         public override void Draw(GameTime gameTime) {
-            this._manager.Draw(gameTime, FurballGame.SpriteBatch);
+            this.Manager.Draw(gameTime, FurballGame.SpriteBatch);
 
             base.Draw(gameTime);
         }
 
         public override void Update(GameTime gameTime) {
-            this._manager.Update(gameTime);
+            this.Manager.Update(gameTime);
 
             base.Update(gameTime);
         }
