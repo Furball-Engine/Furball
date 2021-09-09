@@ -48,12 +48,14 @@ namespace Furball.Engine.Engine.Drawables.Managers {
             for (int i = 0; i != managedDrawables.Count; i++) {
                 ManagedDrawable currentDrawable = managedDrawables[i];
 
+                currentDrawable.UpdateTweens();
                 currentDrawable.Update(time);
             }
         
             for (int i = 0; i != unmanagedDrawables.Count; i++) {
                 UnmanagedDrawable currentDrawable = unmanagedDrawables[i];
 
+                currentDrawable.UpdateTweens();
                 currentDrawable.Update(time);
             }
         }
