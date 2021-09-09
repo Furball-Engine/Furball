@@ -22,5 +22,12 @@
 /processorParam:TextureFormat=Color
 /build:white.png
 
+#begin Corbel.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Corbel.spritefont
+
 #---------------------------------- Content ---------------------------------#
 
