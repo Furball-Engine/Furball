@@ -1,4 +1,7 @@
-﻿using Furball.Engine.Engine;
+﻿using System;
+using Furball.Engine.Engine;
+using Furball.Engine.Engine.Input;
+using Furball.Engine.Engine.Input.InputMethods;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -8,8 +11,9 @@ namespace Furball.Engine {
         private GraphicsDeviceManager _graphics;
         private IGameComponent        _running;
 
-        public static Game        Instance;
-        public static SpriteBatch SpriteBatch;
+        public static Game         Instance;
+        public static SpriteBatch  SpriteBatch;
+        public static InputManager InputManager;
 
         public FurballGame(Screen startScreen) {
             this._graphics             = new GraphicsDeviceManager(this);
@@ -22,6 +26,10 @@ namespace Furball.Engine {
         }
 
         protected override void Initialize() {
+            InputManager = new();
+            InputManager.RegisterInputMethod(new MonogameMouseInputMethod());
+            InputManager.RegisterInputMethod(new MonogameKeyboardInputMethod());
+
             base.Initialize();
         }
 
@@ -43,6 +51,8 @@ namespace Furball.Engine {
         protected override void Update(GameTime gameTime) {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 this.Exit();
+
+            InputManager.Update();
 
             base.Update(gameTime);
         }
