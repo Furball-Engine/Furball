@@ -1,9 +1,8 @@
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Furball.Engine.Engine.Drawables {
+namespace Furball.Engine.Engine.Drawables.Managers {
     public class DrawableManager : UnmanagedDrawable {
         private List<BaseDrawable> _drawables = new();
 
@@ -12,7 +11,7 @@ namespace Furball.Engine.Engine.Drawables {
             List<ManagedDrawable>   managedDrawables   = new();
             List<UnmanagedDrawable> unmanagedDrawables = new();
             
-            for (int i = 0; i != _drawables.Count; i++) {
+            for (int i = 0; i != this._drawables.Count; i++) {
                 BaseDrawable baseDrawable = this._drawables[i];
                 
                 if(baseDrawable is ManagedDrawable managedDrawable) managedDrawables.Add(managedDrawable);
@@ -39,7 +38,7 @@ namespace Furball.Engine.Engine.Drawables {
             List<ManagedDrawable>   managedDrawables   = new();
             List<UnmanagedDrawable> unmanagedDrawables = new();
             
-            for (int i = 0; i != _drawables.Count; i++) {
+            for (int i = 0; i != this._drawables.Count; i++) {
                 BaseDrawable baseDrawable = this._drawables[i];
                 
                 if(baseDrawable is ManagedDrawable managedDrawable) managedDrawables.Add(managedDrawable);

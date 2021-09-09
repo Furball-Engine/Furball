@@ -7,7 +7,7 @@ namespace Furball.Engine.Engine.Drawables {
         public Vector2       Size;
         public Color         ColorOverride;
         public float         Rotation;
-        public float         Scale;
+        public Vector2       Scale;
         public SpriteEffects SpriteEffect;
     }
 }
