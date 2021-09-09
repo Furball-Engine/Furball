@@ -7,16 +7,43 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Furball.Engine.Engine.Drawables {
     public abstract class BaseDrawable {
+        /// <summary>
+        /// Unprocessed Position where the Drawable is expected to be drawn
+        /// <remarks>This variable does not get changed as the DrawableManager translates the Drawable to be Scaled to be properly visible on all resolutions</remarks>
+        /// </summary>
         public Vector2       Position;
+        /// <summary>
+        /// Unprocessed Size of the Drawable in Pixels
+        /// <remarks>This variable does not get changed as the DrawableManager translates the Drawable to be Scaled to be properly visible on all resolutions</remarks>
+        /// </summary>
         public Vector2       Size;
+        /// <summary>
+        /// Unprocessed Color Override of the Drawable, if a White Texture gets drawn with a red override, voila its red
+        /// <remarks>This variable does not get changed as the DrawableManager translates the Drawable to be Scaled to be properly visible on all resolutions</remarks>
+        /// </summary>
         public Color         ColorOverride;
+        /// <summary>
+        /// Unprocessed Rotation of the Drawable in Radians
+        /// <remarks>This variable does not get changed as the DrawableManager translates the Drawable to be Scaled to be properly visible on all resolutions</remarks>
+        /// </summary>
         public float         Rotation;
+        /// <summary>
+        /// Unprocessed Scale of the Drawable, new Vector(1, 1) draws the Drawable at full scale
+        /// <remarks>This variable does not get changed as the DrawableManager translates the Drawable to be Scaled to be properly visible on all resolutions</remarks>
+        /// </summary>
         public Vector2       Scale;
+        /// <summary>
+        /// Basic SpriteEffect, was provided by SpriteBatch so might aswell put it here
+        /// </summary>
         public SpriteEffects SpriteEffect;
+        /// <summary>
+        /// What time does the Drawable go by? Used for Tweens
+        /// </summary>
         public ITimeSource   TimeSource = FurballGame.GameTimeSource;
-
+        /// <summary>
+        /// List of Tweens
+        /// </summary>
         public List<Tween> Tweens = new();
-
         /// <summary>
         /// Updates the pDrawables Tweens
         /// </summary>

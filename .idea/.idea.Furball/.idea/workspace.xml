@@ -6,8 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="239e36a4-ff1e-4736-ac73-293a954e7704" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Furball/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Furball/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Furball.Engine/Engine/Input/InputManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Furball.Engine/Engine/Input/InputManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Furball.Game/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Furball.Game/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Furball.Engine/Engine/Drawables/BaseDrawable.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Furball.Engine/Engine/Drawables/BaseDrawable.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Furball.Engine/Engine/Drawables/TexturedDrawable.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Furball.Engine/Engine/Drawables/TexturedDrawable.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Furball.Engine/Engine/Drawables/UnmanagedDrawable.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Furball.Engine/Engine/Drawables/UnmanagedDrawable.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,6 +46,7 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="preferences.sourceCode.C#" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
@@ -78,7 +80,7 @@
       <updated>1631046727277</updated>
       <workItem from="1631046732396" duration="314000" />
       <workItem from="1631184100696" duration="8553000" />
-      <workItem from="1631202743803" duration="473000" />
+      <workItem from="1631202743803" duration="1267000" />
     </task>
     <task id="LOCAL-00001" summary="furball sounds cuter ngl">
       <created>1631046748940</created>
