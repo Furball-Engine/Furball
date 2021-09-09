@@ -109,6 +109,7 @@ namespace Furball.Engine.Engine.Input {
 
 				for (int j = 0; j < filteredStates.Count; j++) {
 					MouseState newState = filteredStates[i];
+
 					//Handling Mouse Movement by comparing to the last Input Frame
 					if (oldState.State.Position != newState.State.Position)
 						this.OnMouseMove?.Invoke(this, (newState.State.Position, newState.Name));
