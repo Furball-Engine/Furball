@@ -21,7 +21,7 @@ namespace Furball.Engine.Engine.Drawables {
         /// Unprocessed Color Override of the Drawable, if a White Texture gets drawn with a red override, voila its red
         /// <remarks>This variable does not get changed as the DrawableManager translates the Drawable to be Scaled to be properly visible on all resolutions</remarks>
         /// </summary>
-        public Color         ColorOverride;
+        public Color         ColorOverride = Color.White;
         /// <summary>
         /// Unprocessed Rotation of the Drawable in Radians
         /// <remarks>This variable does not get changed as the DrawableManager translates the Drawable to be Scaled to be properly visible on all resolutions</remarks>
@@ -31,7 +31,7 @@ namespace Furball.Engine.Engine.Drawables {
         /// Unprocessed Scale of the Drawable, new Vector(1, 1) draws the Drawable at full scale
         /// <remarks>This variable does not get changed as the DrawableManager translates the Drawable to be Scaled to be properly visible on all resolutions</remarks>
         /// </summary>
-        public Vector2       Scale;
+        public Vector2       Scale = Vector2.One;
         /// <summary>
         /// Basic SpriteEffect, was provided by SpriteBatch so might aswell put it here
         /// </summary>
