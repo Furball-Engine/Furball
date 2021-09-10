@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using Furball.Engine.Engine;
+using Furball.Engine.Engine.Audio;
 using Furball.Engine.Engine.Input;
 using Furball.Engine.Engine.Input.InputMethods;
 using Furball.Engine.Engine.Timing;
@@ -39,6 +40,8 @@ namespace Furball.Engine {
             InputManager.RegisterInputMethod(new MonogameMouseInputMethod());
             InputManager.RegisterInputMethod(new MonogameKeyboardInputMethod());
 
+            AudioEngine.Initialize(this.Window.Handle);
+            
             base.Initialize();
         }
 

@@ -1,6 +1,8 @@
 using System;
+using System.IO;
 using Furball.Engine;
 using Furball.Engine.Engine;
+using Furball.Engine.Engine.Audio;
 using Furball.Engine.Engine.Drawables;
 using Furball.Engine.Engine.Drawables.Tweens;
 using Furball.Engine.Engine.Drawables.Tweens.TweenTypes;
@@ -19,6 +21,11 @@ namespace Furball.Game.Screens {
             whiteTexture.Tweens.Add(new ColorTween(TweenType.Color, Color.White, Color.Red, 1000, 10000, Easing.None));
 
             this.Manager.Add(whiteTexture);
+
+            AudioEngine.ActiveStream.Load(File.ReadAllBytes("testaudio.mp3"));
+            
+            AudioEngine.ActiveStream.Play();
+            
 
             base.Initialize();
         }
