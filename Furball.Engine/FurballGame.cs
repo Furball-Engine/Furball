@@ -2,6 +2,8 @@
 using System.Diagnostics;
 using Furball.Engine.Engine;
 using Furball.Engine.Engine.Audio;
+using Furball.Engine.Engine.Drawables;
+using Furball.Engine.Engine.Drawables.Managers;
 using Furball.Engine.Engine.Input;
 using Furball.Engine.Engine.Input.InputMethods;
 using Furball.Engine.Engine.Timing;
@@ -20,6 +22,10 @@ namespace Furball.Engine {
         public static ITimeSource  GameTimeSource;
 
         private SpriteFont _debugSpriteFont;
+
+        public static TextDrawable debugTime;
+
+        public static DrawableManager DrawableManager;
 
         public FurballGame(Screen startScreen) {
             this._graphics             = new GraphicsDeviceManager(this);
@@ -42,6 +48,8 @@ namespace Furball.Engine {
 
             AudioEngine.Initialize(this.Window.Handle);
             
+            DrawableManager = new();
+
             base.Initialize();
         }
 
@@ -64,6 +72,9 @@ namespace Furball.Engine {
             this._graphics.PreferredBackBufferWidth = 1280;
             this._graphics.PreferredBackBufferHeight = 720;
             this._graphics.ApplyChanges();
+            
+            debugTime = new TextDrawable(this._debugSpriteFont, "");
+            DrawableManager.Add(debugTime);
         }
 
         protected override void Update(GameTime gameTime) {
@@ -71,6 +82,9 @@ namespace Furball.Engine {
                 this.Exit();
 
             InputManager.Update();
+            DrawableManager.Update(gameTime);
+
+            debugTime.Text = gameTime.TotalGameTime.ToString();
 
             base.Update(gameTime);
         }
@@ -78,9 +92,7 @@ namespace Furball.Engine {
         protected override void Draw(GameTime gameTime) {
             this.GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
-            SpriteBatch.DrawString(this._debugSpriteFont, $"Time: {GameTimeSource.GetCurrentTime()}", Vector2.Zero, Color.White);
-            SpriteBatch.End();
+            DrawableManager.Draw(gameTime, SpriteBatch);
 
             base.Draw(gameTime);
         }
