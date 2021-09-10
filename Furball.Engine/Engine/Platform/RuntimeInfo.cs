@@ -13,5 +13,12 @@ namespace Furball.Engine.Engine.Platform {
 				return OSPlatform.FreeBSD;
 			return OSPlatform.Windows;
 		}
+
+		public static bool IsDebug() {
+#if DEBUG
+			return true;
+#endif
+			return false;
+		}
 	}
 }
