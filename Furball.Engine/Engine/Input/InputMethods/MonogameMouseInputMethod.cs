@@ -5,7 +5,7 @@ namespace Furball.Engine.Engine.Input.InputMethods {
 	public class MonogameMouseInputMethod : InputMethod {
 		public override void Update() {
 			MouseStateXna currentMouseState = Mouse.GetState(FurballGame.Instance.Window);
-			this.CursorPositions[0].State = currentMouseState;
+			this.CursorPositions[0] = new MouseState(currentMouseState, "MonogameMouse");
 		}
 		public override void Dispose() { }
 		public override void Initialize() {
