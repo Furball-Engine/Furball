@@ -84,31 +84,32 @@ namespace Furball.Engine.Engine.Audio {
 			set => this.SetFlag(value, BassFlags.Loop);
 		}
 
-		// public float Pitch {
-		// 	get {
-		// 		bool success = Bass.ChannelGetAttribute(this.audioHandle, ChannelAttribute.Pitch, out float pitch);
-		//
-		// 		if (success) return pitch;
-		// 		
-		// 		throw Bass.LastError switch {
-		// 			Errors.Handle => new BassHandleException(),
-		// 			Errors.Type   => new BassAttributeNotValidException(),
-		// 			_             => new BassUnknownException()
-		// 		};
-		// 	}
-		// 	set {
-		// 		bool success = Bass.ChannelSetAttribute(this.audioHandle, ChannelAttribute.Pitch, value);
-		//
-		// 		if (success) return;
-		// 		
-		// 		throw Bass.LastError switch {
-		// 			Errors.Handle    => new BassHandleException(),
-		// 			Errors.Type      => new BassAttributeNotValidException(),
-		// 			Errors.Parameter => new BassParameterException(),
-		// 			_                => new BassUnknownException()
-		// 		};
-		// 	}
-		// }
+		public float Pitch {
+			get {
+				bool success = Bass.ChannelGetAttribute(this.audioHandle, ChannelAttribute.Pitch, out float pitch);
+		
+				if (success) return pitch;
+				
+				throw Bass.LastError switch {
+					Errors.Handle => new BassHandleException(),
+					Errors.Type   => new BassAttributeNotValidException(),
+					_             => new BassUnknownException()
+				};
+			}
+			set {
+				bool success = Bass.ChannelSetAttribute(this.audioHandle, ChannelAttribute.Pitch, value);
+		
+				if (success) return;
+				
+				throw Bass.LastError switch {
+					Errors.Handle    => new BassHandleException(),
+					Errors.Type      => new BassAttributeNotValidException(),
+					Errors.Parameter => new BassParameterException(),
+					_                => new BassUnknownException()
+				};
+			}
+		}
+		
 		public float Frequency {
 			get {
 				bool success = Bass.ChannelGetAttribute(this.audioHandle, ChannelAttribute.Frequency, out float frequency);
