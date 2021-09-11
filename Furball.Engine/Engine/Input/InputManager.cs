@@ -64,7 +64,11 @@ namespace Furball.Engine.Engine.Input {
 		/// <summary>
 		/// Called when a cursor moves
 		/// </summary>
-		public event EventHandler<(Point, string)>       OnMouseMove;
+		public event EventHandler<(Point, string)> OnMouseMove;
+		/// <summary>
+		/// Called when a cursor moves
+		/// </summary>
+		public event EventHandler<((Point, Point), string)> OnMouseDrag;
 		/// <summary>
 		/// Called when the cursor scrolls
 		/// </summary>
@@ -111,8 +115,13 @@ namespace Furball.Engine.Engine.Input {
 					MouseState newState = filteredStates[i];
 
 					//Handling Mouse Movement by comparing to the last Input Frame
-					if (oldState.State.Position != newState.State.Position)
+					if (oldState.State.Position != newState.State.Position) {
 						this.OnMouseMove?.Invoke(this, (newState.State.Position, newState.Name));
+						
+						//We only are going to handle drags with M1
+						if(oldState.State.LeftButton == ButtonState.Pressed && newState.State.LeftButton == ButtonState.Pressed)
+							this.OnMouseDrag?.Invoke(this, ((oldState.State.Position, newState.State.Position), newState.Name));
+					}
 
 
 					//Handling The Left Mouse Button by comparing to the last Input Frame
