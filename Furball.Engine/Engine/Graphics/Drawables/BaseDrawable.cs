@@ -1,11 +1,11 @@
 using System.Collections.Generic;
-using Furball.Engine.Engine.Drawables.Tweens;
-using Furball.Engine.Engine.Drawables.Tweens.TweenTypes;
+using Furball.Engine.Engine.Graphics.Drawables.Tweens;
+using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes;
 using Furball.Engine.Engine.Timing;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Furball.Engine.Engine.Drawables {
+namespace Furball.Engine.Engine.Graphics.Drawables {
     public abstract class BaseDrawable {
         /// <summary>
         /// Unprocessed Position where the Drawable is expected to be drawn

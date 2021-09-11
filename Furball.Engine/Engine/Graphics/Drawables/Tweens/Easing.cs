@@ -1,4 +1,4 @@
-namespace Furball.Engine.Engine.Drawables.Tweens {
+namespace Furball.Engine.Engine.Graphics.Drawables.Tweens {
     public enum Easing {
         None,
         In,

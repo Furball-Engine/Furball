@@ -1,7 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Furball.Engine.Engine.Drawables {
+namespace Furball.Engine.Engine.Graphics.Drawables {
     /// <summary>
     /// A Basic Managed Drawable that just Draws a Texture to the Screen,
     /// </summary>

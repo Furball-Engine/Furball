@@ -1,7 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Furball.Engine.Engine.Drawables {
+namespace Furball.Engine.Engine.Graphics.Drawables {
 	/// <summary>
 	/// Simple way to Draw Text
 	/// </summary>

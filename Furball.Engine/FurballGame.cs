@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Globalization;
 using Furball.Engine.Engine;
 using Furball.Engine.Engine.Audio;
-using Furball.Engine.Engine.Drawables;
-using Furball.Engine.Engine.Drawables.Managers;
+using Furball.Engine.Engine.Graphics.Drawables;
+using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Furball.Engine.Engine.Input;
 using Furball.Engine.Engine.Input.InputMethods;
 using Furball.Engine.Engine.Platform;
@@ -89,13 +90,13 @@ namespace Furball.Engine {
             DrawableManager.Update(gameTime);
 
             if(RuntimeInfo.IsDebug())
-                debugTime.Text = gameTime.TotalGameTime.ToString();
+                debugTime.Text = gameTime.TotalGameTime.TotalMilliseconds.ToString(CultureInfo.InvariantCulture);
             
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime) {
-            this.GraphicsDevice.Clear(Color.CornflowerBlue);
+            this.GraphicsDevice.Clear(Color.Black);
 
             DrawableManager.Draw(gameTime, SpriteBatch);
 

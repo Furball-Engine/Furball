@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Furball.Engine.Engine.Drawables.Managers {
+namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
     public class DrawableManager : UnmanagedDrawable {
         private List<BaseDrawable> _drawables = new();
 

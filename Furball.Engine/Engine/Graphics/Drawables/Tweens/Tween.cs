@@ -1,8 +1,7 @@
 using System;
-using System.ComponentModel.Design;
 using MathHelper=Furball.Engine.Engine.Helpers.MathHelper;
 
-namespace Furball.Engine.Engine.Drawables.Tweens {
+namespace Furball.Engine.Engine.Graphics.Drawables.Tweens {
     /// <summary>
     /// Base Tween Class
     /// </summary>

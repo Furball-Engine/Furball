@@ -3,9 +3,9 @@ using System.IO;
 using Furball.Engine;
 using Furball.Engine.Engine;
 using Furball.Engine.Engine.Audio;
-using Furball.Engine.Engine.Drawables;
-using Furball.Engine.Engine.Drawables.Tweens;
-using Furball.Engine.Engine.Drawables.Tweens.TweenTypes;
+using Furball.Engine.Engine.Graphics.Drawables;
+using Furball.Engine.Engine.Graphics.Drawables.Tweens;
+using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -22,10 +22,10 @@ namespace Furball.Game.Screens {
 
             this.Manager.Add(whiteTexture);
 
-            AudioStream stream = AudioEngine.LoadFile("testaudio.mp3");
-            stream.Play();
-
-            whiteTexture.TimeSource = stream;
+            //AudioStream stream = AudioEngine.LoadFile("testaudio.mp3");
+            //stream.Play();
+//
+            //whiteTexture.TimeSource = stream;
             
 
             base.Initialize();

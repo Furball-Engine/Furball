@@ -1,7 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Furball.Engine.Engine.Drawables {
+namespace Furball.Engine.Engine.Graphics.Drawables {
     /// <summary>
     /// A Drawable that gets passed in a raw SpriteBatch, giving the User Maximum Control over how the Drawable gets Drawn
     /// This is Perfect for a Drawable that needs Precise SpriteBatch Manipulation, Shaders, and other Things

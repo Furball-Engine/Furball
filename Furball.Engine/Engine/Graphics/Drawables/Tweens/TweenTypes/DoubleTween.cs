@@ -1,6 +1,4 @@
-using System;
-
-namespace Furball.Engine.Engine.Drawables.Tweens.TweenTypes {
+namespace Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes {
     //currently no use but its there!
     /// <summary>
     /// Tweens a Double between a Start Value and an End Value over a Certain amount of Time

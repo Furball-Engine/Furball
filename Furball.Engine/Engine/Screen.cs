@@ -1,5 +1,4 @@
-using Furball.Engine.Engine.Drawables;
-using Furball.Engine.Engine.Drawables.Managers;
+using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Microsoft.Xna.Framework;
 
 namespace Furball.Engine.Engine {
