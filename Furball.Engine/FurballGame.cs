@@ -6,6 +6,7 @@ using Furball.Engine.Engine.Drawables;
 using Furball.Engine.Engine.Drawables.Managers;
 using Furball.Engine.Engine.Input;
 using Furball.Engine.Engine.Input.InputMethods;
+using Furball.Engine.Engine.Platform;
 using Furball.Engine.Engine.Timing;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -20,6 +21,7 @@ namespace Furball.Engine {
         public static SpriteBatch  SpriteBatch;
         public static InputManager InputManager;
         public static ITimeSource  GameTimeSource;
+        public static ITimeSource  AudioTimeSource;
 
         private SpriteFont _debugSpriteFont;
 
@@ -34,6 +36,7 @@ namespace Furball.Engine {
 
 
             GameTimeSource = new GameTimeSource();
+            AudioTimeSource = new AudioTimeSource();
             Instance       = this;
 
             this.ChangeScreen(startScreen);
@@ -73,8 +76,10 @@ namespace Furball.Engine {
             this._graphics.PreferredBackBufferHeight = 720;
             this._graphics.ApplyChanges();
             
-            debugTime = new TextDrawable(this._debugSpriteFont, "");
-            DrawableManager.Add(debugTime);
+            if(RuntimeInfo.IsDebug()) {
+                debugTime = new TextDrawable(this._debugSpriteFont, "");
+                DrawableManager.Add(debugTime);
+            }
         }
 
         protected override void Update(GameTime gameTime) {
@@ -84,8 +89,9 @@ namespace Furball.Engine {
             InputManager.Update();
             DrawableManager.Update(gameTime);
 
-            debugTime.Text = gameTime.TotalGameTime.ToString();
-
+            if(RuntimeInfo.IsDebug())
+                debugTime.Text = gameTime.TotalGameTime.ToString();
+            
             base.Update(gameTime);
         }
 
