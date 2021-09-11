@@ -1,14 +1,15 @@
 using System.Runtime.InteropServices;
+using Furball.Engine.Engine.Timing;
 using ManagedBass;
 using ManagedBass.Fx;
 using ManagedManagedBass.Exceptions;
 
 namespace Furball.Engine.Engine.Audio {
-	public class AudioStream {
-		private int      rawAudioHandle;
-		private int      audioHandle;
-		private int      reverseFxAudioHandle;
-		private GCHandle memoryHandle;
+	public class AudioStream : ITimeSource {
+		private int      _rawAudioHandle;
+		private int      _audioHandle;
+		private int      _reverseFxAudioHandle;
+		private GCHandle _memoryHandle;
 
 		public AudioStream() { }
 
@@ -19,7 +20,7 @@ namespace Furball.Engine.Engine.Audio {
 		public bool IsValidHandle {
 			get {
 				try {
-					Bass.ChannelGetInfo(this.audioHandle);
+					Bass.ChannelGetInfo(this._audioHandle);
 				}
 				catch {
 					// ignored
@@ -29,11 +30,11 @@ namespace Furball.Engine.Engine.Audio {
 			}
 		}
 
-		public PlaybackState PlaybackState => Bass.ChannelIsActive(this.audioHandle);
+		public PlaybackState PlaybackState => Bass.ChannelIsActive(this._audioHandle);
 
 		public float Volume {
 			get {
-				bool success = Bass.ChannelGetAttribute(this.audioHandle, ChannelAttribute.Volume, out float volume);
+				bool success = Bass.ChannelGetAttribute(this._audioHandle, ChannelAttribute.Volume, out float volume);
 
 				if (success)
 					return volume;
@@ -45,7 +46,7 @@ namespace Furball.Engine.Engine.Audio {
 				};
 			}
 			set {
-				bool success = Bass.ChannelSetAttribute(this.audioHandle, ChannelAttribute.Volume, value);
+				bool success = Bass.ChannelSetAttribute(this._audioHandle, ChannelAttribute.Volume, value);
 
 				if (success) return;
 
@@ -60,10 +61,10 @@ namespace Furball.Engine.Engine.Audio {
 
 		public double CurrentTime {
 			get {
-				long audioTimeRaw = Bass.ChannelGetPosition(this.audioHandle);
+				long audioTimeRaw = Bass.ChannelGetPosition(this._audioHandle);
 
 				if (audioTimeRaw != -1)
-					return Bass.ChannelBytes2Seconds(this.audioHandle, audioTimeRaw);
+					return Bass.ChannelBytes2Seconds(this._audioHandle, audioTimeRaw);
 
 				throw Bass.LastError switch {
 					Errors.Handle       => new BassHandleException(),
@@ -75,7 +76,7 @@ namespace Furball.Engine.Engine.Audio {
 
 		public bool Loop {
 			get {
-				BassFlags flags = Bass.ChannelFlags(this.audioHandle, 0, 0);
+				BassFlags flags = Bass.ChannelFlags(this._audioHandle, 0, 0);
 
 				if ((int)flags == -1 && Bass.LastError == Errors.Handle) throw new BassHandleException();
 
@@ -86,7 +87,7 @@ namespace Furball.Engine.Engine.Audio {
 
 		public float Pitch {
 			get {
-				bool success = Bass.ChannelGetAttribute(this.audioHandle, ChannelAttribute.Pitch, out float pitch);
+				bool success = Bass.ChannelGetAttribute(this._audioHandle, ChannelAttribute.Pitch, out float pitch);
 		
 				if (success) return pitch;
 				
@@ -97,7 +98,7 @@ namespace Furball.Engine.Engine.Audio {
 				};
 			}
 			set {
-				bool success = Bass.ChannelSetAttribute(this.audioHandle, ChannelAttribute.Pitch, value);
+				bool success = Bass.ChannelSetAttribute(this._audioHandle, ChannelAttribute.Pitch, value);
 		
 				if (success) return;
 				
@@ -112,7 +113,7 @@ namespace Furball.Engine.Engine.Audio {
 		
 		public float Frequency {
 			get {
-				bool success = Bass.ChannelGetAttribute(this.audioHandle, ChannelAttribute.Frequency, out float frequency);
+				bool success = Bass.ChannelGetAttribute(this._audioHandle, ChannelAttribute.Frequency, out float frequency);
 
 				if (success) return frequency;
 
@@ -123,7 +124,7 @@ namespace Furball.Engine.Engine.Audio {
 				};
 			}
 			set {
-				bool success = Bass.ChannelSetAttribute(this.audioHandle, ChannelAttribute.Frequency, value);
+				bool success = Bass.ChannelSetAttribute(this._audioHandle, ChannelAttribute.Frequency, value);
 
 				if (success) return;
 
@@ -137,7 +138,7 @@ namespace Furball.Engine.Engine.Audio {
 		}
 
 		public void SeekTo(int milliseconds) {
-			bool success = Bass.ChannelSetPosition(this.audioHandle, milliseconds / 1000);
+			bool success = Bass.ChannelSetPosition(this._audioHandle, milliseconds / 1000);
 
 			if (success) return;
 
@@ -151,7 +152,7 @@ namespace Furball.Engine.Engine.Audio {
 		}
 
 		public void Pause() {
-			bool success = Bass.ChannelPause(this.audioHandle);
+			bool success = Bass.ChannelPause(this._audioHandle);
 
 			if (success) return;
 
@@ -165,7 +166,7 @@ namespace Furball.Engine.Engine.Audio {
 		}
 
 		public void Play() {
-			bool success = Bass.ChannelPlay(this.audioHandle);
+			bool success = Bass.ChannelPlay(this._audioHandle);
 
 			if (success) return;
 
@@ -177,7 +178,7 @@ namespace Furball.Engine.Engine.Audio {
 		}
 
 		public void Stop(bool reset = true) {
-			bool success = Bass.ChannelStop(this.audioHandle);
+			bool success = Bass.ChannelStop(this._audioHandle);
 
 			if (!success)
 				throw Bass.LastError switch {
@@ -189,7 +190,7 @@ namespace Furball.Engine.Engine.Audio {
 		}
 
 		private void SetFlag(bool status, BassFlags flag) {
-			BassFlags flags = Bass.ChannelFlags(this.audioHandle, status ? flag : BassFlags.Default, flag);
+			BassFlags flags = Bass.ChannelFlags(this._audioHandle, status ? flag : BassFlags.Default, flag);
 
 			if ((int)flags == -1 && Bass.LastError == Errors.Handle) throw new BassHandleException();
 
@@ -206,10 +207,10 @@ namespace Furball.Engine.Engine.Audio {
 		}
 
 		public void Load(byte[] audioData, BassFlags extraFlags = BassFlags.Default) {
-			this.memoryHandle = GCHandle.Alloc(audioData, GCHandleType.Pinned);
+			this._memoryHandle = GCHandle.Alloc(audioData, GCHandleType.Pinned);
 
 			int tempAudioHandle = Bass.CreateStream(
-				this.memoryHandle.AddrOfPinnedObject(),
+				this._memoryHandle.AddrOfPinnedObject(),
 				0,
 				audioData.Length,
 				BassFlags.Prescan | BassFlags.Decode | extraFlags
@@ -230,7 +231,7 @@ namespace Furball.Engine.Engine.Audio {
 					_                   => new BassUnknownException()
 				};
 
-			this.rawAudioHandle = tempAudioHandle;
+			this._rawAudioHandle = tempAudioHandle;
 
 			int tempAudioHandle2 = BassFx.TempoCreate(tempAudioHandle, BassFlags.Prescan | extraFlags);
 
@@ -242,7 +243,7 @@ namespace Furball.Engine.Engine.Audio {
 					_                   => new BassUnknownException()
 				};
 
-			this.audioHandle = tempAudioHandle2;
+			this._audioHandle = tempAudioHandle2;
 			
 			tempAudioHandle = BassFx.ReverseCreate(tempAudioHandle, 5f, BassFlags.Prescan | extraFlags);
 
@@ -254,7 +255,8 @@ namespace Furball.Engine.Engine.Audio {
 					_                   => new BassUnknownException()
 				};
 
-			this.reverseFxAudioHandle = tempAudioHandle;
+			this._reverseFxAudioHandle = tempAudioHandle;
 		}
+		public int GetCurrentTime() => (int)(this.CurrentTime * 1000d);
 	}
 }

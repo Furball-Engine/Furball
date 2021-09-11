@@ -36,7 +36,6 @@ namespace Furball.Engine {
 
 
             GameTimeSource = new GameTimeSource();
-            AudioTimeSource = new AudioTimeSource();
             Instance       = this;
 
             this.ChangeScreen(startScreen);

@@ -22,9 +22,10 @@ namespace Furball.Game.Screens {
 
             this.Manager.Add(whiteTexture);
 
-            AudioEngine.ActiveStream.Load(File.ReadAllBytes("testaudio.mp3"));
-            
-            AudioEngine.ActiveStream.Play();
+            AudioStream stream = AudioEngine.LoadFile("testaudio.mp3");
+            stream.Play();
+
+            whiteTexture.TimeSource = stream;
             
 
             base.Initialize();

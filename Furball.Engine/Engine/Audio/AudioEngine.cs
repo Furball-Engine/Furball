@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Runtime.InteropServices;
 using Furball.Engine.Engine.Platform.Linux;
 using ManagedBass;
@@ -8,8 +9,7 @@ using ManagedBass.Fx;
 namespace Furball.Engine.Engine.Audio {
 	public static class AudioEngine {
 		public static int DefaultAudioDevice = -1;
-		public static AudioStream ActiveStream = new();
-		
+
 		public static void Initialize(IntPtr windowId = default) {
 			if (windowId == default) windowId = IntPtr.Zero;
 
@@ -23,10 +23,15 @@ namespace Furball.Engine.Engine.Audio {
 			}
 
 			Bass.Init(DefaultAudioDevice, 44100, DeviceInitFlags.Default, windowId);
-			
 			Bass.PluginLoad("/usr/lib/libbass_fx.so");
 			
 			Console.WriteLine($"Bass Version: {Bass.Version}\nBassFx Version: {BassFx.Version}");
+		}
+
+		public static AudioStream LoadFile(string filename, BassFlags flags = BassFlags.Default) {
+			byte[] audioData = File.ReadAllBytes(filename);
+
+			return new AudioStream(audioData, flags);
 		}
 	}
 }
