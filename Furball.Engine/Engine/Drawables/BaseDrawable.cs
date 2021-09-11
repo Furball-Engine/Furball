@@ -11,35 +11,35 @@ namespace Furball.Engine.Engine.Drawables {
         /// Unprocessed Position where the Drawable is expected to be drawn
         /// <remarks>This variable does not get changed as the DrawableManager translates the Drawable to be Scaled to be properly visible on all resolutions</remarks>
         /// </summary>
-        public Vector2       Position;
+        public Vector2 Position = Vector2.Zero;
         /// <summary>
         /// Unprocessed Size of the Drawable in Pixels
         /// <remarks>This variable does not get changed as the DrawableManager translates the Drawable to be Scaled to be properly visible on all resolutions</remarks>
         /// </summary>
-        public Vector2       Size;
+        public Vector2 Size = Vector2.Zero;
         /// <summary>
         /// Unprocessed Color Override of the Drawable, if a White Texture gets drawn with a red override, voila its red
         /// <remarks>This variable does not get changed as the DrawableManager translates the Drawable to be Scaled to be properly visible on all resolutions</remarks>
         /// </summary>
-        public Color         ColorOverride = Color.White;
+        public Color ColorOverride = Color.White;
         /// <summary>
         /// Unprocessed Rotation of the Drawable in Radians
         /// <remarks>This variable does not get changed as the DrawableManager translates the Drawable to be Scaled to be properly visible on all resolutions</remarks>
         /// </summary>
-        public float         Rotation;
+        public float Rotation = 0f;
         /// <summary>
         /// Unprocessed Scale of the Drawable, new Vector(1, 1) draws the Drawable at full scale
         /// <remarks>This variable does not get changed as the DrawableManager translates the Drawable to be Scaled to be properly visible on all resolutions</remarks>
         /// </summary>
-        public Vector2       Scale = Vector2.One;
+        public Vector2 Scale = Vector2.One;
         /// <summary>
         /// Basic SpriteEffect, was provided by SpriteBatch so might aswell put it here
         /// </summary>
-        public SpriteEffects SpriteEffect;
+        public SpriteEffects SpriteEffect = SpriteEffects.None;
         /// <summary>
         /// What time does the Drawable go by? Used for Tweens
         /// </summary>
-        public ITimeSource   TimeSource = FurballGame.GameTimeSource;
+        public ITimeSource TimeSource = FurballGame.GameTimeSource;
         /// <summary>
         /// List of Tweens
         /// </summary>
