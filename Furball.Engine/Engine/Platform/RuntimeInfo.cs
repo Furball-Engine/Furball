@@ -17,8 +17,9 @@ namespace Furball.Engine.Engine.Platform {
 		public static bool IsDebug() {
 #if DEBUG
 			return true;
-#endif
+#else
 			return false;
+#endif
 		}
 	}
 }
