@@ -1,5 +1,5 @@
 using System;
 
 namespace ManagedManagedBass.Exceptions {
-	public class BassPositionException : Exception {}
+    public class BassPositionException : Exception {}
 }

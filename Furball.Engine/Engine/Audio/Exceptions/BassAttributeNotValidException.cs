@@ -1,5 +1,5 @@
 using System;
 
 namespace ManagedManagedBass.Exceptions {
-	public class BassAttributeNotValidException : Exception {}
+    public class BassAttributeNotValidException : Exception {}
 }

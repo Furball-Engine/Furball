@@ -48,10 +48,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes {
             if (this.Terminated)
                 return this._endVector;
 
-            return new Vector2(
-                this.CalculateCurrent(this._startVector.X, this._endVector.X),
-                this.CalculateCurrent(this._startVector.Y, this._endVector.Y)
-            );
+            return new Vector2(this.CalculateCurrent(this._startVector.X, this._endVector.X), this.CalculateCurrent(this._startVector.Y, this._endVector.Y));
         }
     }
 }

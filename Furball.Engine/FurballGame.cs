@@ -50,7 +50,7 @@ namespace Furball.Engine {
             InputManager.RegisterInputMethod(new MonogameKeyboardInputMethod());
 
             AudioEngine.Initialize(this.Window.Handle);
-            
+
             DrawableManager = new();
 
             base.Initialize();
@@ -72,11 +72,11 @@ namespace Furball.Engine {
 
             this._debugSpriteFont = this.Content.Load<SpriteFont>("Corbel");
 
-            this._graphics.PreferredBackBufferWidth = 1280;
+            this._graphics.PreferredBackBufferWidth  = 1280;
             this._graphics.PreferredBackBufferHeight = 720;
             this._graphics.ApplyChanges();
-            
-            if(RuntimeInfo.IsDebug()) {
+
+            if (RuntimeInfo.IsDebug()) {
                 debugTime = new TextDrawable(this._debugSpriteFont, "");
                 DrawableManager.Add(debugTime);
             }
@@ -89,9 +89,9 @@ namespace Furball.Engine {
             InputManager.Update();
             DrawableManager.Update(gameTime);
 
-            if(RuntimeInfo.IsDebug())
+            if (RuntimeInfo.IsDebug())
                 debugTime.Text = gameTime.TotalGameTime.TotalMilliseconds.ToString(CultureInfo.InvariantCulture);
-            
+
             base.Update(gameTime);
         }
 
@@ -105,7 +105,7 @@ namespace Furball.Engine {
 
         #region Timing
 
-        private static Stopwatch _stopwatch = new Stopwatch();
+        private static Stopwatch _stopwatch = new();
         public static int Time => (int)_stopwatch.ElapsedMilliseconds;
 
         #endregion

@@ -1,5 +1,5 @@
 using System;
 
 namespace ManagedManagedBass.Exceptions {
-	public class BassSampleFormatException : Exception {}
+    public class BassSampleFormatException : Exception {}
 }

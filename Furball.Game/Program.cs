@@ -3,9 +3,10 @@
 namespace Furball.Game {
     public static class Program {
         [STAThread]
-        static void Main() {
-            using (FurballTestGame game = new FurballTestGame())
+        private static void Main() {
+            using (FurballTestGame game = new()) {
                 game.Run();
+            }
         }
     }
 }

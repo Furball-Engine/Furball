@@ -14,16 +14,16 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Tweens {
         /// <summary>
         /// When does it Start?
         /// </summary>
-        public int    StartTime;
+        public int StartTime;
         /// <summary>
         /// When does it End?
         /// </summary>
-        public int    EndTime;
+        public int EndTime;
 
         /// <summary>
         /// How long is the Tween?
         /// </summary>
-        public int    Duration => this.EndTime - this.StartTime;
+        public int Duration => this.EndTime - this.StartTime;
         /// <summary>
         /// What easing to use?
         /// </summary>
@@ -49,7 +49,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Tweens {
         /// <param name="start">Start Value</param>
         /// <param name="end">End Value</param>
         /// <returns>Interpolated Value with Easing</returns>
-        protected float CalculateCurrent(float start, float end) => (float) this.CalculateCurrent((double) start, (double) end);
+        protected float CalculateCurrent(float start, float end) => (float)this.CalculateCurrent((double)start, (double)end);
         /// <summary>
         /// Interpoltes Start and End using the Easing and Progress of the Tween to return a Interpolated Value
         /// </summary>
@@ -60,12 +60,12 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Tweens {
             double progress = ((double)this.TimeNow - (double)this.StartTime) / (double)this.Duration;
 
             return this.Easing switch {
-                Easing.In        => MathHelper.Lerp(end, start, (1 - progress) * (1 - progress)),
-                Easing.Out       => MathHelper.Lerp(start, end, progress * progress),
-                Easing.InDouble  => MathHelper.Lerp(end, start, Math.Pow(1 - progress, 4)),
-                Easing.OutDouble => MathHelper.Lerp(start, end, Math.Pow(progress, 4)),
-                Easing.InHalf    => MathHelper.Lerp(end, start, Math.Pow(1 - progress, 1.5)),
-                Easing.OutHalf   => MathHelper.Lerp(start, end, Math.Pow(progress, 1.5)),
+                Easing.In        => MathHelper.Lerp(end,   start, (1 - progress) * (1 - progress)),
+                Easing.Out       => MathHelper.Lerp(start, end,   progress * progress),
+                Easing.InDouble  => MathHelper.Lerp(end,   start, Math.Pow(1 - progress, 4)),
+                Easing.OutDouble => MathHelper.Lerp(start, end,   Math.Pow(progress,     4)),
+                Easing.InHalf    => MathHelper.Lerp(end,   start, Math.Pow(1 - progress, 1.5)),
+                Easing.OutHalf   => MathHelper.Lerp(start, end,   Math.Pow(progress,     1.5)),
                 Easing.InOut     => start + (-2 * Math.Pow(progress, 3) + 3 * (progress * progress)) * (end - start),
                 _                => MathHelper.Lerp(start, end, progress)
             };

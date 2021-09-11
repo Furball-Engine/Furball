@@ -10,12 +10,12 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
             // Split _drawables into 2 lists containing the ManagedDrawables and the UnmanagedDrawables
             List<ManagedDrawable>   managedDrawables   = new();
             List<UnmanagedDrawable> unmanagedDrawables = new();
-            
+
             for (int i = 0; i != this._drawables.Count; i++) {
                 BaseDrawable baseDrawable = this._drawables[i];
-                
-                if(baseDrawable is ManagedDrawable managedDrawable) managedDrawables.Add(managedDrawable);
-                if(baseDrawable is UnmanagedDrawable unmanagedDrawable) unmanagedDrawables.Add(unmanagedDrawable);
+
+                if (baseDrawable is ManagedDrawable managedDrawable) managedDrawables.Add(managedDrawable);
+                if (baseDrawable is UnmanagedDrawable unmanagedDrawable) unmanagedDrawables.Add(unmanagedDrawable);
             }
 
             batch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
@@ -37,21 +37,21 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
             // Split _drawables into 2 lists containing the ManagedDrawables and the UnmanagedDrawables
             List<ManagedDrawable>   managedDrawables   = new();
             List<UnmanagedDrawable> unmanagedDrawables = new();
-            
+
             for (int i = 0; i != this._drawables.Count; i++) {
                 BaseDrawable baseDrawable = this._drawables[i];
-                
-                if(baseDrawable is ManagedDrawable managedDrawable) managedDrawables.Add(managedDrawable);
-                if(baseDrawable is UnmanagedDrawable unmanagedDrawable) unmanagedDrawables.Add(unmanagedDrawable);
+
+                if (baseDrawable is ManagedDrawable managedDrawable) managedDrawables.Add(managedDrawable);
+                if (baseDrawable is UnmanagedDrawable unmanagedDrawable) unmanagedDrawables.Add(unmanagedDrawable);
             }
-            
+
             for (int i = 0; i != managedDrawables.Count; i++) {
                 ManagedDrawable currentDrawable = managedDrawables[i];
 
                 currentDrawable.UpdateTweens();
                 currentDrawable.Update(time);
             }
-        
+
             for (int i = 0; i != unmanagedDrawables.Count; i++) {
                 UnmanagedDrawable currentDrawable = unmanagedDrawables[i];
 
