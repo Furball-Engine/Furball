@@ -24,14 +24,14 @@ namespace Furball.Engine.Engine.Input.InputMethods {
 			FurballGame.Instance.Window.KeyUp   += this.OnKeyUp;
 		}
 
-		public void OnKeyDown(object sender, InputKeyEventArgs args) {
+		private void OnKeyDown(object sender, InputKeyEventArgs args) {
 			//OnKeyDown will repeat like a text box if a key is held so we make sure we arent adding duplicates
 			
 			if(!this.tempList.Contains(args.Key))
 				this.tempList.Add(args.Key);
 		}
 		
-		public void OnKeyUp(object sender, InputKeyEventArgs args) {
+		private void OnKeyUp(object sender, InputKeyEventArgs args) {
 			this.tempList.Remove(args.Key);
 		}
 	}
