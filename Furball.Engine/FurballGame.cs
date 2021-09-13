@@ -53,6 +53,10 @@ namespace Furball.Engine {
 
             DrawableManager = new();
 
+            _graphics.SynchronizeWithVerticalRetrace = false;
+            this.IsFixedTimeStep                    = false;
+            this._graphics.ApplyChanges();
+
             base.Initialize();
         }
 
@@ -88,9 +92,6 @@ namespace Furball.Engine {
 
             InputManager.Update();
             DrawableManager.Update(gameTime);
-
-            if (RuntimeInfo.IsDebug())
-                debugTime.Text = gameTime.TotalGameTime.TotalMilliseconds.ToString(CultureInfo.InvariantCulture);
 
             base.Update(gameTime);
         }
