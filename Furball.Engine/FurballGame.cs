@@ -99,6 +99,9 @@ namespace Furball.Engine {
         protected override void Draw(GameTime gameTime) {
             this.GraphicsDevice.Clear(Color.Black);
 
+            if (RuntimeInfo.IsDebug())
+                debugTime.Text = $"fps: {Math.Round(1 / gameTime.ElapsedGameTime.TotalSeconds).ToString(CultureInfo.InvariantCulture)}";
+            
             DrawableManager.Draw(gameTime, SpriteBatch);
 
             base.Draw(gameTime);
