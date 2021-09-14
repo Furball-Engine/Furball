@@ -6,15 +6,15 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
     public class DrawableManager : UnmanagedDrawable {
         private List<BaseDrawable> _drawables = new();
 
-        private List<ManagedDrawable> tempDrawManaged = new();
-        private List<ManagedDrawable> tempUpdateManaged = new();
-        private List<UnmanagedDrawable> tempDrawUnmanaged = new();
+        private List<ManagedDrawable>   tempDrawManaged     = new();
+        private List<ManagedDrawable>   tempUpdateManaged   = new();
+        private List<UnmanagedDrawable> tempDrawUnmanaged   = new();
         private List<UnmanagedDrawable> tempUpdateUnmanaged = new();
         public override void Draw(GameTime time, SpriteBatch batch, DrawableManagerArgs _ = null) {
             // Split _drawables into 2 lists containing the ManagedDrawables and the UnmanagedDrawables
             this.tempDrawManaged.Clear();
             this.tempDrawUnmanaged.Clear();
-            
+
             for (int i = 0; i != this._drawables.Count; i++) {
                 BaseDrawable baseDrawable = this._drawables[i];
 
@@ -27,13 +27,13 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                 ManagedDrawable currentDrawable = tempDrawManaged[i];
 
                 DrawableManagerArgs args = new() {
-                    Color = currentDrawable.ColorOverride,
-                    Effects = currentDrawable.SpriteEffect,
-                    LayerDepth = 0f, //TODO: add depth
-                    Origin = Vector2.Zero, //TODO: add origin
-                    Position = currentDrawable.Position,
-                    Rotation = currentDrawable.Rotation,
-                    Scale = currentDrawable.Scale
+                    Color      = currentDrawable.ColorOverride,
+                    Effects    = currentDrawable.SpriteEffect,
+                    LayerDepth = currentDrawable.Depth,
+                    Origin     = Vector2.Zero,//TODO: add origin
+                    Position   = currentDrawable.Position,
+                    Rotation   = currentDrawable.Rotation,
+                    Scale      = currentDrawable.Scale
                 };
 
                 currentDrawable.Draw(time, batch, args);
@@ -46,13 +46,13 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                 DrawableManagerArgs args = new() {
                     Color      = currentDrawable.ColorOverride,
                     Effects    = currentDrawable.SpriteEffect,
-                    LayerDepth = 0f,          //TODO: add depth
+                    LayerDepth = currentDrawable.Depth,
                     Origin     = Vector2.Zero,//TODO: add origin
                     Position   = currentDrawable.Position,
                     Rotation   = currentDrawable.Rotation,
                     Scale      = currentDrawable.Scale
                 };
-                
+
                 currentDrawable.Draw(time, batch, args);
             }
         }
@@ -61,7 +61,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
             // Split _drawables into 2 lists containing the ManagedDrawables and the UnmanagedDrawables
             this.tempUpdateManaged.Clear();
             this.tempUpdateUnmanaged.Clear();
-            
+
             for (int i = 0; i != this._drawables.Count; i++) {
                 BaseDrawable baseDrawable = this._drawables[i];
 

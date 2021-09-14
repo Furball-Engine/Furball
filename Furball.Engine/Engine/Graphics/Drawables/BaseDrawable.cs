@@ -41,6 +41,10 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// </summary>
         public ITimeSource TimeSource = FurballGame.GameTimeSource;
         /// <summary>
+        /// The draw depth of the Drawable
+        /// </summary>
+        public float Depth;
+        /// <summary>
         /// List of Tweens
         /// </summary>
         public List<Tween> Tweens = new();
