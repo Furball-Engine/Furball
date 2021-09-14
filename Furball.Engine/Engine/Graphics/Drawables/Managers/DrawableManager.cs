@@ -10,7 +10,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
         private List<ManagedDrawable> tempUpdateManaged = new();
         private List<UnmanagedDrawable> tempDrawUnmanaged = new();
         private List<UnmanagedDrawable> tempUpdateUnmanaged = new();
-        public override void Draw(GameTime time, SpriteBatch batch) {
+        public override void Draw(GameTime time, SpriteBatch batch, DrawableManagerArgs _ = null) {
             // Split _drawables into 2 lists containing the ManagedDrawables and the UnmanagedDrawables
             this.tempDrawManaged.Clear();
             this.tempDrawUnmanaged.Clear();
@@ -26,14 +26,34 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
             for (int i = 0; i < tempDrawManaged.Count; i++) {
                 ManagedDrawable currentDrawable = tempDrawManaged[i];
 
-                currentDrawable.Draw(time, batch);
+                DrawableManagerArgs args = new() {
+                    Color = currentDrawable.ColorOverride,
+                    Effects = currentDrawable.SpriteEffect,
+                    LayerDepth = 0f, //TODO: add depth
+                    Origin = Vector2.Zero, //TODO: add origin
+                    Position = currentDrawable.Position,
+                    Rotation = currentDrawable.Rotation,
+                    Scale = currentDrawable.Scale
+                };
+
+                currentDrawable.Draw(time, batch, args);
             }
             batch.End();
 
             for (int i = 0; i < tempDrawUnmanaged.Count; i++) {
                 UnmanagedDrawable currentDrawable = tempDrawUnmanaged[i];
 
-                currentDrawable.Draw(time, batch);
+                DrawableManagerArgs args = new() {
+                    Color      = currentDrawable.ColorOverride,
+                    Effects    = currentDrawable.SpriteEffect,
+                    LayerDepth = 0f,          //TODO: add depth
+                    Origin     = Vector2.Zero,//TODO: add origin
+                    Position   = currentDrawable.Position,
+                    Rotation   = currentDrawable.Rotation,
+                    Scale      = currentDrawable.Scale
+                };
+                
+                currentDrawable.Draw(time, batch, args);
             }
         }
 

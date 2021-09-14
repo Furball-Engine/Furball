@@ -1,3 +1,4 @@
+using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -18,7 +19,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// </summary>
         /// <param name="time">How much time has passed since last Draw</param>
         /// <param name="batch">Already Started SpriteBatch</param>
-        public virtual void Draw(GameTime time, SpriteBatch batch) {}
+        public virtual void Draw(GameTime time, SpriteBatch batch, DrawableManagerArgs args) {}
         /// <summary>
         /// If your Drawable needs updating, this is the Method to Override,
         /// Gets Called every Update

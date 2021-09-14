@@ -1,3 +1,4 @@
+using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -24,8 +25,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
             this.Text = text;
         }
 
-        public override void Draw(GameTime time, SpriteBatch batch) {
-            batch.DrawString(this.Font, this.Text, this.Position, this.ColorOverride, this.Rotation, Vector2.Zero, this.Scale, this.SpriteEffect, 0f);
+        public override void Draw(GameTime time, SpriteBatch batch, DrawableManagerArgs args) {
+            batch.DrawString(this.Font, this.Text, args.Position, args.Color, args.Rotation, args.Origin, args.Scale, args.Effects, args.LayerDepth);
         }
     }
 }

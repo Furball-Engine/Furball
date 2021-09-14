@@ -1,3 +1,4 @@
+using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -44,11 +45,12 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
             this._texture = texture;
         }
 
-        public override void Draw(GameTime time, SpriteBatch batch) {
+        public override void Draw(GameTime time, SpriteBatch batch, DrawableManagerArgs args) {
             //TODO: origin
             //TODO: depth
-            batch.Draw(this._texture, this.Position, this._cropped, this.ColorOverride, this.Rotation, Vector2.Zero, this.Scale, this.SpriteEffect, 0f);
+            batch.Draw(this._texture, args.Position, this._cropped, args.Color, args.Rotation, args.Origin, args.Scale, args.Effects, args.LayerDepth);
         }
+        
         /// <summary>
         /// Changes the Cropping of the Texture
         /// </summary>
