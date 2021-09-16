@@ -73,6 +73,10 @@ namespace Furball.Engine.Engine.Input {
         /// Called when the cursor scrolls
         /// </summary>
         public event EventHandler<(int, string)> OnMouseScroll;
+
+        private List<Keys> diffKeysPressed  = new();
+        private List<Keys> diffKeysReleased = new();
+
         /// <summary>
         /// Updates all registered InputMethods and calls the necessary events
         /// </summary>
@@ -88,8 +92,8 @@ namespace Furball.Engine.Engine.Input {
 
             #region OnKeyUp/Down
 
-            List<Keys> diffKeysPressed  = this.HeldKeys.Except(oldKeys).ToList();
-            List<Keys> diffKeysReleased = oldKeys.Except(this.HeldKeys).ToList();
+            diffKeysPressed  = this.HeldKeys.Except(oldKeys).ToList();
+            diffKeysReleased = oldKeys.Except(this.HeldKeys).ToList();
 
             for (int i = 0; i < diffKeysPressed.Count; i++)
                 this.OnKeyDown?.Invoke(this, diffKeysPressed[i]);
@@ -106,8 +110,9 @@ namespace Furball.Engine.Engine.Input {
 
                 List<MouseState> filteredStates = new();
 
+                int cursorStateSize = this.CursorStates.Count;
                 //Filtering States of the same name
-                for (int k = 0; k != this.CursorStates.Count; k++)
+                for (int k = 0; k < cursorStateSize; k++)
                     if (oldState.Name == this.CursorStates[k].Name)
                         filteredStates.Add(this.CursorStates[k]);
 
