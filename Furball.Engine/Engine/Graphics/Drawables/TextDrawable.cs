@@ -1,6 +1,7 @@
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SpriteFontPlus;
 
 namespace Furball.Engine.Engine.Graphics.Drawables {
     /// <summary>
@@ -18,7 +19,23 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// <summary>
         /// Creates a new TextDrawable
         /// </summary>
-        /// <param name="font">What SpriteFont to draw with</param>
+        /// <param name="font">A byte[] containing the font in ttf form)</param>
+        /// <param name="text">What Text to Draw (can be changed later)</param>
+        /// <param name="range">The CharacterRange of the SpriteFont</param>
+        public TextDrawable(byte[] font, string text, float size, CharacterRange[] range = null) {
+            range ??= new[] {
+                CharacterRange.BasicLatin, CharacterRange.Hiragana, CharacterRange.Katakana, CharacterRange.Latin1Supplement
+            };
+
+            TtfFontBakerResult fontBakeResult = TtfFontBaker.Bake(font, size, (int)(1024f * (size / 25f)), (int)(1024f * (size / 25f)), range);
+
+            this.Font = fontBakeResult.CreateSpriteFont(FurballGame.Instance.GraphicsDevice);
+            this.Text = text;
+        }
+        /// <summary>
+        /// Creates a new TextDrawable
+        /// </summary>
+        /// <param name="font">The SpriteFont to render with</param>
         /// <param name="text">What Text to Draw (can be changed later)</param>
         public TextDrawable(SpriteFont font, string text) {
             this.Font = font;

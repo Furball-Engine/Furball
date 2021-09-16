@@ -13,3 +13,6 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin unifont_jp-13.0.06.ttf
+/copy:unifont_jp-13.0.06.ttf;default-font.ttf
+

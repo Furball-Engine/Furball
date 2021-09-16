@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Diagnostics;
 using System.Globalization;
 using Furball.Engine.Engine;
@@ -24,9 +25,7 @@ namespace Furball.Engine {
         public static ITimeSource  GameTimeSource;
         public static ITimeSource  AudioTimeSource;
 
-        private SpriteFont _debugSpriteFont;
-
-        public static TextDrawable debugTime;
+        public static TextDrawable DebugTime;
 
         public static DrawableManager DrawableManager;
 
@@ -34,7 +33,6 @@ namespace Furball.Engine {
             this._graphics             = new GraphicsDeviceManager(this);
             this.Content.RootDirectory = "Content";
             this.IsMouseVisible        = true;
-
 
             GameTimeSource = new GameTimeSource();
             Instance       = this;
@@ -54,7 +52,7 @@ namespace Furball.Engine {
             DrawableManager = new();
 
             _graphics.SynchronizeWithVerticalRetrace = false;
-            this.IsFixedTimeStep                    = false;
+            this.IsFixedTimeStep                     = false;
             this._graphics.ApplyChanges();
 
             base.Initialize();
@@ -74,15 +72,14 @@ namespace Furball.Engine {
         protected override void LoadContent() {
             SpriteBatch = new SpriteBatch(this.GraphicsDevice);
 
-            this._debugSpriteFont = this.Content.Load<SpriteFont>("Corbel");
-
             this._graphics.PreferredBackBufferWidth  = 1280;
             this._graphics.PreferredBackBufferHeight = 720;
             this._graphics.ApplyChanges();
 
             if (RuntimeInfo.IsDebug()) {
-                debugTime = new TextDrawable(this._debugSpriteFont, "");
-                DrawableManager.Add(debugTime);
+                // TODO: implement a proper ContentReader
+                DebugTime = new TextDrawable(File.ReadAllBytes(Path.Combine(this.Content.RootDirectory, "default-font.ttf")), "", 50);
+                DrawableManager.Add(DebugTime);
             }
         }
 
@@ -100,8 +97,8 @@ namespace Furball.Engine {
             this.GraphicsDevice.Clear(Color.Black);
 
             if (RuntimeInfo.IsDebug())
-                debugTime.Text = $"fps: {Math.Round(1 / gameTime.ElapsedGameTime.TotalSeconds).ToString(CultureInfo.InvariantCulture)}";
-            
+                DebugTime.Text = $"fps: {Math.Round(1 / gameTime.ElapsedGameTime.TotalSeconds).ToString(CultureInfo.InvariantCulture)}";
+
             DrawableManager.Draw(gameTime, SpriteBatch);
 
             base.Draw(gameTime);
