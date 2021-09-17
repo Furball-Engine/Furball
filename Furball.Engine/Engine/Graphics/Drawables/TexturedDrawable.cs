@@ -46,11 +46,9 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         }
 
         public override void Draw(GameTime time, SpriteBatch batch, DrawableManagerArgs args) {
-            //TODO: origin
-            //TODO: depth
             batch.Draw(this._texture, args.Position, this._cropped, args.Color, args.Rotation, args.Origin, args.Scale, args.Effects, args.LayerDepth);
         }
-        
+
         /// <summary>
         /// Changes the Cropping of the Texture
         /// </summary>
