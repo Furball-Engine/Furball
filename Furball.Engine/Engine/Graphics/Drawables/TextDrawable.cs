@@ -16,6 +16,21 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// Text that gets drawn
         /// </summary>
         public string Text;
+
+        /// <summary>
+        /// The height of the text
+        /// </summary>
+        public int Height {
+            get {
+                //Remove all carriage returns and split it by \n
+                string[] tempText = this.Text.Replace("\r", "").Split("\n");
+                if (tempText.Length > 1)
+                    return this.Height * tempText.Length;
+
+                return this.Font.LineSpacing;
+            }
+        }
+
         /// <summary>
         /// Creates a new TextDrawable
         /// </summary>
