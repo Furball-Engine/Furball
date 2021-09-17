@@ -1,4 +1,5 @@
 using System.Runtime.InteropServices;
+using Furball.Engine.Engine.Audio.Exceptions;
 using Furball.Engine.Engine.Timing;
 using ManagedBass;
 using ManagedBass.Fx;

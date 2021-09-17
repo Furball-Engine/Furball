@@ -1,5 +1,5 @@
 using System;
 
-namespace ManagedManagedBass.Exceptions {
+namespace Furball.Engine.Engine.Audio.Exceptions {
     public class BassAttributeNotValidException : Exception {}
 }
