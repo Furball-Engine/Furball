@@ -3,13 +3,12 @@ using Furball.Engine.Engine.Audio.Exceptions;
 using Furball.Engine.Engine.Timing;
 using ManagedBass;
 using ManagedBass.Fx;
-using ManagedManagedBass.Exceptions;
 
 namespace Furball.Engine.Engine.Audio {
     public class AudioStream : ITimeSource {
         private int      _rawAudioHandle;
         private int      _audioHandle;
-        private int      _reverseFxAudioHandle;
+        private int      _reverseAudioHandle;
         private GCHandle _memoryHandle;
 
         public AudioStream() {}
@@ -251,7 +250,7 @@ namespace Furball.Engine.Engine.Audio {
                     _                   => new BassUnknownException()
                 };
 
-            this._reverseFxAudioHandle = tempAudioHandle;
+            this._reverseAudioHandle = tempAudioHandle;
         }
         public int GetCurrentTime() => (int)(this.CurrentTime * 1000d);
     }
