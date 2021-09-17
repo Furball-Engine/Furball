@@ -25,9 +25,12 @@ namespace Furball.Engine {
         public static ITimeSource  GameTimeSource;
         public static ITimeSource  AudioTimeSource;
 
-        public static TextDrawable DebugTime;
+        public static TextDrawable DebugFpsDraw;
+        public static TextDrawable DebugFpsUpdate;
 
         public static DrawableManager DrawableManager;
+        public static DrawableManager DebugOverlayDrawableManager;
+        public static bool            DrawDebugOverlay = true;
 
         public FurballGame(Screen startScreen) {
             this._graphics             = new GraphicsDeviceManager(this);
@@ -47,9 +50,16 @@ namespace Furball.Engine {
             InputManager.RegisterInputMethod(new MonogameMouseInputMethod());
             InputManager.RegisterInputMethod(new MonogameKeyboardInputMethod());
 
+            if (RuntimeInfo.IsDebug()) {
+                InputManager.OnKeyDown += delegate(object sender, Keys keys) {
+                    if (keys == Keys.F11) DrawDebugOverlay = !DrawDebugOverlay;
+                };
+            }
+
             AudioEngine.Initialize(this.Window.Handle);
 
-            DrawableManager = new();
+            DrawableManager             = new();
+            DebugOverlayDrawableManager = new();
 
             _graphics.SynchronizeWithVerticalRetrace = false;
             this.IsFixedTimeStep                     = false;
@@ -78,8 +88,13 @@ namespace Furball.Engine {
 
             if (RuntimeInfo.IsDebug()) {
                 // TODO: implement a proper ContentReader
-                DebugTime = new TextDrawable(File.ReadAllBytes(Path.Combine(this.Content.RootDirectory, "default-font.ttf")), "", 50);
-                DrawableManager.Add(DebugTime);
+                DebugFpsDraw = new TextDrawable(File.ReadAllBytes(Path.Combine(this.Content.RootDirectory, "default-font.ttf")), "", 50);
+                DebugOverlayDrawableManager.Add(DebugFpsDraw);
+
+                DebugFpsUpdate = new TextDrawable(File.ReadAllBytes(Path.Combine(this.Content.RootDirectory, "default-font.ttf")), "", 50) {
+                    Position = new Vector2(0, DebugFpsDraw.Height)
+                };
+                DebugOverlayDrawableManager.Add(DebugFpsUpdate);
             }
         }
 
@@ -87,8 +102,14 @@ namespace Furball.Engine {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 this.Exit();
 
+            if (RuntimeInfo.IsDebug())
+                DebugFpsUpdate.Text = $"update fps: {Math.Round(1 / gameTime.ElapsedGameTime.TotalSeconds).ToString(CultureInfo.InvariantCulture)}";
+
             InputManager.Update();
+
             DrawableManager.Update(gameTime);
+            if (RuntimeInfo.IsDebug())
+                DebugOverlayDrawableManager.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -97,9 +118,11 @@ namespace Furball.Engine {
             this.GraphicsDevice.Clear(Color.Black);
 
             if (RuntimeInfo.IsDebug())
-                DebugTime.Text = $"fps: {Math.Round(1 / gameTime.ElapsedGameTime.TotalSeconds).ToString(CultureInfo.InvariantCulture)}";
+                DebugFpsDraw.Text = $"draw fps: {Math.Round(1 / gameTime.ElapsedGameTime.TotalSeconds).ToString(CultureInfo.InvariantCulture)}";
 
             DrawableManager.Draw(gameTime, SpriteBatch);
+            if (RuntimeInfo.IsDebug() && DrawDebugOverlay)
+                DebugOverlayDrawableManager.Draw(gameTime, SpriteBatch);
 
             base.Draw(gameTime);
         }
