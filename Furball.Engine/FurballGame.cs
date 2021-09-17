@@ -23,7 +23,6 @@ namespace Furball.Engine {
         public static SpriteBatch  SpriteBatch;
         public static InputManager InputManager;
         public static ITimeSource  GameTimeSource;
-        public static ITimeSource  AudioTimeSource;
 
         public static TextDrawable DebugFpsDraw;
         public static TextDrawable DebugFpsUpdate;
@@ -51,7 +50,7 @@ namespace Furball.Engine {
             InputManager.RegisterInputMethod(new MonogameKeyboardInputMethod());
 
             if (RuntimeInfo.IsDebug()) {
-                InputManager.OnKeyDown += delegate(object sender, Keys keys) {
+                InputManager.OnKeyDown += delegate(object _, Keys keys) {
                     if (keys == Keys.F11) DrawDebugOverlay = !DrawDebugOverlay;
                 };
             }

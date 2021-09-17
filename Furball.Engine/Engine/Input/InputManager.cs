@@ -74,8 +74,8 @@ namespace Furball.Engine.Engine.Input {
         /// </summary>
         public event EventHandler<(int, string)> OnMouseScroll;
 
-        private List<Keys> diffKeysPressed  = new();
-        private List<Keys> diffKeysReleased = new();
+        private List<Keys> _diffKeysPressed  = new();
+        private List<Keys> _diffKeysReleased = new();
 
         /// <summary>
         /// Updates all registered InputMethods and calls the necessary events
@@ -92,14 +92,14 @@ namespace Furball.Engine.Engine.Input {
 
             #region OnKeyUp/Down
 
-            diffKeysPressed  = this.HeldKeys.Except(oldKeys).ToList();
-            diffKeysReleased = oldKeys.Except(this.HeldKeys).ToList();
+            this._diffKeysPressed  = this.HeldKeys.Except(oldKeys).ToList();
+            this._diffKeysReleased = oldKeys.Except(this.HeldKeys).ToList();
 
-            for (int i = 0; i < diffKeysPressed.Count; i++)
-                this.OnKeyDown?.Invoke(this, diffKeysPressed[i]);
+            for (int i = 0; i < this._diffKeysPressed.Count; i++)
+                this.OnKeyDown?.Invoke(this, this._diffKeysPressed[i]);
 
-            for (int i = 0; i < diffKeysReleased.Count; i++)
-                this.OnKeyUp?.Invoke(this, diffKeysReleased[i]);
+            for (int i = 0; i < this._diffKeysReleased.Count; i++)
+                this.OnKeyUp?.Invoke(this, this._diffKeysReleased[i]);
 
             #endregion
 
