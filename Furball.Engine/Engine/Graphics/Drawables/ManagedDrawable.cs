@@ -19,6 +19,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// </summary>
         /// <param name="time">How much time has passed since last Draw</param>
         /// <param name="batch">Already Started SpriteBatch</param>
+        /// <param name="args">The DrawableManagerArgs variable, which contains the arguments to pass into your batch.Draw call</param>
         public virtual void Draw(GameTime time, SpriteBatch batch, DrawableManagerArgs args) {}
         /// <summary>
         /// If your Drawable needs updating, this is the Method to Override,
