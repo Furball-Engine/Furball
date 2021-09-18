@@ -1,5 +1,5 @@
 using System;
-using MathHelper=Furball.Engine.Engine.Helpers.MathHelper;
+using Furball.Engine.Engine.Helpers;
 
 namespace Furball.Engine.Engine.Graphics.Drawables.Tweens {
     /// <summary>
@@ -49,7 +49,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Tweens {
         /// <param name="start">Start Value</param>
         /// <param name="end">End Value</param>
         /// <returns>Interpolated Value with Easing</returns>
-        protected float CalculateCurrent(float start, float end) => (float)this.CalculateCurrent((double)start, (double)end);
+        protected float CalculateCurrent(float start, float end) => (float)this.CalculateCurrent(start, (double)end);
         /// <summary>
         /// Interpoltes Start and End using the Easing and Progress of the Tween to return a Interpolated Value
         /// </summary>
@@ -57,7 +57,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Tweens {
         /// <param name="end">End Value</param>
         /// <returns>Interpolated Value with Easing</returns>
         protected double CalculateCurrent(double start, double end) {
-            double progress = ((double)this.TimeNow - (double)this.StartTime) / (double)this.Duration;
+            double progress = (this.TimeNow - (double)this.StartTime) / this.Duration;
 
             return this.Easing switch {
                 Easing.In        => MathHelper.Lerp(end,   start, (1 - progress) * (1 - progress)),
