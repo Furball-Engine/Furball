@@ -6,8 +6,9 @@ using ManagedBass.Fx;
 
 namespace Furball.Engine.Engine.Audio {
     public class AudioStream : ITimeSource {
-        private int      _rawAudioHandle;
-        private int      _audioHandle;
+        private int _audioHandle;
+        // TODO: implement playing from this handle
+        // ReSharper disable once NotAccessedField.Local
         private int      _reverseAudioHandle;
         private GCHandle _memoryHandle;
 
@@ -225,8 +226,6 @@ namespace Furball.Engine.Engine.Audio {
                     Errors.No3D         => new BassNo3DException(),
                     _                   => new BassUnknownException()
                 };
-
-            this._rawAudioHandle = tempAudioHandle;
 
             int tempAudioHandle2 = BassFx.TempoCreate(tempAudioHandle, BassFlags.Prescan | extraFlags);
 
