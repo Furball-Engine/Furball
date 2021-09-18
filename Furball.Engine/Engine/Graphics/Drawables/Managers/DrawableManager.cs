@@ -20,8 +20,14 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
             for (int i = 0; i < tempCount; i++) {
                 BaseDrawable baseDrawable = this._drawables[i];
 
-                if (baseDrawable is ManagedDrawable managedDrawable) tempDrawManaged.Add(managedDrawable);
-                if (baseDrawable is UnmanagedDrawable unmanagedDrawable) tempDrawUnmanaged.Add(unmanagedDrawable);
+                switch (baseDrawable) {
+                    case ManagedDrawable managedDrawable:
+                        this.tempDrawManaged.Add(managedDrawable);
+                        break;
+                    case UnmanagedDrawable unmanagedDrawable:
+                        this.tempDrawUnmanaged.Add(unmanagedDrawable);
+                        break;
+                }
             }
 
             batch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
@@ -80,8 +86,14 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
             for (int i = 0; i < tempCount; i++) {
                 BaseDrawable baseDrawable = this._drawables[i];
 
-                if (baseDrawable is ManagedDrawable managedDrawable) tempUpdateManaged.Add(managedDrawable);
-                if (baseDrawable is UnmanagedDrawable unmanagedDrawable) tempUpdateUnmanaged.Add(unmanagedDrawable);
+                switch (baseDrawable) {
+                    case ManagedDrawable managedDrawable:
+                        this.tempUpdateManaged.Add(managedDrawable);
+                        break;
+                    case UnmanagedDrawable unmanagedDrawable:
+                        this.tempUpdateUnmanaged.Add(unmanagedDrawable);
+                        break;
+                }
             }
 
             tempCount = this.tempUpdateManaged.Count;
