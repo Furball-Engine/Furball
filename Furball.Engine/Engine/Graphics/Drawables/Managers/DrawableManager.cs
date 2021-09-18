@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -30,7 +31,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                     Color      = currentDrawable.ColorOverride,
                     Effects    = currentDrawable.SpriteEffect,
                     LayerDepth = currentDrawable.Depth,
-                    Origin     = Vector2.Zero,//TODO: add origin
+                    Origin     = CalculateNewOriginPosition(currentDrawable),
                     Position   = currentDrawable.Position,
                     Rotation   = currentDrawable.Rotation,
                     Scale      = currentDrawable.Scale
@@ -47,7 +48,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                     Color      = currentDrawable.ColorOverride,
                     Effects    = currentDrawable.SpriteEffect,
                     LayerDepth = currentDrawable.Depth,
-                    Origin     = Vector2.Zero,//TODO: add origin
+                    Origin     = CalculateNewOriginPosition(currentDrawable),
                     Position   = currentDrawable.Position,
                     Rotation   = currentDrawable.Rotation,
                     Scale      = currentDrawable.Scale
@@ -55,6 +56,16 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
 
                 currentDrawable.Draw(time, batch, args);
             }
+        }
+
+        private static Vector2 CalculateNewOriginPosition(BaseDrawable drawable) {
+            return drawable.OriginType switch {
+                OriginType.TopLeft     => Vector2.Zero,
+                OriginType.TopRight    => new Vector2(drawable.Size.X, 0),
+                OriginType.BottomLeft  => new Vector2(0,               drawable.Size.Y),
+                OriginType.BottomRight => new Vector2(drawable.Size.X, drawable.Size.Y),
+                _                      => throw new ArgumentOutOfRangeException(nameof (drawable.OriginType), "That OriginType is unsupported.")
+            };
         }
 
         public override void Update(GameTime time) {

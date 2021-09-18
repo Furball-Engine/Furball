@@ -6,6 +6,13 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Furball.Engine.Engine.Graphics.Drawables {
+    public enum OriginType {
+        TopLeft,
+        TopRight,
+        BottomLeft,
+        BottomRight,
+    }
+
     public abstract class BaseDrawable {
         /// <summary>
         /// Unprocessed Position where the Drawable is expected to be drawn
@@ -48,6 +55,11 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// List of Tweens
         /// </summary>
         public List<Tween> Tweens = new();
+        /// <summary>
+        /// The position of the Origin to render at
+        /// </summary>
+        public OriginType OriginType = OriginType.TopLeft;
+
         /// <summary>
         /// Updates the pDrawables Tweens
         /// </summary>
