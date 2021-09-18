@@ -16,7 +16,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
             this.tempDrawManaged.Clear();
             this.tempDrawUnmanaged.Clear();
 
-            for (int i = 0; i != this._drawables.Count; i++) {
+            int tempCount = this._drawables.Count;
+            for (int i = 0; i < tempCount; i++) {
                 BaseDrawable baseDrawable = this._drawables[i];
 
                 if (baseDrawable is ManagedDrawable managedDrawable) tempDrawManaged.Add(managedDrawable);
@@ -24,7 +25,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
             }
 
             batch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
-            for (int i = 0; i < tempDrawManaged.Count; i++) {
+            tempCount = this.tempDrawManaged.Count;
+            for (int i = 0; i < tempCount; i++) {
                 ManagedDrawable currentDrawable = tempDrawManaged[i];
 
                 DrawableManagerArgs args = new() {
@@ -41,7 +43,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
             }
             batch.End();
 
-            for (int i = 0; i < tempDrawUnmanaged.Count; i++) {
+            tempCount = this.tempDrawUnmanaged.Count;
+            for (int i = 0; i < tempCount; i++) {
                 UnmanagedDrawable currentDrawable = tempDrawUnmanaged[i];
 
                 DrawableManagerArgs args = new() {
@@ -73,21 +76,24 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
             this.tempUpdateManaged.Clear();
             this.tempUpdateUnmanaged.Clear();
 
-            for (int i = 0; i != this._drawables.Count; i++) {
+            int tempCount = this._drawables.Count;
+            for (int i = 0; i < tempCount; i++) {
                 BaseDrawable baseDrawable = this._drawables[i];
 
                 if (baseDrawable is ManagedDrawable managedDrawable) tempUpdateManaged.Add(managedDrawable);
                 if (baseDrawable is UnmanagedDrawable unmanagedDrawable) tempUpdateUnmanaged.Add(unmanagedDrawable);
             }
 
-            for (int i = 0; i < tempUpdateManaged.Count; i++) {
+            tempCount = this.tempUpdateManaged.Count;
+            for (int i = 0; i < tempCount; i++) {
                 ManagedDrawable currentDrawable = tempUpdateManaged[i];
 
                 currentDrawable.UpdateTweens();
                 currentDrawable.Update(time);
             }
 
-            for (int i = 0; i < tempUpdateUnmanaged.Count; i++) {
+            tempCount = this.tempUpdateUnmanaged.Count;
+            for (int i = 0; i < tempCount; i++) {
                 UnmanagedDrawable currentDrawable = tempUpdateUnmanaged[i];
 
                 currentDrawable.UpdateTweens();
