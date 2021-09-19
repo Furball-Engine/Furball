@@ -1,20 +1,22 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
     public class DrawableManager : UnmanagedDrawable {
         private List<BaseDrawable> _drawables = new();
 
-        private List<ManagedDrawable>   tempDrawManaged     = new();
-        private List<ManagedDrawable>   tempUpdateManaged   = new();
-        private List<UnmanagedDrawable> tempDrawUnmanaged   = new();
-        private List<UnmanagedDrawable> tempUpdateUnmanaged = new();
+        private List<ManagedDrawable>   _tempDrawManaged     = new();
+        private List<ManagedDrawable>   _tempUpdateManaged   = new();
+        private List<UnmanagedDrawable> _tempDrawUnmanaged   = new();
+        private List<UnmanagedDrawable> _tempUpdateUnmanaged = new();
         public override void Draw(GameTime time, SpriteBatch batch, DrawableManagerArgs _ = null) {
             // Split _drawables into 2 lists containing the ManagedDrawables and the UnmanagedDrawables
-            this.tempDrawManaged.Clear();
-            this.tempDrawUnmanaged.Clear();
+            this._tempDrawManaged.Clear();
+            this._tempDrawUnmanaged.Clear();
 
             int tempCount = this._drawables.Count;
             for (int i = 0; i < tempCount; i++) {
@@ -22,10 +24,10 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
 
                 switch (baseDrawable) {
                     case ManagedDrawable managedDrawable:
-                        this.tempDrawManaged.Add(managedDrawable);
+                        this._tempDrawManaged.Add(managedDrawable);
                         break;
                     case UnmanagedDrawable unmanagedDrawable:
-                        this.tempDrawUnmanaged.Add(unmanagedDrawable);
+                        this._tempDrawUnmanaged.Add(unmanagedDrawable);
                         break;
                 }
             }
@@ -33,9 +35,9 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
             float resRatio = (float)FurballGame.Instance.GraphicsDevice.Viewport.Height / FurballGame.DEFAULT_WINDOW_HEIGHT;
 
             batch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
-            tempCount = this.tempDrawManaged.Count;
+            tempCount = this._tempDrawManaged.Count;
             for (int i = 0; i < tempCount; i++) {
-                ManagedDrawable currentDrawable = tempDrawManaged[i];
+                ManagedDrawable currentDrawable = this._tempDrawManaged[i];
 
                 DrawableManagerArgs args = new() {
                     Color      = currentDrawable.ColorOverride,
@@ -51,9 +53,9 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
             }
             batch.End();
 
-            tempCount = this.tempDrawUnmanaged.Count;
+            tempCount = this._tempDrawUnmanaged.Count;
             for (int i = 0; i < tempCount; i++) {
-                UnmanagedDrawable currentDrawable = tempDrawUnmanaged[i];
+                UnmanagedDrawable currentDrawable = this._tempDrawUnmanaged[i];
 
                 DrawableManagerArgs args = new() {
                     Color      = currentDrawable.ColorOverride,
@@ -81,8 +83,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
 
         public override void Update(GameTime time) {
             // Split _drawables into 2 lists containing the ManagedDrawables and the UnmanagedDrawables
-            this.tempUpdateManaged.Clear();
-            this.tempUpdateUnmanaged.Clear();
+            this._tempUpdateManaged.Clear();
+            this._tempUpdateUnmanaged.Clear();
 
             int tempCount = this._drawables.Count;
             for (int i = 0; i < tempCount; i++) {
@@ -90,25 +92,71 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
 
                 switch (baseDrawable) {
                     case ManagedDrawable managedDrawable:
-                        this.tempUpdateManaged.Add(managedDrawable);
+                        this._tempUpdateManaged.Add(managedDrawable);
                         break;
                     case UnmanagedDrawable unmanagedDrawable:
-                        this.tempUpdateUnmanaged.Add(unmanagedDrawable);
+                        this._tempUpdateUnmanaged.Add(unmanagedDrawable);
                         break;
                 }
             }
 
-            tempCount = this.tempUpdateManaged.Count;
+            this._tempUpdateManaged   = this._tempUpdateManaged.OrderBy(o => o.Depth).ToList();
+            this._tempUpdateUnmanaged = this._tempUpdateUnmanaged.OrderBy(o => o.Depth).ToList();
+
+            bool hoverHandled = false;
+            bool clickHandled = false;
+
+            tempCount = this._tempUpdateManaged.Count;
             for (int i = 0; i < tempCount; i++) {
-                ManagedDrawable currentDrawable = tempUpdateManaged[i];
+                ManagedDrawable currentDrawable = this._tempUpdateManaged[i];
+
+                Rectangle rect = new(currentDrawable.Position.ToPoint(), currentDrawable.Size.ToPoint());
+
+                if (rect.Contains(FurballGame.InputManager.CursorStates[0].State.Position)) {
+                    if (FurballGame.InputManager.CursorStates[0].State.LeftButton == ButtonState.Pressed) {
+                        if (!clickHandled) {
+                            if (!currentDrawable.IsClicked) {
+                                currentDrawable.InvokeOnClick(this);
+                                currentDrawable.IsClicked = true;
+                            }
+
+                            clickHandled = true;
+                        }
+                    } else {
+                        if (currentDrawable.IsClicked) {
+                            currentDrawable.InvokeOnUnClick(this);
+                            currentDrawable.IsClicked = false;
+                        }
+                    }
+                    if (!hoverHandled) {
+                        if (!currentDrawable.IsHovered) {
+                            currentDrawable.InvokeOnHover(this);
+                            currentDrawable.IsHovered = true;
+                        }
+
+                        hoverHandled = true;
+                    }
+                } else {
+                    if (FurballGame.InputManager.CursorStates[0].State.LeftButton == ButtonState.Released) {
+                        if (currentDrawable.IsClicked) {
+                            currentDrawable.InvokeOnUnClick(this);
+                            currentDrawable.IsClicked = false;
+                        }
+                    }
+                    if (currentDrawable.IsHovered) {
+                        currentDrawable.InvokeOnUnHover(this);
+                        currentDrawable.IsHovered = false;
+                    }
+                }
+
 
                 currentDrawable.UpdateTweens();
                 currentDrawable.Update(time);
             }
 
-            tempCount = this.tempUpdateUnmanaged.Count;
+            tempCount = this._tempUpdateUnmanaged.Count;
             for (int i = 0; i < tempCount; i++) {
-                UnmanagedDrawable currentDrawable = tempUpdateUnmanaged[i];
+                UnmanagedDrawable currentDrawable = this._tempUpdateUnmanaged[i];
 
                 currentDrawable.UpdateTweens();
                 currentDrawable.Update(time);

@@ -92,11 +92,11 @@ namespace Furball.Engine {
             this.ChangeScreenSize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
 
             if (RuntimeInfo.IsDebug()) {
-                DebugFpsDraw = new TextDrawable(ContentReader.LoadRawAsset("default-font.ttf"), "", 50);
+                DebugFpsDraw = new TextDrawable(ContentReader.LoadRawAsset("default-font.ttf"), "a", 50);
                 DebugOverlayDrawableManager.Add(DebugFpsDraw);
 
-                DebugFpsUpdate = new TextDrawable(ContentReader.LoadRawAsset("default-font.ttf"), "", 50) {
-                    Position = new Vector2(0, DebugFpsDraw.Height)
+                DebugFpsUpdate = new TextDrawable(ContentReader.LoadRawAsset("default-font.ttf"), "a", 50) {
+                    Position = new Vector2(0, DebugFpsDraw.Size.Y)
                 };
                 DebugOverlayDrawableManager.Add(DebugFpsUpdate);
             }

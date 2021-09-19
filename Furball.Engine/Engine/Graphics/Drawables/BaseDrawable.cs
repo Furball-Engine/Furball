@@ -1,7 +1,8 @@
+using System;
 using System.Collections.Generic;
+using Furball.Engine.Engine.Timing;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes;
-using Furball.Engine.Engine.Timing;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -63,6 +64,28 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// Whether to scale and move the drawable when the resolution changes
         /// </summary>
         public bool ResolutionScale = true;
+        public bool IsHovered;
+        public bool IsClicked;
+        public event EventHandler OnHover;
+        public void InvokeOnHover(object sender) {
+            if (this.OnHover != null)
+                this.OnHover.Invoke(sender, null!);
+        }
+        public event EventHandler OnUnHover;
+        public void InvokeOnUnHover(object sender) {
+            if (this.OnUnHover != null)
+                this.OnUnHover.Invoke(sender, null!);
+        }
+        public event EventHandler OnClick;
+        public void InvokeOnClick(object sender) {
+            if (this.OnClick != null)
+                this.OnClick.Invoke(sender, null!);
+        }
+        public event EventHandler OnUnClick;
+        public void InvokeOnUnClick(object sender) {
+            if (this.OnUnClick != null)
+                this.OnUnClick.Invoke(sender, null!);
+        }
 
         /// <summary>
         /// Updates the pDrawables Tweens

@@ -22,6 +22,13 @@ namespace Furball.Game.Screens {
             whiteTexture.Tweens.Add(new FloatTween(TweenType.Fade,     1f, 0.5f,                                     1000, 10000));
             whiteTexture.Tweens.Add(new ColorTween(TweenType.Color, Color.White, Color.Red, 1000, 10000));
 
+            whiteTexture.OnClick += delegate {
+                Console.WriteLine("clicked");
+            };
+            whiteTexture.OnUnClick += delegate {
+                Console.WriteLine("unclicked");
+            };
+
             this.Manager.Add(whiteTexture);
 
             //AudioStream stream = AudioEngine.LoadFile("testaudio.mp3");
