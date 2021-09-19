@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Globalization;
 using Furball.Engine.Engine;
 using Furball.Engine.Engine.Audio;
+using Furball.Engine.Engine.Graphics;
 using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Furball.Engine.Engine.Input;
@@ -86,11 +87,10 @@ namespace Furball.Engine {
             this._graphics.ApplyChanges();
 
             if (RuntimeInfo.IsDebug()) {
-                // TODO: implement a proper ContentReader
-                DebugFpsDraw = new TextDrawable(File.ReadAllBytes(Path.Combine(this.Content.RootDirectory, "default-font.ttf")), "", 50);
+                DebugFpsDraw = new TextDrawable(ContentReader.LoadRawAsset("default-font.ttf"), "", 50);
                 DebugOverlayDrawableManager.Add(DebugFpsDraw);
 
-                DebugFpsUpdate = new TextDrawable(File.ReadAllBytes(Path.Combine(this.Content.RootDirectory, "default-font.ttf")), "", 50) {
+                DebugFpsUpdate = new TextDrawable(ContentReader.LoadRawAsset("default-font.ttf"), "", 50) {
                     Position = new Vector2(0, DebugFpsDraw.Height)
                 };
                 DebugOverlayDrawableManager.Add(DebugFpsUpdate);

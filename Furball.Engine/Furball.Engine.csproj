@@ -17,7 +17,9 @@
         <EmbeddedResource Include="Icon.bmp" />
     </ItemGroup>
     <ItemGroup>
-        <MonoGameContentReference Include="Content\Content.mgcb" />
+        <MonoGameContentReference Include="Content\Content.mgcb">
+            <Link>EngineContent/%(RecursiveDir)%(Filename)%(Extension)</Link>
+        </MonoGameContentReference>
     </ItemGroup>
     <ItemGroup>
         <TrimmerRootAssembly Include="Microsoft.Xna.Framework.Content.ContentTypeReader" Visible="false" />
@@ -29,8 +31,5 @@
         <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.0.1641"/>
         <PackageReference Include="SpriteFontPlus" Version="0.9.2"/>
         <PackageReference Include="SpriteFontPlus.MonoGame" Version="0.7.0.22"/>
-    </ItemGroup>
-    <ItemGroup>
-        <Folder Include="Engine\Graphics" />
     </ItemGroup>
 </Project>
