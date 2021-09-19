@@ -30,6 +30,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                 }
             }
 
+            float resRatio = (float)FurballGame.Instance.GraphicsDevice.Viewport.Height / FurballGame.DEFAULT_WINDOW_HEIGHT;
+
             batch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
             tempCount = this.tempDrawManaged.Count;
             for (int i = 0; i < tempCount; i++) {
@@ -40,9 +42,9 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                     Effects    = currentDrawable.SpriteEffect,
                     LayerDepth = currentDrawable.Depth,
                     Origin     = CalculateNewOriginPosition(currentDrawable),
-                    Position   = currentDrawable.Position,
+                    Position   = currentDrawable.Position * (currentDrawable.ResolutionScale ? resRatio : 1f),
                     Rotation   = currentDrawable.Rotation,
-                    Scale      = currentDrawable.Scale
+                    Scale      = currentDrawable.Scale * (currentDrawable.ResolutionScale ? resRatio : 1f)
                 };
 
                 currentDrawable.Draw(time, batch, args);
@@ -58,9 +60,9 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                     Effects    = currentDrawable.SpriteEffect,
                     LayerDepth = currentDrawable.Depth,
                     Origin     = CalculateNewOriginPosition(currentDrawable),
-                    Position   = currentDrawable.Position,
+                    Position   = currentDrawable.Position * (currentDrawable.ResolutionScale ? resRatio : 1f),
                     Rotation   = currentDrawable.Rotation,
-                    Scale      = currentDrawable.Scale
+                    Scale      = currentDrawable.Scale * (currentDrawable.ResolutionScale ? resRatio : 1f)
                 };
 
                 currentDrawable.Draw(time, batch, args);

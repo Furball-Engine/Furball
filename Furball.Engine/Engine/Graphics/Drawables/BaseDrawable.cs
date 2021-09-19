@@ -59,6 +59,10 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// The position of the Origin to render at
         /// </summary>
         public OriginType OriginType = OriginType.TopLeft;
+        /// <summary>
+        /// Whether to scale and move the drawable when the resolution changes
+        /// </summary>
+        public bool ResolutionScale = true;
 
         /// <summary>
         /// Updates the pDrawables Tweens
