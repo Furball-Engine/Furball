@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
 namespace Furball.Engine.Engine.Platform.Linux {
@@ -7,6 +8,7 @@ namespace Furball.Engine.Engine.Platform.Linux {
         ///     A list of flags available to load a library with
         /// </summary>
         [Flags]
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
         public enum LoadFlags {
             RTLD_LAZY         = 0x00001,
             RTLD_NOW          = 0x00002,
