@@ -32,6 +32,9 @@ namespace Furball.Engine {
         public static DrawableManager DebugOverlayDrawableManager;
         public static bool            DrawDebugOverlay = true;
 
+        public const int DEFAULT_WINDOW_WIDTH  = 1280;
+        public const int DEFAULT_WINDOW_HEIGHT = 720;
+
         public FurballGame(Screen startScreen) {
             this._graphics             = new GraphicsDeviceManager(this);
             this.Content.RootDirectory = "Content";
@@ -54,6 +57,10 @@ namespace Furball.Engine {
             InputManager.RegisterInputMethod(new MonogameMouseInputMethod());
             InputManager.RegisterInputMethod(new MonogameKeyboardInputMethod());
 
+            InputManager.OnMouseDown += delegate {
+                this.ChangeScreenSize(1600, 900);
+            };
+
             if (RuntimeInfo.IsDebug()) {
                 InputManager.OnKeyDown += delegate(object _, Keys keys) {
                     if (keys == Keys.F11) DrawDebugOverlay = !DrawDebugOverlay;
@@ -64,10 +71,6 @@ namespace Furball.Engine {
 
             DrawableManager             = new();
             DebugOverlayDrawableManager = new();
-
-            _graphics.SynchronizeWithVerticalRetrace = false;
-            this.IsFixedTimeStep                     = false;
-            this._graphics.ApplyChanges();
 
             base.Initialize();
         }
@@ -86,9 +89,7 @@ namespace Furball.Engine {
         protected override void LoadContent() {
             SpriteBatch = new SpriteBatch(this.GraphicsDevice);
 
-            this._graphics.PreferredBackBufferWidth  = 1280;
-            this._graphics.PreferredBackBufferHeight = 720;
-            this._graphics.ApplyChanges();
+            this.ChangeScreenSize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
 
             if (RuntimeInfo.IsDebug()) {
                 DebugFpsDraw = new TextDrawable(ContentReader.LoadRawAsset("default-font.ttf"), "", 50);
@@ -99,6 +100,17 @@ namespace Furball.Engine {
                 };
                 DebugOverlayDrawableManager.Add(DebugFpsUpdate);
             }
+        }
+
+        public void ChangeScreenSize(int width, int height, bool fullscreen = false) {
+            this._graphics.PreferredBackBufferWidth  = width;
+            this._graphics.PreferredBackBufferHeight = height;
+
+            this._graphics.IsFullScreen = fullscreen;
+
+            this._graphics.SynchronizeWithVerticalRetrace = false;
+            this.IsFixedTimeStep                          = false;
+            this._graphics.ApplyChanges();
         }
 
         protected override void Update(GameTime gameTime) {
