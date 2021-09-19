@@ -14,7 +14,7 @@ namespace Furball.Engine.Engine.Audio {
             if (windowId == default) windowId = IntPtr.Zero;
 
             if (Platform.RuntimeInfo.CurrentPlatform() == OSPlatform.Linux) {
-                Console.WriteLine("Loading Linux Bass Libraries!");
+                Console.WriteLine("Loading Linux Bass Libraries");
 
                 Library.Load("libbass.so", Library.LoadFlags.RTLD_LAZY | Library.LoadFlags.RTLD_GLOBAL);
 
