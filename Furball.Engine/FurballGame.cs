@@ -102,9 +102,6 @@ namespace Furball.Engine {
         }
 
         protected override void Update(GameTime gameTime) {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                this.Exit();
-
             if (RuntimeInfo.IsDebug())
                 DebugFpsUpdate.Text = $"update fps: {Math.Round(1 / gameTime.ElapsedGameTime.TotalSeconds).ToString(CultureInfo.InvariantCulture)}";
 
