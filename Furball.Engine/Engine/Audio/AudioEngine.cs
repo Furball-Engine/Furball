@@ -22,7 +22,6 @@ namespace Furball.Engine.Engine.Audio {
             }
 
             Bass.Init(DefaultAudioDevice, 44100, DeviceInitFlags.Default, windowId);
-            Bass.PluginLoad("/usr/lib/libbass_fx.so");
 
             Console.WriteLine($"Bass Version: {Bass.Version}\nBassFx Version: {BassFx.Version}");
         }
