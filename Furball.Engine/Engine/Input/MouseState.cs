@@ -1,5 +1,3 @@
-using System.Xml;
-
 namespace Furball.Engine.Engine.Input {
     public class MouseState {
         public Microsoft.Xna.Framework.Input.MouseState State;

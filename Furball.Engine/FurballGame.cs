@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Diagnostics;
 using System.Globalization;
 using Furball.Engine.Engine;
