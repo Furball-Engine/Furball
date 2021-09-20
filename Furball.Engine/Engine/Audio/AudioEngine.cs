@@ -1,9 +1,10 @@
 using System;
 using System.IO;
-using System.Runtime.InteropServices;
-using Furball.Engine.Engine.Platform.Linux;
 using ManagedBass;
 using ManagedBass.Fx;
+using System.Runtime.InteropServices;
+using Furball.Engine.Engine.Platform.Linux;
+using Furball.Engine.Engine.Audio.Exceptions;
 
 namespace Furball.Engine.Engine.Audio {
     public static class AudioEngine {
@@ -21,7 +22,26 @@ namespace Furball.Engine.Engine.Audio {
                 // Library.Load("/usr/lib/libbass_fx.so", Library.LoadFlags.RTLD_LAZY | Library.LoadFlags.RTLD_GLOBAL);
             }
 
-            Bass.Init(DefaultAudioDevice, 44100, DeviceInitFlags.Default, windowId);
+            bool success = Bass.Init(DefaultAudioDevice, 44100, DeviceInitFlags.Latency | DeviceInitFlags.Default | DeviceInitFlags.Device3D, windowId);
+
+            if (!success) {
+                switch (Bass.LastError) {
+                    case Errors.Device:
+                        throw new BassInvalidDeviceException();
+                    case Errors.Already:
+                        throw new BassAlreadyInitializedException();
+                    case Errors.Driver:
+                        throw new BassNoAvailableDriveException();
+                    case Errors.SampleFormat:
+                        throw new BassSampleFormatNotSupportedException();
+                    case Errors.Memory:
+                        throw new InsufficientMemoryException();
+                    case Errors.No3D:
+                        throw new BassNo3DException();
+                    case Errors.Unknown:
+                        throw new BassUnknownException();
+                }
+            }
 
             Console.WriteLine($"Bass Version: {Bass.Version}\nBassFx Version: {BassFx.Version}");
         }
