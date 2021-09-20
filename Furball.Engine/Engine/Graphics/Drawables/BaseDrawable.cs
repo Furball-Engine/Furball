@@ -64,27 +64,57 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// Whether to scale and move the drawable when the resolution changes
         /// </summary>
         public bool ResolutionScale = true;
+        /// <summary>
+        /// Whether a cursor is hovering over the drawable
+        /// </summary>
         public bool IsHovered;
+        /// <summary>
+        /// Whether the drawable is being clicked
+        /// </summary>
         public bool IsClicked;
+        /// <summary>
+        /// Called whenever a cursor hovers over the drawable
+        /// </summary>
         public event EventHandler OnHover;
+        /// <summary>
+        /// Invokes the OnHover event
+        /// </summary>
+        /// <param name="sender">The sender of the OnHover event</param>
         public void InvokeOnHover(object sender) {
-            if (this.OnHover != null)
-                this.OnHover.Invoke(sender, null!);
+            this.OnHover?.Invoke(sender, null!);
         }
+        /// <summary>
+        /// Called whenever a cursor moves off of the drawable
+        /// </summary>
         public event EventHandler OnUnHover;
+        /// <summary>
+        /// Invokes the OnUnHover event
+        /// </summary>
+        /// <param name="sender">The sender of the OnUnHover event</param>
         public void InvokeOnUnHover(object sender) {
-            if (this.OnUnHover != null)
-                this.OnUnHover.Invoke(sender, null!);
+            this.OnUnHover?.Invoke(sender, null!);
         }
+        /// <summary>
+        /// Called when the drawable is clicked
+        /// </summary>
         public event EventHandler OnClick;
+        /// <summary>
+        /// Invokes the OnClick event
+        /// </summary>
+        /// <param name="sender"></param>
         public void InvokeOnClick(object sender) {
-            if (this.OnClick != null)
-                this.OnClick.Invoke(sender, null!);
+            this.OnClick?.Invoke(sender, null!);
         }
+        /// <summary>
+        /// Called when the drawable is no longer being clicked
+        /// </summary>
         public event EventHandler OnUnClick;
+        /// <summary>
+        /// Invokes the OnUnClick event
+        /// </summary>
+        /// <param name="sender"></param>
         public void InvokeOnUnClick(object sender) {
-            if (this.OnUnClick != null)
-                this.OnUnClick.Invoke(sender, null!);
+            this.OnUnClick?.Invoke(sender, null!);
         }
 
         /// <summary>
