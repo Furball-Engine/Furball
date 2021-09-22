@@ -36,6 +36,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
             this.ColorOverride              = buttonColor;
 
             this.OnHover += delegate {
+                if (!this.Clickable) return;
+                
                 this.Tweens.Add(
                     new ColorTween(
                         TweenType.Color,
@@ -47,6 +49,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
                 );
             };
             this.OnHoverLost += delegate {
+                if (!this.Clickable) return;
+            
                 this.Tweens.Add(
                     new ColorTween(TweenType.Color, this.ColorOverride, this.ButtonColor, this.TimeSource.GetCurrentTime(), this.TimeSource.GetCurrentTime() + 150)
                 );
