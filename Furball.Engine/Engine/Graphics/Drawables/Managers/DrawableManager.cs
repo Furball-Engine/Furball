@@ -113,7 +113,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                 if (rect.Contains(FurballGame.InputManager.CursorStates[0].State.Position)) {
                     if (FurballGame.InputManager.CursorStates[0].State.LeftButton == ButtonState.Pressed) {
                         if (!clickHandled) {
-                            if (!currentDrawable.IsClicked) {
+                            if (!currentDrawable.IsClicked && currentDrawable.Clickable) {
+
                                 currentDrawable.InvokeOnClick(this);
                                 currentDrawable.IsClicked = true;
                             }
@@ -127,7 +128,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                         }
                     }
                     if (!hoverHandled) {
-                        if (!currentDrawable.IsHovered) {
+                        if (!currentDrawable.IsHovered && currentDrawable.Hoverable) {
                             currentDrawable.InvokeOnHover(this);
                             currentDrawable.IsHovered = true;
                         }

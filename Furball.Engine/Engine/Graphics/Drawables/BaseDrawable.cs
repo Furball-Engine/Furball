@@ -85,6 +85,14 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// </summary>
         public bool IsClicked;
         /// <summary>
+        /// Whether the drawable is able to be clicked
+        /// </summary>
+        public bool Clickable = true;
+        /// <summary>
+        /// Whether the drawable is able to be hovered on
+        /// </summary>
+        public bool Hoverable = true;
+        /// <summary>
         /// Called whenever a cursor hovers over the drawable
         /// </summary>
         public event EventHandler OnHover;
