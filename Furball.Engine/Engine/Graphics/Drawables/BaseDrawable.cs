@@ -15,11 +15,23 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
     }
 
     public abstract class BaseDrawable {
+        private Vector2 _position = Vector2.Zero;
+
         /// <summary>
         /// Unprocessed Position where the Drawable is expected to be drawn
         /// <remarks>This variable does not get changed as the DrawableManager translates the Drawable to be Scaled to be properly visible on all resolutions</remarks>
         /// </summary>
-        public Vector2 Position = Vector2.Zero;
+        public Vector2 Position {
+            get => this._position;
+            set {
+                if (value == this._position)
+                    return;
+                this.OnMove?.Invoke(this, value);
+                this._position = value;
+            }
+        }
+
+        public event EventHandler<Vector2> OnMove;
         /// <summary>
         /// Unprocessed Size of the Drawable in Pixels
         /// <remarks>This variable does not get changed as the DrawableManager translates the Drawable to be Scaled to be properly visible on all resolutions</remarks>
