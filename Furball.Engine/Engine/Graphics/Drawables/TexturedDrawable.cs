@@ -22,11 +22,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// <param name="texture">Texture to Draw</param>
         /// <param name="position">Where to Draw</param>
         public TexturedDrawable(Texture2D texture, Vector2 position) {
-            this.Position      = position;
-            this.Rotation      = 0f;
-            this.ColorOverride = Color.White;
-            this.Scale         = new Vector2(1,             1);
-            this.Size          = new Vector2(texture.Width, texture.Height);
+            this.Position = position;
+            this.Size     = new Vector2(texture.Width, texture.Height);
 
             this._texture = texture;
         }

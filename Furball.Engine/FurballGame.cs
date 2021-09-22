@@ -19,6 +19,8 @@ namespace Furball.Engine {
         private GraphicsDeviceManager _graphics;
         private IGameComponent        _running;
 
+        public static Random Random = new();
+
         public static Game         Instance;
         public static SpriteBatch  SpriteBatch;
         public static InputManager InputManager;
@@ -33,6 +35,8 @@ namespace Furball.Engine {
 
         public const int DEFAULT_WINDOW_WIDTH  = 1280;
         public const int DEFAULT_WINDOW_HEIGHT = 720;
+
+        public static float VerticalRatio => (float)Instance.GraphicsDevice.Viewport.Height / DEFAULT_WINDOW_HEIGHT;
 
         public FurballGame(Screen startScreen) {
             this._graphics             = new GraphicsDeviceManager(this);
@@ -55,10 +59,6 @@ namespace Furball.Engine {
             InputManager = new();
             InputManager.RegisterInputMethod(new MonogameMouseInputMethod());
             InputManager.RegisterInputMethod(new MonogameKeyboardInputMethod());
-
-            InputManager.OnMouseDown += delegate {
-                this.ChangeScreenSize(1600, 900);
-            };
 
             if (RuntimeInfo.IsDebug()) {
                 InputManager.OnKeyDown += delegate(object _, Keys keys) {
