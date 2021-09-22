@@ -12,7 +12,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         private float _margin;
         public float Margin => this._margin;
 
-        public Color OutlineColor = Color.Black;
+        public Color OutlineColor;
+        public float OutlineThickness = 1f;
 
         public UiButtonDrawable(string text, byte[] font, float size, Color textColor, Color outlineColor, float margin = 5f) {
             this.TextDrawable = new TextDrawable(font, text, size);
@@ -38,7 +39,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
 
         public override void Draw(GameTime time, SpriteBatch batch, DrawableManagerArgs args) {
             batch.FillRectangle(args.Position, this.Size, args.Color);
-            batch.DrawRectangle(args.Position, this.Size, this.OutlineColor, 1f, args.LayerDepth);
+            batch.DrawRectangle(args.Position, this.Size, this.OutlineColor, this.OutlineThickness, args.LayerDepth);
 
             // FIXME: this is a bit of a hack, it should definitely be done differently
             DrawableManagerArgs tempArgs = args;
