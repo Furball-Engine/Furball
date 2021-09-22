@@ -66,7 +66,6 @@ namespace Furball.Game.Screens {
             //
             //whiteTexture.TimeSource = stream;
 
-
             base.Initialize();
         }
     }
