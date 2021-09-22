@@ -19,6 +19,8 @@ namespace Furball.Engine {
         private GraphicsDeviceManager _graphics;
         private IGameComponent        _running;
 
+        public static Random Random = new();
+
         public static Game         Instance;
         public static SpriteBatch  SpriteBatch;
         public static InputManager InputManager;
@@ -55,10 +57,6 @@ namespace Furball.Engine {
             InputManager = new();
             InputManager.RegisterInputMethod(new MonogameMouseInputMethod());
             InputManager.RegisterInputMethod(new MonogameKeyboardInputMethod());
-
-            InputManager.OnMouseDown += delegate {
-                this.ChangeScreenSize(1600, 900);
-            };
 
             if (RuntimeInfo.IsDebug()) {
                 InputManager.OnKeyDown += delegate(object _, Keys keys) {
