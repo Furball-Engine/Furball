@@ -31,9 +31,8 @@ namespace Furball.Game.Screens {
 
             this.Manager.Add(whiteTexture);
 
-            UiButtonDrawable testButton = new("test button", ContentReader.LoadRawAsset("default-font.ttf"), 50, Color.White, Color.Black) {
-                Position      = new Vector2(200, 200),
-                ColorOverride = Color.Blue
+            UiButtonDrawable testButton = new("test button", ContentReader.LoadRawAsset("default-font.ttf"), 50, Color.Blue, Color.White, Color.Black) {
+                Position = new Vector2(200, 200)
             };
             testButton.OnHover += delegate {
                 testButton.Tweens.Add(

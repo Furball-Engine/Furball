@@ -1,4 +1,6 @@
+using Furball.Engine.Engine.Graphics.Drawables.Tweens;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
+using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
@@ -13,9 +15,10 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         public float Margin => this._margin;
 
         public Color OutlineColor;
+        public Color ButtonColor;
         public float OutlineThickness = 1f;
 
-        public UiButtonDrawable(string text, byte[] font, float size, Color textColor, Color outlineColor, float margin = 5f) {
+        public UiButtonDrawable(string text, byte[] font, float size, Color buttonColor, Color textColor, Color outlineColor, float margin = 5f) {
             this.TextDrawable = new TextDrawable(font, text, size);
 
             this.OnMove += this.RecalculateSize;
@@ -29,6 +32,25 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
 
             this.TextDrawable.ColorOverride = textColor;
             this.OutlineColor               = outlineColor;
+            this.ButtonColor                = buttonColor;
+            this.ColorOverride              = buttonColor;
+
+            this.OnHover += delegate {
+                this.Tweens.Add(
+                new ColorTween(
+                TweenType.Color,
+                this.ButtonColor,
+                new Color(this.ButtonColor.R + 50, this.ButtonColor.G + 50, this.ButtonColor.B + 50),
+                this.TimeSource.GetCurrentTime(),
+                this.TimeSource.GetCurrentTime() + 150
+                )
+                );
+            };
+            this.OnUnHover += delegate {
+                this.Tweens.Add(
+                new ColorTween(TweenType.Color, this.ColorOverride, this.ButtonColor, this.TimeSource.GetCurrentTime(), this.TimeSource.GetCurrentTime() + 150)
+                );
+            };
         }
 
         private void RecalculateSize(object sender, Vector2 newPos) {
