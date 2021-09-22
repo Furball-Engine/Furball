@@ -37,18 +37,18 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
 
             this.OnHover += delegate {
                 this.Tweens.Add(
-                new ColorTween(
-                TweenType.Color,
-                this.ButtonColor,
-                new Color(this.ButtonColor.R + 50, this.ButtonColor.G + 50, this.ButtonColor.B + 50),
-                this.TimeSource.GetCurrentTime(),
-                this.TimeSource.GetCurrentTime() + 150
-                )
+                    new ColorTween(
+                        TweenType.Color,
+                        this.ButtonColor,
+                        new Color(this.ButtonColor.R + 50, this.ButtonColor.G + 50, this.ButtonColor.B + 50),
+                        this.TimeSource.GetCurrentTime(),
+                        this.TimeSource.GetCurrentTime() + 150
+                    )
                 );
             };
             this.OnUnHover += delegate {
                 this.Tweens.Add(
-                new ColorTween(TweenType.Color, this.ColorOverride, this.ButtonColor, this.TimeSource.GetCurrentTime(), this.TimeSource.GetCurrentTime() + 150)
+                    new ColorTween(TweenType.Color, this.ColorOverride, this.ButtonColor, this.TimeSource.GetCurrentTime(), this.TimeSource.GetCurrentTime() + 150)
                 );
             };
         }

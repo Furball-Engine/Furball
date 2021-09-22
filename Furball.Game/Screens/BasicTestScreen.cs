@@ -36,24 +36,24 @@ namespace Furball.Game.Screens {
             };
             testButton.OnHover += delegate {
                 testButton.Tweens.Add(
-                new VectorTween(
-                TweenType.Movement,
-                testButton.Position,
-                new(testButton.Position.X + FurballGame.Random.NextSingle(-50, 50), testButton.Position.Y + FurballGame.Random.NextSingle(-50, 50)),
-                FurballGame.Time,
-                FurballGame.Time + 1000
-                )
+                    new VectorTween(
+                        TweenType.Movement,
+                        testButton.Position,
+                        new(testButton.Position.X + FurballGame.Random.NextSingle(-50, 50), testButton.Position.Y + FurballGame.Random.NextSingle(-50, 50)),
+                        FurballGame.Time,
+                        FurballGame.Time + 1000
+                    )
                 );
             };
             testButton.OnUnHover += delegate {
                 testButton.Tweens.Add(
-                new VectorTween(
-                TweenType.Movement,
-                testButton.Position,
-                new(testButton.Position.X + FurballGame.Random.NextSingle(-50, 50), testButton.Position.Y + FurballGame.Random.NextSingle(-50, 50)),
-                FurballGame.Time,
-                FurballGame.Time + 1000
-                )
+                    new VectorTween(
+                        TweenType.Movement,
+                        testButton.Position,
+                        new(testButton.Position.X + FurballGame.Random.NextSingle(-50, 50), testButton.Position.Y + FurballGame.Random.NextSingle(-50, 50)),
+                        FurballGame.Time,
+                        FurballGame.Time + 1000
+                    )
                 );
             };
             testButton.OnClick += delegate {
@@ -65,7 +65,6 @@ namespace Furball.Game.Screens {
             //stream.Play();
             //
             //whiteTexture.TimeSource = stream;
-
 
             base.Initialize();
         }
