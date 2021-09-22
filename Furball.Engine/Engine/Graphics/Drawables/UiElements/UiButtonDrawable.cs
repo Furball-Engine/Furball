@@ -46,7 +46,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
                     )
                 );
             };
-            this.OnUnHover += delegate {
+            this.OnHoverLost += delegate {
                 this.Tweens.Add(
                     new ColorTween(TweenType.Color, this.ColorOverride, this.ButtonColor, this.TimeSource.GetCurrentTime(), this.TimeSource.GetCurrentTime() + 150)
                 );

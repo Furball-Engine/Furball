@@ -142,7 +142,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                         }
                     }
                     if (currentDrawable.IsHovered) {
-                        currentDrawable.InvokeOnUnHover(this);
+                        currentDrawable.InvokeOnHoverLost(this);
                         currentDrawable.IsHovered = false;
                     }
                 }

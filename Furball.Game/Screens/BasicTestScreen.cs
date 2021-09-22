@@ -45,7 +45,7 @@ namespace Furball.Game.Screens {
                     )
                 );
             };
-            testButton.OnUnHover += delegate {
+            testButton.OnHoverLost += delegate {
                 testButton.Tweens.Add(
                     new VectorTween(
                         TweenType.Movement,

@@ -98,13 +98,13 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// <summary>
         /// Called whenever a cursor moves off of the drawable
         /// </summary>
-        public event EventHandler OnUnHover;
+        public event EventHandler OnHoverLost;
         /// <summary>
         /// Invokes the OnUnHover event
         /// </summary>
         /// <param name="sender">The sender of the OnUnHover event</param>
-        public void InvokeOnUnHover(object sender) {
-            this.OnUnHover?.Invoke(sender, null!);
+        public void InvokeOnHoverLost(object sender) {
+            this.OnHoverLost?.Invoke(sender, null!);
         }
         /// <summary>
         /// Called when the drawable is clicked
