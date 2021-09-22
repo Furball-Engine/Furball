@@ -36,6 +36,8 @@ namespace Furball.Engine {
         public const int DEFAULT_WINDOW_WIDTH  = 1280;
         public const int DEFAULT_WINDOW_HEIGHT = 720;
 
+        public static float VerticalRatio => (float)Instance.GraphicsDevice.Viewport.Height / DEFAULT_WINDOW_HEIGHT;
+
         public FurballGame(Screen startScreen) {
             this._graphics             = new GraphicsDeviceManager(this);
             this.Content.RootDirectory = "Content";

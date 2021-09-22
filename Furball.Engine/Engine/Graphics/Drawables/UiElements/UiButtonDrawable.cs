@@ -45,7 +45,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
             tempArgs.Position.X += this._margin * args.Scale.X;
             tempArgs.Position.Y += this._margin * args.Scale.Y;
             tempArgs.Color      =  this.TextDrawable.ColorOverride;
-            tempArgs.Scale      /= (float)FurballGame.Instance.GraphicsDevice.Viewport.Height / FurballGame.DEFAULT_WINDOW_HEIGHT;
+            tempArgs.Scale      /= FurballGame.VerticalRatio;
             this.TextDrawable.Draw(time, batch, tempArgs);
         }
     }
