@@ -1,4 +1,5 @@
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
+using Furball.Engine.Engine.Helpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -15,7 +16,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// Crop Rectangle, this basically tells which part of the Texture to Render
         /// Leave null to draw the entire Texture
         /// </summary>
-        private Rectangle? _cropped = null;
+        private Rectangle? _cropping = null;
         public override Vector2 Size => new(this._texture.Width, this._texture.Height);
         /// <summary>
         /// TexturedDrawable Constructor
@@ -32,24 +33,24 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// </summary>
         /// <param name="texture">Texture to Draw</param>
         /// <param name="position">Where to Draw</param>
-        /// <param name="cropped">What Part to Draw</param>
+        /// <param name="cropping">What Part to Draw</param>
         /// <param name="rotation">Rotation in Radians</param>
-        public TexturedDrawable(Texture2D texture, Vector2 position, Rectangle cropped, float rotation = 0f) {
+        public TexturedDrawable(Texture2D texture, Vector2 position, Rectangle cropping, float rotation = 0f) {
             this.Position = position;
             this.Rotation = rotation;
 
-            this._cropped = cropped;
+            this._cropping = cropping;
             this._texture = texture;
         }
 
         public override void Draw(GameTime time, SpriteBatch batch, DrawableManagerArgs args) {
-            batch.Draw(this._texture, args.Position, this._cropped, args.Color, args.Rotation, args.Origin, args.Scale, args.Effects, args.LayerDepth);
+            batch.Draw(this._texture, args, this._cropping);
         }
 
         /// <summary>
         /// Changes the Cropping of the Texture
         /// </summary>
         /// <param name="crop">New Cropping</param>
-        public void ChangeCropping(Rectangle? crop) => this._cropped = crop;
+        public void ChangeCropping(Rectangle? crop) => this._cropping = crop;
     }
 }
