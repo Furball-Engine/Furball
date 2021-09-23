@@ -75,6 +75,17 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
             }
         }
 
+        public RenderTarget2D DrawRenderTarget2D(GameTime time, SpriteBatch batch, DrawableManagerArgs _ = null) {
+            RenderTarget2D target = new RenderTarget2D(FurballGame.Instance.GraphicsDevice, FurballGame.WindowWidth, FurballGame.WindowHeight);
+            FurballGame.Instance.GraphicsDevice.SetRenderTarget(target);
+
+            this.Draw(time, batch, _);
+
+            FurballGame.Instance.GraphicsDevice.SetRenderTarget(null);
+
+            return target;
+        }
+
         private static Vector2 CalculateNewOriginPosition(BaseDrawable drawable) {
             return drawable.OriginType switch {
                 OriginType.TopLeft     => Vector2.Zero,
