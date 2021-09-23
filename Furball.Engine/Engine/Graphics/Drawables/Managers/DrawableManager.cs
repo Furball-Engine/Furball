@@ -13,6 +13,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
         private List<ManagedDrawable>   _tempUpdateManaged   = new();
         private List<UnmanagedDrawable> _tempDrawUnmanaged   = new();
         private List<UnmanagedDrawable> _tempUpdateUnmanaged = new();
+
         public override void Draw(GameTime time, SpriteBatch batch, DrawableManagerArgs _ = null) {
             // Split _drawables into 2 lists containing the ManagedDrawables and the UnmanagedDrawables
             this._tempDrawManaged.Clear();
@@ -33,6 +34,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
             }
 
             batch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
+
             tempCount = this._tempDrawManaged.Count;
             for (int i = 0; i < tempCount; i++) {
                 ManagedDrawable currentDrawable = this._tempDrawManaged[i];
@@ -52,6 +54,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                 if(rect.Intersects(FurballGame.DisplayRect))
                     currentDrawable.Draw(time, batch, args);
             }
+
             batch.End();
 
             tempCount = this._tempDrawUnmanaged.Count;
@@ -116,18 +119,30 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                 if (rect.Contains(FurballGame.InputManager.CursorStates[0].State.Position)) {
                     if (FurballGame.InputManager.CursorStates[0].State.LeftButton == ButtonState.Pressed) {
                         if (!clickHandled) {
-                            if (!currentDrawable.IsClicked && currentDrawable.Clickable) {
+                            if (currentDrawable.Clickable) {
+                                if (!currentDrawable.IsClicked) {
+                                    currentDrawable.InvokeOnClick(this);
+                                    currentDrawable.IsClicked = true;
+                                } else {
+                                    if(!currentDrawable.IsDragging)
+                                        currentDrawable.InvokeOnDragBegin(this);
 
-                                currentDrawable.InvokeOnClick(this);
-                                currentDrawable.IsClicked = true;
+                                    currentDrawable.InvokeOnDrag(this);
+                                    currentDrawable.IsDragging = true;
+                                }
                             }
 
                             clickHandled = true;
                         }
                     } else {
                         if (currentDrawable.IsClicked) {
-                            currentDrawable.InvokeOnUnClick(this);
+                            currentDrawable.InvokeOnClickUp(this);
                             currentDrawable.IsClicked = false;
+
+                            if (currentDrawable.IsDragging) {
+                                currentDrawable.IsDragging = false;
+                                currentDrawable.InvokeOnDragEnd(this);
+                            }
                         }
                     }
                     if (!hoverHandled) {
@@ -141,7 +156,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                 } else {
                     if (FurballGame.InputManager.CursorStates[0].State.LeftButton == ButtonState.Released) {
                         if (currentDrawable.IsClicked) {
-                            currentDrawable.InvokeOnUnClick(this);
+                            currentDrawable.InvokeOnClickUp(this);
                             currentDrawable.IsClicked = false;
                         }
                     }

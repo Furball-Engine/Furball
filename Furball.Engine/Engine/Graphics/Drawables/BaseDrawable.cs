@@ -84,6 +84,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// Whether the drawable is being clicked
         /// </summary>
         public bool IsClicked;
+
+        public bool IsDragging;
         /// <summary>
         /// Whether the drawable is able to be clicked
         /// </summary>
@@ -128,13 +130,31 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// <summary>
         /// Called when the drawable is no longer being clicked
         /// </summary>
-        public event EventHandler OnUnClick;
+        public event EventHandler OnClickUp;
         /// <summary>
         /// Invokes the OnUnClick event
         /// </summary>
         /// <param name="sender"></param>
-        public void InvokeOnUnClick(object sender) {
-            this.OnUnClick?.Invoke(sender, null!);
+        public void InvokeOnClickUp(object sender) {
+            this.OnClickUp?.Invoke(sender, null!);
+        }
+
+        public event EventHandler OnDragBegin;
+
+        public void InvokeOnDragBegin(object sender) {
+            this.OnDragBegin?.Invoke(sender, null!);
+        }
+
+        public event EventHandler OnDrag;
+
+        public void InvokeOnDrag(object sender) {
+            this.OnDrag?.Invoke(sender, null!);
+        }
+
+        public event EventHandler OnDragEnd;
+
+        public void InvokeOnDragEnd(object sender) {
+            this.OnDragEnd?.Invoke(sender, null!);
         }
 
         /// <summary>
