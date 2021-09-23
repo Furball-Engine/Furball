@@ -114,20 +114,23 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
             for (int i = 0; i < tempCount; i++) {
                 ManagedDrawable currentDrawable = this._tempUpdateManaged[i];
 
+                #region Input
+
+                Point cursor = FurballGame.InputManager.CursorStates[0].State.Position;
                 Rectangle rect = new(currentDrawable.Position.ToPoint(), currentDrawable.Size.ToPoint());
 
-                if (rect.Contains(FurballGame.InputManager.CursorStates[0].State.Position)) {
+                if (rect.Contains(cursor)) {
                     if (FurballGame.InputManager.CursorStates[0].State.LeftButton == ButtonState.Pressed) {
                         if (!clickHandled) {
                             if (currentDrawable.Clickable) {
                                 if (!currentDrawable.IsClicked) {
-                                    currentDrawable.InvokeOnClick(this, FurballGame.InputManager.CursorStates[0].State.Position);
+                                    currentDrawable.InvokeOnClick(this, cursor);
                                     currentDrawable.IsClicked = true;
                                 } else {
                                     if(!currentDrawable.IsDragging)
-                                        currentDrawable.InvokeOnDragBegin(this, FurballGame.InputManager.CursorStates[0].State.Position);
+                                        currentDrawable.InvokeOnDragBegin(this, cursor);
 
-                                    currentDrawable.InvokeOnDrag(this, FurballGame.InputManager.CursorStates[0].State.Position);
+                                    currentDrawable.InvokeOnDrag(this, cursor);
                                     currentDrawable.IsDragging = true;
                                 }
                             }
@@ -136,12 +139,12 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                         }
                     } else {
                         if (currentDrawable.IsClicked) {
-                            currentDrawable.InvokeOnClickUp(this, FurballGame.InputManager.CursorStates[0].State.Position);
+                            currentDrawable.InvokeOnClickUp(this, cursor);
                             currentDrawable.IsClicked = false;
 
                             if (currentDrawable.IsDragging) {
                                 currentDrawable.IsDragging = false;
-                                currentDrawable.InvokeOnDragEnd(this, FurballGame.InputManager.CursorStates[0].State.Position);
+                                currentDrawable.InvokeOnDragEnd(this, cursor);
                             }
                         }
                     }
@@ -156,7 +159,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                 } else {
                     if (FurballGame.InputManager.CursorStates[0].State.LeftButton == ButtonState.Released) {
                         if (currentDrawable.IsClicked) {
-                            currentDrawable.InvokeOnClickUp(this, FurballGame.InputManager.CursorStates[0].State.Position);
+                            currentDrawable.InvokeOnClickUp(this, cursor);
                             currentDrawable.IsClicked = false;
                         }
                     }
@@ -165,6 +168,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                         currentDrawable.IsHovered = false;
                     }
                 }
+
+                #endregion
 
 
                 currentDrawable.UpdateTweens();
