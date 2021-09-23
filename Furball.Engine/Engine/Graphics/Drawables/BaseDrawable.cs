@@ -119,42 +119,49 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// <summary>
         /// Called when the drawable is clicked
         /// </summary>
-        public event EventHandler OnClick;
+        public event EventHandler<Point> OnClick;
         /// <summary>
         /// Invokes the OnClick event
         /// </summary>
         /// <param name="sender"></param>
-        public void InvokeOnClick(object sender) {
-            this.OnClick?.Invoke(sender, null!);
+        public void InvokeOnClick(object sender, Point position) {
+            this.OnClick?.Invoke(sender, position);
         }
         /// <summary>
         /// Called when the drawable is no longer being clicked
         /// </summary>
-        public event EventHandler OnClickUp;
+        public event EventHandler<Point> OnClickUp;
         /// <summary>
         /// Invokes the OnUnClick event
         /// </summary>
         /// <param name="sender"></param>
-        public void InvokeOnClickUp(object sender) {
-            this.OnClickUp?.Invoke(sender, null!);
+        public void InvokeOnClickUp(object sender, Point position) {
+            this.OnClickUp?.Invoke(sender, position);
+        }
+        /// <summary>
+        /// Gets fired when the Drawable is first getting started to Drag
+        /// </summary>
+        public event EventHandler<Point> OnDragBegin;
+        /// <summary>
+        /// Invokes the OnDragBegin event
+        /// </summary>
+        /// <param name="sender"></param>
+        public void InvokeOnDragBegin(object sender, Point position) {
+            this.OnDragBegin?.Invoke(sender, position);
+        }
+        /// <summary>
+        /// Gets fired every Input Frame for the duration of the drag
+        /// </summary>
+        public event EventHandler<Point> OnDrag;
+
+        public void InvokeOnDrag(object sender, Point position) {
+            this.OnDrag?.Invoke(sender, position);
         }
 
-        public event EventHandler OnDragBegin;
+        public event EventHandler<Point> OnDragEnd;
 
-        public void InvokeOnDragBegin(object sender) {
-            this.OnDragBegin?.Invoke(sender, null!);
-        }
-
-        public event EventHandler OnDrag;
-
-        public void InvokeOnDrag(object sender) {
-            this.OnDrag?.Invoke(sender, null!);
-        }
-
-        public event EventHandler OnDragEnd;
-
-        public void InvokeOnDragEnd(object sender) {
-            this.OnDragEnd?.Invoke(sender, null!);
+        public void InvokeOnDragEnd(object sender, Point position) {
+            this.OnDragEnd?.Invoke(sender, position);
         }
 
         /// <summary>
