@@ -76,6 +76,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
         }
 
         public RenderTarget2D DrawRenderTarget2D(GameTime time, SpriteBatch batch, DrawableManagerArgs _ = null) {
+            //TODO: reuse rendertargets instead of creating new ones every time
             RenderTarget2D target = new RenderTarget2D(FurballGame.Instance.GraphicsDevice, FurballGame.WindowWidth, FurballGame.WindowHeight);
             FurballGame.Instance.GraphicsDevice.SetRenderTarget(target);
 
