@@ -36,7 +36,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// Unprocessed Size of the Drawable in Pixels
         /// <remarks>This variable does not get changed as the DrawableManager translates the Drawable to be Scaled to be properly visible on all resolutions</remarks>
         /// </summary>
-        public Vector2 Size = Vector2.Zero;
+        public virtual Vector2 Size { get; } = new();
         /// <summary>
         /// Unprocessed Color Override of the Drawable, if a White Texture gets drawn with a red override, voila its red
         /// <remarks>This variable does not get changed as the DrawableManager translates the Drawable to be Scaled to be properly visible on all resolutions</remarks>

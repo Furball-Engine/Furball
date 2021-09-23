@@ -18,17 +18,19 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         public Color ButtonColor;
         public float OutlineThickness = 1f;
 
+        public override Vector2 Size {
+            get {
+                (float textDrawableSizeX, float textDrawableSizeY) = this.TextDrawable.Size;
+
+                return new Vector2(textDrawableSizeX + this._margin * 2f, textDrawableSizeY + this._margin * 2f);
+            }
+        }
+
         public UiButtonDrawable(string text, byte[] font, float size, Color buttonColor, Color textColor, Color outlineColor, float margin = 5f) {
             this.TextDrawable = new TextDrawable(font, text, size);
 
-            this.OnMove += this.RecalculateSize;
-
             this._margin = margin;
             this._text   = text;
-
-            this.Size = new Vector2();
-
-            this.RecalculateSize(this, this.Position);
 
             this.TextDrawable.ColorOverride = textColor;
             this.OutlineColor               = outlineColor;
@@ -55,12 +57,6 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
                     new ColorTween(TweenType.Color, this.ColorOverride, this.ButtonColor, this.TimeSource.GetCurrentTime(), this.TimeSource.GetCurrentTime() + 150)
                 );
             };
-        }
-
-        private void RecalculateSize(object sender, Vector2 newPos) {
-            (float textDrawableSizeX, float textDrawableSizeY) = this.TextDrawable.Size;
-
-            this.Size = new Vector2(textDrawableSizeX + this._margin * 2f, textDrawableSizeY + this._margin * 2f);
         }
 
         public override void Draw(GameTime time, SpriteBatch batch, DrawableManagerArgs args) {

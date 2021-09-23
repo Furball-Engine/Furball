@@ -20,7 +20,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// <summary>
         /// The height of the text
         /// </summary>
-        public new Vector2 Size => this.Font.MeasureString(this.Text);
+        public override Vector2 Size => this.Font.MeasureString(this.Text);
 
         /// <summary>
         /// Creates a new TextDrawable
@@ -31,7 +31,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// <param name="range">The CharacterRange of the SpriteFont</param>
         public TextDrawable(byte[] font, string text, float size, CharacterRange[] range = null) {
             range ??= new[] {
-                CharacterRange.BasicLatin, CharacterRange.Hiragana, CharacterRange.Katakana, CharacterRange.Latin1Supplement
+                CharacterRange.BasicLatin
             };
 
             TtfFontBakerResult fontBakeResult = TtfFontBaker.Bake(font, size, (int)(1024f * (size / 25f)), (int)(1024f * (size / 25f)), range);

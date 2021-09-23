@@ -16,6 +16,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// Leave null to draw the entire Texture
         /// </summary>
         private Rectangle? _cropped = null;
+        public override Vector2 Size => new(this._texture.Width, this._texture.Height);
         /// <summary>
         /// TexturedDrawable Constructor
         /// </summary>
@@ -23,7 +24,6 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// <param name="position">Where to Draw</param>
         public TexturedDrawable(Texture2D texture, Vector2 position) {
             this.Position = position;
-            this.Size     = new Vector2(texture.Width, texture.Height);
 
             this._texture = texture;
         }
