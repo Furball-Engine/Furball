@@ -46,8 +46,11 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                     Rotation   = currentDrawable.Rotation,
                     Scale      = currentDrawable.Scale * (currentDrawable.ResolutionScale ? FurballGame.VerticalRatio : 1f)
                 };
+                
+                Rectangle rect = new(args.Position.ToPoint(), new Point((int)Math.Ceiling(currentDrawable.Size.X * args.Scale.X), (int)Math.Ceiling(currentDrawable.Size.Y * args.Scale.Y)));
 
-                currentDrawable.Draw(time, batch, args);
+                if(rect.Intersects(FurballGame.DisplayRect))
+                    currentDrawable.Draw(time, batch, args);
             }
             batch.End();
 
