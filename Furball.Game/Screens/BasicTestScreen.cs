@@ -12,6 +12,14 @@ using MathHelper=Furball.Engine.Engine.Helpers.MathHelper;
 
 namespace Furball.Game.Screens {
     public class BasicTestScreen : Screen {
+        private UiProgressBarDrawable _progressBar;
+        
+        public override void Update(GameTime gameTime) {
+            this._progressBar.Progress = (gameTime.TotalGameTime.Milliseconds % 1000f) / 1000f;
+            
+            base.Update(gameTime);
+        }
+        
         public override void Initialize() {
             TexturedDrawable whiteTexture = new(ContentReader.LoadMonogameAsset<Texture2D>("white"), new Vector2(240, 240));
 
@@ -67,6 +75,12 @@ namespace Furball.Game.Screens {
 
             this.Manager.Add(testButton);
 
+            this._progressBar = new(ContentReader.LoadRawAsset("default-font.ttf"), new Vector2(200, 40), Color.White, Color.Blue, Color.White) {
+                Position = new Vector2(500, 400)
+            };
+
+            this.Manager.Add(this._progressBar);
+            
             //AudioStream stream = AudioEngine.LoadFile("testaudio.mp3");
             //stream.Play();
             //
