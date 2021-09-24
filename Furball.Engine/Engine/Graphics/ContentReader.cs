@@ -10,6 +10,13 @@ namespace Furball.Engine.Engine.Graphics {
 
         public static int CacheSizeLimit = 4 * 1024 * 1024;//4 MB
 
+        /// <summary>
+        /// Clears the content cache, allowing changed assets to reload
+        /// </summary>
+        public static void ClearCache() {
+            CONTENT_CACHE.Clear();
+        }
+        
         public static pContentType LoadMonogameAsset <pContentType>(string filename, ContentSource source = ContentSource.Game) {
             ContentManager tempManager = new(FurballGame.Instance.Content.ServiceProvider);
 
