@@ -96,6 +96,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                 OriginType.TopRight    => new Vector2(drawable.Size.X, 0),
                 OriginType.BottomLeft  => new Vector2(0,               drawable.Size.Y),
                 OriginType.BottomRight => new Vector2(drawable.Size.X, drawable.Size.Y),
+                OriginType.Center      => new Vector2(drawable.Size.X / 2, drawable.Size.Y / 2),
                 _                      => throw new ArgumentOutOfRangeException(nameof (drawable.OriginType), "That OriginType is unsupported.")
             };
         }
