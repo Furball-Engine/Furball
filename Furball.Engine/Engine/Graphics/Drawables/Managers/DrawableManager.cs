@@ -75,16 +75,19 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
             }
         }
 
+        private RenderTarget2D _target2D;
         public RenderTarget2D DrawRenderTarget2D(GameTime time, SpriteBatch batch, DrawableManagerArgs _ = null) {
-            //TODO: reuse rendertargets instead of creating new ones every time
-            RenderTarget2D target = new RenderTarget2D(FurballGame.Instance.GraphicsDevice, FurballGame.WindowWidth, FurballGame.WindowHeight);
-            FurballGame.Instance.GraphicsDevice.SetRenderTarget(target);
+            if(this._target2D?.Width != FurballGame.WindowWidth || this._target2D?.Height != FurballGame.WindowHeight)
+                this._target2D = new RenderTarget2D(FurballGame.Instance.GraphicsDevice, FurballGame.WindowWidth, FurballGame.WindowHeight);
+            
+            FurballGame.Instance.GraphicsDevice.SetRenderTarget(this._target2D);
 
+            FurballGame.Instance.GraphicsDevice.Clear(Color.Transparent);
             this.Draw(time, batch, _);
 
             FurballGame.Instance.GraphicsDevice.SetRenderTarget(null);
 
-            return target;
+            return this._target2D;
         }
 
         private static Vector2 CalculateNewOriginPosition(BaseDrawable drawable) {
