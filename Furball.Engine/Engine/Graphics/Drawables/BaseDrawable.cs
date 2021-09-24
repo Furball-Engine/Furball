@@ -124,6 +124,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// Invokes the OnClick event
         /// </summary>
         /// <param name="sender"></param>
+        /// <param name="position">The position of the click</param>
         public void InvokeOnClick(object sender, Point position) {
             this.OnClick?.Invoke(sender, position);
         }
@@ -135,6 +136,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// Invokes the OnUnClick event
         /// </summary>
         /// <param name="sender"></param>
+        /// <param name="position">The position when the click was released</param>
         public void InvokeOnClickUp(object sender, Point position) {
             this.OnClickUp?.Invoke(sender, position);
         }
@@ -146,6 +148,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// Invokes the OnDragBegin event
         /// </summary>
         /// <param name="sender"></param>
+        /// <param name="position">The position when dragging began</param>
         public void InvokeOnDragBegin(object sender, Point position) {
             this.OnDragBegin?.Invoke(sender, position);
         }
