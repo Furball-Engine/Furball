@@ -6,10 +6,8 @@ using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens;
 using Furball.Engine.Engine.Graphics.Drawables.UiElements;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes;
-using Furball.Engine.Engine.Input;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MonoGame.Extended;
 using MathHelper=Furball.Engine.Engine.Helpers.MathHelper;
 
 namespace Furball.Game.Screens {
@@ -59,11 +57,11 @@ namespace Furball.Game.Screens {
             //    );
             //};
 
-            testButton.OnDrag += (sender, args) => {
-                testButton.Position = FurballGame.InputManager.CursorStates[0].State.Position.ToVector2() - new Vector2(testButton.Size.X/2, testButton.Size.Y/2);
+            testButton.OnDrag += delegate {
+                testButton.Position = FurballGame.InputManager.CursorStates[0].State.Position.ToVector2() - new Vector2(testButton.Size.X / 2, testButton.Size.Y / 2);
             };
 
-            testButton.OnDragEnd += (sender, args) => {
+            testButton.OnDragEnd += delegate {
                 Console.WriteLine("sdfdsf");
             };
 
