@@ -9,6 +9,7 @@ using Furball.Engine.Engine.Graphics.Drawables.UiElements;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended;
 using MathHelper=Furball.Engine.Engine.Helpers.MathHelper;
 
 namespace Furball.Game.Screens {
@@ -40,32 +41,32 @@ namespace Furball.Game.Screens {
 //
             //this.Manager.Add(whiteTexture);
 //
-            //UiButtonDrawable testButton = new("test button", ContentReader.LoadRawAsset("default-font.ttf"), 50, Color.Blue, Color.White, Color.Black) {
-            //    Position = new Vector2(200, 200),
-            //    Clickable = true
-            //};
-            //testButton.OnHover += delegate {
-            //    testButton.Tweens.Add(
-            //        new VectorTween(
-            //            TweenType.Movement,
-            //            testButton.Position,
-            //            new(testButton.Position.X + FurballGame.Random.NextSingle(-50, 50), testButton.Position.Y + FurballGame.Random.NextSingle(-50, 50)),
-            //            FurballGame.Time,
-            //            FurballGame.Time + 1000
-            //        )
-            //    );
-            //};
-            //testButton.OnHoverLost += delegate {
-            //    testButton.Tweens.Add(
-            //        new VectorTween(
-            //            TweenType.Movement,
-            //            testButton.Position,
-            //            new(testButton.Position.X + FurballGame.Random.NextSingle(-50, 50), testButton.Position.Y + FurballGame.Random.NextSingle(-50, 50)),
-            //            FurballGame.Time,
-            //            FurballGame.Time + 1000
-            //        )
-            //    );
-            //};
+            UiButtonDrawable testButton = new("test button", ContentReader.LoadRawAsset("default-font.ttf"), 50, Color.Blue, Color.White, Color.Black) {
+                Position = new Vector2(200, 200),
+                Clickable = true
+            };
+            testButton.OnHover += delegate {
+                testButton.Tweens.Add(
+                    new VectorTween(
+                        TweenType.Movement,
+                        testButton.Position,
+                        new(testButton.Position.X + FurballGame.Random.NextSingle(-50, 50), testButton.Position.Y + FurballGame.Random.NextSingle(-50, 50)),
+                        FurballGame.Time,
+                        FurballGame.Time + 1000
+                    )
+                );
+            };
+            testButton.OnHoverLost += delegate {
+                testButton.Tweens.Add(
+                    new VectorTween(
+                        TweenType.Movement,
+                        testButton.Position,
+                        new(testButton.Position.X + FurballGame.Random.NextSingle(-50, 50), testButton.Position.Y + FurballGame.Random.NextSingle(-50, 50)),
+                        FurballGame.Time,
+                        FurballGame.Time + 1000
+                    )
+                );
+            };
 
            //testButton.OnDrag += delegate {
            //    testButton.Position = FurballGame.InputManager.CursorStates[0].State.Position.ToVector2() - new Vector2(testButton.Size.X / 2, testButton.Size.Y / 2);
@@ -75,7 +76,7 @@ namespace Furball.Game.Screens {
            //    Console.WriteLine("sdfdsf");
            //};
 
-           //this.Manager.Add(testButton);
+           this.Manager.Add(testButton);
 
            //this._progressBar = new(ContentReader.LoadRawAsset("default-font.ttf"), new Vector2(200, 40), Color.White, Color.Blue, Color.White) {
            //    Position = new Vector2(500, 400)

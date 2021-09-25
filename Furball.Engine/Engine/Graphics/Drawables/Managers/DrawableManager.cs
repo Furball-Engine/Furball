@@ -136,15 +136,17 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
 
                 #region Input
 
-                Point cursor = FurballGame.InputManager.CursorStates[0].State.Position;
+                Point cursor = (FurballGame.InputManager.CursorStates[0].State.Position.ToVector2() / FurballGame.VerticalRatio).ToPoint();
                 ButtonState leftMouseButton = FurballGame.InputManager.CursorStates[0].State.LeftButton;
                 ButtonState rightMouseButton = FurballGame.InputManager.CursorStates[0].State.RightButton;
                 ButtonState middleMouseButton = FurballGame.InputManager.CursorStates[0].State.MiddleButton;
 
-                Rectangle rect = new((currentDrawable.Position - CalculateNewOriginPosition(currentDrawable)).ToPoint(), currentDrawable.Size.ToPoint());
+                Rectangle rect = new(((currentDrawable.Position - CalculateNewOriginPosition(currentDrawable))).ToPoint(), (currentDrawable.Size/ FurballGame.VerticalRatio).ToPoint());
+
+                //Please dont ask how this works i dont know either
 
                 bool circleIntersect = currentDrawable.Circular &&
-                                       Vector2.Distance(cursor.ToVector2() / FurballGame.VerticalRatio, currentDrawable.Position - CalculateNewOriginPosition(currentDrawable)) <
+                                       Vector2.Distance(cursor.ToVector2(), currentDrawable.Position - CalculateNewOriginPosition(currentDrawable)) <
                                        (currentDrawable.CircleRadius / FurballGame.VerticalRatio);
 
                 if (rect.Contains(cursor) && !currentDrawable.Circular || circleIntersect && currentDrawable.Circular) {
