@@ -90,6 +90,7 @@ namespace Furball.Engine {
             }
 
             this.Components.Add(screen);
+            this._running = screen;
         }
 
         protected override void LoadContent() {
