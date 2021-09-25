@@ -137,10 +137,18 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                 #region Input
 
                 Point cursor = FurballGame.InputManager.CursorStates[0].State.Position;
+                ButtonState leftMouseButton = FurballGame.InputManager.CursorStates[0].State.LeftButton;
+                ButtonState rightMouseButton = FurballGame.InputManager.CursorStates[0].State.RightButton;
+                ButtonState middleMouseButton = FurballGame.InputManager.CursorStates[0].State.MiddleButton;
+
                 Rectangle rect = new((currentDrawable.Position - CalculateNewOriginPosition(currentDrawable)).ToPoint(), currentDrawable.Size.ToPoint());
 
-                if (rect.Contains(cursor)) {
-                    if (FurballGame.InputManager.CursorStates[0].State.LeftButton == ButtonState.Pressed) {
+                bool circleIntersect = currentDrawable.Circular &&
+                                       Vector2.Distance(cursor.ToVector2() / FurballGame.VerticalRatio, currentDrawable.Position - CalculateNewOriginPosition(currentDrawable)) <
+                                       (currentDrawable.CircleRadius / FurballGame.VerticalRatio);
+
+                if (rect.Contains(cursor) && !currentDrawable.Circular || circleIntersect && currentDrawable.Circular) {
+                    if (leftMouseButton == ButtonState.Pressed) {
                         if (!clickHandled) {
                             if (currentDrawable.Clickable) {
                                 if (!currentDrawable.IsClicked) {
@@ -177,7 +185,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                         hoverHandled = true;
                     }
                 } else {
-                    if (FurballGame.InputManager.CursorStates[0].State.LeftButton == ButtonState.Released) {
+                    if (leftMouseButton == ButtonState.Released) {
                         if (currentDrawable.IsClicked) {
                             currentDrawable.InvokeOnClickUp(this, cursor);
                             currentDrawable.IsClicked = false;
@@ -190,7 +198,6 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                 }
 
                 #endregion
-
 
                 currentDrawable.UpdateTweens();
                 currentDrawable.Update(time);

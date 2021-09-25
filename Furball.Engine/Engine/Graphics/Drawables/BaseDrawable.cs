@@ -39,6 +39,14 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// </summary>
         public virtual Vector2 Size { get; } = new();
         /// <summary>
+        /// Is the Drawable Circular? (Used for Click detection and other hitboxes)
+        /// </summary>
+        public bool Circular = false;
+        /// <summary>
+        /// Radius of the Circle (Used for Click detection and other hitboxes)
+        /// </summary>
+        public float CircleRadius = 0f;
+        /// <summary>
         /// Unprocessed Color Override of the Drawable, if a White Texture gets drawn with a red override, voila its red
         /// <remarks>This variable does not get changed as the DrawableManager translates the Drawable to be Scaled to be properly visible on all resolutions</remarks>
         /// </summary>
