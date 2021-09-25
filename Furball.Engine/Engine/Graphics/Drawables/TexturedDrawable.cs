@@ -17,6 +17,10 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// Leave null to draw the entire Texture
         /// </summary>
         private Rectangle? _cropping = null;
+        /// <summary>
+        /// Unprocessed Size of the Drawable in Pixels
+        /// <remarks>This variable does not get changed as the DrawableManager translates the Drawable to be Scaled to be properly visible on all resolutions</remarks>
+        /// </summary>
         public override Vector2 Size => new(this._texture.Width, this._texture.Height);
         /// <summary>
         /// TexturedDrawable Constructor

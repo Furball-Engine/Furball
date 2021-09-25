@@ -85,7 +85,9 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// Whether the drawable is being clicked
         /// </summary>
         public bool IsClicked;
-
+        /// <summary>
+        /// Is the Drawable being dragged?
+        /// </summary>
         public bool IsDragging;
         /// <summary>
         /// Whether the drawable is able to be clicked
@@ -161,17 +163,26 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// Gets fired every Input Frame for the duration of the drag
         /// </summary>
         public event EventHandler<Point> OnDrag;
-
+        /// <summary>
+        /// Invokes the OnDrag event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="position">Position where the cursor currently is</param>
         public void InvokeOnDrag(object sender, Point position) {
             this.OnDrag?.Invoke(sender, position);
         }
-
+        /// <summary>
+        /// Gets Fired when the Dragging stops
+        /// </summary>
         public event EventHandler<Point> OnDragEnd;
-
+        /// <summary>
+        /// Invokes the OnDragEnd event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="position">Where dragging stopped</param>
         public void InvokeOnDragEnd(object sender, Point position) {
             this.OnDragEnd?.Invoke(sender, position);
         }
-
         /// <summary>
         /// Updates the pDrawables Tweens
         /// </summary>

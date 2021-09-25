@@ -4,12 +4,12 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 
 namespace Furball.Engine.Engine.Graphics.Drawables.Primatives {
-    public class CirclePrimativeDrawable : ManagedDrawable {
+    public class CirclePrimitiveDrawable : ManagedDrawable {
         public float Radius;
         public float Thickness = 1f;
         public int   Sides     = 10;
 
-        public CirclePrimativeDrawable(float radius, float thickness, Color color) {
+        public CirclePrimitiveDrawable(float radius, float thickness, Color color) {
             this.Radius        = radius;
             this.Thickness     = thickness;
             this.ColorOverride = color;
