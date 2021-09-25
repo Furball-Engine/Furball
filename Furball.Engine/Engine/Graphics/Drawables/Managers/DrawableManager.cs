@@ -133,7 +133,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                 #region Input
 
                 Point cursor = FurballGame.InputManager.CursorStates[0].State.Position;
-                Rectangle rect = new(currentDrawable.Position.ToPoint(), currentDrawable.Size.ToPoint());
+                Rectangle rect = new((currentDrawable.Position - CalculateNewOriginPosition(currentDrawable)).ToPoint(), currentDrawable.Size.ToPoint());
 
                 if (rect.Contains(cursor)) {
                     if (FurballGame.InputManager.CursorStates[0].State.LeftButton == ButtonState.Pressed) {
