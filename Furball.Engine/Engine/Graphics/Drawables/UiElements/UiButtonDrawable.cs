@@ -4,6 +4,7 @@ using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
+using SpriteFontPlus;
 
 namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
     public class UiButtonDrawable : ManagedDrawable {
@@ -26,11 +27,10 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
             }
         }
 
-        public UiButtonDrawable(string text, byte[] font, float size, Color buttonColor, Color textColor, Color outlineColor, float margin = 5f) {
-            this.TextDrawable = new TextDrawable(font, text, size);
-
-            this._margin = margin;
-            this._text   = text;
+        public UiButtonDrawable(string text, byte[] font, float size, Color buttonColor, Color textColor, Color outlineColor, float margin = 5f, CharacterRange[] charRange = null) {
+            this.TextDrawable = new TextDrawable(font, text, size, charRange);
+            this._margin      = margin;
+            this._text        = text;
 
             this.TextDrawable.ColorOverride = textColor;
             this.OutlineColor               = outlineColor;
