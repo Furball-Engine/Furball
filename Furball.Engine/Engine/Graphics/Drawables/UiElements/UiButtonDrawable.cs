@@ -60,8 +60,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         }
 
         public override void Draw(GameTime time, SpriteBatch batch, DrawableManagerArgs args) {
-            batch.FillRectangle(args.Position, this.Size, args.Color);
-            batch.DrawRectangle(args.Position, this.Size, this.OutlineColor, this.OutlineThickness, args.LayerDepth);
+            batch.FillRectangle(args.Position - args.Origin, this.Size, args.Color);
+            batch.DrawRectangle(args.Position - args.Origin, this.Size, this.OutlineColor, this.OutlineThickness, args.LayerDepth);
 
             // FIXME: this is a bit of a hack, it should definitely be done differently
             DrawableManagerArgs tempArgs = args;
