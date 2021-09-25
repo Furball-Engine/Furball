@@ -43,6 +43,8 @@ namespace Furball.Engine {
         public static float HorizontalRatio => (float)WindowWidth / DEFAULT_WINDOW_WIDTH;
         public static Rectangle DisplayRect => new(0, 0, Instance.GraphicsDevice.Viewport.Width, Instance.GraphicsDevice.Viewport.Height);
 
+        public const string DEFAULT_FONT = "default-font.ttf";
+
         public FurballGame(Screen startScreen) {
             this._graphics             = new GraphicsDeviceManager(this);
             this.Content.RootDirectory = "Content";
@@ -96,10 +98,10 @@ namespace Furball.Engine {
             this.ChangeScreenSize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
 
             if (RuntimeInfo.IsDebug()) {
-                DebugFpsDraw = new TextDrawable(ContentReader.LoadRawAsset("default-font.ttf"), "a", 50);
+                DebugFpsDraw = new TextDrawable(ContentReader.LoadRawAsset(DEFAULT_FONT), "a", 50);
                 DebugOverlayDrawableManager.Add(DebugFpsDraw);
 
-                DebugFpsUpdate = new TextDrawable(ContentReader.LoadRawAsset("default-font.ttf"), "a", 50) {
+                DebugFpsUpdate = new TextDrawable(ContentReader.LoadRawAsset(DEFAULT_FONT), "a", 50) {
                     Position = new Vector2(0, DebugFpsDraw.Size.Y)
                 };
                 DebugOverlayDrawableManager.Add(DebugFpsUpdate);
