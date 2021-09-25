@@ -167,7 +167,19 @@ namespace Furball.Engine.Engine.Audio {
         }
 
         public void Play() {
-            bool success = Bass.ChannelPlay(this._audioHandle);
+            bool success = Bass.ChannelPlay(this._audioHandle, true);
+
+            if (success) return;
+
+            throw Bass.LastError switch {
+                Errors.Handle => new BassHandleException(),
+                Errors.Decode => new BassDecodeException(),
+                _             => new BassUnknownException()
+            };
+        }
+        
+        public void Resume() {
+            bool success = Bass.ChannelPlay(this._audioHandle, false);
 
             if (success) return;
 
