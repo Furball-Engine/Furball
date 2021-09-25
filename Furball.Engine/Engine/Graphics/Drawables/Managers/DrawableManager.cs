@@ -38,18 +38,21 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
             tempCount = this._tempDrawManaged.Count;
             for (int i = 0; i < tempCount; i++) {
                 ManagedDrawable currentDrawable = this._tempDrawManaged[i];
-
+                if (!currentDrawable.Visible) continue;
+                
+                Vector2 origin = CalculateNewOriginPosition(currentDrawable);
+                
                 DrawableManagerArgs args = new() {
                     Color      = currentDrawable.ColorOverride,
                     Effects    = currentDrawable.SpriteEffect,
                     LayerDepth = currentDrawable.Depth,
-                    Origin     = CalculateNewOriginPosition(currentDrawable),
+                    Origin     = origin,
                     Position   = currentDrawable.Position * (currentDrawable.ResolutionScale ? FurballGame.VerticalRatio : 1f),
                     Rotation   = currentDrawable.Rotation,
                     Scale      = currentDrawable.Scale * (currentDrawable.ResolutionScale ? FurballGame.VerticalRatio : 1f)
                 };
                 
-                Rectangle rect = new(args.Position.ToPoint(), new Point((int)Math.Ceiling(currentDrawable.Size.X * args.Scale.X), (int)Math.Ceiling(currentDrawable.Size.Y * args.Scale.Y)));
+                Rectangle rect = new((args.Position - origin).ToPoint(), new Point((int)Math.Ceiling(currentDrawable.Size.X * args.Scale.X), (int)Math.Ceiling(currentDrawable.Size.Y * args.Scale.Y)));
 
                 if(rect.Intersects(FurballGame.DisplayRect))
                     currentDrawable.Draw(time, batch, args);
@@ -60,6 +63,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
             tempCount = this._tempDrawUnmanaged.Count;
             for (int i = 0; i < tempCount; i++) {
                 UnmanagedDrawable currentDrawable = this._tempDrawUnmanaged[i];
+                if (!currentDrawable.Visible) continue;
 
                 DrawableManagerArgs args = new() {
                     Color      = currentDrawable.ColorOverride,
