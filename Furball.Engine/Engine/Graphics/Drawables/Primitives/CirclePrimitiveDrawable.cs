@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 
-namespace Furball.Engine.Engine.Graphics.Drawables.Primatives {
+namespace Furball.Engine.Engine.Graphics.Drawables.Primitives {
     public class CirclePrimitiveDrawable : ManagedDrawable {
         public float Radius;
         public float Thickness = 1f;
