@@ -234,5 +234,247 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
                 }
             }
         }
+
+        #region Tween Helpers
+
+        public void FadeColor(Color color, int duration, Easing easing = Easing.None) {
+            lock (this.Tweens) {
+                this.Tweens.RemoveAll(tween => tween.TweenType == TweenType.Color);
+            }
+
+            this.Tweens.Add(
+            new ColorTween(
+                    TweenType.Color,
+                    this.ColorOverride,
+                    color,
+                    this.TimeSource.GetCurrentTime(),
+                    this.TimeSource.GetCurrentTime() + duration,
+                    easing
+                )
+            );
+        }
+
+        public void FlashColor(Color color, int duration, Easing easing = Easing.None) {
+            if (this.ColorOverride == color)
+                return;
+
+            lock (this.Tweens) {
+                this.Tweens.RemoveAll(tween => tween.TweenType == TweenType.Color);
+            }
+
+            this.Tweens.Add(
+            new ColorTween(
+                    TweenType.Color,
+                    color,
+                    this.ColorOverride,
+                    this.TimeSource.GetCurrentTime(),
+                    this.TimeSource.GetCurrentTime() + duration,
+                    easing
+                )
+            );
+        }
+
+        public void FadeIn(int duration, Easing easing = Easing.None) {
+            if (this.ColorOverride.A == 255)
+                return;
+
+            lock (this.Tweens) {
+                this.Tweens.RemoveAll(tween => tween.TweenType == TweenType.Color);
+            }
+
+            Color endColor = this.ColorOverride;
+            endColor.A = 255;
+
+            this.Tweens.Add(
+            new ColorTween(
+                    TweenType.Color,
+                    this.ColorOverride,
+                    endColor,
+                    this.TimeSource.GetCurrentTime(),
+                    this.TimeSource.GetCurrentTime() + duration,
+                    easing
+                )
+            );
+        }
+
+        public void FadeInFromZero(int duration, Easing easing = Easing.None) {
+            if (this.ColorOverride.A == 0)
+                return;
+
+            lock (this.Tweens) {
+                this.Tweens.RemoveAll(tween => tween.TweenType == TweenType.Color);
+            }
+
+            Color startColor = this.ColorOverride;
+            startColor.A = 0;
+
+            Color endColor = this.ColorOverride;
+            endColor.A = 255;
+
+            this.Tweens.Add(
+                    new ColorTween(
+                    TweenType.Color,
+                    startColor,
+                    endColor,
+                    this.TimeSource.GetCurrentTime(),
+                    this.TimeSource.GetCurrentTime() + duration,
+                    easing
+                )
+            );
+        }
+
+        public void FadeOut(int duration, Easing easing = Easing.None) {
+            if (this.ColorOverride.A == 0)
+                return;
+
+            lock (this.Tweens) {
+                this.Tweens.RemoveAll(tween => tween.TweenType == TweenType.Color);
+            }
+
+            Color endColor = this.ColorOverride;
+            endColor.A = 0;
+
+            this.Tweens.Add(
+                    new ColorTween(
+                    TweenType.Color,
+                    this.ColorOverride,
+                    endColor,
+                    this.TimeSource.GetCurrentTime(),
+                    this.TimeSource.GetCurrentTime() + duration,
+                    easing
+                )
+            );
+        }
+
+        public void FadeOutFromOne(int duration, Easing easing = Easing.None) {
+            if (this.ColorOverride.A == 0)
+                return;
+
+            lock (this.Tweens) {
+                this.Tweens.RemoveAll(tween => tween.TweenType == TweenType.Color);
+            }
+
+            Color startColor = this.ColorOverride;
+            startColor.A = 255;
+
+            Color endColor = this.ColorOverride;
+            endColor.A = 0;
+
+            this.Tweens.Add(
+                    new ColorTween(
+                    TweenType.Color,
+                    this.ColorOverride,
+                    endColor,
+                    this.TimeSource.GetCurrentTime(),
+                    this.TimeSource.GetCurrentTime() + duration,
+                    easing
+                )
+            );
+        }
+
+        public void MoveTo(Vector2 dest) {
+            this.MoveTo(dest, 0);
+        }
+
+        public void MoveToRelative(Vector2 move) {
+            this.MoveTo(this.Position + move, 0);
+        }
+
+        public void MoveToRelative(Vector2 move, int duration, Easing easing = Easing.None) {
+            this.MoveTo(this.Position + move, duration, easing);
+        }
+
+        public void MoveTo(Vector2 dest, int duration, Easing easing = Easing.None) {
+            if (this.Position == dest)
+                return;
+
+            lock (this.Tweens) {
+                this.Tweens.RemoveAll(tween => tween.TweenType == TweenType.Movement);
+            }
+
+            this.Tweens.Add(
+            new VectorTween(
+                    TweenType.Movement,
+                    this.Position,
+                    dest,
+                    this.TimeSource.GetCurrentTime(),
+                    this.TimeSource.GetCurrentTime() + duration,
+                    easing
+                )
+            );
+        }
+
+        public void RotateRelative(float radians, int duration, Easing easing = Easing.None) {
+            lock (this.Tweens) {
+                this.Tweens.RemoveAll(tween => tween.TweenType == TweenType.Rotation);
+            }
+
+            this.Tweens.Add(
+            new FloatTween(
+                TweenType.Rotation,
+                this.Rotation,
+                this.Rotation + radians,
+                this.TimeSource.GetCurrentTime(),
+                this.TimeSource.GetCurrentTime() + duration,
+                easing
+                )
+            );
+        }
+
+        public void Rotate(float radians, int duration, Easing easing = Easing.None) {
+            lock (this.Tweens) {
+                this.Tweens.RemoveAll(tween => tween.TweenType == TweenType.Rotation);
+            }
+
+            this.Tweens.Add(
+                new FloatTween(
+                    TweenType.Rotation,
+                    this.Rotation,
+                    radians,
+                    this.TimeSource.GetCurrentTime(),
+                    this.TimeSource.GetCurrentTime() + duration,
+                    easing
+                )
+            );
+        }
+        //dumb name because Scale already taken
+        public void DirectScale(Vector2 newScale, int duration, Easing easing = Easing.None) {
+            if (this.Scale == newScale)
+                return;
+
+            lock (this.Tweens) {
+                this.Tweens.RemoveAll(tween => tween.TweenType == TweenType.Scale);
+            }
+
+            this.Tweens.Add(
+            new VectorTween(
+                    TweenType.Scale,
+                    this.Scale,
+                    newScale,
+                    this.TimeSource.GetCurrentTime(),
+                    this.TimeSource.GetCurrentTime() + duration,
+                    easing
+                )
+            );
+        }
+
+        public void ScaleRelative(Vector2 increase, int duration, Easing easing = Easing.None) {
+            lock (this.Tweens) {
+                this.Tweens.RemoveAll(tween => tween.TweenType == TweenType.Scale);
+            }
+
+            this.Tweens.Add(
+            new VectorTween(
+                    TweenType.Scale,
+                    this.Scale,
+                    this.Scale + increase,
+                    this.TimeSource.GetCurrentTime(),
+                    this.TimeSource.GetCurrentTime() + duration,
+                    easing
+                )
+            );
+        }
+
+        #endregion
     }
 }

@@ -141,10 +141,9 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                 ButtonState rightMouseButton = FurballGame.InputManager.CursorStates[0].State.RightButton;
                 ButtonState middleMouseButton = FurballGame.InputManager.CursorStates[0].State.MiddleButton;
 
-                Rectangle rect = new(((currentDrawable.Position - CalculateNewOriginPosition(currentDrawable))).ToPoint(), (currentDrawable.Size/ FurballGame.VerticalRatio).ToPoint());
+                Rectangle rect = new((currentDrawable.Position - CalculateNewOriginPosition(currentDrawable)).ToPoint(), (currentDrawable.Size / FurballGame.VerticalRatio).ToPoint());
 
                 //Please dont ask how this works i dont know either
-
                 bool circleIntersect = currentDrawable.Circular &&
                                        Vector2.Distance(cursor.ToVector2(), currentDrawable.Position - CalculateNewOriginPosition(currentDrawable)) <
                                        (currentDrawable.CircleRadius / FurballGame.VerticalRatio);
