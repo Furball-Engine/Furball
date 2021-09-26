@@ -36,13 +36,14 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         }
 
         public override void Draw(GameTime time, SpriteBatch batch, DrawableManagerArgs args) {
-            batch.FillRectangle(args.Position, new Vector2(this._progressWidth, this.BarSize.Y), args.Color, args.LayerDepth);
-            batch.DrawRectangle(args.Position, this.BarSize, this.OutlineColor, this.OutlineThickness, args.LayerDepth);
+            batch.FillRectangle(args.Position - args.Origin, new Vector2(this._progressWidth, this.BarSize.Y), args.Color, args.LayerDepth);
+            batch.DrawRectangle(args.Position - args.Origin, this.BarSize, this.OutlineColor, this.OutlineThickness, args.LayerDepth);
             
             // FIXME: this is a bit of a hack, it should definitely be done differently
             DrawableManagerArgs tempArgs = args;
             tempArgs.Position.X += this.BarSize.X / 2f * args.Scale.X;
-            tempArgs.Position.Y += this.BarSize.Y / 2f * args.Scale.X;
+            tempArgs.Position.Y += this.BarSize.Y / 2f * args.Scale.Y;
+            tempArgs.Position   -= args.Origin;
             tempArgs.Color      =  this.TextDrawable.ColorOverride;
             tempArgs.Origin     =  new Vector2(this.TextDrawable.Size.X / 2f, this.TextDrawable.Size.Y / 2) * args.Scale;
             tempArgs.Scale      /= FurballGame.VerticalRatio;
