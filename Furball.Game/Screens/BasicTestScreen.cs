@@ -20,12 +20,25 @@ namespace Furball.Game.Screens {
         }
         
         public override void Initialize() {
-            TexturedDrawable whiteTexture = new(ContentReader.LoadMonogameAsset<Texture2D>("white"), new Vector2(240, 240));
-
-            whiteTexture.RotateRelative(1f, 5000, Easing.None);
+            //TexturedDrawable whiteTexture = new(ContentReader.LoadMonogameAsset<Texture2D>("white"), new Vector2(240, 240));
+//
+            //whiteTexture.RotateRelative(1f, 5000, Easing.None);
 
             this.Manager.Add(this.cursorTest);
-            this.Manager.Add(whiteTexture);
+
+            CirclePrimitiveDrawable drawable = new CirclePrimitiveDrawable(new Vector2(100,       100), 25f, 6f,  Color.Red);
+            CirclePrimitiveDrawable drawable2 = new CirclePrimitiveDrawable(new Vector2(400,      400), 45f, 10f, Color.Green);
+            LinePrimitiveDrawable drawable3 = new LinePrimitiveDrawable(new Vector2(500,          100), 50f, 25f, 10f);
+            LinePrimitiveDrawable drawable4 = new LinePrimitiveDrawable(new Vector2(600,          100), 50f, 25f, 10f);
+            RectanglePrimitiveDrawable drawable5 = new RectanglePrimitiveDrawable(new Vector2(10, 600), new Vector2(400, 50), 5f, true);
+            RectanglePrimitiveDrawable drawable6 = new RectanglePrimitiveDrawable(new Vector2(10, 500), new Vector2(400, 50), 5f, false);
+
+            this.Manager.Add(drawable);
+            this.Manager.Add(drawable2);
+            this.Manager.Add(drawable3);
+            this.Manager.Add(drawable4);
+            this.Manager.Add(drawable5);
+            this.Manager.Add(drawable6);
 
             base.Initialize();
         }
