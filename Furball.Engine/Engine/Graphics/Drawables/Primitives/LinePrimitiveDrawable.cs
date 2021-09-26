@@ -12,7 +12,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Primitives {
 
         public override Vector2 Size => new((float)Math.Cos(this.Angle) * this.Length, (float)Math.Sin(this.Angle) * this.Length);
 
-        public LinePrimitiveDrawable(float length, float angle) {
+        public LinePrimitiveDrawable(float length, float angle, float thickness) {
             this.Length = length;
             this.Angle  = angle;
         }
