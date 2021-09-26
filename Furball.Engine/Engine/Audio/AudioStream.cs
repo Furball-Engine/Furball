@@ -33,6 +33,21 @@ namespace Furball.Engine.Engine.Audio {
 
         public PlaybackState PlaybackState => Bass.ChannelIsActive(this._audioHandle);
 
+        public double Length {
+            get {
+                long length = Bass.ChannelGetLength(this._audioHandle);
+                
+                if(length != -1)
+                    return Bass.ChannelBytes2Seconds(this._audioHandle, length) * 1000;
+                
+                throw Bass.LastError switch {
+                    Errors.Handle       =>    new BassHandleException(),
+                    Errors.NotAvailable => new BassNotAvailableException(),
+                    _                   => new BassUnknownException()
+                };
+            }
+        }
+        
         public float Volume {
             get {
                 bool success = Bass.ChannelGetAttribute(this._audioHandle, ChannelAttribute.Volume, out float volume);
