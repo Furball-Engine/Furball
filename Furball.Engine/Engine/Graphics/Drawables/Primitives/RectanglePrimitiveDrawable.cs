@@ -11,9 +11,9 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Primitives {
         
         public override void Draw(GameTime time, SpriteBatch batch, DrawableManagerArgs args) {
             if(this.Filled)
-                batch.FillRectangle(args.Position, this.RectSize, args.Color, args.LayerDepth);
+                batch.FillRectangle(args.Position - args.Origin, this.RectSize, args.Color, args.LayerDepth);
             else
-                batch.DrawRectangle(args.Position, this.RectSize, args.Color, this.Thickness, args.LayerDepth);
+                batch.DrawRectangle(args.Position - args.Origin, this.RectSize, args.Color, this.Thickness, args.LayerDepth);
         }
     }
 }
