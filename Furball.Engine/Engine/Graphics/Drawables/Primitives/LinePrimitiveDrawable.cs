@@ -1,3 +1,4 @@
+using System;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -15,7 +16,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Primitives {
         }
         
         public override void Draw(GameTime time, SpriteBatch batch, DrawableManagerArgs args) {
-            batch.DrawLine(args.Position, this.Length, this.Angle, args.Color, this.Thickness, args.LayerDepth);
+            batch.DrawLine(args.Position - args.Origin, this.Length, this.Angle, args.Color, this.Thickness, args.LayerDepth);
         }
     }
 }
