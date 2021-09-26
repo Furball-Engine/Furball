@@ -138,8 +138,8 @@ namespace Furball.Engine.Engine.Audio {
             }
         }
 
-        public void SeekTo(int milliseconds) {
-            bool success = Bass.ChannelSetPosition(this._audioHandle, milliseconds / 1000);
+        public void SeekTo(double milliseconds) {
+            bool success = Bass.ChannelSetPosition(this._audioHandle, Bass.ChannelSeconds2Bytes(this._audioHandle, milliseconds / 1000d));
 
             if (success) return;
 
@@ -217,6 +217,16 @@ namespace Furball.Engine.Engine.Audio {
                 default:
                     throw new BassFlagSetException();
             }
+        }
+
+        public void Free() {
+            bool success = Bass.StreamFree(this._audioHandle);
+            
+            if (!success)
+                throw Bass.LastError switch {
+                    Errors.Init => new BassHandleException(),
+                    _           => throw new BassUnknownException()
+                };
         }
 
         public void Load(byte[] audioData, BassFlags extraFlags = BassFlags.Default) {

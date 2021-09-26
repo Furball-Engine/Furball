@@ -1,4 +1,3 @@
-using System;
 using Furball.Engine;
 using Furball.Engine.Engine;
 using Furball.Engine.Engine.Graphics;
@@ -6,11 +5,8 @@ using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Graphics.Drawables.Primitives;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens;
 using Furball.Engine.Engine.Graphics.Drawables.UiElements;
-using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MonoGame.Extended;
-using MathHelper=Furball.Engine.Engine.Helpers.MathHelper;
 
 namespace Furball.Game.Screens {
     public class BasicTestScreen : Screen {
