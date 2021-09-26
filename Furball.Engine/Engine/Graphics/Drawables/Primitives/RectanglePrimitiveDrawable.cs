@@ -8,6 +8,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Primitives {
         public bool    Filled;
         public Vector2 RectSize;
         public float   Thickness;
+
+        public override Vector2 Size => this.RectSize;
         
         public override void Draw(GameTime time, SpriteBatch batch, DrawableManagerArgs args) {
             if(this.Filled)
