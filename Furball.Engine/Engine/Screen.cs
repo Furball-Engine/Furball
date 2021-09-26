@@ -7,7 +7,7 @@ namespace Furball.Engine.Engine {
         public Screen() : base(FurballGame.Instance) {}
 
         public override void Draw(GameTime gameTime) {
-            this.Manager.Draw(gameTime, FurballGame.SpriteBatch);
+            this.Manager.Draw(gameTime, FurballGame.DrawableBatch);
 
             base.Draw(gameTime);
         }

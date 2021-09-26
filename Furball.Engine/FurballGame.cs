@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Globalization;
+using Apos.Shapes;
 using Furball.Engine.Engine;
 using Furball.Engine.Engine.Audio;
 using Furball.Engine.Engine.Graphics;
@@ -21,10 +22,10 @@ namespace Furball.Engine {
 
         public static Random Random = new();
 
-        public static Game         Instance;
-        public static SpriteBatch  SpriteBatch;
-        public static InputManager InputManager;
-        public static ITimeSource  GameTimeSource;
+        public static Game          Instance;
+        public static DrawableBatch DrawableBatch;
+        public static InputManager  InputManager;
+        public static ITimeSource   GameTimeSource;
 
         public static TextDrawable DebugFpsDraw;
         public static TextDrawable DebugFpsUpdate;
@@ -96,7 +97,7 @@ namespace Furball.Engine {
         }
 
         protected override void LoadContent() {
-            SpriteBatch = new SpriteBatch(this.GraphicsDevice);
+            DrawableBatch = new DrawableBatch(new SpriteBatch(this.GraphicsDevice), new ShapeBatch(this.GraphicsDevice, this.Content));
 
             this.ChangeScreenSize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
 
@@ -141,9 +142,9 @@ namespace Furball.Engine {
             if (RuntimeInfo.IsDebug())
                 DebugFpsDraw.Text = $"draw fps: {Math.Round(1 / gameTime.ElapsedGameTime.TotalSeconds).ToString(CultureInfo.InvariantCulture)}";
 
-            DrawableManager.Draw(gameTime, SpriteBatch);
+            DrawableManager.Draw(gameTime, DrawableBatch);
             if (RuntimeInfo.IsDebug() && DrawDebugOverlay)
-                DebugOverlayDrawableManager.Draw(gameTime, SpriteBatch);
+                DebugOverlayDrawableManager.Draw(gameTime, DrawableBatch);
 
             base.Draw(gameTime);
         }

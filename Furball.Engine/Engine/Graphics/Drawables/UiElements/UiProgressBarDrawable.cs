@@ -1,6 +1,4 @@
-using MonoGame.Extended;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
 
 namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
@@ -35,9 +33,9 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
             base.Update(time);
         }
 
-        public override void Draw(GameTime time, SpriteBatch batch, DrawableManagerArgs args) {
-            batch.FillRectangle(args.Position - args.Origin, new Vector2(this._progressWidth, this.BarSize.Y), args.Color, args.LayerDepth);
-            batch.DrawRectangle(args.Position - args.Origin, this.BarSize, this.OutlineColor, this.OutlineThickness, args.LayerDepth);
+        public override void Draw(GameTime time, DrawableBatch batch, DrawableManagerArgs args) {
+            batch.ShapeBatch.FillRectangle(args.Position - args.Origin, new Vector2(this._progressWidth, this.BarSize.Y), args.Color);
+            batch.ShapeBatch.DrawRectangle(args.Position - args.Origin, this.BarSize, Color.Transparent, this.OutlineColor, this.OutlineThickness);
             
             // FIXME: this is a bit of a hack, it should definitely be done differently
             DrawableManagerArgs tempArgs = args;

@@ -1,7 +1,5 @@
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using MonoGame.Extended;
 
 namespace Furball.Engine.Engine.Graphics.Drawables.Primitives {
     public class RectanglePrimitiveDrawable : ManagedDrawable {
@@ -16,12 +14,14 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Primitives {
             this.Thickness = thickness;
             this.Filled    = filled;
         }
+
+        public RectanglePrimitiveDrawable() { }
         
-        public override void Draw(GameTime time, SpriteBatch batch, DrawableManagerArgs args) {
+        public override void Draw(GameTime time, DrawableBatch batch, DrawableManagerArgs args) {
             if(this.Filled)
-                batch.FillRectangle(args.Position - args.Origin, this.RectSize, args.Color, args.LayerDepth);
+                batch.ShapeBatch.FillRectangle(args.Position - args.Origin, this.RectSize, args.Color);
             else
-                batch.DrawRectangle(args.Position - args.Origin, this.RectSize, args.Color, this.Thickness, args.LayerDepth);
+                batch.ShapeBatch.DrawRectangle(args.Position - args.Origin, this.RectSize, Color.Transparent, args.Color, this.Thickness);
         }
     }
 }

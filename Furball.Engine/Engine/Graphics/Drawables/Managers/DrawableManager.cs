@@ -14,7 +14,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
         private List<UnmanagedDrawable> _tempDrawUnmanaged   = new();
         private List<UnmanagedDrawable> _tempUpdateUnmanaged = new();
 
-        public override void Draw(GameTime time, SpriteBatch batch, DrawableManagerArgs _ = null) {
+        public override void Draw(GameTime time, DrawableBatch spriteBatch, DrawableManagerArgs _ = null) {
             // Split _drawables into 2 lists containing the ManagedDrawables and the UnmanagedDrawables
             this._tempDrawManaged.Clear();
             this._tempDrawUnmanaged.Clear();
@@ -33,7 +33,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                 }
             }
 
-            batch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
+            spriteBatch.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
+            spriteBatch.ShapeBatch.Begin();
 
             tempCount = this._tempDrawManaged.Count;
             for (int i = 0; i < tempCount; i++) {
@@ -55,10 +56,11 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                 Rectangle rect = new((args.Position - origin).ToPoint(), new Point((int)Math.Ceiling(currentDrawable.Size.X * args.Scale.X), (int)Math.Ceiling(currentDrawable.Size.Y * args.Scale.Y)));
 
                 if(rect.Intersects(FurballGame.DisplayRect))
-                    currentDrawable.Draw(time, batch, args);
+                    currentDrawable.Draw(time, spriteBatch, args);
             }
 
-            batch.End();
+            spriteBatch.ShapeBatch.End();
+            spriteBatch.SpriteBatch.End();
 
             tempCount = this._tempDrawUnmanaged.Count;
             for (int i = 0; i < tempCount; i++) {
@@ -75,12 +77,12 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                     Scale      = currentDrawable.Scale * (currentDrawable.ResolutionScale ? FurballGame.VerticalRatio : 1f)
                 };
 
-                currentDrawable.Draw(time, batch, args);
+                currentDrawable.Draw(time, spriteBatch, args);
             }
         }
 
         private RenderTarget2D _target2D;
-        public RenderTarget2D DrawRenderTarget2D(GameTime time, SpriteBatch batch, DrawableManagerArgs _ = null) {
+        public RenderTarget2D DrawRenderTarget2D(GameTime time, DrawableBatch batch, DrawableManagerArgs _ = null) {
             if(this._target2D?.Width != FurballGame.WindowWidth || this._target2D?.Height != FurballGame.WindowHeight)
                 this._target2D = new RenderTarget2D(FurballGame.Instance.GraphicsDevice, FurballGame.WindowWidth, FurballGame.WindowHeight);
             

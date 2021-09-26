@@ -1,12 +1,8 @@
 using Furball.Engine;
 using Furball.Engine.Engine;
-using Furball.Engine.Engine.Graphics;
-using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Graphics.Drawables.Primitives;
-using Furball.Engine.Engine.Graphics.Drawables.Tweens;
 using Furball.Engine.Engine.Graphics.Drawables.UiElements;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace Furball.Game.Screens {
     public class BasicTestScreen : Screen {
@@ -28,8 +24,8 @@ namespace Furball.Game.Screens {
 
             CirclePrimitiveDrawable drawable = new CirclePrimitiveDrawable(new Vector2(100,       100), 25f, 6f,  Color.Red);
             CirclePrimitiveDrawable drawable2 = new CirclePrimitiveDrawable(new Vector2(400,      400), 45f, 10f, Color.Green);
-            LinePrimitiveDrawable drawable3 = new LinePrimitiveDrawable(new Vector2(500,          100), 50f, 25f, 10f);
-            LinePrimitiveDrawable drawable4 = new LinePrimitiveDrawable(new Vector2(600,          100), 50f, 25f, 10f);
+            LinePrimitiveDrawable drawable3 = new LinePrimitiveDrawable(new Vector2(500,          100), new(550, 50), 10f);
+            LinePrimitiveDrawable drawable4 = new LinePrimitiveDrawable(new Vector2(600,          100), new(650, 50), 10f);
             RectanglePrimitiveDrawable drawable5 = new RectanglePrimitiveDrawable(new Vector2(10, 600), new Vector2(400, 50), 5f, true);
             RectanglePrimitiveDrawable drawable6 = new RectanglePrimitiveDrawable(new Vector2(10, 500), new Vector2(400, 50), 5f, false);
 

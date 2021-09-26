@@ -1,26 +1,19 @@
-using System;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using MonoGame.Extended;
 
 namespace Furball.Engine.Engine.Graphics.Drawables.Primitives {
     public class LinePrimitiveDrawable : ManagedDrawable {
-        public float Length;
-        public float Angle;
-        public float Thickness;
+        public float   Thickness;
+        public Vector2 EndPoint;
 
-        public override Vector2 Size => new((float)Math.Cos(this.Angle) * this.Length, (float)Math.Sin(this.Angle) * this.Length);
-
-        public LinePrimitiveDrawable(Vector2 position, float length, float angle, float thickness) {
+        public LinePrimitiveDrawable(Vector2 position, Vector2 endPoint, float thickness) {
             this.Position  = position;
             this.Thickness = thickness;
-            this.Length    = length;
-            this.Angle     = angle;
+            this.EndPoint  = endPoint;
         }
         
-        public override void Draw(GameTime time, SpriteBatch batch, DrawableManagerArgs args) {
-            batch.DrawLine(args.Position - args.Origin, this.Length, this.Angle, args.Color, this.Thickness, args.LayerDepth);
+        public override void Draw(GameTime time, DrawableBatch batch, DrawableManagerArgs args) {
+            batch.ShapeBatch.DrawLine(args.Position - args.Origin, this.EndPoint, 1f, args.Color, Color.White, this.Thickness);
         }
     }
 }

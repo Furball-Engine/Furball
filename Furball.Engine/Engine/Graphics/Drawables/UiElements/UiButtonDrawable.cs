@@ -2,8 +2,6 @@ using Furball.Engine.Engine.Graphics.Drawables.Tweens;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using MonoGame.Extended;
 using SpriteFontPlus;
 
 namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
@@ -17,7 +15,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
 
         public Color OutlineColor;
         public Color ButtonColor;
-        public float OutlineThickness = 1f;
+        public float OutlineThickness = 2f;
 
         public override Vector2 Size {
             get {
@@ -59,9 +57,9 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
             };
         }
 
-        public override void Draw(GameTime time, SpriteBatch batch, DrawableManagerArgs args) {
-            batch.FillRectangle(args.Position - args.Origin, this.Size, args.Color);
-            batch.DrawRectangle(args.Position - args.Origin, this.Size, this.OutlineColor, this.OutlineThickness, args.LayerDepth);
+        public override void Draw(GameTime time, DrawableBatch batch, DrawableManagerArgs args) {
+            // batch.ShapeBatch.FillRectangle(args.Position - args.Origin, this.Size, args.Color);
+            batch.ShapeBatch.DrawRectangle(args.Position - args.Origin, this.Size, args.Color, this.OutlineColor, this.OutlineThickness);
 
             // FIXME: this is a bit of a hack, it should definitely be done differently
             DrawableManagerArgs tempArgs = args;

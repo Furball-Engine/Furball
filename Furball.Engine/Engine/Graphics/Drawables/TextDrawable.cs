@@ -50,8 +50,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
             this.Text = text;
         }
 
-        public override void Draw(GameTime time, SpriteBatch batch, DrawableManagerArgs args) {
-            batch.DrawString(this.Font, this.Text, args);
+        public override void Draw(GameTime time, DrawableBatch batch, DrawableManagerArgs args) {
+            batch.SpriteBatch.DrawString(this.Font, this.Text, args);
         }
     }
 }

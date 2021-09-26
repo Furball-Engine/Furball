@@ -47,8 +47,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
             this._texture = texture;
         }
 
-        public override void Draw(GameTime time, SpriteBatch batch, DrawableManagerArgs args) {
-            batch.Draw(this._texture, args, this._cropping);
+        public override void Draw(GameTime time, DrawableBatch batch, DrawableManagerArgs args) {
+            batch.SpriteBatch.Draw(this._texture, args, this._cropping);
         }
 
         /// <summary>
