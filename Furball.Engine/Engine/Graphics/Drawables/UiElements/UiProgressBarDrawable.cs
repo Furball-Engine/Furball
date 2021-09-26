@@ -26,7 +26,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         }
 
         public override void Update(GameTime time) {
-            this.TextDrawable.Text       = string.Format(this._formatString, this.Progress * 100);
+            this.TextDrawable.Text = string.Format(this._formatString, this.Progress * 100);
 
             this._progressWidth = this.BarSize.X * this.Progress;
 
@@ -34,7 +34,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         }
 
         public override void Draw(GameTime time, DrawableBatch batch, DrawableManagerArgs args) {
-            batch.ShapeBatch.FillRectangle(args.Position - args.Origin, new Vector2(this._progressWidth, this.BarSize.Y), args.Color);
+            batch.ShapeBatch.DrawRectangle(args.Position - args.Origin, new Vector2(this._progressWidth, this.BarSize.Y), args.Color, Color.Transparent, this.OutlineThickness);
             batch.ShapeBatch.DrawRectangle(args.Position - args.Origin, this.BarSize, Color.Transparent, this.OutlineColor, this.OutlineThickness);
             
             // FIXME: this is a bit of a hack, it should definitely be done differently
