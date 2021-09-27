@@ -21,7 +21,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// Unprocessed Size of the Drawable in Pixels
         /// <remarks>This variable does not get changed as the DrawableManager translates the Drawable to be Scaled to be properly visible on all resolutions</remarks>
         /// </summary>
-        public override Vector2 Size => this._cropping != null ? new(this._cropping.Value.Width, this._cropping.Value.Height) : new(this._texture.Width, this._texture.Height);
+        public override Vector2 Size => this._cropping != null ? new Vector2(this._cropping.Value.Width, this._cropping.Value.Height) * this.Scale : new Vector2(this._texture.Width, this._texture.Height) * this.Scale;
 
         /// <summary>
         /// TexturedDrawable Constructor
@@ -49,6 +49,9 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         }
 
         public override void Draw(GameTime time, DrawableBatch batch, DrawableManagerArgs args) {
+            args.Position *= FurballGame.VerticalRatio;
+            args.Scale *= FurballGame.VerticalRatio;
+            
             batch.SpriteBatch.Draw(this._texture, args, this._cropping);
         }
 

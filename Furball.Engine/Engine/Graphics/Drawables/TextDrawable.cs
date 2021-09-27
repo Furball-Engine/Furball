@@ -54,7 +54,14 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         }
 
         public override void Draw(GameTime time, DrawableBatch batch, DrawableManagerArgs args) {
-            batch.SpriteBatch.DrawString(this.Font, this.Text, args);
+            args.Position *= FurballGame.VerticalRatio;
+            args.Scale    *= FurballGame.VerticalRatio;
+            
+            batch.SpriteBatch.DrawString(
+                this.Font, 
+                this.Text, 
+                args
+            );
         }
     }
 }

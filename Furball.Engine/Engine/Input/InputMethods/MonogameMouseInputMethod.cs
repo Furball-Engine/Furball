@@ -7,13 +7,13 @@ namespace Furball.Engine.Engine.Input.InputMethods {
             MouseStateXna currentMouseState = Mouse.GetState(FurballGame.Instance.Window);
             
             MouseState state = new("MonogameMouse") {
-                Position     = new((int)(currentMouseState.Position.X), (int)(currentMouseState.Position.Y)),
-                LeftButton   = currentMouseState.LeftButton,
-                MiddleButton = currentMouseState.MiddleButton,
-                RightButton  = currentMouseState.RightButton,
-                XButton1     =  currentMouseState.XButton1,
-                XButton2     = currentMouseState.XButton2,
-                ScrollWheelValue = currentMouseState.ScrollWheelValue,
+                Position                   = (currentMouseState.Position.ToVector2() / FurballGame.VerticalRatio).ToPoint(),
+                LeftButton                 = currentMouseState.LeftButton,
+                MiddleButton               = currentMouseState.MiddleButton,
+                RightButton                = currentMouseState.RightButton,
+                XButton1                   = currentMouseState.XButton1,
+                XButton2                   = currentMouseState.XButton2,
+                ScrollWheelValue           = currentMouseState.ScrollWheelValue,
                 HorizontalScrollWheelValue = currentMouseState.HorizontalScrollWheelValue
             };
             
@@ -24,13 +24,13 @@ namespace Furball.Engine.Engine.Input.InputMethods {
             MouseStateXna currentMouseState = Mouse.GetState(FurballGame.Instance.Window);
             
             MouseState state = new("MonogameMouse") {
-                Position     = new((int)(currentMouseState.Position.X), (int)(currentMouseState.Position.Y)),
-                LeftButton   = currentMouseState.LeftButton,
-                MiddleButton = currentMouseState.MiddleButton,
-                RightButton  = currentMouseState.RightButton,
-                XButton1     =  currentMouseState.XButton1,
-                XButton2     = currentMouseState.XButton2,
-                ScrollWheelValue = currentMouseState.ScrollWheelValue,
+                Position                   = (currentMouseState.Position.ToVector2() / FurballGame.VerticalRatio).ToPoint(),
+                LeftButton                 = currentMouseState.LeftButton,
+                MiddleButton               = currentMouseState.MiddleButton,
+                RightButton                = currentMouseState.RightButton,
+                XButton1                   = currentMouseState.XButton1,
+                XButton2                   = currentMouseState.XButton2,
+                ScrollWheelValue           = currentMouseState.ScrollWheelValue,
                 HorizontalScrollWheelValue = currentMouseState.HorizontalScrollWheelValue
             };
             

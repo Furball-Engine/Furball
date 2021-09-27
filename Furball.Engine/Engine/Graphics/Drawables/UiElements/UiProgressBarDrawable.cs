@@ -16,7 +16,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         private float   _progressWidth;
         public  float   OutlineThickness = 1f;
 
-        public override Vector2 Size => this.BarSize;
+        public override Vector2 Size => this.BarSize * this.Scale;
         /// <summary>
         /// Creates a Progress Bar
         /// </summary>
@@ -46,16 +46,32 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         }
 
         public override void Draw(GameTime time, DrawableBatch batch, DrawableManagerArgs args) {
-            batch.ShapeBatch.DrawRectangle(args.Position - args.Origin, new Vector2(this._progressWidth, this.BarSize.Y), args.Color, Color.Transparent, this.OutlineThickness);
-            batch.ShapeBatch.DrawRectangle(args.Position - args.Origin, this.BarSize, Color.Transparent, this.OutlineColor, this.OutlineThickness);
+            batch.ShapeBatch.DrawRectangle(
+                args.Position * FurballGame.VerticalRatio, 
+                new Vector2(this._progressWidth, this.BarSize.Y) * FurballGame.VerticalRatio, 
+                args.Color, 
+                Color.Transparent, 
+                this.OutlineThickness * FurballGame.VerticalRatio
+            );
+            batch.ShapeBatch.DrawRectangle(
+                args.Position * FurballGame.VerticalRatio, 
+                this.BarSize * FurballGame.VerticalRatio, 
+                Color.Transparent, 
+                this.OutlineColor, 
+                this.OutlineThickness * FurballGame.VerticalRatio
+            );
             
             // FIXME: this is a bit of a hack, it should definitely be done differently
             DrawableManagerArgs tempArgs = args;
+            // Center the text in the middle of the bar
             tempArgs.Position.X += this.BarSize.X / 2f;
             tempArgs.Position.Y += this.BarSize.Y / 2f;
-            tempArgs.Position   -= args.Origin;
-            tempArgs.Color      =  this.TextDrawable.ColorOverride;
-            tempArgs.Origin     =  new Vector2(this.TextDrawable.Size.X / 2f, this.TextDrawable.Size.Y / 2);
+            // Do the equivalent of settings the origin to center
+            tempArgs.Position.X -= this.TextDrawable.Size.X / 2f;
+            tempArgs.Position.Y -= this.TextDrawable.Size.Y / 2f;
+            
+            tempArgs.Color =  this.TextDrawable.ColorOverride;
+            // tempArgs.Origin     =  new Vector2(this.TextDrawable.Size.X / 2f, this.TextDrawable.Size.Y / 2);
             this.TextDrawable.Draw(time, batch, tempArgs);
         }
     }

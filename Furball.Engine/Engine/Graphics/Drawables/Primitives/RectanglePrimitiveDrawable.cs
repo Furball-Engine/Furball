@@ -9,7 +9,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Primitives {
         public bool    Filled;
         public Vector2 RectSize;
         public float   Thickness;
-        public override Vector2 Size => this.RectSize;
+        public override Vector2 Size => this.RectSize * this.Scale;
         /// <summary>
         /// Creates a Rectangle
         /// </summary>
@@ -28,9 +28,19 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Primitives {
         
         public override void Draw(GameTime time, DrawableBatch batch, DrawableManagerArgs args) {
             if(this.Filled)
-                batch.ShapeBatch.FillRectangle(args.Position - args.Origin, this.RectSize, args.Color);
+                batch.ShapeBatch.FillRectangle(
+                    args.Position * FurballGame.VerticalRatio, 
+                    this.RectSize * FurballGame.VerticalRatio, 
+                    args.Color
+                );
             else
-                batch.ShapeBatch.DrawRectangle(args.Position - args.Origin, this.RectSize, Color.Transparent, args.Color, this.Thickness);
+                batch.ShapeBatch.DrawRectangle(
+                    args.Position * FurballGame.VerticalRatio, 
+                    this.RectSize * FurballGame.VerticalRatio, 
+                    Color.Transparent, 
+                    args.Color, 
+                    this.Thickness * FurballGame.VerticalRatio
+                );
         }
     }
 }

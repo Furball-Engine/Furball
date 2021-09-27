@@ -38,6 +38,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
             }
         }
 
+        public Vector2 LastCalculatedOrigin = Vector2.Zero;
         public event EventHandler<Vector2> OnMove;
         /// <summary>
         /// Unprocessed Size of the Drawable in Pixels

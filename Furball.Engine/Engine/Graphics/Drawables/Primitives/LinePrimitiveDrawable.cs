@@ -21,7 +21,14 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Primitives {
         }
         
         public override void Draw(GameTime time, DrawableBatch batch, DrawableManagerArgs args) {
-            batch.ShapeBatch.DrawLine(args.Position - args.Origin, this.EndPoint, 1f, args.Color, Color.White, this.Thickness);
+            batch.ShapeBatch.DrawLine(
+                args.Position * FurballGame.VerticalRatio, 
+                this.EndPoint * FurballGame.VerticalRatio, 
+                1f, 
+                args.Color, 
+                Color.White, 
+                this.Thickness * FurballGame.VerticalRatio
+            );
         }
     }
 }

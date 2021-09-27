@@ -24,7 +24,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
             get {
                 (float textDrawableSizeX, float textDrawableSizeY) = this.TextDrawable.Size;
 
-                return new Vector2(textDrawableSizeX + this._margin * 2f, textDrawableSizeY + this._margin * 2f);
+                return new Vector2(textDrawableSizeX + this._margin * 2f, textDrawableSizeY + this._margin * 2f) * this.Scale;
             }
         }
 
@@ -74,8 +74,13 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         }
 
         public override void Draw(GameTime time, DrawableBatch batch, DrawableManagerArgs args) {
-            // batch.ShapeBatch.FillRectangle(args.Position - args.Origin, this.Size, args.Color);
-            batch.ShapeBatch.DrawRectangle(args.Position - args.Origin, this.Size, args.Color, this.OutlineColor, this.OutlineThickness);
+            batch.ShapeBatch.DrawRectangle(
+                args.Position * FurballGame.VerticalRatio, 
+                this.Size * FurballGame.VerticalRatio, 
+                args.Color, 
+                this.OutlineColor, 
+                this.OutlineThickness * FurballGame.VerticalRatio
+            );
 
             // FIXME: this is a bit of a hack, it should definitely be done differently
             DrawableManagerArgs tempArgs = args;

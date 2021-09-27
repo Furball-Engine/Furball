@@ -18,7 +18,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         public event EventHandler<char> OnLetterTyped;
         public event EventHandler<char> OnLetterRemoved; 
 
-        public override Vector2 Size => new(this.TextBoxWidth, this.Font.MeasureString("|").Y);
+        public override Vector2 Size => new Vector2(this.TextBoxWidth, this.Font.MeasureString("|").Y) * this.Scale;
         /// <summary>
         /// Creates a Textbox
         /// </summary>
@@ -53,7 +53,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
 
         private void OnMouseDown(object? sender, (MouseButton, string) e) {
             Vector2   tempSize = this.Size;
-            Rectangle sizeRect = new(new((int)this.Position.X, (int)this.Position.Y), new((int)tempSize.X, (int)tempSize.Y));
+            Rectangle sizeRect = new(new Point((int)this.Position.X, (int)this.Position.Y) - this.LastCalculatedOrigin.ToPoint(), new((int)tempSize.X, (int)tempSize.Y));
 
             Point mousePos = FurballGame.InputManager.CursorStates.First(state => state.Name == e.Item2).Position;
             if (sizeRect.Contains(mousePos) && this.Visible && this.Clickable) {
@@ -98,7 +98,12 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         }
 
         public override void Draw(GameTime time, DrawableBatch batch, DrawableManagerArgs args) {
-            batch.ShapeBatch.DrawRectangle(args.Position - args.Origin, this.Size, Color.Transparent, this.Selected ? Color.White : Color.Gray);
+            batch.ShapeBatch.DrawRectangle(
+                args.Position * FurballGame.VerticalRatio, 
+                this.Size * FurballGame.VerticalRatio, 
+                Color.Transparent, 
+                this.Selected ? Color.White : Color.Gray
+            );
             
             base.Draw(time, batch, args);
         }

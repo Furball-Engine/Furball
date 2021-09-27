@@ -1,7 +1,6 @@
 using Furball.Engine.Engine.Graphics;
 using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
-using Furball.Engine.Engine.Helpers;
 using Microsoft.Xna.Framework;
 
 namespace Furball.Engine.Engine.Debug {

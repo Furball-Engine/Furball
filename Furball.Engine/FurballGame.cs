@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Globalization;
 using Apos.Shapes;
 using Furball.Engine.Engine;
 using Furball.Engine.Engine.Audio;
 using Furball.Engine.Engine.Debug;
 using Furball.Engine.Engine.Graphics;
-using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Furball.Engine.Engine.Input;
 using Furball.Engine.Engine.Input.InputMethods;
@@ -40,9 +38,10 @@ namespace Furball.Engine {
         public static int WindowHeight => Instance.GraphicsDevice.Viewport.Height;
         public static int WindowWidth => Instance.GraphicsDevice.Viewport.Width;
 
-        public static float VerticalRatio => (float)WindowHeight / DEFAULT_WINDOW_HEIGHT;
         public static float HorizontalRatio => (float)WindowWidth / DEFAULT_WINDOW_WIDTH;
-        public static Rectangle DisplayRect => new(0, 0, Instance.GraphicsDevice.Viewport.Width, Instance.GraphicsDevice.Viewport.Height);
+        public static float VerticalRatio => (float)WindowHeight / DEFAULT_WINDOW_HEIGHT;
+        public static Rectangle DisplayRect => new(0, 0, (int)Math.Ceiling(Instance.GraphicsDevice.Viewport.Width / VerticalRatio), (int)Math.Ceiling(Instance.GraphicsDevice.Viewport.Height / VerticalRatio));
+        public static Rectangle DisplayRectActual => new(0, 0, Instance.GraphicsDevice.Viewport.Width, Instance.GraphicsDevice.Viewport.Height);
 
         public static byte[] DEFAULT_FONT;
 

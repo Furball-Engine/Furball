@@ -58,13 +58,13 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                 if (!currentDrawable.Visible) continue;
                 
                 Vector2 origin = CalculateNewOriginPosition(currentDrawable);
+                currentDrawable.LastCalculatedOrigin = origin;
                 
                 DrawableManagerArgs args = new() {
                     Color      = currentDrawable.ColorOverride,
                     Effects    = currentDrawable.SpriteEffect,
                     LayerDepth = currentDrawable.Depth,
-                    Origin     = origin,
-                    Position   = currentDrawable.Position,
+                    Position   = currentDrawable.Position - origin,
                     Rotation   = currentDrawable.Rotation,
                     Scale      = currentDrawable.Scale
                 };
@@ -84,13 +84,15 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
             for (int i = 0; i < tempCount; i++) {
                 UnmanagedDrawable currentDrawable = this._tempDrawUnmanaged[i];
                 if (!currentDrawable.Visible) continue;
+                
+                Vector2 origin = CalculateNewOriginPosition(currentDrawable);
+                currentDrawable.LastCalculatedOrigin = origin;
 
                 DrawableManagerArgs args = new() {
                     Color      = currentDrawable.ColorOverride,
                     Effects    = currentDrawable.SpriteEffect,
                     LayerDepth = currentDrawable.Depth,
-                    Origin     = CalculateNewOriginPosition(currentDrawable),
-                    Position   = currentDrawable.Position,
+                    Position   = currentDrawable.Position - origin,
                     Rotation   = currentDrawable.Rotation,
                     Scale      = currentDrawable.Scale
                 };
@@ -165,12 +167,12 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                 ButtonState rightMouseButton = FurballGame.InputManager.CursorStates[0].RightButton;
                 ButtonState middleMouseButton = FurballGame.InputManager.CursorStates[0].MiddleButton;
 
-                Rectangle rect = new((currentDrawable.Position - CalculateNewOriginPosition(currentDrawable)).ToPoint(), currentDrawable.Size.ToPoint());
+                Rectangle rect = new(currentDrawable.Position.ToPoint() - currentDrawable.LastCalculatedOrigin.ToPoint(), currentDrawable.Size.ToPoint());
 
                 //Please dont ask how this works i dont know either
                 bool circleIntersect = currentDrawable.Circular &&
-                                       Vector2.Distance(cursor.ToVector2(), currentDrawable.Position - CalculateNewOriginPosition(currentDrawable)) <
-                                       (currentDrawable.CircleRadius);
+                                       Vector2.Distance(cursor.ToVector2(), currentDrawable.Position - currentDrawable.LastCalculatedOrigin) <
+                                       currentDrawable.CircleRadius;
 
                 if (rect.Contains(cursor) && !currentDrawable.Circular || circleIntersect && currentDrawable.Circular) {
                     if (leftMouseButton == ButtonState.Pressed) {
