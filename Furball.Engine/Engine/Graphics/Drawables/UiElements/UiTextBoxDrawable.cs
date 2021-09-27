@@ -17,6 +17,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
 
         public event EventHandler<char> OnLetterTyped;
         public event EventHandler<char> OnLetterRemoved; 
+        public event EventHandler OnCommit; 
 
         public override Vector2 Size => new Vector2(this.TextBoxWidth, this.Font.MeasureString("|").Y) * this.Scale;
         /// <summary>
@@ -69,13 +70,20 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
             bool wasSpecial = false;
 
             switch (e.Key) {
-                case Keys.Back:
+                case Keys.Back: {
                     if (this.Text.Length != 0) {
                         this.OnLetterRemoved?.Invoke(this, this.Text[^1]);
                         this.Text = this.Text[..^1];
                     }
                     wasSpecial = true;
                     break;
+                }
+                case Keys.Enter: {
+                    this.OnCommit?.Invoke(this, EventArgs.Empty);
+                    
+                    wasSpecial = true;
+                    break;
+                }
             }
 
             if (wasSpecial) return;
