@@ -36,6 +36,12 @@ namespace Furball.Game.Screens {
             this.Manager.Add(drawable5);
             this.Manager.Add(drawable6);
 
+            UiTextBoxDrawable textBox = new(FurballGame.DEFAULT_FONT, "input pog?", 30, 200) {
+                Position = new(500, 500)
+            };
+
+            this.Manager.Add(textBox);
+            
             base.Initialize();
         }
     }
