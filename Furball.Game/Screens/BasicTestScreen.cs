@@ -11,7 +11,7 @@ namespace Furball.Game.Screens {
         
         public override void Update(GameTime gameTime) {
             //this._progressBar.Progress = (gameTime.TotalGameTime.Milliseconds % 1000f) / 1000f;
-            this.cursorTest.Position = FurballGame.InputManager.CursorStates[0].State.Position.ToVector2() / FurballGame.VerticalRatio;
+            this.cursorTest.Position = FurballGame.InputManager.CursorStates[0].Position.ToVector2() / FurballGame.VerticalRatio;
             base.Update(gameTime);
         }
         

@@ -120,42 +120,42 @@ namespace Furball.Engine.Engine.Input {
                     MouseState newState = filteredStates[i];
 
                     //Handling Mouse Movement by comparing to the last Input Frame
-                    if (oldState.State.Position != newState.State.Position) {
-                        this.OnMouseMove?.Invoke(this, (newState.State.Position, newState.Name));
+                    if (oldState.Position != newState.Position) {
+                        this.OnMouseMove?.Invoke(this, (newState.Position, newState.Name));
 
                         //We only are going to handle drags with M1
-                        if (oldState.State.LeftButton == ButtonState.Pressed && newState.State.LeftButton == ButtonState.Pressed)
-                            this.OnMouseDrag?.Invoke(this, ((oldState.State.Position, newState.State.Position), newState.Name));
+                        if (oldState.LeftButton == ButtonState.Pressed && newState.LeftButton == ButtonState.Pressed)
+                            this.OnMouseDrag?.Invoke(this, ((oldState.Position, newState.Position), newState.Name));
                     }
 
 
                     //Handling The Left Mouse Button by comparing to the last Input Frame
-                    if (oldState.State.LeftButton != newState.State.LeftButton)
-                        if (oldState.State.LeftButton == ButtonState.Released)
+                    if (oldState.LeftButton != newState.LeftButton)
+                        if (oldState.LeftButton == ButtonState.Released)
                             this.OnMouseDown?.Invoke(this, (MouseButton.LeftButton, newState.Name));
                         else
                             this.OnMouseUp?.Invoke(this, (MouseButton.LeftButton, newState.Name));
 
 
                     //Handling The Right Mouse Button by comparing to the last Input Frame
-                    if (oldState.State.RightButton != newState.State.RightButton)
-                        if (oldState.State.RightButton == ButtonState.Released)
+                    if (oldState.RightButton != newState.RightButton)
+                        if (oldState.RightButton == ButtonState.Released)
                             this.OnMouseDown?.Invoke(this, (MouseButton.RightButton, newState.Name));
                         else
                             this.OnMouseUp?.Invoke(this, (MouseButton.RightButton, newState.Name));
 
 
                     //Handling the Middle Mouse Button by comparing to the last Input Frame
-                    if (oldState.State.MiddleButton != newState.State.MiddleButton)
-                        if (oldState.State.MiddleButton == ButtonState.Released)
+                    if (oldState.MiddleButton != newState.MiddleButton)
+                        if (oldState.MiddleButton == ButtonState.Released)
                             this.OnMouseDown?.Invoke(this, (MouseButton.MiddleButton, newState.Name));
                         else
                             this.OnMouseUp?.Invoke(this, (MouseButton.MiddleButton, newState.Name));
 
 
                     //Handling Scrolling by comparing to the last Input Frame
-                    if (oldState.State.ScrollWheelValue != newState.State.ScrollWheelValue)
-                        this.OnMouseScroll?.Invoke(this, (newState.State.ScrollWheelValue - oldState.State.ScrollWheelValue, newState.Name));
+                    if (oldState.ScrollWheelValue != newState.ScrollWheelValue)
+                        this.OnMouseScroll?.Invoke(this, (newState.ScrollWheelValue - oldState.ScrollWheelValue, newState.Name));
                 }
             }
 

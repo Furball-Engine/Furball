@@ -142,10 +142,10 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
 
                 #region Input
 
-                Point cursor = (FurballGame.InputManager.CursorStates[0].State.Position.ToVector2() / FurballGame.VerticalRatio).ToPoint();
-                ButtonState leftMouseButton = FurballGame.InputManager.CursorStates[0].State.LeftButton;
-                ButtonState rightMouseButton = FurballGame.InputManager.CursorStates[0].State.RightButton;
-                ButtonState middleMouseButton = FurballGame.InputManager.CursorStates[0].State.MiddleButton;
+                Point cursor = FurballGame.InputManager.CursorStates[0].Position;
+                ButtonState leftMouseButton = FurballGame.InputManager.CursorStates[0].LeftButton;
+                ButtonState rightMouseButton = FurballGame.InputManager.CursorStates[0].RightButton;
+                ButtonState middleMouseButton = FurballGame.InputManager.CursorStates[0].MiddleButton;
 
                 Rectangle rect = new((currentDrawable.Position - CalculateNewOriginPosition(currentDrawable)).ToPoint(), (currentDrawable.Size / FurballGame.VerticalRatio).ToPoint());
 
