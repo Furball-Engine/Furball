@@ -121,6 +121,7 @@ namespace Furball.Engine {
             InputManager.Update();
 
             DrawableManager.Update(gameTime);
+
             if (RuntimeInfo.IsDebug())
                 DebugOverlayDrawableManager.Update(gameTime);
 
