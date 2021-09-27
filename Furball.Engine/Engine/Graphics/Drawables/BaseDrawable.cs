@@ -195,6 +195,9 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         public void InvokeOnDragEnd(object sender, Point position) {
             this.OnDragEnd?.Invoke(sender, position);
         }
+        
+        public virtual void Dispose(bool disposing) {}
+        
         /// <summary>
         /// Updates the pDrawables Tweens
         /// </summary>

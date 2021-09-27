@@ -17,5 +17,11 @@ namespace Furball.Engine.Engine {
 
             base.Update(gameTime);
         }
+
+        protected override void Dispose(bool disposing) {
+            this.Manager.Dispose(disposing);
+            
+            base.Dispose(disposing);
+        }
     }
 }
