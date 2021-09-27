@@ -35,7 +35,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
             Rectangle sizeRect = new(new((int)this.Position.X, (int)this.Position.Y), new((int)tempSize.X, (int)tempSize.Y));
 
             Point mousePos = FurballGame.InputManager.CursorStates.Where(state => state.Name == e.Item2).First().State.Position;
-            if (sizeRect.Contains(mousePos)) {
+            if (sizeRect.Contains(mousePos) && this.Visible && this.Clickable) {
                 this.Selected = true;
             } else {
                 this.Selected = false;
