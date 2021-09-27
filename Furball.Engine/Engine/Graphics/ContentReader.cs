@@ -8,7 +8,7 @@ namespace Furball.Engine.Engine.Graphics {
     public static class ContentReader {
         private static readonly Dictionary<string, byte[]> CONTENT_CACHE = new();
 
-        public static int CacheSizeLimit = 4 * 1024 * 1024;//4 MB
+        public static int CacheSizeLimit = 4000000;//4 MB
 
         /// <summary>
         /// Clears the content cache, allowing changed assets to reload
@@ -22,21 +22,21 @@ namespace Furball.Engine.Engine.Graphics {
 
             string executablePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? throw new Exception("shits fucked man");
 
-            if (source <= ContentSource.User) {
+            if ((int)source >= (int)ContentSource.User) {
                 tempManager.RootDirectory = Path.Combine(executablePath, "/UserContent/");
 
                 try { return tempManager.Load<pContentType>(filename); }
                 catch {/* */
                 }
             }
-            if (source <= ContentSource.Game) {
+            if ((int)source >= (int)ContentSource.Game) {
                 tempManager.RootDirectory = FurballGame.Instance.Content.RootDirectory;
 
                 try { return tempManager.Load<pContentType>(filename); }
                 catch {/* */
                 }
             }
-            if (source <= ContentSource.Engine) {
+            if ((int)source >= (int)ContentSource.Engine) {
                 tempManager.RootDirectory = Path.Combine(executablePath, "/EngineContent/");
 
                 try { return tempManager.Load<pContentType>(filename); }
@@ -56,17 +56,17 @@ namespace Furball.Engine.Engine.Graphics {
             string executablePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? throw new Exception("shits fucked man");
 
             string path;
-            if (source <= ContentSource.User) {
+            if ((int)source >= (int)ContentSource.User) {
                 path = Path.Combine(executablePath, "/UserContent/", filename);
                 if (File.Exists(path))
                     data = File.ReadAllBytes(path);
             }
-            if (source <= ContentSource.Game && data.Length == 0) {
+            if ((int)source >= (int)ContentSource.Game && data.Length == 0) {
                 path = Path.Combine(FurballGame.Instance.Content.RootDirectory, filename);
                 if (File.Exists(path))
                     data = File.ReadAllBytes(path);
             }
-            if (source <= ContentSource.Engine && data.Length == 0) {
+            if ((int)source >= (int)ContentSource.Engine && data.Length == 0) {
                 path = Path.Combine(executablePath, "/EngineContent/", filename);
                 if (File.Exists(path))
                     data = File.ReadAllBytes(path);
