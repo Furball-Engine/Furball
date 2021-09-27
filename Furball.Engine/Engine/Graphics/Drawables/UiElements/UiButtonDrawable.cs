@@ -26,7 +26,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         }
 
         public UiButtonDrawable(string text, byte[] font, float size, Color buttonColor, Color textColor, Color outlineColor, float margin = 5f, CharacterRange[] charRange = null) {
-            this.TextDrawable = new TextDrawable(font, text, size, charRange);
+            this.TextDrawable = new TextDrawable(Vector2.Zero, font, text, size, charRange);
             this._margin      = margin;
             this._text        = text;
 

@@ -26,11 +26,14 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// <summary>
         /// Creates a new TextDrawable
         /// </summary>
+        /// <param name="position">Where to Draw</param>
         /// <param name="font">A byte[] containing the font in ttf form)</param>
         /// <param name="text">What Text to Draw (can be changed later)</param>
         /// <param name="size">The size of the text as a float</param>
         /// <param name="range">The CharacterRange of the SpriteFont</param>
-        public TextDrawable(byte[] font, string text, float size, CharacterRange[] range = null) {
+        public TextDrawable(Vector2 position, byte[] font, string text, float size, CharacterRange[] range = null) {
+            this.Position = position;
+
             range ??= new[] {
                 CharacterRange.BasicLatin
             };

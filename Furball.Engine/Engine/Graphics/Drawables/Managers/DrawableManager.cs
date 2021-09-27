@@ -14,6 +14,20 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
         private List<UnmanagedDrawable> _tempDrawUnmanaged   = new();
         private List<UnmanagedDrawable> _tempUpdateUnmanaged = new();
 
+        public int CountManaged { get; private set; }
+        public int CountUnmanaged { get; private set; }
+
+        public static object                StatLock         = new ();
+        public static List<DrawableManager> DrawableManagers = new();
+        public static int                   Instances        = 0;
+
+        public DrawableManager() {
+            lock (StatLock) {
+                Instances++;
+                DrawableManagers.Add(this);
+            }
+        }
+
         public override void Draw(GameTime time, DrawableBatch spriteBatch, DrawableManagerArgs _ = null) {
             // Split _drawables into 2 lists containing the ManagedDrawables and the UnmanagedDrawables
             this._tempDrawManaged.Clear();
@@ -36,7 +50,9 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
             spriteBatch.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
             spriteBatch.ShapeBatch.Begin();
 
-            tempCount = this._tempDrawManaged.Count;
+            tempCount    = this._tempDrawManaged.Count;
+            CountManaged = tempCount;
+
             for (int i = 0; i < tempCount; i++) {
                 ManagedDrawable currentDrawable = this._tempDrawManaged[i];
                 if (!currentDrawable.Visible) continue;
@@ -62,7 +78,9 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
             spriteBatch.ShapeBatch.End();
             spriteBatch.SpriteBatch.End();
 
-            tempCount = this._tempDrawUnmanaged.Count;
+            tempCount      = this._tempDrawUnmanaged.Count;
+            CountUnmanaged = tempCount;
+
             for (int i = 0; i < tempCount; i++) {
                 UnmanagedDrawable currentDrawable = this._tempDrawUnmanaged[i];
                 if (!currentDrawable.Visible) continue;
@@ -224,6 +242,11 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
         public override void Dispose(bool disposing) {
             for (var i = 0; i < this._drawables.Count; i++) 
                 this._drawables[i].Dispose(disposing);
+
+            lock (StatLock) {
+                Instances--;
+                DrawableManagers.Remove(this);
+            }
 
             base.Dispose(disposing);
         }

@@ -17,7 +17,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
 
         public override Vector2 Size => new(this.TextBoxWidth, this.Font.MeasureString("|").Y);
 
-        public UiTextBoxDrawable(byte[] font, string text, float size, float width, CharacterRange[] range = null) : base(font, text, size, range) {
+        public UiTextBoxDrawable(byte[] font, string text, float size, float width, CharacterRange[] range = null) : base(Vector2.Zero, font, text, size, range) {
             this.TextBoxWidth = width;
             this.RegisterHandlers();
         }

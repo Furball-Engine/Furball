@@ -4,6 +4,7 @@ using System.Globalization;
 using Apos.Shapes;
 using Furball.Engine.Engine;
 using Furball.Engine.Engine.Audio;
+using Furball.Engine.Engine.Debug;
 using Furball.Engine.Engine.Graphics;
 using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
@@ -27,8 +28,7 @@ namespace Furball.Engine {
         public static InputManager  InputManager;
         public static ITimeSource   GameTimeSource;
 
-        public static TextDrawable DebugFpsDraw;
-        public static TextDrawable DebugFpsUpdate;
+        public static DebugCounter DebugCounter;
 
         public static DrawableManager DrawableManager;
         public static DrawableManager DebugOverlayDrawableManager;
@@ -59,7 +59,7 @@ namespace Furball.Engine {
 
         protected override void Initialize() {
             Console.WriteLine(
-            $@"Starting Furball {(Environment.Is64BitProcess ? "64-bit" : "32-bit")} on {Environment.OSVersion.VersionString} {(Environment.Is64BitOperatingSystem ? "64-bit" : "32-bit")}"
+                $@"Starting Furball {(Environment.Is64BitProcess ? "64-bit" : "32-bit")} on {Environment.OSVersion.VersionString} {(Environment.Is64BitOperatingSystem ? "64-bit" : "32-bit")}"
             );
 
             DEFAULT_FONT = ContentReader.LoadRawAsset("default-font.ttf");
@@ -101,15 +101,9 @@ namespace Furball.Engine {
 
             this.ChangeScreenSize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
 
-            if (RuntimeInfo.IsDebug()) {
-                DebugFpsDraw = new TextDrawable(DEFAULT_FONT, "a", 50);
-                DebugOverlayDrawableManager.Add(DebugFpsDraw);
+            DebugCounter = new();
 
-                DebugFpsUpdate = new TextDrawable(DEFAULT_FONT, "a", 50) {
-                    Position = new Vector2(0, DebugFpsDraw.Size.Y)
-                };
-                DebugOverlayDrawableManager.Add(DebugFpsUpdate);
-            }
+            DebugOverlayDrawableManager.Add(DebugCounter);
         }
 
         public void ChangeScreenSize(int width, int height, bool fullscreen = false) {
@@ -124,9 +118,6 @@ namespace Furball.Engine {
         }
 
         protected override void Update(GameTime gameTime) {
-            if (RuntimeInfo.IsDebug())
-                DebugFpsUpdate.Text = $"update fps: {Math.Round(1 / gameTime.ElapsedGameTime.TotalSeconds).ToString(CultureInfo.InvariantCulture)}";
-
             InputManager.Update();
 
             DrawableManager.Update(gameTime);
@@ -138,9 +129,6 @@ namespace Furball.Engine {
 
         protected override void Draw(GameTime gameTime) {
             this.GraphicsDevice.Clear(Color.Black);
-
-            if (RuntimeInfo.IsDebug())
-                DebugFpsDraw.Text = $"draw fps: {Math.Round(1 / gameTime.ElapsedGameTime.TotalSeconds).ToString(CultureInfo.InvariantCulture)}";
 
             DrawableManager.Draw(gameTime, DrawableBatch);
             if (RuntimeInfo.IsDebug() && DrawDebugOverlay)
