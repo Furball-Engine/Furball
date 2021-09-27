@@ -69,6 +69,9 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
 
         public override void Dispose(bool disposing) {
             this.UnregisterHandlers();
+
+            this.OnLetterTyped = null;
+            this.OnLetterRemoved = null;
             
             base.Dispose(disposing);
         }
