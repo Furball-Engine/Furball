@@ -2,12 +2,21 @@ using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Microsoft.Xna.Framework;
 
 namespace Furball.Engine.Engine.Graphics.Drawables.Primitives {
+    /// <summary>
+    /// Simple rectangle Drawable
+    /// </summary>
     public class RectanglePrimitiveDrawable : ManagedDrawable {
         public bool    Filled;
         public Vector2 RectSize;
         public float   Thickness;
         public override Vector2 Size => this.RectSize;
-
+        /// <summary>
+        /// Creates a Rectangle
+        /// </summary>
+        /// <param name="position">Where to Draw</param>
+        /// <param name="size">How big</param>
+        /// <param name="thickness">How thicc</param>
+        /// <param name="filled">Fill or not</param>
         public RectanglePrimitiveDrawable(Vector2 position, Vector2 size, float thickness, bool filled) {
             this.Position  = position;
             this.RectSize  = size;

@@ -2,6 +2,9 @@ using Microsoft.Xna.Framework;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
 
 namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
+    /// <summary>
+    /// Creates a simple Progress Bar
+    /// </summary>
     public class UiProgressBarDrawable : ManagedDrawable {
         private string _formatString = "{0:0}%";
 
@@ -14,11 +17,20 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         public  float   OutlineThickness = 1f;
 
         public override Vector2 Size => this.BarSize;
-
-        public UiProgressBarDrawable(byte[] font, Vector2 size, Color outlineColor, Color barColor, Color textColor) {
-            this.BarSize                    = size;
-            this.OutlineColor               = outlineColor;
-            this.ColorOverride              = barColor;
+        /// <summary>
+        /// Creates a Progress Bar
+        /// </summary>
+        /// <param name="position">Where to Draw it</param>
+        /// <param name="font">What SpriteFont to use</param>
+        /// <param name="size">What size should it be?</param>
+        /// <param name="outlineColor">Outline Color</param>
+        /// <param name="barColor">Bar Color</param>
+        /// <param name="textColor">Text Color</param>
+        public UiProgressBarDrawable(Vector2 position, byte[] font, Vector2 size, Color outlineColor, Color barColor, Color textColor) {
+            this.Position      = position;
+            this.BarSize       = size;
+            this.OutlineColor  = outlineColor;
+            this.ColorOverride = barColor;
 
             this.TextDrawable = new(Vector2.Zero, font, "", size.Y * 0.9f) {
                 ColorOverride = textColor

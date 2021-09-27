@@ -16,8 +16,16 @@ namespace Furball.Engine.Engine.Graphics {
         public static void ClearCache() {
             CONTENT_CACHE.Clear();
         }
-        
-        public static pContentType LoadMonogameAsset <pContentType>(string filename, ContentSource source = ContentSource.Game) {
+        /// <summary>
+        /// Looks for `filename` and returns it if it finds it at `source`
+        /// </summary>
+        /// <param name="filename">Asset Name</param>
+        /// <param name="source">Where to look for</param>
+        /// <typeparam name="pContentType">What type is the Asset</typeparam>
+        /// <returns>Asset Requested</returns>
+        /// <exception cref="Exception">other stuff</exception>
+        /// <exception cref="FileNotFoundException">Asset not Found</exception>
+        public static pContentType LoadMonogameAsset<pContentType>(string filename, ContentSource source = ContentSource.Game) {
             ContentManager tempManager = new(FurballGame.Instance.Content.ServiceProvider);
 
             string executablePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? throw new Exception("shits fucked man");

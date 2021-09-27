@@ -8,6 +8,9 @@ using Furball.Engine.Engine.Input;
 using Microsoft.Xna.Framework.Input;
 
 namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
+    /// <summary>
+    /// Creates a Basic Textbox
+    /// </summary>
     public class UiTextBoxDrawable : TextDrawable {
         public float TextBoxWidth;
         public bool  Selected;
@@ -16,12 +19,29 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         public event EventHandler<char> OnLetterRemoved; 
 
         public override Vector2 Size => new(this.TextBoxWidth, this.Font.MeasureString("|").Y);
-
-        public UiTextBoxDrawable(byte[] font, string text, float size, float width, CharacterRange[] range = null) : base(Vector2.Zero, font, text, size, range) {
+        /// <summary>
+        /// Creates a Textbox
+        /// </summary>
+        /// <param name="position">Where to Draw</param>
+        /// <param name="font">What font to use</param>
+        /// <param name="text">Initial Text</param>
+        /// <param name="size">Size of the text</param>
+        /// <param name="width">Width/Length of the Textbox</param>
+        /// <param name="range">SpriteFont characcter range</param>
+        public UiTextBoxDrawable(Vector2 position, byte[] font, string text, float size, float width, CharacterRange[] range = null) : base(Vector2.Zero, font, text, size, range) {
+            this.Position     = position;
             this.TextBoxWidth = width;
             this.RegisterHandlers();
         }
-        public UiTextBoxDrawable(SpriteFont font, string text, float width) : base(font, text) {
+        /// <summary>
+        /// Creates a Textbox
+        /// </summary>
+        /// <param name="position">Where to Draw</param>
+        /// <param name="font">What font to use</param>
+        /// <param name="text">Initial Text</param>>
+        /// <param name="width">Width/Length of the Textbox</param>
+        public UiTextBoxDrawable(Vector2 position, SpriteFont font, string text, float width) : base(font, text) {
+            this.Position     = position;
             this.TextBoxWidth = width;
             this.RegisterHandlers();
         }
@@ -30,6 +50,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
             FurballGame.Instance.Window.TextInput += this.OnTextInput;
             FurballGame.InputManager.OnMouseDown += this.OnMouseDown;
         }
+
         private void OnMouseDown(object? sender, (MouseButton, string) e) {
             Vector2   tempSize = this.Size;
             Rectangle sizeRect = new(new((int)this.Position.X, (int)this.Position.Y), new((int)tempSize.X, (int)tempSize.Y));

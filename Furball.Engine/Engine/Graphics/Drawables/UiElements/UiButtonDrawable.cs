@@ -5,6 +5,9 @@ using Microsoft.Xna.Framework;
 using SpriteFontPlus;
 
 namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
+    /// <summary>
+    /// Creates a Simple Button Object
+    /// </summary>
     public class UiButtonDrawable : ManagedDrawable {
         private string _text;
         public string Text => this._text;
@@ -25,7 +28,20 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
             }
         }
 
-        public UiButtonDrawable(string text, byte[] font, float size, Color buttonColor, Color textColor, Color outlineColor, float margin = 5f, CharacterRange[] charRange = null) {
+        /// <summary>
+        /// Creates a button
+        /// </summary>
+        /// <param name="position">Where to Draw the Button</param>
+        /// <param name="text">What text should the button display?</param>
+        /// <param name="font">What SpriteFont to use</param>
+        /// <param name="size">What size to Draw at</param>
+        /// <param name="buttonColor">Button Background Color</param>
+        /// <param name="textColor">Button Text Color</param>
+        /// <param name="outlineColor">Button Outline Color</param>
+        /// <param name="margin">Beyley explain</param>
+        /// <param name="charRange">SpriteFont character range</param>
+        public UiButtonDrawable(Vector2 position, string text, byte[] font, float size, Color buttonColor, Color textColor, Color outlineColor, float margin = 5f, CharacterRange[] charRange = null) {
+            this.Position     = position;
             this.TextDrawable = new TextDrawable(Vector2.Zero, font, text, size, charRange);
             this._margin      = margin;
             this._text        = text;

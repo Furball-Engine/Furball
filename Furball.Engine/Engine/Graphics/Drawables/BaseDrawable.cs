@@ -18,7 +18,9 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         LeftCenter,
         RightCenter
     }
-
+    /// <summary>
+    /// Base Class for Managed and Unmanaged Drawable
+    /// </summary>
     public abstract class BaseDrawable {
         private Vector2 _position = Vector2.Zero;
 
