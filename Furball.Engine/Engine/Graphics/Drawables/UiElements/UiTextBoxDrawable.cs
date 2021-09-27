@@ -80,8 +80,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
                 }
                 case Keys.Enter: {
                     this.OnCommit?.Invoke(this, EventArgs.Empty);
-                    
-                    wasSpecial = true;
+                    this.Selected = false;
+                    wasSpecial    = true;
                     break;
                 }
             }
