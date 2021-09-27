@@ -12,7 +12,11 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         TopRight,
         BottomLeft,
         BottomRight,
-        Center
+        Center,
+        TopCenter,
+        BottomCenter,
+        LeftCenter,
+        RightCenter
     }
 
     public abstract class BaseDrawable {

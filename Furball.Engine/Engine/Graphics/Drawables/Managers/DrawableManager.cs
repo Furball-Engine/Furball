@@ -98,12 +98,16 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
 
         private static Vector2 CalculateNewOriginPosition(BaseDrawable drawable) {
             return drawable.OriginType switch {
-                OriginType.TopLeft     => Vector2.Zero,
-                OriginType.TopRight    => new Vector2(drawable.Size.X, 0),
-                OriginType.BottomLeft  => new Vector2(0,               drawable.Size.Y),
-                OriginType.BottomRight => new Vector2(drawable.Size.X, drawable.Size.Y),
-                OriginType.Center      => new Vector2(drawable.Size.X / 2, drawable.Size.Y / 2),
-                _                      => throw new ArgumentOutOfRangeException(nameof (drawable.OriginType), "That OriginType is unsupported.")
+                OriginType.TopLeft      => Vector2.Zero,
+                OriginType.TopRight     => new Vector2(drawable.Size.X,     0),
+                OriginType.BottomLeft   => new Vector2(0,                   drawable.Size.Y),
+                OriginType.BottomRight  => new Vector2(drawable.Size.X,     drawable.Size.Y),
+                OriginType.Center       => new Vector2(drawable.Size.X / 2, drawable.Size.Y / 2),
+                OriginType.TopCenter    => new Vector2(drawable.Size.X / 2, 0),
+                OriginType.BottomCenter => new Vector2(drawable.Size.X / 2, drawable.Size.Y),
+                OriginType.LeftCenter   => new Vector2(0, drawable.Size.Y / 2),
+                OriginType.RightCenter  => new Vector2(drawable.Size.X, drawable.Size.Y / 2),
+                _                       => throw new ArgumentOutOfRangeException(nameof (drawable.OriginType), "That OriginType is unsupported.")
             };
         }
 
