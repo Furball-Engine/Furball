@@ -63,10 +63,9 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
 
             // FIXME: this is a bit of a hack, it should definitely be done differently
             DrawableManagerArgs tempArgs = args;
-            tempArgs.Position.X += this._margin * args.Scale.X;
-            tempArgs.Position.Y += this._margin * args.Scale.Y;
+            tempArgs.Position.X += this._margin;
+            tempArgs.Position.Y += this._margin;
             tempArgs.Color      =  this.TextDrawable.ColorOverride;
-            tempArgs.Scale      /= FurballGame.VerticalRatio;
             this.TextDrawable.Draw(time, batch, tempArgs);
         }
     }

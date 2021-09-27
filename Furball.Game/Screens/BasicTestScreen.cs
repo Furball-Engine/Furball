@@ -1,5 +1,6 @@
 using Furball.Engine;
 using Furball.Engine.Engine;
+using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Graphics.Drawables.Primitives;
 using Furball.Engine.Engine.Graphics.Drawables.UiElements;
 using Microsoft.Xna.Framework;
@@ -11,7 +12,7 @@ namespace Furball.Game.Screens {
         
         public override void Update(GameTime gameTime) {
             //this._progressBar.Progress = (gameTime.TotalGameTime.Milliseconds % 1000f) / 1000f;
-            this.cursorTest.Position = FurballGame.InputManager.CursorStates[0].Position.ToVector2() / FurballGame.VerticalRatio;
+            this.cursorTest.Position = FurballGame.InputManager.CursorStates[0].Position.ToVector2();
             base.Update(gameTime);
         }
         
@@ -27,7 +28,9 @@ namespace Furball.Game.Screens {
             LinePrimitiveDrawable drawable3 = new LinePrimitiveDrawable(new Vector2(500,          100), new(550, 50), 10f);
             LinePrimitiveDrawable drawable4 = new LinePrimitiveDrawable(new Vector2(600,          100), new(650, 50), 10f);
             RectanglePrimitiveDrawable drawable5 = new RectanglePrimitiveDrawable(new Vector2(10, 600), new Vector2(400, 50), 5f, true);
-            RectanglePrimitiveDrawable drawable6 = new RectanglePrimitiveDrawable(new Vector2(10, 500), new Vector2(400, 50), 5f, false);
+            RectanglePrimitiveDrawable drawable6 = new RectanglePrimitiveDrawable(new Vector2(300, 500), new Vector2(400, 50), 5f, false) {
+                OriginType = OriginType.Center
+            };
 
             this.Manager.Add(drawable);
             this.Manager.Add(drawable2);

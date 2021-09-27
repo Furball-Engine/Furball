@@ -7,7 +7,7 @@ namespace Furball.Engine.Engine.Input.InputMethods {
             MouseStateXna currentMouseState = Mouse.GetState(FurballGame.Instance.Window);
             
             MouseState state = new("MonogameMouse") {
-                Position     = new((int)(currentMouseState.Position.X / FurballGame.VerticalRatio), (int)(currentMouseState.Position.Y / FurballGame.VerticalRatio)),
+                Position     = new((int)(currentMouseState.Position.X), (int)(currentMouseState.Position.Y)),
                 LeftButton   = currentMouseState.LeftButton,
                 MiddleButton = currentMouseState.MiddleButton,
                 RightButton  = currentMouseState.RightButton,
@@ -24,7 +24,7 @@ namespace Furball.Engine.Engine.Input.InputMethods {
             MouseStateXna currentMouseState = Mouse.GetState(FurballGame.Instance.Window);
             
             MouseState state = new("MonogameMouse") {
-                Position     = new((int)(currentMouseState.Position.X / FurballGame.VerticalRatio), (int)(currentMouseState.Position.Y / FurballGame.VerticalRatio)),
+                Position     = new((int)(currentMouseState.Position.X), (int)(currentMouseState.Position.Y)),
                 LeftButton   = currentMouseState.LeftButton,
                 MiddleButton = currentMouseState.MiddleButton,
                 RightButton  = currentMouseState.RightButton,
