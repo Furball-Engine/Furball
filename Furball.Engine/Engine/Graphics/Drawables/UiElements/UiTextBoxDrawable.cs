@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using SpriteFontPlus;
 using Microsoft.Xna.Framework;
@@ -10,7 +11,10 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
     public class UiTextBoxDrawable : TextDrawable {
         public float TextBoxWidth;
         public bool  Selected;
-        
+
+        public event EventHandler<char> OnLetterTyped;
+        public event EventHandler<char> OnLetterRemoved; 
+
         public override Vector2 Size => new(this.TextBoxWidth, this.Font.MeasureString("|").Y);
 
         public UiTextBoxDrawable(byte[] font, string text, float size, float width, CharacterRange[] range = null) : base(font, text, size, range) {
@@ -45,8 +49,10 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
 
             switch (e.Key) {
                 case Keys.Back:
-                    if(this.Text.Length != 0)
-                        this.Text  = this.Text.Substring(0, this.Text.Length - 1);
+                    if (this.Text.Length != 0) {
+                        this.OnLetterRemoved?.Invoke(this, this.Text[^1]);
+                        this.Text = this.Text[..^1];
+                    }
                     wasSpecial = true;
                     break;
             }
@@ -54,6 +60,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
             if (wasSpecial) return;
 
             this.Text += e.Character;
+            this.OnLetterTyped?.Invoke(this, e.Character);
         }
 
         private void UnregisterHandlers() {
