@@ -42,7 +42,11 @@ namespace Furball.Game.Screens {
             this.Manager.Add(drawable5);
             this.Manager.Add(drawable6);
 
-            UiButtonDrawable testButton = new(new(500, 500), "Test button", FurballGame.DEFAULT_FONT, 30, new(100, 100, 100), Color.White, Color.White, new(200, 200));
+            UiButtonDrawable testButton = new(new(500, 500), "Test button", FurballGame.DEFAULT_FONT, 30, new(100, 100, 100), Color.White, Color.White, new(200, 200)) {
+                TextDrawable = {
+                    OriginType = OriginType.RightCenter
+                }
+            };
 
             this.Manager.Add(testButton);
             

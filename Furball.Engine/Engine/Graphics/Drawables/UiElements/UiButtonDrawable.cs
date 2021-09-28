@@ -64,6 +64,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
             this.ColorOverride = buttonColor;
             this.ButtonSize    = buttonSize;
 
+            this.TextDrawable.OriginType = OriginType.Center;
+
             this.OnHover += delegate {
                 if (!this.Clickable) return;
                 
@@ -103,8 +105,62 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
             } else {
                 (float textX, float textY) = this.TextDrawable.Size;
 
-                tempArgs.Position.X += this.ButtonSize.X / 2 - textX / 2;
-                tempArgs.Position.Y += this.ButtonSize.Y / 2 - textY / 2;
+                switch (this.TextDrawable.OriginType) {
+                    case OriginType.Center: {
+                        tempArgs.Position.X += this.ButtonSize.X / 2 - textX / 2;
+                        tempArgs.Position.Y += this.ButtonSize.Y / 2 - textY / 2;
+                        
+                        break;
+                    }
+                    case OriginType.TopLeft: {
+                        tempArgs.Position.X += this.Margin;
+                        tempArgs.Position.Y += this.Margin;
+                        
+                        break;
+                    }
+                    case OriginType.BottomRight: {
+                        tempArgs.Position.X += this.Size.X - this.Margin - textX;
+                        tempArgs.Position.Y += this.Size.Y - this.Margin - textY;
+                        
+                        break;
+                    }
+                    case OriginType.TopRight: {
+                        tempArgs.Position.X += this.Size.X - this.Margin - textX;
+                        tempArgs.Position.Y += this.Margin;
+                        
+                        break;
+                    }
+                    case OriginType.BottomLeft: {
+                        tempArgs.Position.X += this.Margin;
+                        tempArgs.Position.Y += this.Size.Y - this.Margin - textY;
+                        
+                        break;
+                    }
+                    case OriginType.TopCenter: {
+                        tempArgs.Position.X += this.ButtonSize.X / 2 - textX / 2;
+                        tempArgs.Position.Y += this.Margin;
+                        
+                        break;
+                    }
+                    case OriginType.BottomCenter: {
+                        tempArgs.Position.X += this.ButtonSize.X / 2 - textX / 2;
+                        tempArgs.Position.Y += this.Size.Y - this.Margin - textY;
+                        
+                        break;
+                    }
+                    case OriginType.LeftCenter: {
+                        tempArgs.Position.X += this.Margin;
+                        tempArgs.Position.Y += this.ButtonSize.Y / 2 - textY / 2;
+                        
+                        break;
+                    }
+                    case OriginType.RightCenter: {
+                        tempArgs.Position.X += this.Size.X - this.Margin - textX;
+                        tempArgs.Position.Y += this.ButtonSize.Y / 2 - textY / 2;
+                        
+                        break;
+                    }
+                }
             }
             tempArgs.Color      =  this.TextDrawable.ColorOverride;
             this.TextDrawable.Draw(time, batch, tempArgs);
