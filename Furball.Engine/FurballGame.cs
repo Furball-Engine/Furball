@@ -45,6 +45,9 @@ namespace Furball.Engine {
 
         public static byte[] DEFAULT_FONT;
 
+        public event EventHandler<Screen> BeforeScreenChange; 
+        public event EventHandler<Screen> AfterScreenChange; 
+
         public FurballGame(Screen startScreen) {
             this._graphics             = new GraphicsDeviceManager(this);
             this.Content.RootDirectory = "Content";
@@ -84,6 +87,8 @@ namespace Furball.Engine {
         }
 
         public void ChangeScreen(Screen screen) {
+            this.BeforeScreenChange?.Invoke(this, screen);
+            
             if (this._running != null) {
                 this.Components.Remove(this._running);
 
@@ -93,6 +98,8 @@ namespace Furball.Engine {
 
             this.Components.Add(screen);
             this._running = screen;
+            
+            this.AfterScreenChange?.Invoke(this, screen);
         }
 
         protected override void LoadContent() {
