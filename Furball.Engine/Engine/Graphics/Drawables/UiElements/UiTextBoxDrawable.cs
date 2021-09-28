@@ -72,8 +72,9 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
             switch (e.Key) {
                 case Keys.Back: {
                     if (this.Text.Length != 0) {
-                        this.OnLetterRemoved?.Invoke(this, this.Text[^1]);
+                        char lastLetter = this.Text[^1];
                         this.Text = this.Text[..^1];
+                        this.OnLetterRemoved?.Invoke(this, lastLetter);
                     }
                     wasSpecial = true;
                     break;
