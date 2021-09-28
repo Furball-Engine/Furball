@@ -18,13 +18,24 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
 
         public Color OutlineColor;
         public Color ButtonColor;
+
+        public Color TextColor {
+            get => this.TextDrawable.ColorOverride;
+            set => this.TextDrawable.ColorOverride = value;
+        }
         public float OutlineThickness = 2f;
+
+        public Vector2 ButtonSize = new();
 
         public override Vector2 Size {
             get {
-                (float textDrawableSizeX, float textDrawableSizeY) = this.TextDrawable.Size;
+                if(this.ButtonSize == Vector2.Zero) {
+                    (float textDrawableSizeX, float textDrawableSizeY) = this.TextDrawable.Size;
 
-                return new Vector2(textDrawableSizeX + this._margin * 2f, textDrawableSizeY + this._margin * 2f) * this.Scale;
+                    return new Vector2(textDrawableSizeX + this._margin * 2f, textDrawableSizeY + this._margin * 2f) * this.Scale;
+                } 
+                
+                return this.ButtonSize;
             }
         }
 
@@ -34,22 +45,24 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         /// <param name="position">Where to Draw the Button</param>
         /// <param name="text">What text should the button display?</param>
         /// <param name="font">What SpriteFont to use</param>
-        /// <param name="size">What size to Draw at</param>
+        /// <param name="textSize">What size to Draw at</param>
         /// <param name="buttonColor">Button Background Color</param>
         /// <param name="textColor">Button Text Color</param>
         /// <param name="outlineColor">Button Outline Color</param>
+        /// <param name="buttonSize">The size of the button, set to Vector2.Zero for it to auto calculate</param>
         /// <param name="margin">Beyley explain</param>
         /// <param name="charRange">SpriteFont character range</param>
-        public UiButtonDrawable(Vector2 position, string text, byte[] font, float size, Color buttonColor, Color textColor, Color outlineColor, float margin = 5f, CharacterRange[] charRange = null) {
+        public UiButtonDrawable(Vector2 position, string text, byte[] font, float textSize, Color buttonColor, Color textColor, Color outlineColor, Vector2 buttonSize, float margin = 5f, CharacterRange[] charRange = null) {
             this.Position     = position;
-            this.TextDrawable = new TextDrawable(Vector2.Zero, font, text, size, charRange);
+            this.TextDrawable = new TextDrawable(Vector2.Zero, font, text, textSize, charRange);
             this._margin      = margin;
             this._text        = text;
 
-            this.TextDrawable.ColorOverride = textColor;
-            this.OutlineColor               = outlineColor;
-            this.ButtonColor                = buttonColor;
-            this.ColorOverride              = buttonColor;
+            this.TextColor     = textColor;
+            this.OutlineColor  = outlineColor;
+            this.ButtonColor   = buttonColor;
+            this.ColorOverride = buttonColor;
+            this.ButtonSize    = buttonSize;
 
             this.OnHover += delegate {
                 if (!this.Clickable) return;
@@ -84,8 +97,15 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
 
             // FIXME: this is a bit of a hack, it should definitely be done differently
             DrawableManagerArgs tempArgs = args;
-            tempArgs.Position.X += this._margin;
-            tempArgs.Position.Y += this._margin;
+            if(this.ButtonSize == Vector2.Zero) {
+                tempArgs.Position.X += this._margin;
+                tempArgs.Position.Y += this._margin;
+            } else {
+                (float textX, float textY) = this.TextDrawable.Size;
+
+                tempArgs.Position.X += this.ButtonSize.X / 2 - textX / 2;
+                tempArgs.Position.Y += this.ButtonSize.Y / 2 - textY / 2;
+            }
             tempArgs.Color      =  this.TextDrawable.ColorOverride;
             this.TextDrawable.Draw(time, batch, tempArgs);
         }
