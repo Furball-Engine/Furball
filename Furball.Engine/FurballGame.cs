@@ -21,7 +21,7 @@ namespace Furball.Engine {
 
         public static Random Random = new();
 
-        public static Game          Instance;
+        public static FurballGame   Instance;
         public static DrawableBatch DrawableBatch;
         public static InputManager  InputManager;
         public static ITimeSource   GameTimeSource;
