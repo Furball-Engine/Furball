@@ -109,9 +109,17 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// </summary>
         public bool Clickable = true;
         /// <summary>
+        /// Whether the drawable covers other drawables from being clicked
+        /// </summary>
+        public bool CoverClicks = true;
+        /// <summary>
         /// Whether the drawable is able to be hovered on
         /// </summary>
         public bool Hoverable = true;
+        /// <summary>
+        /// Whether the drawable covers other drawables from being hovered over
+        /// </summary>
+        public bool CoverHovers = true;
         /// <summary>
         /// Whether the drawable is visible or not
         /// </summary>

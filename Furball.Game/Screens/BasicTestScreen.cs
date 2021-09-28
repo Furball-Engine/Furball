@@ -8,7 +8,10 @@ using Microsoft.Xna.Framework;
 namespace Furball.Game.Screens {
     public class BasicTestScreen : Screen {
         private UiProgressBarDrawable   _progressBar;
-        private CirclePrimitiveDrawable cursorTest = new CirclePrimitiveDrawable(new Vector2(0,0), 10f, 2f, Color.White, Color.Transparent);
+        private CirclePrimitiveDrawable cursorTest = new(new Vector2(0,0), 10f, 2f, Color.White, Color.Transparent) {
+            CoverClicks = false,
+            CoverHovers = false
+        };
         
         public override void Update(GameTime gameTime) {
             //this._progressBar.Progress = (gameTime.TotalGameTime.Milliseconds % 1000f) / 1000f;
@@ -39,9 +42,9 @@ namespace Furball.Game.Screens {
             this.Manager.Add(drawable5);
             this.Manager.Add(drawable6);
 
-            UiTextBoxDrawable textBox = new(new(500, 500), FurballGame.DEFAULT_FONT, "input pog?", 30, 200);
+            UiButtonDrawable testButton = new(new(500, 500), "Test button", FurballGame.DEFAULT_FONT, 30, new(100, 100, 100), Color.White, Color.White, new(0, 0));
 
-            this.Manager.Add(textBox);
+            this.Manager.Add(testButton);
             
             base.Initialize();
         }

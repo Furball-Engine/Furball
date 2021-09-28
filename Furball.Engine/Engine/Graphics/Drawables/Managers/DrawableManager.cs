@@ -190,7 +190,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                                 }
                             }
 
-                            clickHandled = true;
+                            if(currentDrawable.CoverClicks)
+                                clickHandled = true;
                         }
                     } else {
                         if (currentDrawable.IsClicked) {
@@ -209,7 +210,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                             currentDrawable.IsHovered = true;
                         }
 
-                        hoverHandled = true;
+                        if(currentDrawable.CoverHovers)
+                            hoverHandled = true;
                     }
                 } else {
                     if (leftMouseButton == ButtonState.Released) {
