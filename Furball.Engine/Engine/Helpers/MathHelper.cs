@@ -1,4 +1,5 @@
 using System;
+using System.Security.Cryptography;
 
 namespace Furball.Engine.Engine.Helpers {
     public static class MathHelper {
@@ -29,5 +30,19 @@ namespace Furball.Engine.Engine.Helpers {
         /// <param name="deg">Amount in degrees</param>
         /// <returns>Amount in radians</returns>
         public static double DegreesToRadians(double deg) => deg * Math.PI / 180.0;
+
+        private static MD5 _md5 = new MD5CryptoServiceProvider();
+        
+        public static string GetMD5(byte[] bytes) {
+            byte[] hash = _md5.ComputeHash(bytes);
+
+            string hashString = string.Empty;
+            for (int index = 0; index < hash.Length; index++) {
+                byte x = hash[index];
+                hashString += $"{x:x2}";
+            }
+
+            return hashString;
+        }
     }
 }
