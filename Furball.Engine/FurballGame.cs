@@ -63,7 +63,7 @@ namespace Furball.Engine {
                 $@"Starting Furball {(Environment.Is64BitProcess ? "64-bit" : "32-bit")} on {Environment.OSVersion.VersionString} {(Environment.Is64BitOperatingSystem ? "64-bit" : "32-bit")}"
             );
 
-            DEFAULT_FONT = ContentReader.LoadRawAsset("default-font.ttf");
+            DEFAULT_FONT = ContentManager.LoadRawAsset("default-font.ttf");
 
             _stopwatch.Start();
 

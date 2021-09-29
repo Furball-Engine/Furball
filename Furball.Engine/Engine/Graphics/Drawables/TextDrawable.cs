@@ -1,8 +1,10 @@
+using System.Collections.Generic;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Furball.Engine.Engine.Helpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SpriteFontPlus;
+using MathHelper=Furball.Engine.Engine.Helpers.MathHelper;
 
 namespace Furball.Engine.Engine.Graphics.Drawables {
     /// <summary>
@@ -38,9 +40,17 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
                 CharacterRange.BasicLatin
             };
 
-            TtfFontBakerResult fontBakeResult = TtfFontBaker.Bake(font, size, (int)(1024f * (size / 25f)), (int)(1024f * (size / 25f)), range);
+            string md5 = MathHelper.GetMD5(font);
+            if (!ContentManager.SPRITEFONTPLUS_CACHE.TryGetValue(new KeyValuePair<string, float>(md5, size), out this.Font)) {
+                TtfFontBakerResult fontBakeResult = TtfFontBaker.Bake(font, size, (int)(1024f * (size / 25f)), (int)(1024f * (size / 25f)), range);
 
-            this.Font = fontBakeResult.CreateSpriteFont(FurballGame.Instance.GraphicsDevice);
+                SpriteFont spriteFont = fontBakeResult.CreateSpriteFont(FurballGame.Instance.GraphicsDevice);
+                
+                ContentManager.SPRITEFONTPLUS_CACHE.Add(new KeyValuePair<string, float>(md5, size), spriteFont);
+                
+                this.Font = spriteFont;
+            }
+
             this.Text = text;
         }
         /// <summary>

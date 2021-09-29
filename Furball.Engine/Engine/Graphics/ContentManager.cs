@@ -2,12 +2,16 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Collections.Generic;
-using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Furball.Engine.Engine.Graphics {
-    public static class ContentReader {
-        private static readonly Dictionary<string, byte[]> CONTENT_CACHE = new();
-
+    public static class ContentManager {
+        private static readonly Dictionary<string, byte[]>  CONTENT_CACHE = new();
+        /// <summary>
+        /// Contains a cache of generated SpriteFonts by TextDrawable
+        /// </summary>
+        public static readonly Dictionary<KeyValuePair<string, float>, SpriteFont> SPRITEFONTPLUS_CACHE = new();
+        
         public static int CacheSizeLimit = 4000000;//4 MB
 
         /// <summary>
@@ -26,7 +30,7 @@ namespace Furball.Engine.Engine.Graphics {
         /// <exception cref="Exception">other stuff</exception>
         /// <exception cref="FileNotFoundException">Asset not Found</exception>
         public static pContentType LoadMonogameAsset<pContentType>(string filename, ContentSource source = ContentSource.Game) {
-            ContentManager tempManager = new(FurballGame.Instance.Content.ServiceProvider);
+            Microsoft.Xna.Framework.Content.ContentManager tempManager = new(FurballGame.Instance.Content.ServiceProvider);
 
             string executablePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? throw new Exception("shits fucked man");
 
