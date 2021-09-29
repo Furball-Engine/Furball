@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Furball.Engine.Engine.Input;
 using Microsoft.Xna.Framework.Input;
+using Xssp.MonoGame.Primitives2D;
 
 namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
     /// <summary>
@@ -107,11 +108,11 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         }
 
         public override void Draw(GameTime time, DrawableBatch batch, DrawableManagerArgs args) {
-            batch.ShapeBatch.DrawRectangle(
+            batch.SpriteBatch.DrawRectangle(
                 args.Position * FurballGame.VerticalRatio, 
                 this.Size * FurballGame.VerticalRatio, 
-                Color.Transparent, 
-                this.Selected ? Color.White : Color.Gray
+                this.Selected ? Color.LightGray : Color.DarkGray, 
+                args.LayerDepth
             );
             
             base.Draw(time, batch, args);

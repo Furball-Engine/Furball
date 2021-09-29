@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework;
+using Xssp.MonoGame.Primitives2D;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
 
 namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
@@ -46,19 +47,18 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         }
 
         public override void Draw(GameTime time, DrawableBatch batch, DrawableManagerArgs args) {
-            batch.ShapeBatch.DrawRectangle(
+            batch.SpriteBatch.DrawRectangle(
                 args.Position * FurballGame.VerticalRatio, 
                 new Vector2(this._progressWidth, this.BarSize.Y) * FurballGame.VerticalRatio, 
-                args.Color, 
-                Color.Transparent, 
-                this.OutlineThickness * FurballGame.VerticalRatio
+                this.OutlineColor, 
+                this.OutlineThickness * FurballGame.VerticalRatio, 
+                args.LayerDepth
             );
-            batch.ShapeBatch.DrawRectangle(
+            batch.SpriteBatch.FillRectangle(
                 args.Position * FurballGame.VerticalRatio, 
                 this.BarSize * FurballGame.VerticalRatio, 
-                Color.Transparent, 
-                this.OutlineColor, 
-                this.OutlineThickness * FurballGame.VerticalRatio
+                args.Color, 
+                this.Depth
             );
             
             // FIXME: this is a bit of a hack, it should definitely be done differently

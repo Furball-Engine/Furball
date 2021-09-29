@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using Apos.Shapes;
 using Furball.Engine.Engine;
 using Furball.Engine.Engine.Audio;
 using Furball.Engine.Engine.Debug;
@@ -103,7 +102,7 @@ namespace Furball.Engine {
         }
 
         protected override void LoadContent() {
-            DrawableBatch = new DrawableBatch(new SpriteBatch(this.GraphicsDevice), new ShapeBatch(this.GraphicsDevice, this.Content));
+            DrawableBatch = new DrawableBatch(new SpriteBatch(this.GraphicsDevice));
 
             this.ChangeScreenSize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
 

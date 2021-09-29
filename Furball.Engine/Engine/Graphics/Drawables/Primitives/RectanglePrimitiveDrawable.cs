@@ -1,5 +1,6 @@
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Microsoft.Xna.Framework;
+using Xssp.MonoGame.Primitives2D;
 
 namespace Furball.Engine.Engine.Graphics.Drawables.Primitives {
     /// <summary>
@@ -27,19 +28,28 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Primitives {
         public RectanglePrimitiveDrawable() { }
         
         public override void Draw(GameTime time, DrawableBatch batch, DrawableManagerArgs args) {
-            if(this.Filled)
-                batch.ShapeBatch.FillRectangle(
-                    args.Position * FurballGame.VerticalRatio, 
-                    this.RectSize * FurballGame.VerticalRatio, 
-                    args.Color
+            if(this.Filled) {
+                batch.SpriteBatch.DrawRectangle(
+                    args.Position * FurballGame.VerticalRatio,
+                    this.Size * FurballGame.VerticalRatio,
+                    args.Color,
+                    this.Thickness * FurballGame.VerticalRatio,
+                    args.LayerDepth
                 );
-            else
-                batch.ShapeBatch.DrawRectangle(
+                batch.SpriteBatch.FillRectangle(
                     args.Position * FurballGame.VerticalRatio, 
-                    this.RectSize * FurballGame.VerticalRatio, 
-                    Color.Transparent, 
+                    this.Size * FurballGame.VerticalRatio, 
                     args.Color, 
-                    this.Thickness * FurballGame.VerticalRatio
+                    args.LayerDepth
+                );
+            }
+            else
+                batch.SpriteBatch.DrawRectangle(
+                    args.Position * FurballGame.VerticalRatio,
+                    this.Size * FurballGame.VerticalRatio,
+                    args.Color,
+                    this.Thickness * FurballGame.VerticalRatio,
+                    args.LayerDepth
                 );
         }
     }

@@ -28,7 +28,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
             }
         }
 
-        public override void Draw(GameTime time, DrawableBatch spriteBatch, DrawableManagerArgs _ = null) {
+        public override void Draw(GameTime time, DrawableBatch drawableBatch, DrawableManagerArgs _ = null) {
             // Split _drawables into 2 lists containing the ManagedDrawables and the UnmanagedDrawables
             this._tempDrawManaged.Clear();
             this._tempDrawUnmanaged.Clear();
@@ -47,9 +47,10 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                 }
             }
 
-            spriteBatch.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
-            spriteBatch.ShapeBatch.Begin();
+            drawableBatch.Begin();
 
+            this._tempDrawManaged.Sort((x, y) => (int)((y.Depth - x.Depth) * 100f));
+            
             tempCount    = this._tempDrawManaged.Count;
             CountManaged = tempCount;
 
@@ -72,11 +73,12 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                 Rectangle rect = new((args.Position - origin).ToPoint(), new Point((int)Math.Ceiling(currentDrawable.Size.X * args.Scale.X), (int)Math.Ceiling(currentDrawable.Size.Y * args.Scale.Y)));
 
                 if(rect.Intersects(FurballGame.DisplayRect))
-                    currentDrawable.Draw(time, spriteBatch, args);
+                    currentDrawable.Draw(time, drawableBatch, args);
             }
 
-            spriteBatch.ShapeBatch.End();
-            spriteBatch.SpriteBatch.End();
+            drawableBatch.End();
+
+            this._tempDrawUnmanaged.Sort((x, y) => (int)((y.Depth - x.Depth) * 100f));
 
             tempCount      = this._tempDrawUnmanaged.Count;
             CountUnmanaged = tempCount;
@@ -97,7 +99,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                     Scale      = currentDrawable.Scale
                 };
 
-                currentDrawable.Draw(time, spriteBatch, args);
+                currentDrawable.Draw(time, drawableBatch, args);
             }
         }
 
