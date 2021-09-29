@@ -206,6 +206,17 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         public void InvokeOnDragEnd(object sender, Point position) {
             this.OnDragEnd?.Invoke(sender, position);
         }
+
+        public virtual void ClearEvents() {
+            this.OnClick     = null;
+            this.OnClickUp   = null;
+            this.OnDrag      = null;
+            this.OnDragEnd   = null;
+            this.OnDragBegin = null;
+            this.OnHover     = null;
+            this.OnMove      = null;
+            this.OnHoverLost = null;
+        }
         
         public virtual void Dispose(bool disposing) {}
         
