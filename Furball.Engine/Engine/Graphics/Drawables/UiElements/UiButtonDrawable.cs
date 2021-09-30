@@ -24,7 +24,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
             get => this.TextDrawable.ColorOverride;
             set => this.TextDrawable.ColorOverride = value;
         }
-        public float OutlineThickness = 4f;
+        public float OutlineThickness = 2f;
 
         public Vector2 ButtonSize = new();
 
