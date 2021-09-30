@@ -5,6 +5,7 @@ using Furball.Engine.Engine.Audio;
 using Furball.Engine.Engine.Debug;
 using Furball.Engine.Engine.Graphics;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
+using Furball.Engine.Engine.Helpers.Logger;
 using Furball.Engine.Engine.Input;
 using Furball.Engine.Engine.Input.InputMethods;
 using Furball.Engine.Engine.Platform;
@@ -54,13 +55,16 @@ namespace Furball.Engine {
 
             GameTimeSource = new GameTimeSource();
             Instance       = this;
+            
+            Logger.AddLogger(new ConsoleLogger());
 
             this.ChangeScreen(startScreen);
         }
 
         protected override void Initialize() {
-            Console.WriteLine(
-                $@"Starting Furball {(Environment.Is64BitProcess ? "64-bit" : "32-bit")} on {Environment.OSVersion.VersionString} {(Environment.Is64BitOperatingSystem ? "64-bit" : "32-bit")}"
+            Logger.Log(
+                $@"Starting Furball {(Environment.Is64BitProcess ? "64-bit" : "32-bit")} on {Environment.OSVersion.VersionString} {(Environment.Is64BitOperatingSystem ? "64-bit" : "32-bit")}",
+                LoggerLevel.EngineInfo
             );
 
             DEFAULT_FONT = ContentManager.LoadRawAsset("default-font.ttf");
@@ -81,7 +85,7 @@ namespace Furball.Engine {
 
             DrawableManager             = new();
             DebugOverlayDrawableManager = new();
-
+            
             base.Initialize();
         }
 
@@ -130,6 +134,9 @@ namespace Furball.Engine {
             if (RuntimeInfo.IsDebug())
                 DebugOverlayDrawableManager.Update(gameTime);
 
+            if (RuntimeInfo.LoggerEnabled())
+                Logger.Update(gameTime);
+                
             base.Update(gameTime);
         }
 

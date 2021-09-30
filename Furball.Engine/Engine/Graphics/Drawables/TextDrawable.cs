@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Furball.Engine.Engine.Helpers;
+using Furball.Engine.Engine.Helpers.Logger;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SpriteFontPlus;
@@ -47,6 +48,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
                 SpriteFont spriteFont = fontBakeResult.CreateSpriteFont(FurballGame.Instance.GraphicsDevice);
                 
                 ContentManager.SPRITEFONTPLUS_CACHE.Add(new KeyValuePair<string, float>(md5, size), spriteFont);
+                Logger.Log($"Caching SpriteFont with hash:{md5}, fontSize:{size}, dataSize:{font.LongLength}", LoggerLevel.CacheEvent);
                 
                 this.Font = spriteFont;
             }

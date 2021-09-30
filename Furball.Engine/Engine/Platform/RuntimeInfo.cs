@@ -14,6 +14,10 @@ namespace Furball.Engine.Engine.Platform {
             return OSPlatform.Windows;
         }
 
+        public static bool LoggerEnabled() {
+            return true;
+        }
+
         public static bool IsDebug() {
 #if DEBUG
             return true;

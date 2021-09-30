@@ -5,6 +5,7 @@ using ManagedBass.Fx;
 using System.Runtime.InteropServices;
 using Furball.Engine.Engine.Platform.Linux;
 using Furball.Engine.Engine.Audio.Exceptions;
+using Furball.Engine.Engine.Helpers.Logger;
 
 namespace Furball.Engine.Engine.Audio {
     public static class AudioEngine {
@@ -14,7 +15,7 @@ namespace Furball.Engine.Engine.Audio {
             if (windowId == default) windowId = IntPtr.Zero;
 
             if (Platform.RuntimeInfo.CurrentPlatform() == OSPlatform.Linux) {
-                Console.WriteLine("Loading Linux Bass Libraries");
+                Logger.Log("Loading Linux Bass Libraries", LoggerLevel.EngineInfo);
 
                 Library.Load("libbass.so", Library.LoadFlags.RTLD_LAZY | Library.LoadFlags.RTLD_GLOBAL);
 
@@ -43,7 +44,7 @@ namespace Furball.Engine.Engine.Audio {
                 }
             }
 
-            Console.WriteLine($"Bass Version: {Bass.Version}\nBassFx Version: {BassFx.Version}");
+            Logger.Log($"Bass Version: {Bass.Version} BassFx Version: {BassFx.Version}", LoggerLevel.EngineInfo);
         }
 
         public static AudioStream LoadFile(string filename, BassFlags flags = BassFlags.Default) {

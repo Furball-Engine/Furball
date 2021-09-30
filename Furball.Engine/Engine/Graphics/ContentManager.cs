@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Collections.Generic;
+using Furball.Engine.Engine.Helpers.Logger;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Furball.Engine.Engine.Graphics {
@@ -88,8 +89,10 @@ namespace Furball.Engine.Engine.Graphics {
                 throw new FileNotFoundException("The specified content file was not found.", filename);
 
             //We dont want to be caching anything huge as that could cause unnessesarily high memory usage
-            if (data.Length < CacheSizeLimit)
+            if (data.Length < CacheSizeLimit) {
+                Logger.Log($"Caching content with filepath: {filename}, hash:{MathHelper.GetMD5(data)}, dataSize:{data.LongLength}", LoggerLevel.CacheEvent);
                 CONTENT_CACHE.Add(filename, data);
+            }
 
             return data;
         }
