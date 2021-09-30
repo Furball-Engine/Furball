@@ -61,8 +61,8 @@ namespace Furball.Engine.Engine.Graphics {
             throw new FileNotFoundException();
         }
 
-        public static byte[] LoadRawAsset(string filename, ContentSource source = ContentSource.Game) {
-            if (CONTENT_CACHE.TryGetValue(filename, out byte[] cacheData))
+        public static byte[] LoadRawAsset(string filename, ContentSource source = ContentSource.Game, bool bypassCache = false) {
+            if (CONTENT_CACHE.TryGetValue(filename, out byte[] cacheData) && !bypassCache)
                 return cacheData;
 
             byte[] data = Array.Empty<byte>();
@@ -95,7 +95,7 @@ namespace Furball.Engine.Engine.Graphics {
                 throw new FileNotFoundException("The specified content file was not found.", filename);
 
             //We dont want to be caching anything huge as that could cause unnessesarily high memory usage
-            if (data.Length < CacheSizeLimit) {
+            if (data.Length < CacheSizeLimit && !bypassCache) {
                 Logger.Log($"Caching content with filepath: {filename}, hash:{MathHelper.GetMD5(data)}, dataSize:{data.LongLength}", LoggerLevel.CacheEvent);
                 CONTENT_CACHE.Add(filename, data);
             }
