@@ -1,6 +1,8 @@
+using System;
+
 namespace Furball.Engine.Engine.Helpers.Logger {
-    public abstract class ILogger {
-        public ILogger(LoggerLevel level = (LoggerLevel)long.MaxValue) {
+    public abstract class LoggerBase : IDisposable {
+        public LoggerBase(LoggerLevel level = (LoggerLevel)long.MaxValue) {
             this.Level = level;
         }
         
@@ -9,8 +11,8 @@ namespace Furball.Engine.Engine.Helpers.Logger {
         public virtual void Initialize() {
             Logger.Log(new LoggerLine{Level = LoggerLevel.LoggerInfo, LineData = $"{ this.GetType().Name } initialized!"});
         }
-        public virtual  void Dispose() {}
         
         public LoggerLevel Level;
+        public void        Dispose() {}
     }
 }

@@ -49,7 +49,7 @@ namespace Furball.Game.Screens {
                     OriginType = OriginType.RightCenter
                 }
             };
-
+            
             testButton.OnClick += delegate {
                 Logger.Log($"pain peko {FurballGame.Time}");
             };

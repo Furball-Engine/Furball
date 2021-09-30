@@ -6,11 +6,11 @@ using System.Collections.Generic;
 namespace Furball.Engine.Engine.Helpers.Logger {
     public static class Logger {
         private static Queue<LoggerLine> _LoggerLines = new();
-        private static List<ILogger>     _Loggers     = new();
+        private static List<LoggerBase>     _Loggers     = new();
         
         private static       double            _UpdateDeltaTime = 0;
         
-        public static List<ILogger> Loggers => _Loggers;
+        public static List<LoggerBase> Loggers => _Loggers;
 
         /// <summary>
         /// The time in seconds before each logger update, defaults to half a second
@@ -30,7 +30,7 @@ namespace Furball.Engine.Engine.Helpers.Logger {
                     do {
                         LoggerLine lineToSend = _LoggerLines.Dequeue();
 
-                        foreach (ILogger logger in _Loggers)
+                        foreach (LoggerBase logger in _Loggers)
                             logger.Send(lineToSend);
                     } while (_LoggerLines.Count > 0);
                 }
@@ -38,14 +38,14 @@ namespace Furball.Engine.Engine.Helpers.Logger {
             }
         }
 
-        public static void AddLogger(ILogger logger) {
-            logger.Initialize();
-            _Loggers.Add(logger);
+        public static void AddLogger(LoggerBase loggerBase) {
+            loggerBase.Initialize();
+            _Loggers.Add(loggerBase);
         }
 
-        public static void RemoveLogger(ILogger logger) {
-            logger.Dispose();
-            _Loggers.Remove(logger);
+        public static void RemoveLogger(LoggerBase loggerBase) {
+            loggerBase.Dispose();
+            _Loggers.Remove(loggerBase);
         }
 
         public static void RemoveLogger(Type type) {
