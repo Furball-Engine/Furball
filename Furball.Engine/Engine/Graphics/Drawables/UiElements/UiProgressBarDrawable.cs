@@ -47,18 +47,18 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         }
 
         public override void Draw(GameTime time, DrawableBatch batch, DrawableManagerArgs args) {
+            batch.SpriteBatch.FillRectangle(
+                args.Position * FurballGame.VerticalRatio, 
+                new Vector2(this._progressWidth, this.BarSize.Y) * FurballGame.VerticalRatio,
+                args.Color, 
+                this.Depth
+            );
             batch.SpriteBatch.DrawRectangle(
                 args.Position * FurballGame.VerticalRatio, 
-                new Vector2(this._progressWidth, this.BarSize.Y) * FurballGame.VerticalRatio, 
+                this.BarSize * FurballGame.VerticalRatio, 
                 this.OutlineColor, 
                 this.OutlineThickness * FurballGame.VerticalRatio, 
                 args.LayerDepth
-            );
-            batch.SpriteBatch.FillRectangle(
-                args.Position * FurballGame.VerticalRatio, 
-                this.BarSize * FurballGame.VerticalRatio, 
-                args.Color, 
-                this.Depth
             );
             
             // FIXME: this is a bit of a hack, it should definitely be done differently
