@@ -12,6 +12,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// The Texture Being drawn
         /// </summary>
         private Texture2D _texture;
+        public Texture2D Texture => this._texture;
         /// <summary>
         /// Crop Rectangle, this basically tells which part of the Texture to Render
         /// Leave null to draw the entire Texture
@@ -50,7 +51,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
 
         public override void Draw(GameTime time, DrawableBatch batch, DrawableManagerArgs args) {
             args.Position *= FurballGame.VerticalRatio;
-            args.Scale *= FurballGame.VerticalRatio;
+            args.Scale    *= FurballGame.VerticalRatio;
             
             batch.SpriteBatch.Draw(this._texture, args, this._cropping);
         }
@@ -60,5 +61,6 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// </summary>
         /// <param name="crop">New Cropping</param>
         public void ChangeCropping(Rectangle? crop) => this._cropping = crop;
+        public void SetTexture(Texture2D texture) => this._texture = texture;
     }
 }
