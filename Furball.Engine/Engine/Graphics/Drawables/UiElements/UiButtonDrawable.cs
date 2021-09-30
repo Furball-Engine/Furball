@@ -51,7 +51,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         /// <param name="textColor">Button Text Color</param>
         /// <param name="outlineColor">Button Outline Color</param>
         /// <param name="buttonSize">The size of the button, set to Vector2.Zero for it to auto calculate</param>
-        /// <param name="margin">Beyley explain</param>
+        /// <param name="margin">The margin between the text and the side of the button</param>
         /// <param name="charRange">SpriteFont character range</param>
         public UiButtonDrawable(Vector2 position, string text, byte[] font, float textSize, Color buttonColor, Color textColor, Color outlineColor, Vector2 buttonSize, float margin = 5f, CharacterRange[] charRange = null) {
             this.Position     = position;
