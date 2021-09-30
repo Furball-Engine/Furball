@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Collections.Generic;
 using Furball.Engine.Engine.Helpers.Logger;
 using Microsoft.Xna.Framework.Graphics;
+using MathHelper=Furball.Engine.Engine.Helpers.MathHelper;
 
 namespace Furball.Engine.Engine.Graphics {
     public static class ContentManager {
@@ -13,7 +14,7 @@ namespace Furball.Engine.Engine.Graphics {
         /// </summary>
         public static readonly Dictionary<KeyValuePair<string, float>, SpriteFont> SPRITEFONTPLUS_CACHE = new();
         
-        public static int CacheSizeLimit = 4000000;//4 MB
+        public static int CacheSizeLimit = 40000000;//4 MB
 
         /// <summary>
         /// Clears the content cache, allowing changed assets to reload
@@ -69,20 +70,25 @@ namespace Furball.Engine.Engine.Graphics {
             string executablePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? throw new Exception("shits fucked man");
 
             string path;
-            if ((int)source >= (int)ContentSource.User) {
-                path = Path.Combine(executablePath, "/UserContent/", filename);
-                if (File.Exists(path))
-                    data = File.ReadAllBytes(path);
-            }
-            if ((int)source >= (int)ContentSource.Game && data.Length == 0) {
-                path = Path.Combine(FurballGame.Instance.Content.RootDirectory, filename);
-                if (File.Exists(path))
-                    data = File.ReadAllBytes(path);
-            }
-            if ((int)source >= (int)ContentSource.Engine && data.Length == 0) {
-                path = Path.Combine(executablePath, "/EngineContent/", filename);
-                if (File.Exists(path))
-                    data = File.ReadAllBytes(path);
+            if(source != ContentSource.External) {
+                if ((int)source >= (int)ContentSource.User) {
+                    path = Path.Combine(executablePath, "/UserContent/", filename);
+                    if (File.Exists(path))
+                        data = File.ReadAllBytes(path);
+                }
+                if ((int)source >= (int)ContentSource.Game && data.Length == 0) {
+                    path = Path.Combine(FurballGame.Instance.Content.RootDirectory, filename);
+                    if (File.Exists(path))
+                        data = File.ReadAllBytes(path);
+                }
+                if ((int)source >= (int)ContentSource.Engine && data.Length == 0) {
+                    path = Path.Combine(executablePath, "/EngineContent/", filename);
+                    if (File.Exists(path))
+                        data = File.ReadAllBytes(path);
+                }
+            } else {
+                if (File.Exists(filename))
+                    data = File.ReadAllBytes(filename);
             }
 
             if (data.Length == 0)
@@ -110,6 +116,10 @@ namespace Furball.Engine.Engine.Graphics {
         /// <summary>
         /// Loads the User's custom content, overrides both Game and Engine
         /// </summary>
-        User = 2
+        User = 2,
+        /// <summary>
+        /// Loads data outside of the main content folders, the root is the working directory(?)
+        /// </summary>
+        External = 3,
     }
 }
