@@ -9,6 +9,8 @@ namespace Furball.Engine.Engine.Audio {
         private GCHandle _memoryHandle;
 
         private int _sampleHandle;
+
+        public float Volume = 1f;
         
         public void Load(byte[] sampleData) {
             this._memoryHandle = GCHandle.Alloc(sampleData, GCHandleType.Pinned);
@@ -30,7 +32,7 @@ namespace Furball.Engine.Engine.Audio {
                 };
         }
 
-        public void Play(float volume) {
+        public void Play() {
             int handle = Bass.SampleGetChannel(this._sampleHandle);
 
             if (handle == 0) 
@@ -49,7 +51,7 @@ namespace Furball.Engine.Engine.Audio {
                 };
             }
 
-            Bass.ChannelSetAttribute(handle, ChannelAttribute.Volume, volume);
+            Bass.ChannelSetAttribute(handle, ChannelAttribute.Volume, this.Volume);
         }
     }
 }
