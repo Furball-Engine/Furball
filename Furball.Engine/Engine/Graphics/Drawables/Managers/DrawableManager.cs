@@ -243,7 +243,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
             }
         }
 
-        public void Add(BaseDrawable drawable) => this._drawables.Add(drawable);
+        public void Add(BaseDrawable    drawable) => this._drawables.Add(drawable);
+        public void Remove(BaseDrawable drawable) => this._drawables.Remove(drawable);
 
         public override void Dispose(bool disposing) {
             for (var i = 0; i < this._drawables.Count; i++) 
