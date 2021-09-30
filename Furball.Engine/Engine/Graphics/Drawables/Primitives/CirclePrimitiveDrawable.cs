@@ -24,7 +24,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Primitives {
         }
 
         public override void Draw(GameTime time, DrawableBatch batch, DrawableManagerArgs args) {
-            batch.SpriteBatch.DrawCircle(args.Position * FurballGame.VerticalRatio, this.CircleRadius * FurballGame.VerticalRatio, this.Detail, args.Color, args.LayerDepth);
+            batch.SpriteBatch.DrawCircle(args.Position * FurballGame.VerticalRatio, this.CircleRadius * FurballGame.VerticalRatio, this.Detail, args.Color, 0f);
         }
     }
 }

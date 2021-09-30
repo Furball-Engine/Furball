@@ -10,7 +10,9 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Primitives {
         public bool    Filled;
         public Vector2 RectSize;
         public float   Thickness;
+        
         public override Vector2 Size => this.RectSize * this.Scale;
+        
         /// <summary>
         /// Creates a Rectangle
         /// </summary>
@@ -34,13 +36,13 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Primitives {
                     this.Size * FurballGame.VerticalRatio,
                     args.Color,
                     this.Thickness * FurballGame.VerticalRatio,
-                    args.LayerDepth
+                    0f
                 );
                 batch.SpriteBatch.FillRectangle(
                     args.Position * FurballGame.VerticalRatio, 
                     this.Size * FurballGame.VerticalRatio, 
                     args.Color, 
-                    args.LayerDepth
+                    0f
                 );
             }
             else
@@ -49,7 +51,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Primitives {
                     this.Size * FurballGame.VerticalRatio,
                     args.Color,
                     this.Thickness * FurballGame.VerticalRatio,
-                    args.LayerDepth
+                    0f
                 );
         }
     }
