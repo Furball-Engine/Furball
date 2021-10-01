@@ -143,11 +143,11 @@ namespace Furball.Engine {
         protected override void Draw(GameTime gameTime) {
             this.GraphicsDevice.Clear(Color.Black);
 
+            base.Draw(gameTime);
+            
             DrawableManager.Draw(gameTime, DrawableBatch);
             if (RuntimeInfo.IsDebug() && DrawDebugOverlay)
                 DebugOverlayDrawableManager.Draw(gameTime, DrawableBatch);
-
-            base.Draw(gameTime);
         }
 
         #region Timing
