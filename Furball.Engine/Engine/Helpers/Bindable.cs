@@ -16,7 +16,7 @@ namespace Furball.Engine.Engine.Helpers {
         }
         
         public Bindable(T value) {
-            this.Value = value;
+            this._value = value;
         }
 
         public void Dispose() {
