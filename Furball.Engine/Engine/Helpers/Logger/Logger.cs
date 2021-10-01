@@ -6,9 +6,9 @@ using System.Collections.Generic;
 namespace Furball.Engine.Engine.Helpers.Logger {
     public static class Logger {
         private static Queue<LoggerLine> _LoggerLines = new();
-        private static List<LoggerBase>     _Loggers     = new();
-        
-        private static       double            _UpdateDeltaTime = 0;
+        private static List<LoggerBase>  _Loggers     = new();
+
+        private static double _UpdateDeltaTime = 0;
         
         public static List<LoggerBase> Loggers => _Loggers;
 
@@ -30,8 +30,10 @@ namespace Furball.Engine.Engine.Helpers.Logger {
                     do {
                         LoggerLine lineToSend = _LoggerLines.Dequeue();
 
-                        foreach (LoggerBase logger in _Loggers)
-                            logger.Send(lineToSend);
+                        foreach (LoggerBase logger in _Loggers) {
+                            if(logger.Level.Contains(lineToSend.LoggerLevel) || logger.Level.Contains(LoggerLevel.All))
+                                logger.Send(lineToSend);
+                        }
                     } while (_LoggerLines.Count > 0);
                 }
                 );
@@ -60,8 +62,10 @@ namespace Furball.Engine.Engine.Helpers.Logger {
             _LoggerLines.Enqueue(line);
         }
 
-        public static void Log(string data, LoggerLevel level = LoggerLevel.Unknown) {
-            Log(new LoggerLine{Level = level, LineData = data});
+        public static void Log(string data, LoggerLevel level = null) {
+            level ??= new LoggerLevelUnknown();
+
+            Log(new LoggerLine{LoggerLevel = level, LineData = data});
         }
     }
 }

@@ -1,8 +1,31 @@
 namespace Furball.Engine.Engine.Helpers.Logger {
-    public enum LoggerLevel : long {
-        Unknown = 1 << 0,
-        CacheEvent = 1 << 1,
-        LoggerInfo = 1 << 2,
-        EngineInfo = 1 << 3,
+    public class LoggerLevel {
+        public virtual string Name => null;
+
+        public static LoggerLevel All = new LoggerLevelAll();
+
+        public override string ToString() {
+            return this.Name ?? this.GetType().Name;
+        }
+    }
+
+    public class LoggerLevelUnknown : LoggerLevel {
+        public override string Name => "Unknown";
+    }
+    
+    public class LoggerLevelCacheEvent : LoggerLevel {
+        public override string Name => "CacheEvent";
+    }
+    
+    public class LoggerLevelLoggerInfo : LoggerLevel {
+        public override string Name => "LoggerInfo";
+    }
+    
+    public class LoggerLevelEngineInfo : LoggerLevel {
+        public override string Name => "EngineInfo";
+    }
+
+    public class LoggerLevelAll : LoggerLevel {
+        
     }
 }

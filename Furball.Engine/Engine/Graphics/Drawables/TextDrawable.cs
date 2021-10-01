@@ -48,7 +48,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
                 SpriteFont spriteFont = fontBakeResult.CreateSpriteFont(FurballGame.Instance.GraphicsDevice);
                 
                 ContentManager.SPRITEFONTPLUS_CACHE.Add(new KeyValuePair<string, float>(md5, size), spriteFont);
-                Logger.Log($"Caching SpriteFont with hash:{md5}, fontSize:{size}, dataSize:{font.LongLength}", LoggerLevel.CacheEvent);
+                Logger.Log($"Caching SpriteFont with hash:{md5}, fontSize:{size}, dataSize:{font.LongLength}", new LoggerLevelCacheEvent());
                 
                 this.Font = spriteFont;
             }

@@ -64,7 +64,7 @@ namespace Furball.Engine {
         protected override void Initialize() {
             Logger.Log(
                 $@"Starting Furball {(Environment.Is64BitProcess ? "64-bit" : "32-bit")} on {Environment.OSVersion.VersionString} {(Environment.Is64BitOperatingSystem ? "64-bit" : "32-bit")}",
-                LoggerLevel.EngineInfo
+                new LoggerLevelEngineInfo()
             );
 
             DEFAULT_FONT = ContentManager.LoadRawAsset("default-font.ttf");

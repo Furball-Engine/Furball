@@ -96,7 +96,7 @@ namespace Furball.Engine.Engine.Graphics {
 
             //We dont want to be caching anything huge as that could cause unnessesarily high memory usage
             if (data.Length < CacheSizeLimit && !bypassCache) {
-                Logger.Log($"Caching content with filepath: {filename}, hash:{MathHelper.GetMD5(data)}, dataSize:{data.LongLength}", LoggerLevel.CacheEvent);
+                Logger.Log($"Caching content with filepath: {filename}, hash:{MathHelper.GetMD5(data)}, dataSize:{data.LongLength}", new LoggerLevelCacheEvent());
                 CONTENT_CACHE.Add(filename, data);
             }
 

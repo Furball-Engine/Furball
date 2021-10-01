@@ -15,7 +15,7 @@ namespace Furball.Engine.Engine.Audio {
             if (windowId == default) windowId = IntPtr.Zero;
 
             if (Platform.RuntimeInfo.CurrentPlatform() == OSPlatform.Linux) {
-                Logger.Log("Loading Linux Bass Libraries", LoggerLevel.EngineInfo);
+                Logger.Log("Loading Linux Bass Libraries", new LoggerLevelEngineInfo());
 
                 Library.Load("libbass.so", Library.LoadFlags.RTLD_LAZY | Library.LoadFlags.RTLD_GLOBAL);
 
@@ -44,7 +44,7 @@ namespace Furball.Engine.Engine.Audio {
                 }
             }
 
-            Logger.Log($"Bass Version: {Bass.Version} BassFx Version: {BassFx.Version}", LoggerLevel.EngineInfo);
+            Logger.Log($"Bass Version: {Bass.Version} BassFx Version: {BassFx.Version}", new LoggerLevelEngineInfo());
         }
 
         public static AudioStream LoadFile(string filename, BassFlags flags = BassFlags.Default) {
