@@ -170,11 +170,14 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                 ButtonState middleMouseButton = FurballGame.InputManager.CursorStates[0].MiddleButton;
 
                 Rectangle rect = new(currentDrawable.Position.ToPoint() - currentDrawable.LastCalculatedOrigin.ToPoint(), currentDrawable.Size.ToPoint());
+                
+                bool circleIntersect = false;
+                if (currentDrawable.Circular) {
+                    float distanceToCentre = Vector2.Distance(cursor.ToVector2(), currentDrawable.Position - currentDrawable.LastCalculatedOrigin);
 
-                //Please dont ask how this works i dont know either
-                bool circleIntersect = currentDrawable.Circular &&
-                                       Vector2.Distance(cursor.ToVector2(), currentDrawable.Position - currentDrawable.LastCalculatedOrigin) <
-                                       currentDrawable.CircleRadius;
+                    if (distanceToCentre < currentDrawable.CircleRadius)
+                        circleIntersect = true;
+                }
 
                 if (rect.Contains(cursor) && !currentDrawable.Circular || circleIntersect && currentDrawable.Circular) {
                     if (leftMouseButton == ButtonState.Pressed) {

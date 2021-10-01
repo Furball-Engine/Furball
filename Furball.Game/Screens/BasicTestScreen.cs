@@ -37,6 +37,10 @@ namespace Furball.Game.Screens {
                 OriginType = OriginType.Center
             };
 
+            drawable.OnClick += delegate {
+                Logger.Log("click!");
+            };
+
             this.Manager.Add(drawable);
             this.Manager.Add(drawable2);
             this.Manager.Add(drawable3);
