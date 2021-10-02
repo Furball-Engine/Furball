@@ -12,7 +12,7 @@ namespace Furball.Engine.Engine.Graphics {
         /// <summary>
         /// Contains a cache of generated SpriteFonts by TextDrawable
         /// </summary>
-        public static readonly Dictionary<KeyValuePair<string, float>, SpriteFont> SPRITEFONTPLUS_CACHE = new();
+        public static readonly Dictionary<KeyValuePair<long, float>, SpriteFont> SPRITEFONTPLUS_CACHE = new();
         
         public static int CacheSizeLimit = 40000000;//4 MB
 

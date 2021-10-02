@@ -41,14 +41,15 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
                 CharacterRange.BasicLatin
             };
 
-            string md5 = MathHelper.GetMD5(font);
-            if (!ContentManager.SPRITEFONTPLUS_CACHE.TryGetValue(new KeyValuePair<string, float>(md5, size), out this.Font)) {
+            long crc64 = MathHelper.CRC64(font, 5000);
+            if (!ContentManager.SPRITEFONTPLUS_CACHE.TryGetValue(new KeyValuePair<long, float>(crc64, size), out this.Font)) {
                 TtfFontBakerResult fontBakeResult = TtfFontBaker.Bake(font, size, (int)(1024f * (size / 25f)), (int)(1024f * (size / 25f)), range);
 
                 SpriteFont spriteFont = fontBakeResult.CreateSpriteFont(FurballGame.Instance.GraphicsDevice);
+                spriteFont.DefaultCharacter = '?';
                 
-                ContentManager.SPRITEFONTPLUS_CACHE.Add(new KeyValuePair<string, float>(md5, size), spriteFont);
-                Logger.Log($"Caching SpriteFont with hash:{md5}, fontSize:{size}, dataSize:{font.LongLength}", new LoggerLevelCacheEvent());
+                ContentManager.SPRITEFONTPLUS_CACHE.Add(new KeyValuePair<long, float>(crc64, size), spriteFont);
+                Logger.Log($"Caching SpriteFont with crc8:{crc64}, fontSize:{size}, dataSize:{font.LongLength}", new LoggerLevelCacheEvent());
                 
                 this.Font = spriteFont;
             }
