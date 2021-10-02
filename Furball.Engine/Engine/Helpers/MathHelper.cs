@@ -32,7 +32,7 @@ namespace Furball.Engine.Engine.Helpers {
         public static double DegreesToRadians(double deg) => deg * Math.PI / 180.0;
 
         private static MD5 _md5 = new MD5CryptoServiceProvider();
-        
+
         public static string GetMD5(byte[] bytes) {
             byte[] hash = _md5.ComputeHash(bytes);
 
@@ -43,6 +43,58 @@ namespace Furball.Engine.Engine.Helpers {
             }
 
             return hashString;
+        }
+        
+        public static byte CRC8(byte[] data, int dataLimit)
+        {
+            byte sum = 0;
+            unchecked// Let overflow occur without exceptions
+            {
+                for (int index = 0; index < Math.Min(dataLimit, data.Length); index++) {
+                    byte b = data[index];
+                    sum += b;
+                }
+            }
+            return sum;
+        }
+        
+        public static short CRC16(byte[] data, int dataLimit)
+        {
+            short sum = 0;
+            unchecked// Let overflow occur without exceptions
+            {
+                for (int index = 0; index < Math.Min(dataLimit, data.Length); index++) {
+                    byte b = data[index];
+                    sum += b;
+                }
+            }
+            return sum;
+        }
+        
+        public static int CRC32(byte[] data, int dataLimit)
+        {
+            int sum = 0;
+            unchecked// Let overflow occur without exceptions
+            {
+                for (int index = 0; index < Math.Min(dataLimit, data.Length); index++) {
+                    byte b = data[index];
+                    sum += b;
+                }
+            }
+            return sum;
+        }
+        
+        public static long CRC64(byte[] data, int dataLimit)
+        {
+            long sum = 0;
+            unchecked// Let overflow occur without exceptions
+            {
+                for (int index = 0; index < Math.Min(dataLimit, data.Length); index++) {
+                    byte b = data[index];
+                    sum += b;
+                }
+            }
+            return sum;
         }
     }
 }
