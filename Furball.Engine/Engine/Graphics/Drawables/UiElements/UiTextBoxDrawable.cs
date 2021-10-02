@@ -2,10 +2,11 @@ using System;
 using System.Linq;
 using SpriteFontPlus;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Furball.Engine.Engine.Input;
-using Microsoft.Xna.Framework.Input;
+using TextCopy;
 using Xssp.MonoGame.Primitives2D;
 
 namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
@@ -51,6 +52,20 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         private void RegisterHandlers() {
             FurballGame.Instance.Window.TextInput += this.OnTextInput;
             FurballGame.InputManager.OnMouseDown += this.OnMouseDown;
+            FurballGame.InputManager.OnKeyDown += this.OnKeyDown;
+        }
+        
+        private void OnKeyDown(object? sender, Keys e) {
+            if (!this.Selected) return;
+            
+            switch(e) {
+                case Keys.V when FurballGame.InputManager.HeldKeys.Contains(Keys.LeftControl): {
+                    string clipboard = ClipboardService.GetText();
+
+                    this.Text += clipboard;
+                    break;
+                }
+            }
         }
 
         private void OnMouseDown(object? sender, (MouseButton, string) e) {
