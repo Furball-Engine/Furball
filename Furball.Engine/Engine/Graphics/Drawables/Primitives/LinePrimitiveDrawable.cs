@@ -13,8 +13,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Primitives {
         /// Creates a Line
         /// </summary>
         /// <param name="position">Where to Draw</param>
-        /// <param name="endPoint">Where to End</param>
-        /// <param name="thickness">How thicc should the Line be</param>
+        /// <param name="length">The length of the line</param>
+        /// <param name="angle">The angle of the line in radians</param>
         public LinePrimitiveDrawable(Vector2 position, float length, float angle) {
             this.Position = position;
             this.Length   = length;
