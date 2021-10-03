@@ -4,6 +4,9 @@ using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes;
 using Microsoft.Xna.Framework;
 
 namespace Furball.Engine.Engine.Transitions {
+    /// <summary>
+    /// Nice smooth Fade In and Out Transition
+    /// </summary>
     public class FadeTransition : Transition {
         private TexturedDrawable _fadeScreen;
 
@@ -15,11 +18,13 @@ namespace Furball.Engine.Engine.Transitions {
 
             this.Manager.Add(this._fadeScreen);
         }
+
         public override void TransitionBegin() {
             int currentTime = this._fadeScreen.DrawableTime;
 
             ColorTween fadeInTween = new ColorTween(TweenType.Color,  Color.Transparent, Color.Black,       currentTime,       currentTime + 500);
             ColorTween fadeOutTween = new ColorTween(TweenType.Color, Color.Black,       Color.Transparent, currentTime + 600, currentTime + 1100);
+
             this._fadeScreen.Tweens.Add(fadeInTween);
             this._fadeScreen.Tweens.Add(fadeOutTween);
         }
