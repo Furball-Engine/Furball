@@ -28,10 +28,11 @@ namespace Furball.Engine.Engine.Helpers.Logger {
                     if (_LoggerLines.Count == 0) return;
 
                     do {
+                        if (_LoggerLines.Count == 0) break;
                         LoggerLine lineToSend = _LoggerLines.Dequeue();
 
                         foreach (LoggerBase logger in _Loggers) {
-                            if(logger.Level.Contains(lineToSend.LoggerLevel) || logger.Level.Contains(LoggerLevel.All))
+                            if (logger.Level.Contains(lineToSend.LoggerLevel) || logger.Level.Contains(LoggerLevel.All))
                                 logger.Send(lineToSend);
                         }
                     } while (_LoggerLines.Count > 0);
