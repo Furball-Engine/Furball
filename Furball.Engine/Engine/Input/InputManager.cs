@@ -56,23 +56,23 @@ namespace Furball.Engine.Engine.Input {
         /// <summary>
         /// Called when a mouse button is pressed
         /// </summary>
-        public event EventHandler<(MouseButton, string)> OnMouseDown;
+        public event EventHandler<(MouseButton mouseButton, string cursorName)> OnMouseDown;
         /// <summary>
         /// Called when a mouse button is released
         /// </summary>
-        public event EventHandler<(MouseButton, string)> OnMouseUp;
+        public event EventHandler<(MouseButton mouseButton, string cursorName)> OnMouseUp;
         /// <summary>
         /// Called when a cursor moves
         /// </summary>
-        public event EventHandler<(Point, string)> OnMouseMove;
+        public event EventHandler<(Point mousePosition, string cursorName)> OnMouseMove;
         /// <summary>
         /// Called when a cursor moves
         /// </summary>
-        public event EventHandler<((Point, Point), string)> OnMouseDrag;
+        public event EventHandler<((Point lastPosition, Point newPosition), string cursorName)> OnMouseDrag;
         /// <summary>
         /// Called when the cursor scrolls
         /// </summary>
-        public event EventHandler<(int, string)> OnMouseScroll;
+        public event EventHandler<(int scrollAmount, string cursorName)> OnMouseScroll;
 
         private List<Keys> _diffKeysPressed  = new();
         private List<Keys> _diffKeysReleased = new();
