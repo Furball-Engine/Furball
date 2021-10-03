@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Furball.Engine.Engine.Timing;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes;
@@ -76,6 +77,10 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// What time does the Drawable go by? Used for Tweens
         /// </summary>
         public ITimeSource TimeSource = FurballGame.GameTimeSource;
+        /// <summary>
+        /// Shorter way of getting TimeSource.GetCurrentTime()
+        /// </summary>
+        public int DrawableTime => this.TimeSource.GetCurrentTime();
         /// <summary>
         /// The draw depth of the Drawable
         /// </summary>
@@ -220,10 +225,17 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// Updates the pDrawables Tweens
         /// </summary>
         public void UpdateTweens() {
-            for (int i = 0; i != this.Tweens.Count; i++) {
-                Tween currentTween = this.Tweens[i];
+            this.Tweens.RemoveAll(tween => tween.Terminated);
+
+            var sortedTweens = this.Tweens.OrderBy(tween => tween.StartTime).ToList();
+
+            for (int i = 0; i != sortedTweens.Count; i++) {
+                Tween currentTween = sortedTweens[i];
 
                 currentTween.Update(this.TimeSource.GetCurrentTime());
+
+                if(!currentTween.Initiated)
+                    continue;
 
                 switch (currentTween.TweenType) {
                     case TweenType.Color:

@@ -10,6 +10,7 @@ using Furball.Engine.Engine.Input;
 using Furball.Engine.Engine.Input.InputMethods;
 using Furball.Engine.Engine.Platform;
 using Furball.Engine.Engine.Timing;
+using Furball.Engine.Engine.Transitions;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -44,6 +45,8 @@ namespace Furball.Engine {
         public static Rectangle DisplayRectActual => new(0, 0, Instance.GraphicsDevice.Viewport.Width, Instance.GraphicsDevice.Viewport.Height);
 
         public static byte[] DEFAULT_FONT;
+
+        public static Texture2D WhitePixel;
 
         public event EventHandler<Screen> BeforeScreenChange; 
         public event EventHandler<Screen> AfterScreenChange; 
@@ -113,6 +116,12 @@ namespace Furball.Engine {
             DebugCounter = new();
 
             DebugOverlayDrawableManager.Add(DebugCounter);
+
+            WhitePixel = new Texture2D(this.GraphicsDevice, 1, 1);
+            Color[] white = { Color.White };
+            WhitePixel.SetData(white);
+
+            ScreenManager.SetTransition(new FadeTransition());
         }
 
         public void ChangeScreenSize(int width, int height, bool fullscreen = false) {
@@ -136,6 +145,8 @@ namespace Furball.Engine {
 
             if (RuntimeInfo.LoggerEnabled())
                 Logger.Update(gameTime);
+
+            ScreenManager.UpdateTransition(gameTime);
                 
             base.Update(gameTime);
         }
@@ -148,6 +159,11 @@ namespace Furball.Engine {
             DrawableManager.Draw(gameTime, DrawableBatch);
             if (RuntimeInfo.IsDebug() && DrawDebugOverlay)
                 DebugOverlayDrawableManager.Draw(gameTime, DrawableBatch);
+
+            if(DrawableBatch.Begun)
+                DrawableBatch.End();
+
+            ScreenManager.DrawTransition(gameTime, DrawableBatch);
         }
 
         #region Timing
