@@ -155,15 +155,15 @@ namespace Furball.Engine {
             this.GraphicsDevice.Clear(Color.Black);
 
             base.Draw(gameTime);
-            
-            DrawableManager.Draw(gameTime, DrawableBatch);
-            if (RuntimeInfo.IsDebug() && DrawDebugOverlay)
-                DebugOverlayDrawableManager.Draw(gameTime, DrawableBatch);
 
             if(DrawableBatch.Begun)
                 DrawableBatch.End();
 
             ScreenManager.DrawTransition(gameTime, DrawableBatch);
+            
+            DrawableManager.Draw(gameTime, DrawableBatch);
+            if (RuntimeInfo.IsDebug() && DrawDebugOverlay)
+                DebugOverlayDrawableManager.Draw(gameTime, DrawableBatch);
         }
 
         #region Timing
