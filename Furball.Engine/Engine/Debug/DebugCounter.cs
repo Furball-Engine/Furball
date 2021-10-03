@@ -8,7 +8,7 @@ namespace Furball.Engine.Engine.Debug {
         private TextDrawable _textDrawable = new TextDrawable(new Vector2(0, 700), FurballGame.DEFAULT_FONT, "a", 24f);
 
         private Vector2 _size;
-        public override Vector2 Size => this._size;
+        public override Vector2 Size => this._size * this.Scale;
 
         private double _lastUpdatedFramerate          = 0;
         private double _lastUpdatedUpdaterate         = 0;

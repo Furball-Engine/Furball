@@ -36,7 +36,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
                     return new Vector2(textDrawableSizeX + this._margin * 2f, textDrawableSizeY + this._margin * 2f) * this.Scale;
                 } 
                 
-                return this.ButtonSize;
+                return this.ButtonSize * this.Scale;
             }
         }
 

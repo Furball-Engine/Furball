@@ -24,7 +24,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// <summary>
         /// The height of the text
         /// </summary>
-        public override Vector2 Size => this.Font.MeasureString(this.Text);
+        public override Vector2 Size => this.Font.MeasureString(this.Text) * this.Scale;
 
         /// <summary>
         /// Creates a new TextDrawable
