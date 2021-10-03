@@ -1,6 +1,6 @@
+using ManagedBass;
 using System.Runtime.InteropServices;
 using Furball.Engine.Engine.Audio.Exceptions;
-using ManagedBass;
 
 namespace Furball.Engine.Engine.Audio {
     public class SoundEffect {
@@ -39,7 +39,8 @@ namespace Furball.Engine.Engine.Audio {
                 throw Bass.LastError switch {
                     Errors.Handle    => new BassHandleException(),
                     Errors.NoChannel => new BassNoChannelException(),
-                    Errors.Timeout   => new BassTimeoutException()
+                    Errors.Timeout   => new BassTimeoutException(),
+                    _                => new BassUnknownException()
                 };
 
             if(!Bass.ChannelPlay(handle)) {
