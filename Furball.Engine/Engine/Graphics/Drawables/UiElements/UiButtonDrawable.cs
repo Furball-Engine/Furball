@@ -1,3 +1,4 @@
+using System;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes;
@@ -53,7 +54,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         /// <param name="buttonSize">The size of the button, set to Vector2.Zero for it to auto calculate</param>
         /// <param name="margin">The margin between the text and the side of the button</param>
         /// <param name="charRange">SpriteFont character range</param>
-        public UiButtonDrawable(Vector2 position, string text, byte[] font, float textSize, Color buttonColor, Color textColor, Color outlineColor, Vector2 buttonSize, float margin = 5f, CharacterRange[] charRange = null) {
+        public UiButtonDrawable(Vector2 position, string text, byte[] font, float textSize, Color buttonColor, Color textColor, Color outlineColor, Vector2 buttonSize, EventHandler<Point> onClick, float margin = 5f, CharacterRange[] charRange = null) {
             this.Position     = position;
             this.TextDrawable = new TextDrawable(Vector2.Zero, font, text, textSize, charRange);
             this._margin      = margin;
@@ -64,6 +65,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
             this.ButtonColor   = buttonColor;
             this.ColorOverride = buttonColor;
             this.ButtonSize    = buttonSize;
+
+            this.OnClick += onClick;
 
             this.TextDrawable.OriginType = OriginType.Center;
 
