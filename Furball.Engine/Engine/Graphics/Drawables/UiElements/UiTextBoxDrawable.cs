@@ -63,6 +63,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
                     string clipboard = ClipboardService.GetText();
 
                     this.Text += clipboard;
+                    this.OnLetterTyped?.Invoke(this, 'v');
                     break;
                 }
             }
