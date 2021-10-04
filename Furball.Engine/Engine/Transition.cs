@@ -9,15 +9,17 @@ namespace Furball.Engine.Engine {
         /// <summary>
         /// This gets called right before the Screen gets Changed,
         /// Imagine a Triangle Transition Effect, this could make Triangles start appearing
+        /// <returns>How long the FadeIn Takes in milliseconds</returns>
         /// </summary>
-        public abstract void TransitionBegin();
+        public abstract int TransitionBegin();
         /// <summary>
         /// This gets called right after the Screen got Changed,
         /// Imagine a Triangle Transition Effect, this could make the Triangles stop appearing
         /// This is made optional as some Transitions can be made with only the Begin call,
         /// For example the Fade Transition would be pretty inconvinient to make in 2 function calls
+        /// <returns>How long the FadeOut Takes in milliseconds</returns>
         /// </summary>
-        public virtual void TransitionEnd() {}
+        public virtual int TransitionEnd() { return 0; }
         /// <summary>
         /// Draws the DrawableManager of the Transition
         /// </summary>

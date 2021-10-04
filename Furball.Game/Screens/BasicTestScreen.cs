@@ -11,15 +11,12 @@ using Microsoft.Xna.Framework;
 namespace Furball.Game.Screens {
     public class BasicTestScreen : Screen {
         public override void Initialize() {
-            EventHandler<Point> onClick = (sender, point) => {
-                AudioStream stream = AudioEngine.LoadFile("audio.mp3");
-                stream.TempoFrequencyLock = false;
-                stream.AudioRate          = 1.5f;
-                stream.Volume             = 0.25f;
-                stream.Play();
-            };
+            Random random = new Random();
+            UiButtonDrawable screenSwitchButton = new UiButtonDrawable(new Vector2(random.Next(0, 1280), random.Next(0, 720)), "Test Switching Screen", FurballGame.DEFAULT_FONT, 14f, Color.Cyan, Color.White, Color.Black, new Vector2(200, 40));
 
-            UiButtonDrawable screenSwitchButton = new UiButtonDrawable(new Vector2(40, 40), "Test Switching Screen", FurballGame.DEFAULT_FONT, 14f, Color.Cyan, Color.White, Color.Black, new Vector2(200, 40), onClick);
+            screenSwitchButton.OnClick += (sender, point) => {
+                ScreenManager.ChangeScreen(new BasicTestScreen());
+            };
 
             this.Manager.Add(screenSwitchButton);
             

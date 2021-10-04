@@ -1,3 +1,4 @@
+using System.Threading;
 using Furball.Engine.Engine.Graphics;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Microsoft.Xna.Framework;
@@ -8,6 +9,14 @@ namespace Furball.Engine.Engine {
         /// Transition that's currently used, by default it is FadeTransition
         /// </summary>
         internal static Transition? Transition;
+        /// <summary>
+        /// Current Fade State
+        /// </summary>
+        public static FadeState CurrentFadeState { get; private set; } = FadeState.None;
+        /// <summary>
+        /// Lock for CurrentFadeState because Threads...
+        /// </summary>
+        private static object _fadeLock = new object();
         /// <summary>
         /// Calls the Transition Draw Method
         /// </summary>
@@ -29,11 +38,31 @@ namespace Furball.Engine.Engine {
         /// </summary>
         /// <param name="newScreen">Screen to Switch to</param>
         public static void ChangeScreen(Screen newScreen) {
-            Transition?.TransitionBegin();
+            if (Transition != null) {
+                lock (_fadeLock) {
+                    int fadeInTime = Transition.TransitionBegin();
 
-            FurballGame.Instance.ChangeScreen(newScreen);
+                    CurrentFadeState = FadeState.FadeIn;
 
-            Transition?.TransitionEnd();
+                    Thread fadeWaitThread = new(() => {
+                        Thread.Sleep(fadeInTime);
+
+                        FurballGame.Instance.ChangeScreen(newScreen);
+
+                        int fadeOutTime = Transition.TransitionEnd();
+
+                        Thread.Sleep(fadeOutTime);
+
+                        CurrentFadeState = FadeState.FadeOut;
+                    }) {
+                        Priority = ThreadPriority.BelowNormal
+                    };
+
+                    fadeWaitThread.Start();
+                }
+            } else {
+                FurballGame.Instance.ChangeScreen(newScreen);
+            }
         }
         /// <summary>
         /// Sets the Transition Effect to something else
