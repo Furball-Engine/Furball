@@ -3,6 +3,7 @@ using Furball.Engine.Engine.Graphics.Drawables.Tweens;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using SpriteFontPlus;
 using Xssp.MonoGame.Primitives2D;
 
@@ -39,6 +40,56 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
                 
                 return this.ButtonSize * this.Scale;
             }
+        }
+        
+        /// <summary>
+        /// Creates a button
+        /// </summary>
+        /// <param name="position">Where to Draw the Button</param>
+        /// <param name="text">What text should the button display?</param>
+        /// <param name="font">What SpriteFont to use</param>
+        /// <param name="buttonColor">Button Background Color</param>
+        /// <param name="textColor">Button Text Color</param>
+        /// <param name="outlineColor">Button Outline Color</param>
+        /// <param name="buttonSize">The size of the button, set to Vector2.Zero for it to auto calculate</param>
+        /// <param name="onClick">What happens when the button is clicked</param>
+        /// <param name="margin">The margin between the text and the side of the button</param>
+        public UiButtonDrawable(Vector2 position, string text, SpriteFont font, Color buttonColor, Color textColor, Color outlineColor, Vector2 buttonSize, EventHandler<Point> onClick = null, float margin = 5f) {
+            this.Position     = position;
+            this.TextDrawable = new TextDrawable(font, text);
+            this._margin      = margin;
+            this._text        = text;
+
+            this.TextColor     = textColor;
+            this.OutlineColor  = outlineColor;
+            this.ButtonColor   = buttonColor;
+            this.ColorOverride = buttonColor;
+            this.ButtonSize    = buttonSize;
+
+            this.OnClick += onClick;
+
+            this.TextDrawable.OriginType = OriginType.Center;
+
+            this.OnHover += delegate {
+                if (!this.Clickable) return;
+                
+                this.Tweens.Add(
+                    new ColorTween(
+                        TweenType.Color,
+                        this.ButtonColor,
+                        new Color(this.ButtonColor.R + 50, this.ButtonColor.G + 50, this.ButtonColor.B + 50),
+                        this.TimeSource.GetCurrentTime(),
+                        this.TimeSource.GetCurrentTime() + 150
+                    )
+                );
+            };
+            this.OnHoverLost += delegate {
+                if (!this.Clickable) return;
+            
+                this.Tweens.Add(
+                    new ColorTween(TweenType.Color, this.ColorOverride, this.ButtonColor, this.TimeSource.GetCurrentTime(), this.TimeSource.GetCurrentTime() + 150)
+                );
+            };
         }
 
         /// <summary>
