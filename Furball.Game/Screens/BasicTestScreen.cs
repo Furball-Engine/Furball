@@ -1,11 +1,7 @@
 using System;
 using Furball.Engine;
 using Furball.Engine.Engine;
-using Furball.Engine.Engine.Audio;
-using Furball.Engine.Engine.Graphics.Drawables;
-using Furball.Engine.Engine.Graphics.Drawables.Primitives;
 using Furball.Engine.Engine.Graphics.Drawables.UiElements;
-using Furball.Engine.Engine.Helpers.Logger;
 using Microsoft.Xna.Framework;
 
 namespace Furball.Game.Screens {
