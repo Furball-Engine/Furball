@@ -1,3 +1,4 @@
+using FontStashSharp;
 using Microsoft.Xna.Framework;
 using Xssp.MonoGame.Primitives2D;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
@@ -27,13 +28,13 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         /// <param name="outlineColor">Outline Color</param>
         /// <param name="barColor">Bar Color</param>
         /// <param name="textColor">Text Color</param>
-        public UiProgressBarDrawable(Vector2 position, byte[] font, Vector2 size, Color outlineColor, Color barColor, Color textColor) {
+        public UiProgressBarDrawable(Vector2 position, FontSystem font, Vector2 size, Color outlineColor, Color barColor, Color textColor) {
             this.Position      = position;
             this.BarSize       = size;
             this.OutlineColor  = outlineColor;
             this.ColorOverride = barColor;
 
-            this.TextDrawable = new(Vector2.Zero, font, "", size.Y * 0.9f) {
+            this.TextDrawable = new(Vector2.Zero, font, "", (int)(size.Y * 0.9f)) {
                 ColorOverride = textColor
             };
         }

@@ -1,9 +1,8 @@
 using System;
 using System.Linq;
-using SpriteFontPlus;
+using FontStashSharp;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Graphics;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Furball.Engine.Engine.Input;
 using TextCopy;
@@ -30,20 +29,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         /// <param name="text">Initial Text</param>
         /// <param name="size">Size of the text</param>
         /// <param name="width">Width/Length of the Textbox</param>
-        /// <param name="range">SpriteFont characcter range</param>
-        public UiTextBoxDrawable(Vector2 position, byte[] font, string text, float size, float width, CharacterRange[] range = null) : base(Vector2.Zero, font, text, size, range) {
-            this.Position     = position;
-            this.TextBoxWidth = width;
-            this.RegisterHandlers();
-        }
-        /// <summary>
-        /// Creates a Textbox
-        /// </summary>
-        /// <param name="position">Where to Draw</param>
-        /// <param name="font">What font to use</param>
-        /// <param name="text">Initial Text</param>>
-        /// <param name="width">Width/Length of the Textbox</param>
-        public UiTextBoxDrawable(Vector2 position, SpriteFont font, string text, float width) : base(font, text) {
+        public UiTextBoxDrawable(Vector2 position, FontSystem font, string text, int size, float width) : base(Vector2.Zero, font, text, size) {
             this.Position     = position;
             this.TextBoxWidth = width;
             this.RegisterHandlers();

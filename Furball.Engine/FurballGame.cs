@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using FontStashSharp;
 using Furball.Engine.Engine;
 using Furball.Engine.Engine.Audio;
 using Furball.Engine.Engine.Debug;
@@ -44,7 +45,13 @@ namespace Furball.Engine {
         public static Rectangle DisplayRect => new(0, 0, (int)Math.Ceiling(Instance.GraphicsDevice.Viewport.Width / VerticalRatio), (int)Math.Ceiling(Instance.GraphicsDevice.Viewport.Height / VerticalRatio));
         public static Rectangle DisplayRectActual => new(0, 0, Instance.GraphicsDevice.Viewport.Width, Instance.GraphicsDevice.Viewport.Height);
 
-        public static byte[] DEFAULT_FONT;
+        public static byte[] DEFAULT_FONT_DATA;
+        public static readonly FontSystem DEFAULT_FONT = new(new FontSystemSettings {
+            FontResolutionFactor = 2f,
+            KernelWidth = 2,
+            KernelHeight = 2,
+            Effect = FontSystemEffect.None
+        });
 
         public static Texture2D WhitePixel;
 
@@ -70,7 +77,8 @@ namespace Furball.Engine {
                 new LoggerLevelEngineInfo()
             );
 
-            DEFAULT_FONT = ContentManager.LoadRawAsset("default-font.ttf");
+            DEFAULT_FONT_DATA = ContentManager.LoadRawAsset("default-font.ttf");
+            DEFAULT_FONT.AddFont(DEFAULT_FONT_DATA);
 
             _stopwatch.Start();
 

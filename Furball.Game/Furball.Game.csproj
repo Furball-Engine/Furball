@@ -11,24 +11,25 @@
         <ApplicationIcon>Icon.ico</ApplicationIcon>
     </PropertyGroup>
     <ItemGroup>
-        <None Remove="Icon.ico"/>
-        <None Remove="Icon.bmp"/>
+        <None Remove="Icon.ico" />
+        <None Remove="Icon.bmp" />
     </ItemGroup>
     <ItemGroup>
-        <EmbeddedResource Include="Icon.ico"/>
-        <EmbeddedResource Include="Icon.bmp"/>
+        <EmbeddedResource Include="Icon.ico" />
+        <EmbeddedResource Include="Icon.bmp" />
     </ItemGroup>
     <ItemGroup>
-        <MonoGameContentReference Include="Content\Content.mgcb"/>
+        <MonoGameContentReference Include="Content\Content.mgcb" />
     </ItemGroup>
     <ItemGroup>
-        <TrimmerRootAssembly Include="Microsoft.Xna.Framework.Content.ContentTypeReader" Visible="false"/>
+        <TrimmerRootAssembly Include="Microsoft.Xna.Framework.Content.ContentTypeReader" Visible="false" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.0.1641"/>
-        <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.0.1641"/>
+        <PackageReference Include="FontStashSharp.MonoGame" Version="1.0.3" />
+        <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.0.1641" />
+        <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.0.1641" />
     </ItemGroup>
     <ItemGroup>
-        <ProjectReference Include="..\Furball.Engine\Furball.Engine.csproj"/>
+        <ProjectReference Include="..\Furball.Engine\Furball.Engine.csproj" />
     </ItemGroup>
 </Project>

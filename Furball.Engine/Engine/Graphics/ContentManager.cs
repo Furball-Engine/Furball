@@ -3,16 +3,11 @@ using System.IO;
 using System.Reflection;
 using System.Collections.Generic;
 using Furball.Engine.Engine.Helpers.Logger;
-using Microsoft.Xna.Framework.Graphics;
 using MathHelper=Furball.Engine.Engine.Helpers.MathHelper;
 
 namespace Furball.Engine.Engine.Graphics {
     public static class ContentManager {
         private static readonly Dictionary<string, byte[]>  CONTENT_CACHE = new();
-        /// <summary>
-        /// Contains a cache of generated SpriteFonts by TextDrawable
-        /// </summary>
-        public static readonly Dictionary<KeyValuePair<long, float>, SpriteFont> SPRITEFONTPLUS_CACHE = new();
         
         public static int CacheSizeLimit = 40000000;//4 MB
 

@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework;
 
 namespace Furball.Engine.Engine.Debug {
     public class DebugCounter : ManagedDrawable {
-        private TextDrawable _textDrawable = new TextDrawable(new Vector2(0, 700), FurballGame.DEFAULT_FONT, "a", 24f);
+        private TextDrawable _textDrawable = new TextDrawable(new Vector2(0, 700), FurballGame.DEFAULT_FONT, "a", 24);
 
         private Vector2 _size;
         public override Vector2 Size => this._size * this.Scale;
