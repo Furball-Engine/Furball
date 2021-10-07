@@ -70,7 +70,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                     Scale      = currentDrawable.Scale
                 };
                 
-                Rectangle rect = new((args.Position - origin).ToPoint(), new Point((int)Math.Ceiling(currentDrawable.Size.X * args.Scale.X), (int)Math.Ceiling(currentDrawable.Size.Y * args.Scale.Y)));
+                Rectangle rect = new((args.Position).ToPoint(), new Point((int)Math.Ceiling(currentDrawable.Size.X * args.Scale.X), (int)Math.Ceiling(currentDrawable.Size.Y * args.Scale.Y)));
 
                 if(rect.Intersects(FurballGame.DisplayRect))
                     currentDrawable.Draw(time, drawableBatch, args);
