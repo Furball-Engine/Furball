@@ -8,7 +8,7 @@ namespace Furball.Engine.Engine.Helpers {
         public T Value {
             get => this._value;
             set {
-                if (this._value.Equals(value)) return;
+                if (this._value is not null && this._value.Equals(value)) return;
                 
                 this._value = value;
                 this.OnChange?.Invoke(this, value);
