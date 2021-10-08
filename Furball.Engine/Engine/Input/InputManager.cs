@@ -60,7 +60,7 @@ namespace Furball.Engine.Engine.Input {
         /// <summary>
         /// Called when a mouse button is released
         /// </summary>
-        public event EventHandler<(MouseButton mouseButton, string cursorName)> OnMouseUp;
+        public event EventHandler<((MouseButton mouseButton, Point position) args, string cursorName)> OnMouseUp;
         /// <summary>
         /// Called when a cursor moves
         /// </summary>
@@ -134,7 +134,7 @@ namespace Furball.Engine.Engine.Input {
                         if (oldState.LeftButton == ButtonState.Released)
                             this.OnMouseDown?.Invoke(this, ((MouseButton.LeftButton, newState.Position), newState.Name));
                         else
-                            this.OnMouseUp?.Invoke(this, (MouseButton.LeftButton, newState.Name));
+                            this.OnMouseUp?.Invoke(this, ((MouseButton.LeftButton, newState.Position), newState.Name));
 
 
                     //Handling The Right Mouse Button by comparing to the last Input Frame
@@ -142,7 +142,7 @@ namespace Furball.Engine.Engine.Input {
                         if (oldState.RightButton == ButtonState.Released)
                             this.OnMouseDown?.Invoke(this, ((MouseButton.RightButton, newState.Position), newState.Name));
                         else
-                            this.OnMouseUp?.Invoke(this, (MouseButton.RightButton, newState.Name));
+                            this.OnMouseUp?.Invoke(this, ((MouseButton.RightButton, newState.Position), newState.Name));
 
 
                     //Handling the Middle Mouse Button by comparing to the last Input Frame
@@ -150,7 +150,7 @@ namespace Furball.Engine.Engine.Input {
                         if (oldState.MiddleButton == ButtonState.Released)
                             this.OnMouseDown?.Invoke(this, ((MouseButton.MiddleButton, newState.Position), newState.Name));
                         else
-                            this.OnMouseUp?.Invoke(this, (MouseButton.MiddleButton, newState.Name));
+                            this.OnMouseUp?.Invoke(this, ((MouseButton.MiddleButton, newState.Position), newState.Name));
 
 
                     //Handling Scrolling by comparing to the last Input Frame

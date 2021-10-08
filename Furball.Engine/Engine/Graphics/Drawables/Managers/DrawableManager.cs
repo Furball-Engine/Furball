@@ -27,11 +27,40 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                 DrawableManagers.Add(this);
             }
             
-            FurballGame.InputManager.OnMouseDown += this.InputManagerOnMouseDown; 
+            FurballGame.InputManager.OnMouseDown += this.InputManagerOnMouseDown;
+            FurballGame.InputManager.OnMouseUp   += this.InputManagerOnMouseUp;
             FurballGame.InputManager.OnMouseMove += this.InputManagerOnMouseMove; 
         }
+        
+        private List<ManagedDrawable> _tempClickUpManaged = new();
+        private void InputManagerOnMouseUp(object sender, ((MouseButton mouseButton, Point position) args, string cursorName) e) {
+            // should we lock these here?
+            lock(this._tempClickUpManaged) {
+                // Split _drawables into 2 lists containing the ManagedDrawables and the UnmanagedDrawables
+                this._tempClickUpManaged.Clear();
 
-        private List<ManagedDrawable> _tempClickUnmanaged = new();
+                int tempCount = this._drawables.Count;
+                for (int i = 0; i < tempCount; i++) {
+                    BaseDrawable baseDrawable = this._drawables[i];
+
+                    switch (baseDrawable) {
+                        case ManagedDrawable managedDrawable:
+                            this._tempClickUpManaged.Add(managedDrawable);
+                            break;
+                    }
+                }
+                
+                this._tempClickUpManaged = this._tempClickUpManaged.OrderBy(o => o.Depth).ToList();
+
+                for (int i = 0; i < this._tempClickUpManaged.Count; i++) {
+                    ManagedDrawable drawable = this._tempClickUpManaged[i];
+
+                    drawable.InvokeOnClickUp(this, e.args.position);
+                }
+            }
+        }
+
+        private List<ManagedDrawable> _tempHoverManaged = new();
         private void InputManagerOnMouseMove(object sender, (Point mousePosition, string cursorName) e) {
             // should we lock these here?
             lock(this._tempClickManaged) {
@@ -49,7 +78,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                     }
                 }
                 
-                this._tempClickUnmanaged = this._tempClickUnmanaged.OrderBy(o => o.Depth).ToList();
+                this._tempHoverManaged = this._tempHoverManaged.OrderBy(o => o.Depth).ToList();
 
                 for (var i = 0; i < this._tempClickManaged.Count; i++) {
                     ManagedDrawable drawable = this._tempClickManaged[i];
