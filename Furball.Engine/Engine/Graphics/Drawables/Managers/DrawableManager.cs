@@ -28,10 +28,64 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
             }
             
             FurballGame.InputManager.OnMouseDown += this.InputManagerOnMouseDown; 
+            FurballGame.InputManager.OnMouseMove += this.InputManagerOnMouseMove; 
         }
 
-        private List<ManagedDrawable> _tempClickManaged = new();
+        private List<ManagedDrawable> _tempClickUnmanaged = new();
+        private void InputManagerOnMouseMove(object sender, (Point mousePosition, string cursorName) e) {
+            // should we lock these here?
+            lock(this._tempClickManaged) {
+                // Split _drawables into 2 lists containing the ManagedDrawables and the UnmanagedDrawables
+                this._tempClickManaged.Clear();
 
+                int tempCount = this._drawables.Count;
+                for (int i = 0; i < tempCount; i++) {
+                    BaseDrawable baseDrawable = this._drawables[i];
+
+                    switch (baseDrawable) {
+                        case ManagedDrawable managedDrawable:
+                            this._tempClickManaged.Add(managedDrawable);
+                            break;
+                    }
+                }
+                
+                for (var i = 0; i < this._tempClickManaged.Count; i++) {
+                    ManagedDrawable drawable = this._tempClickManaged[i];
+
+                    if (!drawable.Hoverable) continue;
+                    
+                    Rectangle rect = new(drawable.Position.ToPoint() - drawable.LastCalculatedOrigin.ToPoint(), drawable.Size.ToPoint());
+
+                    //Whether the we are intersecting with the circle radius of the drawable
+                    bool circleIntersect = false;
+                    if (drawable.Circular) {
+                        // Get the distance of the cursor to the drawable
+                        float distanceToCentre = Vector2.Distance(e.mousePosition.ToVector2(), drawable.Position - drawable.LastCalculatedOrigin);
+                    
+                        // Checks if we are within the radius of the drawable
+                        if (distanceToCentre < drawable.CircleRadius)
+                            circleIntersect = true;
+                    }
+                    
+                    if (rect.Contains(e.mousePosition) && !drawable.Circular || circleIntersect) {
+                        if (drawable.IsHovered) {
+                            if (drawable.CoverHovers) break;
+                            //If we dont cover hovers, just continue to the next one
+                            continue;
+                        }
+                        
+                        drawable.InvokeOnHover(this);
+                        if (drawable.CoverHovers) break;
+                    } else {
+                        if (drawable.IsHovered) {
+                            drawable.InvokeOnHoverLost(this);
+                        }
+                    }
+                }
+            }
+        }
+        
+        private List<ManagedDrawable> _tempClickManaged = new();
         private void InputManagerOnMouseDown(object sender, ((MouseButton mouseButton, Point position) args, string cursorName) e) {
             // should we lock these here?
             lock(this._tempClickManaged) {

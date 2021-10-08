@@ -135,6 +135,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// <param name="sender">The sender of the OnHover event</param>
         public void InvokeOnHover(object sender) {
             this.OnHover?.Invoke(sender, null!);
+            this.IsHovered = true;
         }
         /// <summary>
         /// Called whenever a cursor moves off of the drawable
@@ -146,6 +147,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// <param name="sender">The sender of the OnUnHover event</param>
         public void InvokeOnHoverLost(object sender) {
             this.OnHoverLost?.Invoke(sender, null!);
+            this.IsHovered = false;
         }
         /// <summary>
         /// Called when the drawable is clicked
@@ -158,6 +160,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// <param name="position">The position of the click</param>
         public void InvokeOnClick(object sender, Point position) {
             this.OnClick?.Invoke(sender, position);
+            this.IsClicked = true;
         }
         /// <summary>
         /// Called when the drawable is no longer being clicked
@@ -170,6 +173,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// <param name="position">The position when the click was released</param>
         public void InvokeOnClickUp(object sender, Point position) {
             this.OnClickUp?.Invoke(sender, position);
+            this.IsClicked = false;
         }
         /// <summary>
         /// Gets fired when the Drawable is first getting started to Drag
