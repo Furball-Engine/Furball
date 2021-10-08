@@ -56,7 +56,7 @@ namespace Furball.Engine.Engine.Input {
         /// <summary>
         /// Called when a mouse button is pressed
         /// </summary>
-        public event EventHandler<(MouseButton mouseButton, string cursorName)> OnMouseDown;
+        public event EventHandler<((MouseButton mouseButton, Point position) args, string cursorName)> OnMouseDown;
         /// <summary>
         /// Called when a mouse button is released
         /// </summary>
@@ -132,7 +132,7 @@ namespace Furball.Engine.Engine.Input {
                     //Handling The Left Mouse Button by comparing to the last Input Frame
                     if (oldState.LeftButton != newState.LeftButton)
                         if (oldState.LeftButton == ButtonState.Released)
-                            this.OnMouseDown?.Invoke(this, (MouseButton.LeftButton, newState.Name));
+                            this.OnMouseDown?.Invoke(this, ((MouseButton.LeftButton, newState.Position), newState.Name));
                         else
                             this.OnMouseUp?.Invoke(this, (MouseButton.LeftButton, newState.Name));
 
@@ -140,7 +140,7 @@ namespace Furball.Engine.Engine.Input {
                     //Handling The Right Mouse Button by comparing to the last Input Frame
                     if (oldState.RightButton != newState.RightButton)
                         if (oldState.RightButton == ButtonState.Released)
-                            this.OnMouseDown?.Invoke(this, (MouseButton.RightButton, newState.Name));
+                            this.OnMouseDown?.Invoke(this, ((MouseButton.RightButton, newState.Position), newState.Name));
                         else
                             this.OnMouseUp?.Invoke(this, (MouseButton.RightButton, newState.Name));
 
@@ -148,7 +148,7 @@ namespace Furball.Engine.Engine.Input {
                     //Handling the Middle Mouse Button by comparing to the last Input Frame
                     if (oldState.MiddleButton != newState.MiddleButton)
                         if (oldState.MiddleButton == ButtonState.Released)
-                            this.OnMouseDown?.Invoke(this, (MouseButton.MiddleButton, newState.Name));
+                            this.OnMouseDown?.Invoke(this, ((MouseButton.MiddleButton, newState.Position), newState.Name));
                         else
                             this.OnMouseUp?.Invoke(this, (MouseButton.MiddleButton, newState.Name));
 
