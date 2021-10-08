@@ -56,6 +56,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                     ManagedDrawable drawable = this._tempClickUpManaged[i];
 
                     drawable.InvokeOnClickUp(this, e.args.position);
+                    drawable.InvokeOnDragEnd(this, e.args.position);
                 }
             }
         }
@@ -96,6 +97,10 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                         // Checks if we are within the radius of the drawable
                         if (distanceToCentre < drawable.CircleRadius)
                             circleIntersect = true;
+                    }
+
+                    if (drawable.IsDragging) {
+                        drawable.InvokeOnDrag(this, e.mousePosition);
                     }
                     
                     if (rect.Contains(e.mousePosition) && !drawable.Circular || circleIntersect) {
@@ -157,6 +162,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                     
                     if (rect.Contains(e.args.position) && !drawable.Circular || circleIntersect) {
                         drawable.InvokeOnClick(this, e.args.position);
+                        drawable.InvokeOnDragBegin(this, e.args.position);
                         if (drawable.CoverClicks) break;
                     }
                 }

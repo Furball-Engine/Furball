@@ -185,6 +185,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// <param name="sender"></param>
         /// <param name="position">The position when dragging began</param>
         public void InvokeOnDragBegin(object sender, Point position) {
+            this.IsDragging = true;
             this.OnDragBegin?.Invoke(sender, position);
         }
         /// <summary>
@@ -209,6 +210,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// <param name="sender"></param>
         /// <param name="position">Where dragging stopped</param>
         public void InvokeOnDragEnd(object sender, Point position) {
+            this.IsDragging = false;
             this.OnDragEnd?.Invoke(sender, position);
         }
 
