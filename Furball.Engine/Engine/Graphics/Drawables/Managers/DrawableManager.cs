@@ -1,8 +1,8 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using Furball.Engine.Engine.Input;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
@@ -25,6 +25,54 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
             lock (StatLock) {
                 Instances++;
                 DrawableManagers.Add(this);
+            }
+            
+            FurballGame.InputManager.OnMouseDown += this.InputManagerOnMouseDown; 
+        }
+
+        private List<ManagedDrawable> _tempClickManaged = new();
+
+        private void InputManagerOnMouseDown(object sender, ((MouseButton mouseButton, Point position) args, string cursorName) e) {
+            // should we lock these here?
+            lock(this._tempClickManaged) {
+                // Split _drawables into 2 lists containing the ManagedDrawables and the UnmanagedDrawables
+                this._tempClickManaged.Clear();
+
+                int tempCount = this._drawables.Count;
+                for (int i = 0; i < tempCount; i++) {
+                    BaseDrawable baseDrawable = this._drawables[i];
+
+                    switch (baseDrawable) {
+                        case ManagedDrawable managedDrawable:
+                            this._tempClickManaged.Add(managedDrawable);
+                            break;
+                    }
+                }
+                
+                for (var i = 0; i < this._tempClickManaged.Count; i++) {
+                    ManagedDrawable drawable = this._tempClickManaged[i];
+
+                    if (!drawable.Clickable) continue;
+                    
+                    // Calculate the rectangle of the drawable
+                    Rectangle rect = new(drawable.Position.ToPoint() - drawable.LastCalculatedOrigin.ToPoint(), drawable.Size.ToPoint());
+
+                    //Whether the we are intersecting with the circle radius of the drawable
+                    bool circleIntersect = false;
+                    if (drawable.Circular) {
+                        // Get the distance of the cursor to the drawable
+                        float distanceToCentre = Vector2.Distance(e.args.position.ToVector2(), drawable.Position - drawable.LastCalculatedOrigin);
+                    
+                        // Checks if we are within the radius of the drawable
+                        if (distanceToCentre < drawable.CircleRadius)
+                            circleIntersect = true;
+                    }
+                    
+                    if (rect.Contains(e.args.position) && !drawable.Circular || circleIntersect) {
+                        drawable.InvokeOnClick(this, e.args.position);
+                        if (drawable.CoverClicks) break;
+                    }
+                }
             }
         }
 
@@ -155,83 +203,83 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
             this._tempUpdateManaged   = this._tempUpdateManaged.OrderBy(o => o.Depth).ToList();
             this._tempUpdateUnmanaged = this._tempUpdateUnmanaged.OrderBy(o => o.Depth).ToList();
 
-            bool hoverHandled = false;
-            bool clickHandled = false;
+            // bool hoverHandled = false;
+            // bool clickHandled = false;
 
             tempCount = this._tempUpdateManaged.Count;
             for (int i = 0; i < tempCount; i++) {
                 ManagedDrawable currentDrawable = this._tempUpdateManaged[i];
 
-                #region Input
-
-                Point cursor = FurballGame.InputManager.CursorStates[0].Position;
-                ButtonState leftMouseButton = FurballGame.InputManager.CursorStates[0].LeftButton;
-                ButtonState rightMouseButton = FurballGame.InputManager.CursorStates[0].RightButton;
-                ButtonState middleMouseButton = FurballGame.InputManager.CursorStates[0].MiddleButton;
-
-                Rectangle rect = new(currentDrawable.Position.ToPoint() - currentDrawable.LastCalculatedOrigin.ToPoint(), currentDrawable.Size.ToPoint());
-                
-                bool circleIntersect = false;
-                if (currentDrawable.Circular) {
-                    float distanceToCentre = Vector2.Distance(cursor.ToVector2(), currentDrawable.Position - currentDrawable.LastCalculatedOrigin);
-
-                    if (distanceToCentre < currentDrawable.CircleRadius)
-                        circleIntersect = true;
-                }
-
-                if (rect.Contains(cursor) && !currentDrawable.Circular || circleIntersect && currentDrawable.Circular) {
-                    if (leftMouseButton == ButtonState.Pressed) {
-                        if (!clickHandled) {
-                            if (currentDrawable.Clickable) {
-                                if (!currentDrawable.IsClicked) {
-                                    currentDrawable.InvokeOnClick(this, cursor);
-                                    currentDrawable.IsClicked = true;
-                                } else {
-                                    if(!currentDrawable.IsDragging)
-                                        currentDrawable.InvokeOnDragBegin(this, cursor);
-
-                                    currentDrawable.InvokeOnDrag(this, cursor);
-                                    currentDrawable.IsDragging = true;
-                                }
-                            }
-
-                            if(currentDrawable.CoverClicks)
-                                clickHandled = true;
-                        }
-                    } else {
-                        if (currentDrawable.IsClicked) {
-                            currentDrawable.InvokeOnClickUp(this, cursor);
-                            currentDrawable.IsClicked = false;
-
-                            if (currentDrawable.IsDragging) {
-                                currentDrawable.IsDragging = false;
-                                currentDrawable.InvokeOnDragEnd(this, cursor);
-                            }
-                        }
-                    }
-                    if (!hoverHandled) {
-                        if (!currentDrawable.IsHovered && currentDrawable.Hoverable) {
-                            currentDrawable.InvokeOnHover(this);
-                            currentDrawable.IsHovered = true;
-                        }
-
-                        if(currentDrawable.CoverHovers)
-                            hoverHandled = true;
-                    }
-                } else {
-                    if (leftMouseButton == ButtonState.Released) {
-                        if (currentDrawable.IsClicked) {
-                            currentDrawable.InvokeOnClickUp(this, cursor);
-                            currentDrawable.IsClicked = false;
-                        }
-                    }
-                    if (currentDrawable.IsHovered) {
-                        currentDrawable.InvokeOnHoverLost(this);
-                        currentDrawable.IsHovered = false;
-                    }
-                }
-
-                #endregion
+                // #region Input
+                //
+                // Point cursor = FurballGame.InputManager.CursorStates[0].Position;
+                // ButtonState leftMouseButton = FurballGame.InputManager.CursorStates[0].LeftButton;
+                // ButtonState rightMouseButton = FurballGame.InputManager.CursorStates[0].RightButton;
+                // ButtonState middleMouseButton = FurballGame.InputManager.CursorStates[0].MiddleButton;
+                //
+                // Rectangle rect = new(currentDrawable.Position.ToPoint() - currentDrawable.LastCalculatedOrigin.ToPoint(), currentDrawable.Size.ToPoint());
+                //
+                // bool circleIntersect = false;
+                // if (currentDrawable.Circular) {
+                //     float distanceToCentre = Vector2.Distance(cursor.ToVector2(), currentDrawable.Position - currentDrawable.LastCalculatedOrigin);
+                //
+                //     if (distanceToCentre < currentDrawable.CircleRadius)
+                //         circleIntersect = true;
+                // }
+                //
+                // if (rect.Contains(cursor) && !currentDrawable.Circular || circleIntersect && currentDrawable.Circular) {
+                //     if (leftMouseButton == ButtonState.Pressed) {
+                //         if (!clickHandled) {
+                //             if (currentDrawable.Clickable) {
+                //                 if (!currentDrawable.IsClicked) {
+                //                     currentDrawable.InvokeOnClick(this, cursor);
+                //                     currentDrawable.IsClicked = true;
+                //                 } else {
+                //                     if(!currentDrawable.IsDragging)
+                //                         currentDrawable.InvokeOnDragBegin(this, cursor);
+                //
+                //                     currentDrawable.InvokeOnDrag(this, cursor);
+                //                     currentDrawable.IsDragging = true;
+                //                 }
+                //             }
+                //
+                //             if(currentDrawable.CoverClicks)
+                //                 clickHandled = true;
+                //         }
+                //     } else {
+                //         if (currentDrawable.IsClicked) {
+                //             currentDrawable.InvokeOnClickUp(this, cursor);
+                //             currentDrawable.IsClicked = false;
+                //
+                //             if (currentDrawable.IsDragging) {
+                //                 currentDrawable.IsDragging = false;
+                //                 currentDrawable.InvokeOnDragEnd(this, cursor);
+                //             }
+                //         }
+                //     }
+                //     if (!hoverHandled) {
+                //         if (!currentDrawable.IsHovered && currentDrawable.Hoverable) {
+                //             currentDrawable.InvokeOnHover(this);
+                //             currentDrawable.IsHovered = true;
+                //         }
+                //
+                //         if(currentDrawable.CoverHovers)
+                //             hoverHandled = true;
+                //     }
+                // } else {
+                //     if (leftMouseButton == ButtonState.Released) {
+                //         if (currentDrawable.IsClicked) {
+                //             currentDrawable.InvokeOnClickUp(this, cursor);
+                //             currentDrawable.IsClicked = false;
+                //         }
+                //     }
+                //     if (currentDrawable.IsHovered) {
+                //         currentDrawable.InvokeOnHoverLost(this);
+                //         currentDrawable.IsHovered = false;
+                //     }
+                // }
+                //
+                // #endregion
 
                 currentDrawable.UpdateTweens();
                 currentDrawable.Update(time);
@@ -257,6 +305,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                 Instances--;
                 DrawableManagers.Remove(this);
             }
+            
+            FurballGame.InputManager.OnMouseDown -= this.InputManagerOnMouseDown;
 
             base.Dispose(disposing);
         }

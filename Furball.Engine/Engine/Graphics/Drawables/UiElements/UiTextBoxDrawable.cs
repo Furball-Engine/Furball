@@ -1,11 +1,10 @@
 using System;
-using System.Linq;
+using TextCopy;
 using FontStashSharp;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Furball.Engine.Engine.Input;
-using TextCopy;
+using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Xssp.MonoGame.Primitives2D;
 
 namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
@@ -55,12 +54,11 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
             }
         }
 
-        private void OnMouseDown(object? sender, (MouseButton, string) e) {
+        private void OnMouseDown(object sender, ((MouseButton heldButton, Point position) args, string name) e) {
             Vector2   tempSize = this.Size;
             Rectangle sizeRect = new(new Point((int)this.Position.X, (int)this.Position.Y) - this.LastCalculatedOrigin.ToPoint(), new((int)tempSize.X, (int)tempSize.Y));
-
-            Point mousePos = FurballGame.InputManager.CursorStates.First(state => state.Name == e.Item2).Position;
-            if (sizeRect.Contains(mousePos) && this.Visible && this.Clickable) {
+            
+            if (sizeRect.Contains(e.args.position) && this.Visible && this.Clickable) {
                 this.Selected = true;
             } else {
                 this.Selected = false;
