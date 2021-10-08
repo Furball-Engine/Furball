@@ -49,6 +49,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                     }
                 }
                 
+                this._tempClickUnmanaged = this._tempClickUnmanaged.OrderBy(o => o.Depth).ToList();
+
                 for (var i = 0; i < this._tempClickManaged.Count; i++) {
                     ManagedDrawable drawable = this._tempClickManaged[i];
 
@@ -103,6 +105,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                     }
                 }
                 
+                this._tempClickManaged = this._tempClickManaged.OrderBy(o => o.Depth).ToList();
+
                 for (var i = 0; i < this._tempClickManaged.Count; i++) {
                     ManagedDrawable drawable = this._tempClickManaged[i];
 
