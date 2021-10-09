@@ -37,6 +37,10 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Tweens {
         /// Has the Tween ended and been Terminated
         /// </summary>
         public bool Terminated;
+        /// <summary>
+        /// If this is set to true the Tween won't be automatically removed when Terminated
+        /// </summary>
+        public bool KeepAlive;
 
         /// <summary>
         /// Time right now

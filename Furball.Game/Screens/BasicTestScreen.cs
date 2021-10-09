@@ -1,5 +1,6 @@
 using Furball.Engine;
 using Furball.Engine.Engine;
+using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Graphics.Drawables.UiElements;
 using Furball.Engine.Engine.Helpers.Logger;
 using Microsoft.Xna.Framework;
@@ -9,6 +10,13 @@ namespace Furball.Game.Screens {
         public override void Initialize() {
             base.Initialize();
             
+            TexturedDrawable background = new TexturedDrawable(FurballGame.WhitePixel, Vector2.Zero) {
+                ColorOverride = Color.BlueViolet,
+                Scale = new Vector2(1280, 720),
+                Depth = 1f
+            };
+            
+            this.Manager.Add(background);
             UiButtonDrawable screenSwitchButton = new (new Vector2(FurballGame.Random.Next(0, 1280), FurballGame.Random.Next(0, 720)), "Test Switching Screen", FurballGame.DEFAULT_FONT, 30, Color.Cyan, Color.Red, Color.Black, new Vector2(200, 40));
 
             screenSwitchButton.OnClick += delegate {

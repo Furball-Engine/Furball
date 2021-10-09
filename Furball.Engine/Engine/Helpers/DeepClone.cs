@@ -9,6 +9,7 @@ namespace Furball.Engine.Engine.Helpers {
 
         public static bool IsPrimitive(this Type type) {
             if (type == typeof(string)) return true;
+
             return type.IsValueType & type.IsPrimitive;
         }
 
@@ -20,13 +21,20 @@ namespace Furball.Engine.Engine.Helpers {
         public static object Copy(this object originalObject) => InternalCopy(originalObject, new Dictionary<object, object>(new ReferenceEqualityComparer()));
         private static object InternalCopy(object originalObject, IDictionary<object, object> visited) {
             if (originalObject == null) return null;
+
             Type typeToReflect = originalObject.GetType();
+
             if (IsPrimitive(typeToReflect)) return originalObject;
+
             if (visited.ContainsKey(originalObject)) return visited[originalObject];
+
             if (typeof(Delegate).IsAssignableFrom(typeToReflect)) return null;
+
             object? cloneObject = CloneMethod.Invoke(originalObject, null);
+
             if (typeToReflect.IsArray) {
                 Type? arrayType = typeToReflect.GetElementType();
+
                 if (IsPrimitive(arrayType) == false) {
                     Array clonedArray = (Array)cloneObject;
                     clonedArray.ForEach((array, indices) => array.SetValue(InternalCopy(clonedArray.GetValue(indices), visited), indices));
@@ -34,8 +42,10 @@ namespace Furball.Engine.Engine.Helpers {
 
             }
             visited.Add(originalObject, cloneObject);
+
             CopyFields(originalObject, visited, cloneObject, typeToReflect);
             RecursiveCopyBaseTypePrivateFields(originalObject, visited, cloneObject, typeToReflect);
+
             return cloneObject;
         }
 
@@ -54,8 +64,10 @@ namespace Furball.Engine.Engine.Helpers {
             foreach (FieldInfo fieldInfo in typeToReflect.GetFields(bindingFlags)) {
                 if (filter != null && filter(fieldInfo) == false) continue;
                 if (IsPrimitive(fieldInfo.FieldType)) continue;
+
                 object? originalFieldValue = fieldInfo.GetValue(originalObject);
                 object  clonedFieldValue   = InternalCopy(originalFieldValue, visited);
+
                 fieldInfo.SetValue(cloneObject, clonedFieldValue);
             }
         }
@@ -74,7 +86,9 @@ namespace Furball.Engine.Engine.Helpers {
         public static class ArrayExtensions {
             public static void ForEach(this Array array, Action<Array, int[]> action) {
                 if (array.LongLength == 0) return;
+
                 ArrayTraverse walker = new(array);
+
                 do {
                     action(array, walker.Position);
                 } while (walker.Step());
@@ -87,8 +101,10 @@ namespace Furball.Engine.Engine.Helpers {
 
             public ArrayTraverse(Array array) {
                 this.maxLengths = new int[array.Rank];
+
                 for (int i = 0; i < array.Rank; ++i)
                     this.maxLengths[i] = array.GetLength(i) - 1;
+
                 this.Position = new int[array.Rank];
             }
 
@@ -96,8 +112,10 @@ namespace Furball.Engine.Engine.Helpers {
                 for (int i = 0; i < this.Position.Length; ++i)
                     if (this.Position[i] < this.maxLengths[i]) {
                         this.Position[i]++;
+
                         for (int j = 0; j < i; j++)
                             this.Position[j] = 0;
+
                         return true;
                     }
                 return false;
