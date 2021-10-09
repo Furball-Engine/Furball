@@ -9,7 +9,7 @@ namespace Furball.Engine.Engine.Helpers {
 
         public static bool IsPrimitive(this Type type) {
             if (type == typeof(string)) return true;
-            
+
             return type.IsValueType & type.IsPrimitive;
         }
 

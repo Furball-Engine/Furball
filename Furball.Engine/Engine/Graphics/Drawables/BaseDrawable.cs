@@ -218,14 +218,16 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
             this.OnMove      = null;
             this.OnHoverLost = null;
         }
-        
-        public virtual void Dispose(bool disposing) {}
+
+        public virtual void Dispose(bool disposing) {
+            this.Tweens.Clear();
+        }
         
         /// <summary>
         /// Updates the pDrawables Tweens
         /// </summary>
         public void UpdateTweens() {
-            this.Tweens.RemoveAll(tween => tween.Terminated);
+            this.Tweens.RemoveAll(tween => tween.Terminated && !tween.KeepAlive);
 
             var sortedTweens = this.Tweens.OrderBy(tween => tween.StartTime).ToList();
 
