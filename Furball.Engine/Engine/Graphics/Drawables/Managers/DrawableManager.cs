@@ -55,8 +55,10 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                 for (int i = 0; i < this._tempClickUpManaged.Count; i++) {
                     ManagedDrawable drawable = this._tempClickUpManaged[i];
 
-                    drawable.InvokeOnClickUp(this, e.args.position);
-                    drawable.InvokeOnDragEnd(this, e.args.position);
+                    if(drawable.IsClicked)
+                        drawable.InvokeOnClickUp(this, e.args.position);
+                    if(drawable.IsDragging)
+                        drawable.InvokeOnDragEnd(this, e.args.position);
                 }
             }
         }
@@ -104,6 +106,9 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                     }
                     
                     if (rect.Contains(e.mousePosition) && !drawable.Circular || circleIntersect) {
+                        if(drawable.IsClicked && !drawable.IsHovered)
+                            drawable.InvokeOnDragBegin(this, e.mousePosition);
+                        
                         if (drawable.IsHovered) {
                             if (drawable.CoverHovers) break;
                             //If we dont cover hovers, just continue to the next one
@@ -162,7 +167,6 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                     
                     if (rect.Contains(e.args.position) && !drawable.Circular || circleIntersect) {
                         drawable.InvokeOnClick(this, e.args.position);
-                        drawable.InvokeOnDragBegin(this, e.args.position);
                         if (drawable.CoverClicks) break;
                     }
                 }
@@ -303,77 +307,6 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
             for (int i = 0; i < tempCount; i++) {
                 ManagedDrawable currentDrawable = this._tempUpdateManaged[i];
 
-                // #region Input
-                //
-                // Point cursor = FurballGame.InputManager.CursorStates[0].Position;
-                // ButtonState leftMouseButton = FurballGame.InputManager.CursorStates[0].LeftButton;
-                // ButtonState rightMouseButton = FurballGame.InputManager.CursorStates[0].RightButton;
-                // ButtonState middleMouseButton = FurballGame.InputManager.CursorStates[0].MiddleButton;
-                //
-                // Rectangle rect = new(currentDrawable.Position.ToPoint() - currentDrawable.LastCalculatedOrigin.ToPoint(), currentDrawable.Size.ToPoint());
-                //
-                // bool circleIntersect = false;
-                // if (currentDrawable.Circular) {
-                //     float distanceToCentre = Vector2.Distance(cursor.ToVector2(), currentDrawable.Position - currentDrawable.LastCalculatedOrigin);
-                //
-                //     if (distanceToCentre < currentDrawable.CircleRadius)
-                //         circleIntersect = true;
-                // }
-                //
-                // if (rect.Contains(cursor) && !currentDrawable.Circular || circleIntersect && currentDrawable.Circular) {
-                //     if (leftMouseButton == ButtonState.Pressed) {
-                //         if (!clickHandled) {
-                //             if (currentDrawable.Clickable) {
-                //                 if (!currentDrawable.IsClicked) {
-                //                     currentDrawable.InvokeOnClick(this, cursor);
-                //                     currentDrawable.IsClicked = true;
-                //                 } else {
-                //                     if(!currentDrawable.IsDragging)
-                //                         currentDrawable.InvokeOnDragBegin(this, cursor);
-                //
-                //                     currentDrawable.InvokeOnDrag(this, cursor);
-                //                     currentDrawable.IsDragging = true;
-                //                 }
-                //             }
-                //
-                //             if(currentDrawable.CoverClicks)
-                //                 clickHandled = true;
-                //         }
-                //     } else {
-                //         if (currentDrawable.IsClicked) {
-                //             currentDrawable.InvokeOnClickUp(this, cursor);
-                //             currentDrawable.IsClicked = false;
-                //
-                //             if (currentDrawable.IsDragging) {
-                //                 currentDrawable.IsDragging = false;
-                //                 currentDrawable.InvokeOnDragEnd(this, cursor);
-                //             }
-                //         }
-                //     }
-                //     if (!hoverHandled) {
-                //         if (!currentDrawable.IsHovered && currentDrawable.Hoverable) {
-                //             currentDrawable.InvokeOnHover(this);
-                //             currentDrawable.IsHovered = true;
-                //         }
-                //
-                //         if(currentDrawable.CoverHovers)
-                //             hoverHandled = true;
-                //     }
-                // } else {
-                //     if (leftMouseButton == ButtonState.Released) {
-                //         if (currentDrawable.IsClicked) {
-                //             currentDrawable.InvokeOnClickUp(this, cursor);
-                //             currentDrawable.IsClicked = false;
-                //         }
-                //     }
-                //     if (currentDrawable.IsHovered) {
-                //         currentDrawable.InvokeOnHoverLost(this);
-                //         currentDrawable.IsHovered = false;
-                //     }
-                // }
-                //
-                // #endregion
-
                 currentDrawable.UpdateTweens();
                 currentDrawable.Update(time);
             }
@@ -399,8 +332,9 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                 DrawableManagers.Remove(this);
             }
             
-            FurballGame.InputManager.OnMouseDown -= this.InputManagerOnMouseDown;
-            FurballGame.InputManager.OnMouseMove -= this.InputManagerOnMouseMove;
+            FurballGame.InputManager.OnMouseDown += this.InputManagerOnMouseDown;
+            FurballGame.InputManager.OnMouseUp   += this.InputManagerOnMouseUp;
+            FurballGame.InputManager.OnMouseMove += this.InputManagerOnMouseMove; 
 
             base.Dispose(disposing);
         }
