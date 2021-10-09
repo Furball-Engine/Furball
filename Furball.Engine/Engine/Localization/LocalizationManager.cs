@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using Furball.Engine.Engine.Helpers.Logger;
 using Furball.Engine.Engine.Localization.Exceptions;
 using Furball.Engine.Engine.Localization.Languages;
 
@@ -88,6 +89,8 @@ namespace Furball.Engine.Engine.Localization {
                         _translations.Add(key, splitLine[1].Trim());
                     }
                 }
+
+                Logger.Log($"Parsed localization for {GetLanguageFromCode(code)}", new LoggerLevelLocalizationInfo());
             }
         }
     }
