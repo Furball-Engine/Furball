@@ -332,9 +332,9 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                 DrawableManagers.Remove(this);
             }
             
-            FurballGame.InputManager.OnMouseDown += this.InputManagerOnMouseDown;
-            FurballGame.InputManager.OnMouseUp   += this.InputManagerOnMouseUp;
-            FurballGame.InputManager.OnMouseMove += this.InputManagerOnMouseMove; 
+            FurballGame.InputManager.OnMouseDown -= this.InputManagerOnMouseDown;
+            FurballGame.InputManager.OnMouseUp   -= this.InputManagerOnMouseUp;
+            FurballGame.InputManager.OnMouseMove -= this.InputManagerOnMouseMove; 
 
             base.Dispose(disposing);
         }
