@@ -4,7 +4,6 @@ using System.Reflection;
 using System.Collections.Generic;
 using Furball.Engine.Engine.Helpers;
 using Furball.Engine.Engine.Helpers.Logger;
-using MathHelper=Furball.Engine.Engine.Helpers.MathHelper;
 
 namespace Furball.Engine.Engine.Graphics {
     public static class ContentManager {
