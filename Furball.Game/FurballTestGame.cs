@@ -1,4 +1,5 @@
 ﻿using Furball.Engine;
+using Furball.Engine.Engine.Localization;
 using Furball.Game.Screens;
 
 namespace Furball.Game {
@@ -7,5 +8,8 @@ namespace Furball.Game {
             this.Window.AllowUserResizing = true;
         }
 
+        public override void InitializeLocalizations() {
+            LocalizationManager.AddDefaultTranslation("cat", "Cat");
+        }
     }
 }

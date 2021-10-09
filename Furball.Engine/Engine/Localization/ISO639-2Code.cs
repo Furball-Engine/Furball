@@ -472,6 +472,9 @@ namespace Furball.Engine.Engine.Localization {
         uig,
         ukr,
         umb,
+        /// <summary>
+        /// Undetermined language
+        /// </summary>
         und,
         urd,
         uzb,
