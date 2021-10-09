@@ -96,6 +96,10 @@ namespace Furball.Engine {
 
             DrawableManager             = new();
             DebugOverlayDrawableManager = new();
+
+            WhitePixel = new Texture2D(this.GraphicsDevice, 1, 1);
+            Color[] white = { Color.White };
+            WhitePixel.SetData(white);
             
             base.Initialize();
         }
@@ -124,10 +128,6 @@ namespace Furball.Engine {
             DebugCounter = new();
 
             DebugOverlayDrawableManager.Add(DebugCounter);
-
-            WhitePixel = new Texture2D(this.GraphicsDevice, 1, 1);
-            Color[] white = { Color.White };
-            WhitePixel.SetData(white);
 
             ScreenManager.SetTransition(new FadeTransition());
         }
