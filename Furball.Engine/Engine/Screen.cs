@@ -3,9 +3,18 @@ using Microsoft.Xna.Framework;
 
 namespace Furball.Engine.Engine {
     public class Screen : DrawableGameComponent {
-        protected DrawableManager Manager = new();
+        protected DrawableManager Manager;
         public Screen() : base(FurballGame.Instance) {}
 
+        /// <summary>
+        /// You MUST run base.Initialize before adding things to your manager!!!!
+        /// </summary>
+        public override void Initialize() {
+            this.Manager = new();
+            
+            base.Initialize();
+        }
+        
         public override void Draw(GameTime gameTime) {
             this.Manager.Draw(gameTime, FurballGame.DrawableBatch);
 

@@ -56,8 +56,9 @@ namespace Furball.Engine {
         public static Texture2D WhitePixel;
 
         public event EventHandler<Screen> BeforeScreenChange; 
-        public event EventHandler<Screen> AfterScreenChange; 
+        public event EventHandler<Screen> AfterScreenChange;
 
+        private Screen _startScreen;
         public FurballGame(Screen startScreen) {
             this._graphics             = new GraphicsDeviceManager(this);
             this.Content.RootDirectory = "Content";
@@ -68,7 +69,7 @@ namespace Furball.Engine {
             
             Logger.AddLogger(new ConsoleLogger());
 
-            this.ChangeScreen(startScreen);
+            this._startScreen = startScreen;
         }
 
         protected override void Initialize() {
@@ -102,6 +103,10 @@ namespace Furball.Engine {
             WhitePixel.SetData(white);
             
             base.Initialize();
+        }
+
+        protected override void BeginRun() {
+            ScreenManager.ChangeScreen(this._startScreen);
         }
 
         public void ChangeScreen(Screen screen) {
