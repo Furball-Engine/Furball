@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
+using System.Reflection;
 using FontStashSharp;
 using Furball.Engine.Engine;
 using Furball.Engine.Engine.Audio;
@@ -9,6 +11,7 @@ using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Furball.Engine.Engine.Helpers.Logger;
 using Furball.Engine.Engine.Input;
 using Furball.Engine.Engine.Input.InputMethods;
+using Furball.Engine.Engine.Localization;
 using Furball.Engine.Engine.Platform;
 using Furball.Engine.Engine.Timing;
 using Furball.Engine.Engine.Transitions;
@@ -36,6 +39,9 @@ namespace Furball.Engine {
 
         public const int DEFAULT_WINDOW_WIDTH  = 1280;
         public const int DEFAULT_WINDOW_HEIGHT = 720;
+
+        public static string AssemblyPath       = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? throw new Exception("shits fucked man");
+        public static string LocalizationFolder => $"{Instance.Content.RootDirectory}/Localization";
 
         public static int WindowHeight => Instance.GraphicsDevice.Viewport.Height;
         public static int WindowWidth => Instance.GraphicsDevice.Viewport.Width;
@@ -73,6 +79,8 @@ namespace Furball.Engine {
         }
 
         protected override void Initialize() {
+            this.InitializeLocalizations();
+            
             Logger.Log(
                 $@"Starting Furball {(Environment.Is64BitProcess ? "64-bit" : "32-bit")} on {Environment.OSVersion.VersionString} {(Environment.Is64BitOperatingSystem ? "64-bit" : "32-bit")}",
                 new LoggerLevelEngineInfo()
@@ -101,8 +109,17 @@ namespace Furball.Engine {
             WhitePixel = new Texture2D(this.GraphicsDevice, 1, 1);
             Color[] white = { Color.White };
             WhitePixel.SetData(white);
+
+            LocalizationManager.ReadTranslations();
             
             base.Initialize();
+        }
+
+        /// <summary>
+        /// Use this function to initialize the default strings for all your localizations
+        /// </summary>
+        public virtual void InitializeLocalizations() {
+            
         }
 
         protected override void BeginRun() {

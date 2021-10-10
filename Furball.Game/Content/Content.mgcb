@@ -13,6 +13,9 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin Localization/Lojban.lang
+/copy:Localization/Lojban.lang
+
 #begin white.png
 /importer:TextureImporter
 /processor:TextureProcessor

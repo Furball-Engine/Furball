@@ -3,6 +3,8 @@ using Furball.Engine.Engine;
 using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Graphics.Drawables.UiElements;
 using Furball.Engine.Engine.Helpers.Logger;
+using Furball.Engine.Engine.Localization;
+using Furball.Engine.Engine.Localization.Languages;
 using Microsoft.Xna.Framework;
 
 namespace Furball.Game.Screens {
@@ -17,11 +19,14 @@ namespace Furball.Game.Screens {
             };
             
             this.Manager.Add(background);
-            UiButtonDrawable screenSwitchButton = new (new Vector2(FurballGame.Random.Next(0, 1280), FurballGame.Random.Next(0, 720)), "Test Switching Screen", FurballGame.DEFAULT_FONT, 30, Color.Cyan, Color.Red, Color.Black, new Vector2(200, 40));
+            UiButtonDrawable screenSwitchButton = new (new Vector2(FurballGame.Random.Next(0, 1280), FurballGame.Random.Next(0, 720)), "Change Language", FurballGame.DEFAULT_FONT, 30, Color.Cyan, Color.Red, Color.Black, new Vector2(200, 40));
 
             screenSwitchButton.OnClick += delegate {
                 Logger.Log($"button click event {FurballGame.Time}");
+                Logger.Log($"Current Language: {LocalizationManager.GetLanguageFromCode(LocalizationManager.CurrentLanguage.Iso6392Code())}");
+                LocalizationManager.CurrentLanguage = new LojbanLanguage();
                 ScreenManager.ChangeScreen(new BasicTestScreen());
+                
             };
 
             screenSwitchButton.OnHover += delegate {
@@ -29,6 +34,9 @@ namespace Furball.Game.Screens {
             };
             
             this.Manager.Add(screenSwitchButton);
+
+            TextDrawable localizationTest = new(new(10f), FurballGame.DEFAULT_FONT, LocalizationManager.GetLocalizedString("cat"), 30);
+            this.Manager.Add(localizationTest);
         }
     }
 }
