@@ -62,6 +62,8 @@ namespace Furball.Engine.Engine.Localization {
             Languages.Add(ISO639_2Code.jpn, typeof(JapaneseLanguage));
             Languages.Add(ISO639_2Code.spa, typeof(SpanishLanguage));
             Languages.Add(ISO639_2Code.ara, typeof(ArabicLanguage));
+            Languages.Add(ISO639_2Code.ita, typeof(ItalianLanguage));
+            Languages.Add(ISO639_2Code.fra, typeof(FrenchLanguage));
 
             string localizationFolder = Path.Combine(FurballGame.AssemblyPath, FurballGame.LocalizationFolder);
             
