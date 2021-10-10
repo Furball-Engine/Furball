@@ -25,8 +25,27 @@ namespace Furball.Game.Screens {
                 Logger.Log($"button click event {FurballGame.Time}");
                 Logger.Log($"Current Language: {LocalizationManager.GetLanguageFromCode(LocalizationManager.CurrentLanguage.Iso6392Code())}");
                 LocalizationManager.CurrentLanguage = new LojbanLanguage();
-                ScreenManager.ChangeScreen(new BasicTestScreen());
-                
+
+                FurballGame.GameTimeScheduler.ScheduleMethod(
+                delegate {
+                    ScreenManager.ChangeScreen(new BasicTestScreen());
+                },
+                FurballGame.Time + 1000
+                );
+
+                FurballGame.GameTimeScheduler.ScheduleMethod(
+                delegate {
+                    ScreenManager.ChangeScreen(new BasicTestScreen());
+                },
+                FurballGame.Time + 2000
+                );
+
+                FurballGame.GameTimeScheduler.ScheduleMethod(
+                delegate {
+                    ScreenManager.ChangeScreen(new BasicTestScreen());
+                },
+                FurballGame.Time + 3000
+                );
             };
 
             screenSwitchButton.OnHover += delegate {

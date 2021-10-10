@@ -8,6 +8,7 @@ using Furball.Engine.Engine.Audio;
 using Furball.Engine.Engine.Debug;
 using Furball.Engine.Engine.Graphics;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
+using Furball.Engine.Engine.Helpers;
 using Furball.Engine.Engine.Helpers.Logger;
 using Furball.Engine.Engine.Input;
 using Furball.Engine.Engine.Input.InputMethods;
@@ -30,6 +31,7 @@ namespace Furball.Engine {
         public static DrawableBatch DrawableBatch;
         public static InputManager  InputManager;
         public static ITimeSource   GameTimeSource;
+        public static Scheduler     GameTimeScheduler;
 
         public static DebugCounter DebugCounter;
 
@@ -70,10 +72,12 @@ namespace Furball.Engine {
             this.Content.RootDirectory = "Content";
             this.IsMouseVisible        = true;
 
-            GameTimeSource = new GameTimeSource();
-            Instance       = this;
+            GameTimeSource    = new GameTimeSource();
+            Instance          = this;
+            GameTimeScheduler = new();
             
             Logger.AddLogger(new ConsoleLogger());
+
 
             this._startScreen = startScreen;
         }
@@ -113,6 +117,12 @@ namespace Furball.Engine {
             LocalizationManager.ReadTranslations();
             
             base.Initialize();
+        }
+
+        protected override void EndRun() {
+            GameTimeScheduler.Dispose(Time);
+
+            base.EndRun();
         }
 
         /// <summary>
@@ -177,7 +187,9 @@ namespace Furball.Engine {
                 Logger.Update(gameTime);
 
             ScreenManager.UpdateTransition(gameTime);
-                
+
+            GameTimeScheduler.Update(Time);
+            
             base.Update(gameTime);
         }
 
