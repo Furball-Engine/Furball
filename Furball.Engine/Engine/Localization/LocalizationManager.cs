@@ -56,7 +56,13 @@ namespace Furball.Engine.Engine.Localization {
         public static void ReadTranslations() {
             Languages.Add(ISO639_2Code.eng, typeof(EnglishLanguage));
             Languages.Add(ISO639_2Code.jbo, typeof(LojbanLanguage));
-            
+            Languages.Add(ISO639_2Code.epo, typeof(EsperantoLanguage));
+            Languages.Add(ISO639_2Code.pol, typeof(PolishLanguage));
+            Languages.Add(ISO639_2Code.deu, typeof(GermanLanguage));
+            Languages.Add(ISO639_2Code.jpn, typeof(JapaneseLanguage));
+            Languages.Add(ISO639_2Code.spa, typeof(SpanishLanguage));
+            Languages.Add(ISO639_2Code.ara, typeof(ArabicLanguage));
+
             string localizationFolder = Path.Combine(FurballGame.AssemblyPath, FurballGame.LocalizationFolder);
             
             DirectoryInfo dirInfo = null;
