@@ -8,13 +8,15 @@ using Furball.Engine.Engine.Localization.Languages;
 namespace Furball.Engine.Engine.Localization {
     public class LocalizationManager {
         private static readonly Dictionary<(string translationKey, ISO639_2Code code), string> _translations = new();
+        
+        public static readonly Dictionary<ISO639_2Code, Type> Languages = new();
 
         public static readonly Language DefaultLanguage = new EnglishLanguage();
-        public static          Language Language        = DefaultLanguage;
+        public static          Language CurrentLanguage = DefaultLanguage;
 
         public static string GetLocalizedString(string key, ISO639_2Code code = ISO639_2Code.und) {
             if (code == ISO639_2Code.und)
-                code = Language.Iso6392Code();
+                code = CurrentLanguage.Iso6392Code();
 
             if (_translations.TryGetValue((key, code), out string localization)) {
                 return localization;
@@ -40,11 +42,11 @@ namespace Furball.Engine.Engine.Localization {
         }
 
         public static Language GetLanguageFromCode(ISO639_2Code code) {
-            return code switch {
-                ISO639_2Code.eng => new EnglishLanguage(),
-                ISO639_2Code.jbo => new LojbanLanguage(),
-                _                => null
-            };
+            if (Languages.TryGetValue(code, out Type type)) {
+                return (Language)Activator.CreateInstance(type);
+            }
+
+            return null;
         }
         
         public static void AddDefaultTranslation(string key, string contents) {
@@ -52,6 +54,9 @@ namespace Furball.Engine.Engine.Localization {
         }
         
         public static void ReadTranslations() {
+            Languages.Add(ISO639_2Code.eng, typeof(EnglishLanguage));
+            Languages.Add(ISO639_2Code.jbo, typeof(LojbanLanguage));
+            
             string localizationFolder = Path.Combine(FurballGame.AssemblyPath, FurballGame.LocalizationFolder);
             
             DirectoryInfo dirInfo = null;
