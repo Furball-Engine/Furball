@@ -33,6 +33,10 @@ namespace Furball.Engine.Engine.Helpers.Logger {
         public override string Name => "SchedulerInfo";
     }
 
+    public class LoggerLevelConfigInfo : LoggerLevel {
+        public override string Name => "ConfigInfo";
+    }
+
     public class LoggerLevelAll : LoggerLevel {
         
     }

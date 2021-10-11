@@ -24,7 +24,7 @@ namespace Furball.Game.Screens {
             screenSwitchButton.OnClick += delegate {
                 Logger.Log($"button click event {FurballGame.Time}");
                 Logger.Log($"Current Language: {LocalizationManager.GetLanguageFromCode(LocalizationManager.CurrentLanguage.Iso6392Code())}");
-                LocalizationManager.CurrentLanguage = new LojbanLanguage();
+                FurballGame.ChangeLanguage(new LojbanLanguage());
 
                 FurballGame.GameTimeScheduler.ScheduleMethod(
                 delegate {

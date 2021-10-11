@@ -5,6 +5,7 @@ using System.Reflection;
 using FontStashSharp;
 using Furball.Engine.Engine;
 using Furball.Engine.Engine.Audio;
+using Furball.Engine.Engine.Configuration;
 using Furball.Engine.Engine.Debug;
 using Furball.Engine.Engine.Graphics;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
@@ -13,6 +14,7 @@ using Furball.Engine.Engine.Helpers.Logger;
 using Furball.Engine.Engine.Input;
 using Furball.Engine.Engine.Input.InputMethods;
 using Furball.Engine.Engine.Localization;
+using Furball.Engine.Engine.Localization.Languages;
 using Furball.Engine.Engine.Platform;
 using Furball.Engine.Engine.Timing;
 using Furball.Engine.Engine.Transitions;
@@ -63,6 +65,8 @@ namespace Furball.Engine {
 
         public static Texture2D WhitePixel;
 
+        public static event EventHandler<Language> OnLanguageChange; 
+
         public event EventHandler<Screen> BeforeScreenChange; 
         public event EventHandler<Screen> AfterScreenChange;
 
@@ -77,8 +81,7 @@ namespace Furball.Engine {
             GameTimeScheduler = new();
             
             Logger.AddLogger(new ConsoleLogger());
-
-
+            
             this._startScreen = startScreen;
         }
 
@@ -115,6 +118,10 @@ namespace Furball.Engine {
             WhitePixel.SetData(white);
 
             LocalizationManager.ReadTranslations();
+
+            this.InitializeDefaultConfig();
+            Config.Load();
+            ChangeLanguage(LocalizationManager.GetLanguageFromCode(Enum.Parse<ISO639_2Code>(Config.GetConfig<long>("Language").ToString())));
             
             base.Initialize();
         }
@@ -126,6 +133,23 @@ namespace Furball.Engine {
         }
 
         /// <summary>
+        ///     Use this function to initialize the default config options for your game
+        /// </summary>
+        public virtual void InitializeDefaultConfig() {
+            Config.AddDefaultConfig("StartupResolution", new Rectangle(0, 0, DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT));
+            Config.AddDefaultConfig("Language",          new EnglishLanguage().Iso6392Code());
+        }
+
+        public static void ChangeLanguage(Language language) {
+            LocalizationManager.CurrentLanguage = language;
+
+            Config.SetConfig("Language", long.Parse(((int)language.Iso6392Code()).ToString()));
+            Config.Save();
+
+            OnLanguageChange?.Invoke(null, language);
+        }
+
+        /// <summary>
         /// Use this function to initialize the default strings for all your localizations
         /// </summary>
         public virtual void InitializeLocalizations() {
@@ -133,6 +157,16 @@ namespace Furball.Engine {
         }
 
         protected override void BeginRun() {
+            #region startup stuff from config
+
+            Rectangle startupResolution = Config.GetConfig<Rectangle>("StartupResolution");
+            Language  language          = LocalizationManager.GetLanguageFromCode(Enum.Parse<ISO639_2Code>(Config.GetConfig<long>("Language").ToString()));
+
+            this.ChangeScreenSize(startupResolution.Width, startupResolution.Height);
+            ChangeLanguage(language);
+
+            #endregion
+            
             ScreenManager.ChangeScreen(this._startScreen);
         }
 
@@ -173,6 +207,9 @@ namespace Furball.Engine {
             this._graphics.SynchronizeWithVerticalRetrace = false;
             this.IsFixedTimeStep                          = false;
             this._graphics.ApplyChanges();
+
+            Config.SetConfig("StartupResolution", new Rectangle(0, 0, width, height));
+            Config.Save();
         }
 
         protected override void Update(GameTime gameTime) {
