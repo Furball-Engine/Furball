@@ -7,7 +7,7 @@ using Furball.Engine.Engine.Localization.Languages;
 
 namespace Furball.Engine.Engine.Localization {
     public class LocalizationManager {
-        private static readonly Dictionary<(string translationKey, ISO639_2Code code), string> _Translations = new();
+        private static readonly Dictionary<(string translationKey, ISO639_2Code code), string> TRANSLATIONS = new();
 
         public static Dictionary<ISO639_2Code, Type> Languages = new();
 
@@ -18,10 +18,10 @@ namespace Furball.Engine.Engine.Localization {
             if (code == ISO639_2Code.und)
                 code = CurrentLanguage.Iso6392Code();
 
-            if (_Translations.TryGetValue((key, code), out string localization))
+            if (TRANSLATIONS.TryGetValue((key, code), out string localization))
                 return localization;
 
-            if (_Translations.TryGetValue((key, DefaultLanguage.Iso6392Code()), out localization))
+            if (TRANSLATIONS.TryGetValue((key, DefaultLanguage.Iso6392Code()), out localization))
                 return localization;
 
             throw new NoTranslationException();
@@ -30,7 +30,7 @@ namespace Furball.Engine.Engine.Localization {
         public static List<ISO639_2Code> GetSupportedLanguages() {
             List<ISO639_2Code> languages = new();
 
-            foreach (KeyValuePair<(string translationKey, ISO639_2Code code), string> translation in _Translations) {
+            foreach (KeyValuePair<(string translationKey, ISO639_2Code code), string> translation in TRANSLATIONS) {
                 if (languages.Contains(translation.Key.code)) continue;
                 
                 languages.Add(translation.Key.code);
@@ -48,7 +48,7 @@ namespace Furball.Engine.Engine.Localization {
         }
         
         public static void AddDefaultTranslation(string key, string contents) {
-            _Translations.Add((key, DefaultLanguage.Iso6392Code()), contents);
+            TRANSLATIONS.Add((key, DefaultLanguage.Iso6392Code()), contents);
         }
         
         public static void ReadTranslations() {
@@ -97,7 +97,7 @@ namespace Furball.Engine.Engine.Localization {
                     } else {
                         (string translationKey, ISO639_2Code languageCode) key = (splitLine[0], code);
 
-                        _Translations.Add(key, splitLine[1].Trim());
+                        TRANSLATIONS.Add(key, splitLine[1].Trim());
                     }
                 }
 
