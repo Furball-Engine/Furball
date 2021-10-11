@@ -1,3 +1,4 @@
+// ReSharper disable InconsistentNaming
 namespace Furball.Engine.Engine.Localization {
     public enum ISO639_1Code {
         ab,
