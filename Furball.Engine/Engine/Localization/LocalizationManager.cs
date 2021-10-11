@@ -101,7 +101,7 @@ namespace Furball.Engine.Engine.Localization {
                     }
                 }
 
-                Logger.Log($"Parsed localization for {GetLanguageFromCode(code)}", new LoggerLevelLocalizationInfo());
+                Logger.Log($"Parsed localization for {GetLanguageFromCode(code)}", LoggerLevelLocalizationInfo.Instance);
             }
         }
     }

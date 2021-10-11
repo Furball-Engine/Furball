@@ -1,7 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
-using System.Collections.Generic;
 
 namespace Furball.Engine.Engine.Helpers.Logger {
     public static class Logger {
@@ -64,7 +64,7 @@ namespace Furball.Engine.Engine.Helpers.Logger {
         }
 
         public static void Log(string data, LoggerLevel level = null) {
-            level ??= new LoggerLevelUnknown();
+            level ??= LoggerLevelUnknown.Instance;
 
             Log(new LoggerLine{LoggerLevel = level, LineData = data});
         }

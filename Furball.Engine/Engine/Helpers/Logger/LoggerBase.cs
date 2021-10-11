@@ -14,7 +14,12 @@ namespace Furball.Engine.Engine.Helpers.Logger {
         public abstract void Send(LoggerLine line);
 
         public virtual void Initialize() {
-            Logger.Log(new LoggerLine{ LoggerLevel = new LoggerLevelLoggerInfo(), LineData = $"{ this.GetType().Name } initialized!"});
+            Logger.Log(
+            new LoggerLine {
+                LoggerLevel = LoggerLevelLoggerInfo.Instance,
+                LineData    = $"{this.GetType().Name} initialized!"
+            }
+            );
         }
         
         public List<LoggerLevel> Level;
