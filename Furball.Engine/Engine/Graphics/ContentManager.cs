@@ -1,7 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using System.Collections.Generic;
 using Furball.Engine.Engine.Helpers;
 using Furball.Engine.Engine.Helpers.Logger;
 
@@ -91,7 +91,7 @@ namespace Furball.Engine.Engine.Graphics {
 
             //We dont want to be caching anything huge as that could cause unnessesarily high memory usage
             if (data.Length < CacheSizeLimit && !bypassCache) {
-                Logger.Log($"Caching content with filepath: {filename}, hash:{CryptoHelper.GetMD5(data)}, dataSize:{data.LongLength}", new LoggerLevelCacheEvent());
+                Logger.Log($"Caching content with filepath: {filename}, hash:{CryptoHelper.GetMd5(data)}, dataSize:{data.LongLength}", new LoggerLevelCacheEvent());
                 CONTENT_CACHE.Add(filename, data);
             }
 

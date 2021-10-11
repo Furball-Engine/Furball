@@ -53,7 +53,7 @@ namespace Furball.Engine {
         public static Rectangle DisplayRect => new(0, 0, (int)Math.Ceiling(Instance.GraphicsDevice.Viewport.Width / VerticalRatio), (int)Math.Ceiling(Instance.GraphicsDevice.Viewport.Height / VerticalRatio));
         public static Rectangle DisplayRectActual => new(0, 0, Instance.GraphicsDevice.Viewport.Width, Instance.GraphicsDevice.Viewport.Height);
 
-        public static byte[] DEFAULT_FONT_DATA;
+        public static byte[] DefaultFontData;
         public static readonly FontSystem DEFAULT_FONT = new(new FontSystemSettings {
             FontResolutionFactor = 2f,
             KernelWidth = 2,
@@ -90,8 +90,8 @@ namespace Furball.Engine {
                 new LoggerLevelEngineInfo()
             );
 
-            DEFAULT_FONT_DATA = ContentManager.LoadRawAsset("default-font.ttf");
-            DEFAULT_FONT.AddFont(DEFAULT_FONT_DATA);
+            DefaultFontData = ContentManager.LoadRawAsset("default-font.ttf");
+            DEFAULT_FONT.AddFont(DefaultFontData);
 
             _stopwatch.Start();
 

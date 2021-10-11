@@ -3,8 +3,6 @@ namespace Furball.Engine.Engine.Helpers.Logger {
         public string      LineData;
         public LoggerLevel LoggerLevel;
 
-        public override string ToString() {
-            return $"{this.LoggerLevel.ToString()}: {this.LineData}";
-        }
+        public override string ToString() => $"{this.LoggerLevel}: {this.LineData}";
     }
 }

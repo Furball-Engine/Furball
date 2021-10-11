@@ -14,7 +14,7 @@ namespace Furball.Engine.Engine.Helpers {
                 ScheduledMethod method = this._scheduledMethods[i];
                 if (time > method.Time) {
                     Logger.Logger.Log($"ScheduledMethod invoked at {time}", new LoggerLevelSchedulerInfo());
-                    method.method.Invoke(time);
+                    method.MethodToRun.Invoke(time);
                     this._scheduledMethods.Remove(method);
                 }
             }
@@ -31,7 +31,7 @@ namespace Furball.Engine.Engine.Helpers {
 
             foreach (ScheduledMethod method in this._scheduledMethods) {
                 Logger.Logger.Log($"ScheduledMethod invoked at {time} during dispose", new LoggerLevelSchedulerInfo());
-                method.method.Invoke(time);
+                method.MethodToRun.Invoke(time);
             }
 
             this._scheduledMethods.Clear();
@@ -41,12 +41,12 @@ namespace Furball.Engine.Engine.Helpers {
     public class ScheduledMethod {
         public delegate void Method(int time);
 
-        public readonly Method method;
+        public readonly Method MethodToRun;
         public readonly bool   RunOnDispose;
         public readonly int    Time;
 
         protected internal ScheduledMethod(Method method, int time, bool runOnDispose = false) {
-            this.method       = method;
+            this.MethodToRun  = method;
             this.Time         = time;
             this.RunOnDispose = runOnDispose;
         }

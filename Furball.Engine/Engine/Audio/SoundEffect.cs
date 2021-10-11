@@ -1,10 +1,10 @@
-using ManagedBass;
 using System.Runtime.InteropServices;
 using Furball.Engine.Engine.Audio.Exceptions;
+using ManagedBass;
 
 namespace Furball.Engine.Engine.Audio {
     public class SoundEffect {
-        public static readonly int MaxSimultaneousPlaybacks = 32;// chosen due to hardware limitations 
+        public static int MaxSimultaneousPlaybacks = 32;// chosen due to hardware limitations 
         
         private GCHandle _memoryHandle;
 

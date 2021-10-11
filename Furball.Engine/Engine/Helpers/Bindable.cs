@@ -1,11 +1,12 @@
 using System;
 
 namespace Furball.Engine.Engine.Helpers {
-    public class Bindable<T> : IDisposable {
-        public event EventHandler<T> OnChange;
+    public class Bindable <pT> : IDisposable {
+        public event EventHandler<pT> OnChange;
 
-        private T _value;
-        public T Value {
+        private pT _value;
+
+        public pT Value {
             get => this._value;
             set {
                 if (this._value is not null && this._value.Equals(value)) return;
@@ -14,17 +15,13 @@ namespace Furball.Engine.Engine.Helpers {
                 this.OnChange?.Invoke(this, value);
             }
         }
-        
-        public Bindable(T value) {
-            this._value = value;
-        }
+
+        public Bindable(pT value) => this._value = value;
 
         public void Dispose() {
             this.OnChange = null;
         }
-        
-        public static implicit operator T(Bindable<T> bindable) {
-            return bindable.Value;
-        }
+
+        public static implicit operator pT(Bindable<pT> bindable) => bindable.Value;
     }
 }

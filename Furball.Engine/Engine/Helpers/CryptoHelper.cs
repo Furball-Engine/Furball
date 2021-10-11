@@ -6,7 +6,7 @@ namespace Furball.Engine.Engine.Helpers {
         private static MD5 _md5 = new MD5CryptoServiceProvider();
         private static SHA256 _sha256 = new SHA256CryptoServiceProvider();
 
-        public static string GetMD5(byte[] bytes) {
+        public static string GetMd5(byte[] bytes) {
             byte[] hash = _md5.ComputeHash(bytes);
 
             string hashString = string.Empty;
@@ -18,7 +18,7 @@ namespace Furball.Engine.Engine.Helpers {
             return hashString;
         }
 
-        public static string GetSHA256(byte[] bytes) {
+        public static string GetSha256(byte[] bytes) {
             byte[] hash = _sha256.ComputeHash(bytes);
 
             string hashString = string.Empty;
@@ -30,7 +30,7 @@ namespace Furball.Engine.Engine.Helpers {
             return hashString;
         }
 
-        public static byte CRC8(byte[] data, int dataLimit) {
+        public static byte Crc8(byte[] data, int dataLimit) {
             byte sum = 0;
             unchecked // Let overflow occur without exceptions
             {
@@ -42,7 +42,7 @@ namespace Furball.Engine.Engine.Helpers {
             return sum;
         }
 
-        public static short CRC16(byte[] data, int dataLimit) {
+        public static short Crc16(byte[] data, int dataLimit) {
             short sum = 0;
             unchecked // Let overflow occur without exceptions
             {
@@ -54,7 +54,7 @@ namespace Furball.Engine.Engine.Helpers {
             return sum;
         }
 
-        public static int CRC32(byte[] data, int dataLimit) {
+        public static int Crc32(byte[] data, int dataLimit) {
             int sum = 0;
             unchecked // Let overflow occur without exceptions
             {
@@ -66,7 +66,7 @@ namespace Furball.Engine.Engine.Helpers {
             return sum;
         }
 
-        public static long CRC64(byte[] data, int dataLimit) {
+        public static long Crc64(byte[] data, int dataLimit) {
             long sum = 0;
             unchecked // Let overflow occur without exceptions
             {

@@ -1,10 +1,10 @@
 using System;
-using TextCopy;
 using FontStashSharp;
+using Furball.Engine.Engine.Graphics.Drawables.Managers;
+using Furball.Engine.Engine.Input;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using Furball.Engine.Engine.Input;
-using Furball.Engine.Engine.Graphics.Drawables.Managers;
+using TextCopy;
 using Xssp.MonoGame.Primitives2D;
 
 namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
@@ -39,8 +39,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
             FurballGame.InputManager.OnMouseDown += this.OnMouseDown;
             FurballGame.InputManager.OnKeyDown += this.OnKeyDown;
         }
-        
-        private void OnKeyDown(object? sender, Keys e) {
+
+        private void OnKeyDown(object sender, Keys e) {
             if (!this.Selected) return;
             
             switch(e) {

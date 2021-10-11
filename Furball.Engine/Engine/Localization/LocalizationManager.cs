@@ -1,6 +1,6 @@
 using System;
-using System.IO;
 using System.Collections.Generic;
+using System.IO;
 using Furball.Engine.Engine.Helpers.Logger;
 using Furball.Engine.Engine.Localization.Exceptions;
 using Furball.Engine.Engine.Localization.Languages;
@@ -8,11 +8,11 @@ using Furball.Engine.Engine.Localization.Languages;
 namespace Furball.Engine.Engine.Localization {
     public class LocalizationManager {
         private static readonly Dictionary<(string translationKey, ISO639_2Code code), string> _translations = new();
-        
-        public static readonly Dictionary<ISO639_2Code, Type> Languages = new();
 
-        public static readonly Language DefaultLanguage = new EnglishLanguage();
-        public static          Language CurrentLanguage = DefaultLanguage;
+        public static Dictionary<ISO639_2Code, Type> Languages = new();
+
+        public static Language DefaultLanguage = new EnglishLanguage();
+        public static Language CurrentLanguage = DefaultLanguage;
 
         public static string GetLocalizedString(string key, ISO639_2Code code = ISO639_2Code.und) {
             if (code == ISO639_2Code.und)
