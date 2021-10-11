@@ -50,6 +50,8 @@ namespace Furball.Engine {
         public static int WindowHeight => Instance.GraphicsDevice.Viewport.Height;
         public static int WindowWidth => Instance.GraphicsDevice.Viewport.Width;
 
+        public static EngineConfig Config = new();
+
         public static float HorizontalRatio => (float)WindowWidth / DEFAULT_WINDOW_WIDTH;
         public static float VerticalRatio => (float)WindowHeight / DEFAULT_WINDOW_HEIGHT;
         public static Rectangle DisplayRect => new(0, 0, (int)Math.Ceiling(Instance.GraphicsDevice.Viewport.Width / VerticalRatio), (int)Math.Ceiling(Instance.GraphicsDevice.Viewport.Height / VerticalRatio));
@@ -119,9 +121,7 @@ namespace Furball.Engine {
 
             LocalizationManager.ReadTranslations();
 
-            this.InitializeDefaultConfig();
             Config.Load();
-            ChangeLanguage(LocalizationManager.GetLanguageFromCode(Enum.Parse<ISO639_2Code>(Config.GetConfig<long>("Language").ToString())));
             
             base.Initialize();
         }
@@ -132,18 +132,10 @@ namespace Furball.Engine {
             base.EndRun();
         }
 
-        /// <summary>
-        ///     Use this function to initialize the default config options for your game
-        /// </summary>
-        public virtual void InitializeDefaultConfig() {
-            Config.AddDefaultConfig("StartupResolution", new Rectangle(0, 0, DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT));
-            Config.AddDefaultConfig("Language",          new EnglishLanguage().Iso6392Code());
-        }
-
         public static void ChangeLanguage(Language language) {
             LocalizationManager.CurrentLanguage = language;
 
-            Config.SetConfig("Language", long.Parse(((int)language.Iso6392Code()).ToString()));
+            Config.Language = language.Iso6392Code();
             Config.Save();
 
             OnLanguageChange?.Invoke(null, language);
@@ -159,12 +151,8 @@ namespace Furball.Engine {
         protected override void BeginRun() {
             #region startup stuff from config
 
-            Rectangle startupResolution = Config.GetConfig<Rectangle>("StartupResolution");
-            Language  language          = LocalizationManager.GetLanguageFromCode(Enum.Parse<ISO639_2Code>(Config.GetConfig<long>("Language").ToString()));
-
-            this.ChangeScreenSize(startupResolution.Width, startupResolution.Height);
-            ChangeLanguage(language);
-
+            this.ChangeScreenSize(Config.CurrentResolution.Width, Config.CurrentResolution.Height);
+            ChangeLanguage(LocalizationManager.GetLanguageFromCode(Config.Language));
             #endregion
             
             ScreenManager.ChangeScreen(this._startScreen);
@@ -208,7 +196,7 @@ namespace Furball.Engine {
             this.IsFixedTimeStep                          = false;
             this._graphics.ApplyChanges();
 
-            Config.SetConfig("StartupResolution", new Rectangle(0, 0, width, height));
+            Config.CurrentResolution = new(0, 0, width, height);
             Config.Save();
         }
 
