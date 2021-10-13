@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Furball.Engine.Engine.Console.Types;
 
 namespace Furball.Engine.Engine.Console {
     public class Console {
@@ -9,12 +10,25 @@ namespace Furball.Engine.Engine.Console {
 
         public static void Initialize() {
             AddConVar(ConVars.TestVar);
+            AddConVar(ConVars.ResolutionWidth);
+            AddConVar(ConVars.ResolutionHeight);
 
             AddFunction(
             "quit",
             delegate {
                 FurballGame.Instance.Exit();
                 return "Exiting game!";
+            }
+            );
+            
+            AddFunction(
+            "set_screen_resolution",
+            delegate {
+                int width  = ((IntConVar)_conVars.GetValueOrDefault("screen_resolution_width",  new IntConVar("a", FurballGame.DEFAULT_WINDOW_WIDTH))).Value.Value;
+                int height = ((IntConVar)_conVars.GetValueOrDefault("screen_resolution_height", new IntConVar("a", FurballGame.DEFAULT_WINDOW_HEIGHT))).Value.Value;
+                
+                FurballGame.Instance.ChangeScreenSize(width, height);
+                return $"Setting the screen resolution to {width}x{height}!";
             }
             );
         }
