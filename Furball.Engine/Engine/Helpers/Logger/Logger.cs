@@ -64,6 +64,8 @@ namespace Furball.Engine.Engine.Helpers.Logger {
         }
 
         public static void Log(string data, LoggerLevel level = null) {
+            if (data is null) data = "";
+            
             level ??= LoggerLevelUnknown.Instance;
 
             Log(new LoggerLine{LoggerLevel = level, LineData = data});
