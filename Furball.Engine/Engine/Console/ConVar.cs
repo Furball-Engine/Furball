@@ -1,6 +1,3 @@
-using System;
-using System.Runtime.CompilerServices;
-
 namespace Furball.Engine.Engine.Console {
     public abstract class ConVar {
         public string Name { get; init; }
