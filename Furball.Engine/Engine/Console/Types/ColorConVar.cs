@@ -5,9 +5,9 @@ namespace Furball.Engine.Engine.Console.Types {
     public class ColorConVar : ConVar {
         public Bindable<Color> Value;
 
-        public ColorConVar(string conVarName) : base(conVarName) {}
+        public ColorConVar(string conVarName, Color initialValue) : base(conVarName) => this.Value = new(initialValue);
 
-        public override void Set(string consoleInput) {
+        public override string Set(string consoleInput) {
             string[] split = consoleInput.Split(" ");
 
             if (split.Length == 1) {
@@ -31,8 +31,10 @@ namespace Furball.Engine.Engine.Console.Types {
 
                 this.Value.Value = tempColor;
             }
+
+            return $"{this.Name} set to {this.Value.Value.ToHexString()}!";
         }
 
-        public override string ToString() => this.Value.ToString();
+        public override string ToString() => this.Value.Value.ToHexString();
     }
 }

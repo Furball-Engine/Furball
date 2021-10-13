@@ -6,6 +6,6 @@ namespace Furball.Engine.Engine.Console {
             this.Name = conVarName;
         }
 
-        public abstract void Set(string consoleInput);
+        public abstract string Set(string consoleInput);
     }
 }

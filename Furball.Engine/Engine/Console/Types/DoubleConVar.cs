@@ -4,10 +4,12 @@ namespace Furball.Engine.Engine.Console.Types {
     public class DoubleConVar : ConVar {
         public Bindable<double> Value;
 
-        public DoubleConVar(string conVarName) : base(conVarName) {}
+        public DoubleConVar(string conVarName, double initialValue = 0d) : base(conVarName) => this.Value = new(initialValue);
 
-        public override void Set(string consoleInput) {
+        public override string Set(string consoleInput) {
             this.Value.Value = double.Parse(consoleInput);
+
+            return $"{this.Name} set to {this.Value.Value}";
         }
 
         public override string ToString() => this.Value.ToString();

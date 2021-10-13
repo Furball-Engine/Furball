@@ -41,7 +41,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         }
 
         private void OnKeyDown(object sender, Keys e) {
-            if (!this.Selected) return;
+            if (!this.Selected && !this.Visible) return;
             
             switch(e) {
                 case Keys.V when FurballGame.InputManager.HeldKeys.Contains(Keys.LeftControl): {

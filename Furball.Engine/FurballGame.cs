@@ -5,6 +5,7 @@ using System.Reflection;
 using FontStashSharp;
 using Furball.Engine.Engine;
 using Furball.Engine.Engine.Audio;
+using Furball.Engine.Engine.Console;
 using Furball.Engine.Engine.Debug;
 using Furball.Engine.Engine.Graphics;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
@@ -53,6 +54,8 @@ namespace Furball.Engine {
         public static Rectangle DisplayRect => new(0, 0, (int)Math.Ceiling(Instance.GraphicsDevice.Viewport.Width / VerticalRatio), (int)Math.Ceiling(Instance.GraphicsDevice.Viewport.Height / VerticalRatio));
         public static Rectangle DisplayRectActual => new(0, 0, Instance.GraphicsDevice.Viewport.Width, Instance.GraphicsDevice.Viewport.Height);
 
+        public static ConsoleDrawable Console;
+        
         public static byte[] DefaultFontData;
         public static readonly FontSystem DEFAULT_FONT = new(new FontSystemSettings {
             FontResolutionFactor = 2f,
@@ -77,8 +80,7 @@ namespace Furball.Engine {
             GameTimeScheduler = new();
             
             Logger.AddLogger(new ConsoleLogger());
-
-
+            
             this._startScreen = startScreen;
         }
 
@@ -109,6 +111,9 @@ namespace Furball.Engine {
 
             DrawableManager             = new();
             DebugOverlayDrawableManager = new();
+
+            Console = new();
+            DebugOverlayDrawableManager.Add(Console);
 
             WhitePixel = new Texture2D(this.GraphicsDevice, 1, 1);
             Color[] white = { Color.White };

@@ -11,8 +11,10 @@ namespace Furball.Engine.Engine.Console {
         public static void AddConVar(ConVar conVar) => _conVars.Add(conVar.Name, conVar);
 
         public static string Run(string input) {
+            string returnString = "";
+            
             if (input.Length == 0)
-                return "";
+                return returnString;
 
             string[] splitCommand = input.Split(" ");
 
@@ -33,10 +35,10 @@ namespace Furball.Engine.Engine.Console {
 
                 ConVar var = _conVars.GetValueOrDefault(variableName, null);
 
-                var?.Set(argumentString);
+                returnString = var?.Set(argumentString);
             }
 
-            return "yters";
+            return returnString;
         }
     }
 }
