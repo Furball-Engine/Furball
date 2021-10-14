@@ -146,7 +146,8 @@ namespace Furball.Engine {
                 ColorOverride = new(255, 255, 255, 0)
             };
 
-            ConsoleDrawable.OnLetterTyped += this.ConsoleOnLetterTyped;
+            ConsoleDrawable.OnLetterTyped   += this.ConsoleOnLetterTyped;
+            ConsoleDrawable.OnLetterRemoved += this.ConsoleOnLetterTyped;
 
             DebugOverlayDrawableManager.Add(_ConsoleAutoComplete);
 
