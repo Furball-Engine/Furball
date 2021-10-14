@@ -14,11 +14,9 @@ namespace Furball.Engine.Engine.Console {
         }
 
         private void OnKeyDown(object sender, Keys e) {
-            if (this.Visible) return;
-
             if (e == Keys.OemTilde) {
-                this.Visible  = true;
-                this.Selected = true;
+                this.Visible  = !this.Visible;
+                this.Selected = !this.Selected;
 
                 this.Text = "";
             }
