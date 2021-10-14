@@ -1,12 +1,13 @@
 using System.Collections.Generic;
-using Furball.Engine.Engine.Console.Types;
+using System.Collections.ObjectModel;
 
 namespace Furball.Engine.Engine.Console {
     public class Console {
         private static readonly Dictionary<string, ConVar>   _conVars   = new();
         private static readonly Dictionary<string, ConFunc> _conFuncs = new();
 
-        public delegate string Function(string args);
+        public static ReadOnlyDictionary<string, ConVar> RegisteredConVars => new(_conVars);
+        public static ReadOnlyDictionary<string, ConFunc> RegisteredFunctions => new(_conFuncs);
 
         public static void Initialize() {
             AddConVar(ConVars.TestVar);

@@ -1,10 +1,12 @@
+using System;
 using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Graphics.Drawables.UiElements;
-using Furball.Engine.Engine.Helpers.Logger;
 using Microsoft.Xna.Framework.Input;
 
 namespace Furball.Engine.Engine.Console {
     public class ConsoleDrawable : UiTextBoxDrawable {
+        public event EventHandler<string> OnCommandFinished;
+    
         public ConsoleDrawable() : base(new(FurballGame.DEFAULT_WINDOW_WIDTH / 2f, FurballGame.DEFAULT_WINDOW_HEIGHT / 2f), FurballGame.DEFAULT_FONT, "", 30, 300) {
             this.OriginType = OriginType.Center;
             this.Visible    = false;
@@ -23,8 +25,12 @@ namespace Furball.Engine.Engine.Console {
         }
 
         private void OnTextCommit(object sender, string text) {
-            Logger.Log(Console.Run(text));
-            this.Visible = false;
+            string result = Console.Run(text);
+
+            this.OnCommandFinished?.Invoke(this, result);
+
+            this.Visible  = false;
+            this.Selected = false;
         }
 
         public override void Dispose(bool disposing) {

@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using FontStashSharp;
 using Furball.Engine.Engine;
@@ -8,7 +10,10 @@ using Furball.Engine.Engine.Audio;
 using Furball.Engine.Engine.Console;
 using Furball.Engine.Engine.Debug;
 using Furball.Engine.Engine.Graphics;
+using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
+using Furball.Engine.Engine.Graphics.Drawables.Tweens;
+using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes;
 using Furball.Engine.Engine.Helpers;
 using Furball.Engine.Engine.Helpers.Logger;
 using Furball.Engine.Engine.Input;
@@ -20,6 +25,7 @@ using Furball.Engine.Engine.Transitions;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Console=Furball.Engine.Engine.Console.Console;
 
 namespace Furball.Engine {
     public class FurballGame : Game {
@@ -54,7 +60,8 @@ namespace Furball.Engine {
         public static Rectangle DisplayRect => new(0, 0, (int)Math.Ceiling(Instance.GraphicsDevice.Viewport.Width / VerticalRatio), (int)Math.Ceiling(Instance.GraphicsDevice.Viewport.Height / VerticalRatio));
         public static Rectangle DisplayRectActual => new(0, 0, Instance.GraphicsDevice.Viewport.Width, Instance.GraphicsDevice.Viewport.Height);
 
-        public static ConsoleDrawable Console;
+        public static  ConsoleDrawable ConsoleDrawable;
+        private static TextDrawable    _ConsoleAutoComplete;
         
         public static byte[] DefaultFontData;
         public static readonly FontSystem DEFAULT_FONT = new(new FontSystemSettings {
@@ -112,8 +119,36 @@ namespace Furball.Engine {
             DrawableManager             = new();
             DebugOverlayDrawableManager = new();
 
-            Console = new();
-            DebugOverlayDrawableManager.Add(Console);
+            ConsoleDrawable = new();
+            DebugOverlayDrawableManager.Add(ConsoleDrawable);
+
+            #region Console result
+
+            TextDrawable consoleResult = new(new Vector2(DEFAULT_WINDOW_WIDTH / 2f, DEFAULT_WINDOW_HEIGHT * 0.75f), DEFAULT_FONT, "", 30) {
+                OriginType    = OriginType.Center,
+                ColorOverride = new(255, 255, 255, 0)
+            };
+
+            ConsoleDrawable.OnCommandFinished += delegate(object _, string s) {
+                consoleResult.Tweens.Clear();
+                consoleResult.Tweens.Add(new FloatTween(TweenType.Fade, consoleResult.ColorOverride.A / 255f, 1f, Time,        Time + 100));
+                consoleResult.Tweens.Add(new FloatTween(TweenType.Fade, 1f,                                   0f, Time + 4100, Time + 5100));
+
+                consoleResult.Text = s;
+            };
+
+            DebugOverlayDrawableManager.Add(consoleResult);
+
+            #endregion
+
+            _ConsoleAutoComplete = new(new(DEFAULT_WINDOW_WIDTH / 2f, DEFAULT_WINDOW_HEIGHT * 0.4f), DEFAULT_FONT, "", 30) {
+                OriginType    = OriginType.BottomCenter,
+                ColorOverride = new(255, 255, 255, 0)
+            };
+
+            ConsoleDrawable.OnLetterTyped += this.ConsoleOnLetterTyped;
+
+            DebugOverlayDrawableManager.Add(_ConsoleAutoComplete);
 
             WhitePixel = new Texture2D(this.GraphicsDevice, 1, 1);
             Color[] white = { Color.White };
@@ -122,6 +157,44 @@ namespace Furball.Engine {
             LocalizationManager.ReadTranslations();
             
             base.Initialize();
+        }
+
+        private void ConsoleOnLetterTyped(object? sender, char e) {
+            _ConsoleAutoComplete.Tweens.Clear();
+            _ConsoleAutoComplete.Tweens.Add(new FloatTween(TweenType.Fade, _ConsoleAutoComplete.ColorOverride.A / 255f, 1f, Time,        Time + 100));
+            _ConsoleAutoComplete.Tweens.Add(new FloatTween(TweenType.Fade, 1f,                                          0f, Time + 2100, Time + 3100));
+
+            string input = ConsoleDrawable.Text;
+
+            if (input.StartsWith(':')) {
+                input = input.TrimStart(':');
+
+                IEnumerable<KeyValuePair<string, ConFunc>> functions = Console.RegisteredFunctions.Where(x => x.Key.StartsWith(input));
+
+                string text = "";
+
+                int i = 0;
+                foreach (KeyValuePair<string, ConFunc> pair in functions) {
+                    if (i == 5) break;
+                    text += $"{pair.Key}\n";
+                    i++;
+                }
+
+                _ConsoleAutoComplete.Text = text.Trim();
+            } else {
+                IEnumerable<KeyValuePair<string, ConVar>> convars = Console.RegisteredConVars.Where(x => x.Key.StartsWith(input));
+
+                string text = "";
+
+                int i = 0;
+                foreach (KeyValuePair<string, ConVar> pair in convars) {
+                    if (i == 5) break;
+                    text += $"{pair.Key}\n";
+                    i++;
+                }
+
+                _ConsoleAutoComplete.Text = text.Trim();
+            }
         }
 
         protected override void EndRun() {
