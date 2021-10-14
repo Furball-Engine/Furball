@@ -2,7 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.IO;
+using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using Furball.Engine.Engine.Graphics;
 using Furball.Engine.Engine.Helpers;
 using Jace;
 using Jace.Execution;
@@ -22,10 +26,30 @@ namespace Furball.Engine.Engine.Console {
             AddConFunc(ConVars.QuitFunction);
             AddConFunc(ConVars.ScreenResFunction);
             AddConFunc(ConVars.PrintFunction);
+            AddConFunc(ConVars.ClearContentCache);
+
+            if (!Directory.Exists(ScriptPath)) Directory.CreateDirectory(ScriptPath);
         }
 
         public static void AddConVar(ConVar conVar) => _conVars.Add(conVar.Name, conVar);
         public static void AddConFunc(ConFunc conFunc) => _conFuncs.Add(conFunc.Name, conFunc);
+
+        public static string ScriptPath = "scripts";
+
+        public static async Task RunFile(string filename) {
+            byte[] data = ContentManager.LoadRawAsset(Path.Combine(ScriptPath, filename), ContentSource.External, true);
+
+            string file = Encoding.Default.GetString(data);
+
+            await Task.Run(
+            () => {
+                string[] split = file.Replace("\r", "").Split("\n");
+
+                foreach (string line in split)
+                    Run(line);
+            }
+            );
+        }
         
         public static string Run(string input) {
             string returnString = "";

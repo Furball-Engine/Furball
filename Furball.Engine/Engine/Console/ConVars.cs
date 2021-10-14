@@ -9,5 +9,6 @@ namespace Furball.Engine.Engine.Console {
         public static ConFunc QuitFunction      = new Quit();
         public static ConFunc ScreenResFunction = new SetScreenResolution();
         public static ConFunc PrintFunction     = new Print();
+        public static ConFunc ClearContentCache = new ClearContentCache();
     }
 }
