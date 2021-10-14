@@ -1,6 +1,11 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel.DataAnnotations;
+using System.Globalization;
+using System.Text.RegularExpressions;
+using Furball.Engine.Engine.Helpers;
+using Jace;
+using Jace.Execution;
 
 namespace Furball.Engine.Engine.Console {
     public class Console {
@@ -40,19 +45,40 @@ namespace Furball.Engine.Engine.Console {
             for (int i = 1; i != splitCommand.Length; i++) {
                 string toConcat = splitCommand[i];
 
-                if (toConcat[0] == '$') {
-                    string variableName = toConcat.TrimStart('$');
+                int index;
+                do {
+                    index = toConcat.IndexOf('$');
+                    if (index == -1) break;
 
-                    ConVar value = _conVars.GetValueOrDefault(variableName, null);
+                    string subString = toConcat[index..];
 
-                    toConcat = value != null ? value.ToString() : "~~Error: Variable not found!";
-                }
+                    Match  match         = Regex.Match(subString, "^([\\S]+)");
+                    string matchedString = match.Groups[0].Value;
+
+                    ConVar value = _conVars.GetValueOrDefault(matchedString.TrimStart('$'), null);
+
+                    toConcat = toConcat.Replace(matchedString, value?.ToString() ?? "~~Error: Variable not found!");
+
+                } while (true);
 
                 argumentString += toConcat + " ";
             }
 
             argumentString = argumentString.Trim();
 
+            CalculationEngine jaceEngine = new(CultureInfo.InvariantCulture, ExecutionMode.Interpreted);
+
+            bool run = true;
+            do {
+                try {
+                    string match = argumentString.SubstringWithEnds("#(", ")");
+
+                    argumentString = argumentString.Replace(match, jaceEngine.Calculate(argumentString.Substring("#(", ")")).ToString(CultureInfo.InvariantCulture));
+                }
+                catch (ArgumentException ex) {
+                    run = false;
+                }
+            } while (run);
 
             if (variableAssign) {
                 string variableName = splitCommand[0];
