@@ -5,12 +5,14 @@ namespace Furball.Engine.Engine.Console.Types {
         public Bindable<(int, int)> Value = new((0, 0));
 
         public IntIntConVar(string conVarName, string defaultValue) : base(conVarName) {
-            string[] splitInput = defaultValue.Split(" ");
+            if (defaultValue.Length != 0) {
+                string[] splitInput = defaultValue.Split(" ");
 
-            int x = int.Parse(splitInput[0]);
-            int y = int.Parse(splitInput[1]);
+                int x = int.Parse(splitInput[0]);
+                int y = int.Parse(splitInput[1]);
 
-            this.Value.Value = (x, y);
+                this.Value.Value = (x, y);
+            }
         }
 
         public override string Set(string consoleInput) {
@@ -20,6 +22,8 @@ namespace Furball.Engine.Engine.Console.Types {
             int y = int.Parse(splitInput[1]);
 
             this.Value.Value = (x, y);
+
+            base.Set(string.Empty);
 
             return $"{this.Name} set to {x}:{y}";
         }

@@ -1,6 +1,6 @@
 namespace Furball.Engine.Engine.Console.ConFuncs {
     public class SetScreenResolution : ConFunc {
-        public SetScreenResolution() : base("set_screen_resolution") {
+        public SetScreenResolution() : base("cl_set_screen_resolution") {
 
         }
 
@@ -11,6 +11,7 @@ namespace Furball.Engine.Engine.Console.ConFuncs {
             (int width, int height) = ConVars.ScreenResolution.Value.Value;
 
             FurballGame.Instance.ChangeScreenSize(width, height);
+
             return $"Setting the screen resolution to {width}x{height}!";
         }
     }

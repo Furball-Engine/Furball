@@ -13,26 +13,29 @@ using Jace.Execution;
 
 namespace Furball.Engine.Engine.Console {
     public class Console {
-        private static readonly Dictionary<string, ConVar>   _conVars   = new();
-        private static readonly Dictionary<string, ConFunc> _conFuncs = new();
-
-        public static ReadOnlyDictionary<string, ConVar> RegisteredConVars => new(_conVars);
-        public static ReadOnlyDictionary<string, ConFunc> RegisteredFunctions => new(_conFuncs);
+        public static readonly Dictionary<string, ConVar>  RegisteredConVars   = new();
+        public static readonly Dictionary<string, ConFunc> RegisteredFunctions = new();
 
         public static void Initialize() {
-            AddConVar(ConVars.TestVar);
             AddConVar(ConVars.ScreenResolution);
+            AddConVar(ConVars.DebugOverlay);
 
             AddConFunc(ConVars.QuitFunction);
             AddConFunc(ConVars.ScreenResFunction);
             AddConFunc(ConVars.PrintFunction);
             AddConFunc(ConVars.ClearContentCache);
+            AddConFunc(ConVars.CreateVariable);
+            AddConFunc(ConVars.DeleteVariable);
+            AddConFunc(ConVars.Hook);
 
             if (!Directory.Exists(ScriptPath)) Directory.CreateDirectory(ScriptPath);
         }
 
-        public static void AddConVar(ConVar conVar) => _conVars.Add(conVar.Name, conVar);
-        public static void AddConFunc(ConFunc conFunc) => _conFuncs.Add(conFunc.Name, conFunc);
+        public static void AddConVar(ConVar conVar) => RegisteredConVars.Add(conVar.Name, conVar);
+        public static void RemoveConVar(string name) => RegisteredConVars.Remove(name);
+        public static void AddConFunc(ConFunc conFunc) => RegisteredFunctions.Add(conFunc.Name, conFunc);
+        public static void RemoveConFunc(string name) => RegisteredFunctions.Remove(name);
+
 
         public static string ScriptPath = "scripts";
 
@@ -66,6 +69,7 @@ namespace Furball.Engine.Engine.Console {
 
             string argumentString = "";
 
+            //Check for Variable refrences
             for (int i = 1; i != splitCommand.Length; i++) {
                 string toConcat = splitCommand[i];
 
@@ -79,7 +83,7 @@ namespace Furball.Engine.Engine.Console {
                     Match  match         = Regex.Match(subString, "^([\\S]+)");
                     string matchedString = match.Groups[0].Value;
 
-                    ConVar value = _conVars.GetValueOrDefault(matchedString.TrimStart('$'), null);
+                    ConVar value = RegisteredConVars.GetValueOrDefault(matchedString.TrimStart('$'), null);
 
                     toConcat = toConcat.Replace(matchedString, value?.ToString() ?? "~~Error: Variable not found!");
 
@@ -93,6 +97,23 @@ namespace Furball.Engine.Engine.Console {
             CalculationEngine jaceEngine = new(CultureInfo.InvariantCulture, ExecutionMode.Interpreted);
 
             bool run = true;
+            //Check for evaluatable Code Blocks
+            do {
+                try {
+                    string match = (argumentString + " ").SubstringWithEnds("%(", ")");
+                    string code = match.Substring("%(", ")");
+                    string result = Run(code);
+
+                    argumentString = argumentString.Replace(match, result);
+                }
+                catch (ArgumentException ex) {
+                    run = false;
+                }
+            } while (run);
+
+            run = true;
+
+            //Check for Math Expressions
             do {
                 try {
                     string match = argumentString.SubstringWithEnds("#(", ")");
@@ -107,13 +128,13 @@ namespace Furball.Engine.Engine.Console {
             if (variableAssign) {
                 string variableName = splitCommand[0];
 
-                ConVar var = _conVars.GetValueOrDefault(variableName, null);
+                ConVar var = RegisteredConVars.GetValueOrDefault(variableName, null);
 
                 returnString = var?.Set(argumentString) ?? "Unknown Variable! Did you mean to use a function? Prefix it with :";
             } else {
                 string functionName   = splitCommand[0].TrimStart(':');
 
-                ConFunc func = _conFuncs.GetValueOrDefault(functionName, null);
+                ConFunc func = RegisteredFunctions.GetValueOrDefault(functionName, null);
 
                 returnString = func?.Run(argumentString) ?? "Unknown Function! Did you mean to set a variable? Remove the :";
             }

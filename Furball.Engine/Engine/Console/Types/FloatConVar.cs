@@ -9,6 +9,8 @@ namespace Furball.Engine.Engine.Console.Types {
         public override string Set(string consoleInput) {
             this.Value.Value = float.Parse(consoleInput);
 
+            base.Set(string.Empty);
+
             return $"{this.Name} set to {this.Value.Value}";
         }
 

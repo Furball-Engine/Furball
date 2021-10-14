@@ -1,4 +1,4 @@
-namespace Furball.Engine.Engine.Console.ConFuncs {
+namespace Furball.Engine.Engine.Console.ConFuncs.Standard {
     public class Quit: ConFunc {
         public Quit() : base("quit") {
 

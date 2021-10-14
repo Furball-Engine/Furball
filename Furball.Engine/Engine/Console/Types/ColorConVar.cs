@@ -32,6 +32,8 @@ namespace Furball.Engine.Engine.Console.Types {
                 this.Value.Value = tempColor;
             }
 
+            base.Set(string.Empty);
+
             return $"{this.Name} set to {this.Value.Value.ToHexString()}!";
         }
 

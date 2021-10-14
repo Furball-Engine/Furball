@@ -108,7 +108,7 @@ namespace Furball.Engine {
             InputManager.RegisterInputMethod(new MonogameMouseInputMethod());
             InputManager.RegisterInputMethod(new MonogameKeyboardInputMethod());
 
-            if (RuntimeInfo.IsDebug()) {
+            if (ConVars.DebugOverlay.Value == 1) {
                 InputManager.OnKeyDown += delegate(object _, Keys keys) {
                     if (keys == Keys.F11) DrawDebugOverlay = !DrawDebugOverlay;
                 };
@@ -118,6 +118,8 @@ namespace Furball.Engine {
 
             DrawableManager             = new();
             DebugOverlayDrawableManager = new();
+
+            Console.Initialize();
 
             ConsoleDrawable = new();
             DebugOverlayDrawableManager.Add(ConsoleDrawable);
@@ -259,7 +261,7 @@ namespace Furball.Engine {
 
             DrawableManager.Update(gameTime);
 
-            if (RuntimeInfo.IsDebug())
+            if (ConVars.DebugOverlay.Value == 1)
                 DebugOverlayDrawableManager.Update(gameTime);
 
             if (RuntimeInfo.LoggerEnabled())
@@ -283,7 +285,8 @@ namespace Furball.Engine {
             ScreenManager.DrawTransition(gameTime, DrawableBatch);
             
             DrawableManager.Draw(gameTime, DrawableBatch);
-            if (RuntimeInfo.IsDebug() && DrawDebugOverlay)
+
+            if (ConVars.DebugOverlay.Value == 1)
                 DebugOverlayDrawableManager.Draw(gameTime, DrawableBatch);
         }
 
