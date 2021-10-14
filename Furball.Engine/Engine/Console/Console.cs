@@ -4,37 +4,20 @@ using Furball.Engine.Engine.Console.Types;
 namespace Furball.Engine.Engine.Console {
     public class Console {
         private static readonly Dictionary<string, ConVar>   _conVars   = new();
-        private static readonly Dictionary<string, Function> _functions = new();
+        private static readonly Dictionary<string, ConFunc> _conFuncs = new();
 
         public delegate string Function(string args);
 
         public static void Initialize() {
             AddConVar(ConVars.TestVar);
-            AddConVar(ConVars.ResolutionWidth);
-            AddConVar(ConVars.ResolutionHeight);
+            AddConVar(ConVars.ScreenResolution);
 
-            AddFunction(
-            "quit",
-            delegate {
-                FurballGame.Instance.Exit();
-                return "Exiting game!";
-            }
-            );
-            
-            AddFunction(
-            "set_screen_resolution",
-            delegate {
-                int width  = ((IntConVar)_conVars.GetValueOrDefault("screen_resolution_width",  new IntConVar("a", FurballGame.DEFAULT_WINDOW_WIDTH))).Value.Value;
-                int height = ((IntConVar)_conVars.GetValueOrDefault("screen_resolution_height", new IntConVar("a", FurballGame.DEFAULT_WINDOW_HEIGHT))).Value.Value;
-                
-                FurballGame.Instance.ChangeScreenSize(width, height);
-                return $"Setting the screen resolution to {width}x{height}!";
-            }
-            );
+            AddConFunc(ConVars.QuitFunction);
+            AddConFunc(ConVars.ScreenResFunction);
         }
 
-        public static void AddConVar(ConVar   conVar)                  => _conVars.Add(conVar.Name, conVar);
-        public static void AddFunction(string name, Function function) => _functions.Add(name, function); 
+        public static void AddConVar(ConVar conVar) => _conVars.Add(conVar.Name, conVar);
+        public static void AddConFunc(ConFunc conFunc) => _conFuncs.Add(conFunc.Name, conFunc);
         
         public static string Run(string input) {
             string returnString = "";
@@ -71,9 +54,9 @@ namespace Furball.Engine.Engine.Console {
 
                 argumentString = argumentString.Trim();
 
-                Function function = _functions.GetValueOrDefault(functionName, delegate { return "Unknown Function!"; });
+                ConFunc func = _conFuncs.GetValueOrDefault(functionName, null);
 
-                returnString = function?.Invoke(argumentString) ?? "Unknown Function! Did you mean to set a variable? Remove the :";
+                returnString = func?.Run(argumentString) ?? "Unknown Function! Did you mean to set a variable? Remove the :";
             }
 
             return returnString;

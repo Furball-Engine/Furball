@@ -6,7 +6,6 @@ namespace Furball.Game {
         [STAThread]
         private static void Main() {
             Console.Initialize();
-            Console.Run("test_var 123 420 123");
 
             using (FurballTestGame game = new()) {
                 game.Run();
