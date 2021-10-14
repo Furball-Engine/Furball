@@ -78,6 +78,8 @@ namespace Furball.Engine {
 
         private Screen _startScreen;
         public FurballGame(Screen startScreen) {
+            Console.Initialize();
+            
             this._graphics             = new GraphicsDeviceManager(this);
             this.Content.RootDirectory = "Content";
             this.IsMouseVisible        = true;

@@ -1,5 +1,4 @@
 ﻿using System;
-using Console=Furball.Engine.Engine.Console.Console;
 
 namespace Furball.Game {
     public static class Program {
