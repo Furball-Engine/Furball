@@ -100,7 +100,6 @@ namespace Furball.Engine.Engine.Console {
             //Check for evaluatable Code Blocks
             do {
                 try {
-                    //TODO: fix evaluating more than 1 eval not working
                     string match = (argumentString + " ").SubstringWithEnds("%(", ")");
                     string code = match.Substring("%(", ")");
                     string result = Run(code);
@@ -117,7 +116,6 @@ namespace Furball.Engine.Engine.Console {
             //Check for Math Expressions
             do {
                 try {
-                    //TODO: fix evaluating more than 1 eval not working
                     string match = argumentString.SubstringWithEnds("#(", ")");
 
                     argumentString = argumentString.Replace(match, jaceEngine.Calculate(argumentString.Substring("#(", ")")).ToString(CultureInfo.InvariantCulture));

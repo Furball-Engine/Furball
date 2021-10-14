@@ -46,7 +46,7 @@ namespace Furball.Engine.Engine.Helpers {
             if (endIndex < 0)
                 throw new ArgumentException("until: Failed to find an instance of the last anchor");
 
-            string subString = @this.Substring(startIndex, endIndex + until.Length);
+            string subString = @this.Substring(startIndex, (endIndex - startIndex) + until.Length);
             return subString;
         }
     }
