@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace Furball.Engine.Engine.Console {
     public class Console {
@@ -15,6 +16,7 @@ namespace Furball.Engine.Engine.Console {
 
             AddConFunc(ConVars.QuitFunction);
             AddConFunc(ConVars.ScreenResFunction);
+            AddConFunc(ConVars.PrintFunction);
         }
 
         public static void AddConVar(ConVar conVar) => _conVars.Add(conVar.Name, conVar);
@@ -33,27 +35,33 @@ namespace Furball.Engine.Engine.Console {
 
             bool variableAssign = input[0] != ':';
 
-            if (variableAssign) {
-                string variableName = splitCommand[0];
-                string argumentString = "";
+            string argumentString = "";
 
-                for (int i = 1; i != splitCommand.Length; i++) {
-                    argumentString += splitCommand[i] + " ";
+            for (int i = 1; i != splitCommand.Length; i++) {
+                string toConcat = splitCommand[i];
+
+                if (toConcat[0] == '$') {
+                    string variableName = toConcat.TrimStart('$');
+
+                    ConVar value = _conVars.GetValueOrDefault(variableName, null);
+
+                    toConcat = value != null ? value.ToString() : "~~Error: Variable not found!";
                 }
 
-                argumentString = argumentString.Trim();
+                argumentString += toConcat + " ";
+            }
+
+            argumentString = argumentString.Trim();
+
+
+            if (variableAssign) {
+                string variableName = splitCommand[0];
 
                 ConVar var = _conVars.GetValueOrDefault(variableName, null);
 
                 returnString = var?.Set(argumentString) ?? "Unknown Variable! Did you mean to use a function? Prefix it with :";
             } else {
                 string functionName   = splitCommand[0].TrimStart(':');
-                string argumentString = "";
-
-                for (int i = 1; i != splitCommand.Length; i++)
-                    argumentString += splitCommand[i] + " ";
-
-                argumentString = argumentString.Trim();
 
                 ConFunc func = _conFuncs.GetValueOrDefault(functionName, null);
 
