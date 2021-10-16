@@ -171,7 +171,7 @@ namespace Furball.Engine {
         }
 
         protected override void OnExiting(object sender, EventArgs args) {
-            Console.Run(":nt_on_exiting", true);
+            Console.Run(":nt_on_exiting", false, true);
             Console.WriteLog();
 
             base.OnExiting(sender, args);
@@ -229,7 +229,7 @@ namespace Furball.Engine {
         }
 
         protected override void BeginRun() {
-            Console.Run(":nt_begin_run", true);
+            Console.Run(":nt_begin_run", false, true);
             ScreenManager.ChangeScreen(this._startScreen);
         }
 

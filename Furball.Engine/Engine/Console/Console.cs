@@ -107,7 +107,7 @@ namespace Furball.Engine.Engine.Console {
             );
         }
         
-        public static (ExecutionResult result, string message) Run(string input, bool disableLog = false) {
+        public static (ExecutionResult result, string message) Run(string input, bool userRun = true, bool disableLog = false) {
             (ExecutionResult result, string message) returnResult = (ExecutionResult.Error, "");
 
             if (input.Length == 0) {
@@ -205,6 +205,12 @@ namespace Furball.Engine.Engine.Console {
                     goto ConsoleEnd;
                 }
 
+                if (value.Protected && value.CheckPrivledges(userRun) == false) {
+                    returnResult = (ExecutionResult.Error, $"Variable of name `{variableName}` is protected and you are not privledged to access it.");
+                    goto ConsoleEnd;
+
+                }
+
                 argumentString = argumentString.Replace(matchedString, value.ToString());
 
             } while (true);
@@ -219,6 +225,9 @@ namespace Furball.Engine.Engine.Console {
                 if (var != null) {
                     if (var.ReadOnly)
                         returnResult = (ExecutionResult.Error, "Variable is read-only!");
+                    else if (var.Protected && var.CheckPrivledges(userRun) == false) {
+                        returnResult = (ExecutionResult.Error, "Variable is protected and you are not privledged to access it.");
+                    }
                     else {
                         (ExecutionResult result, string message) result = var.Set(argumentString);
 
