@@ -10,7 +10,7 @@ namespace Furball.Engine.Engine.DevConsole {
             this.Name = conFuncName;
         }
 
-        public abstract (ExecutionResult result, string message) Run(string consoleInput);
+        public abstract ConsoleResult Run(string consoleInput);
 
         public void CallOnCall(string message) {
             if(!this.DisableOnCall)

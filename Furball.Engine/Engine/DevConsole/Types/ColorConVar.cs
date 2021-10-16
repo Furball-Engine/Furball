@@ -8,7 +8,7 @@ namespace Furball.Engine.Engine.DevConsole.Types {
 
         public ColorConVar(string conVarName, Color initialValue, Action onChange = null) : base(conVarName, onChange) => this.Value = new Bindable<Color>(initialValue);
 
-        public override (ExecutionResult result, string message) Set(string consoleInput) {
+        public override ConsoleResult Set(string consoleInput) {
             string[] split = consoleInput.Split(" ");
 
             try {
@@ -39,19 +39,19 @@ namespace Furball.Engine.Engine.DevConsole.Types {
                         break;
                     }
                     default:
-                        return (ExecutionResult.Error, "Invalid Syntax.");
+                        return new ConsoleResult(ExecutionResult.Error, "Invalid Syntax.");
                 }
             } catch (ArgumentException) {
-                return (ExecutionResult.Error, "`consoleInput` was null, how? i have no clue");
+                return new ConsoleResult(ExecutionResult.Error, "`consoleInput` was null, how? i have no clue");
             } catch (FormatException) {
-                return (ExecutionResult.Error, "Failed to parse input into a +color");
+                return new ConsoleResult(ExecutionResult.Error, "Failed to parse input into a +color");
             } catch (OverflowException) {
-                return (ExecutionResult.Error, "Number parsed is too big to fit into a +color+byte");
+                return new ConsoleResult(ExecutionResult.Error, "Number parsed is too big to fit into a +color+byte");
             }
 
             base.Set(string.Empty);
 
-            return (ExecutionResult.Success, $"{this.Name} set to {this.Value.Value.ToHexString()}!");
+            return new ConsoleResult(ExecutionResult.Success, $"{this.Name} set to {this.Value.Value.ToHexString()}!");
         }
 
         public override string ToString() => this.Value.Value.ToHexString();

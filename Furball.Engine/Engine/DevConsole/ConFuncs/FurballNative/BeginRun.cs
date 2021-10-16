@@ -4,6 +4,6 @@ namespace Furball.Engine.Engine.DevConsole.ConFuncs.FurballNative {
     /// </summary>
     public class BeginRun : ConFunc {
         public BeginRun() : base("nt_begin_run") {}
-        public override (ExecutionResult result, string message) Run(string consoleInput) => (ExecutionResult.Success, string.Empty);
+        public override ConsoleResult Run(string consoleInput) => new ConsoleResult(ExecutionResult.Success, string.Empty);
     }
 }

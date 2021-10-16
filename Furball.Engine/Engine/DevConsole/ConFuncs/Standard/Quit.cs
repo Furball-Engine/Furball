@@ -6,10 +6,10 @@ namespace Furball.Engine.Engine.DevConsole.ConFuncs.Standard {
     public class Quit: ConFunc {
         public Quit() : base("quit") {}
 
-        public override (ExecutionResult result, string message) Run(string consoleInput) {
+        public override ConsoleResult Run(string consoleInput) {
             FurballGame.Instance.Exit();
 
-            return (ExecutionResult.Success, "Exiting game.");
+            return new ConsoleResult(ExecutionResult.Success, "Exiting game.");
         }
     }
 }

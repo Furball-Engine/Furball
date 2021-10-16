@@ -17,7 +17,7 @@ namespace Furball.Engine.Engine.DevConsole {
         public static readonly Dictionary<string, ConVar>  RegisteredConVars   = new();
         public static readonly Dictionary<string, ConFunc> RegisteredFunctions = new();
 
-        public static readonly List<(string input, ExecutionResult result, string message)> ConsoleLog = new();
+        public static readonly List<(string input, ConsoleResult)> ConsoleLog = new();
 
         public static string ScriptPath = "scripts";
         public static string LogPath = "logs";
@@ -61,14 +61,14 @@ namespace Furball.Engine.Engine.DevConsole {
                 AddConFunc(function);
             }
 
-            ConsoleLog.Add((string.Empty, ExecutionResult.Message, "Executing AutoRun..."));
+            ConsoleLog.Add((string.Empty, new ConsoleResult(ExecutionResult.Message, "Executing AutoRun...")));
 
             //Run AutoRun
             for (int i = 0; i != AutoRun.Length; i++) {
                 Run(AutoRun[i]);
             }
 
-            ConsoleLog.Add((string.Empty, ExecutionResult.Message, "AutoRun script complete!"));
+            ConsoleLog.Add((string.Empty, new ConsoleResult(ExecutionResult.Message, "AutoRun script complete!")));
         }
         //Because the fields are required to be static this is the only way that i can think of for devs to add their own ConVarStores like `ConVars`
         public static void AddConVarStore(Type store) {
@@ -107,18 +107,18 @@ namespace Furball.Engine.Engine.DevConsole {
             );
         }
         
-        public static (ExecutionResult result, string message) Run(string input, bool userRun = true, bool disableLog = false) {
-            (ExecutionResult result, string message) returnResult = (ExecutionResult.Error, "");
+        public static ConsoleResult Run(string input, bool userRun = true, bool disableLog = false) {
+            ConsoleResult returnResult = new ConsoleResult(ExecutionResult.Error, "");
 
             if (input.Length == 0) {
-                returnResult = (ExecutionResult.Error, returnResult.message);
+                returnResult = new ConsoleResult(ExecutionResult.Error, returnResult.Message);
                 goto ConsoleEnd;
             }
 
             string[] splitCommand = input.Split(" ");
 
             if (splitCommand.Length == 0) {
-                returnResult =  (ExecutionResult.Error, "Invalid Syntax.");
+                returnResult = new ConsoleResult(ExecutionResult.Error, "Invalid Syntax.");
                 goto ConsoleEnd;
             }
 
@@ -149,14 +149,14 @@ namespace Furball.Engine.Engine.DevConsole {
                     string match = (argumentString + " ").SubstringWithEnds("%(", ")");
                     string code = match.Substring("%(", ")");
 
-                    (ExecutionResult result, string message) result = Run(code);
+                    ConsoleResult result = Run(code);
 
-                    if (result.result == ExecutionResult.Error) {
-                        returnResult =  (ExecutionResult.Error, $"Eval at index {evalIndex} failed to finish. Error Message: \"{result.message}\"");
+                    if (result.Result == ExecutionResult.Error) {
+                        returnResult = new ConsoleResult(ExecutionResult.Error, $"Eval at index {evalIndex} failed to finish. Error Message: \"{result.Message}\"");
                         goto ConsoleEnd;
                     }
 
-                    argumentString = argumentString.Replace(match, result.message);
+                    argumentString = argumentString.Replace(match, result.Message);
 
                     evalIndex++;
                 }
@@ -201,12 +201,12 @@ namespace Furball.Engine.Engine.DevConsole {
                 ConVar value = RegisteredConVars.GetValueOrDefault(variableName, null);
 
                 if (value == null) {
-                    returnResult = (ExecutionResult.Error, $"Variable of name `{variableName}` not found!");
+                    returnResult = new ConsoleResult(ExecutionResult.Error, $"Variable of name `{variableName}` not found!");
                     goto ConsoleEnd;
                 }
 
                 if (value.Protected && value.CheckPrivledges(userRun) == false) {
-                    returnResult = (ExecutionResult.Error, $"Variable of name `{variableName}` is protected and you are not privledged to access it.");
+                    returnResult = new ConsoleResult(ExecutionResult.Error, $"Variable of name `{variableName}` is protected and you are not privledged to access it.");
                     goto ConsoleEnd;
 
                 }
@@ -224,17 +224,17 @@ namespace Furball.Engine.Engine.DevConsole {
 
                 if (var != null) {
                     if (var.ReadOnly)
-                        returnResult = (ExecutionResult.Error, "Variable is read-only!");
+                        returnResult = new ConsoleResult(ExecutionResult.Error, "Variable is read-only!");
                     else if (var.Protected && var.CheckPrivledges(userRun) == false) {
-                        returnResult = (ExecutionResult.Error, "Variable is protected and you are not privledged to access it.");
+                        returnResult = new ConsoleResult(ExecutionResult.Error, "Variable is protected and you are not privledged to access it.");
                     }
                     else {
-                        (ExecutionResult result, string message) result = var.Set(argumentString);
+                        ConsoleResult result = var.Set(argumentString);
 
                         returnResult = result;
                     }
                 } else {
-                    returnResult = (ExecutionResult.Error, "Unknown Variable! Did you mean to use a function? Prefix it with :");
+                    returnResult = new ConsoleResult(ExecutionResult.Error, "Unknown Variable! Did you mean to use a function? Prefix it with :");
                 }
 
             } else {
@@ -243,19 +243,19 @@ namespace Furball.Engine.Engine.DevConsole {
                 ConFunc func = RegisteredFunctions.GetValueOrDefault(functionName, null);
 
                 if (func != null) {
-                    (ExecutionResult result, string message) result = func.Run(argumentString);
+                    ConsoleResult result = func.Run(argumentString);
                     returnResult = result;
 
-                    func.CallOnCall(result.message);
+                    func.CallOnCall(result.Message);
                 } else {
-                    returnResult = (ExecutionResult.Error, "Unknown Function! Did you mean to set a variable? Remove the :");
+                    returnResult = new ConsoleResult(ExecutionResult.Error, "Unknown Function! Did you mean to set a variable? Remove the :");
                 }
             }
 
             ConsoleEnd: ;
 
             if(!disableLog)
-                ConsoleLog.Add((input, returnResult.result, returnResult.message));
+                ConsoleLog.Add((input, returnResult));
 
             return returnResult;
         }
@@ -263,39 +263,39 @@ namespace Furball.Engine.Engine.DevConsole {
         public static string[] GetLog() {
             List<string> lines = new List<string>();
 
-            foreach ((string input, ExecutionResult result, string message) action in ConsoleLog) {
+            foreach ((string input, ConsoleResult result) action in ConsoleLog) {
                 lines.AddRange(FormatActionLine(action));
             }
 
             return lines.ToArray();
         }
 
-        public static List<string> FormatActionLine((string input, ExecutionResult result, string message) action) {
+        public static List<string> FormatActionLine((string input, ConsoleResult result) action) {
             List<string> lines = new List<string>();
 
             if(action.input != string.Empty)
                 lines.Add($"] {action.input}");
 
-            switch (action.result) {
+            switch (action.result.Result) {
                 case ExecutionResult.Message:
-                    lines.Add(action.message);
+                    lines.Add(action.result.Message);
                     break;
                 case ExecutionResult.Log:
-                    lines.Add($"::[Log] {action.message}");
+                    lines.Add($"::[Log] {action.result.Message}");
                     break;
                 case ExecutionResult.Success:
                 case ExecutionResult.Warning:
                 case ExecutionResult.Error:
-                    lines.Add($"[{action.result}] {action.message}");
+                    lines.Add($"[{action.result}] {action.result.Message}");
                     break;
             }
 
             return lines;
         }
 
-        public static (ExecutionResult result, string message) WriteLog() {
+        public static ConsoleResult WriteLog() {
             if (ConVars.WriteLog.Value.Value != 1)
-                return (ExecutionResult.Error, "Writing Logs disabled! change `cl_console_log` to 1 to enable Console Logging");
+                return new ConsoleResult(ExecutionResult.Error, "Writing Logs disabled! change `cl_console_log` to 1 to enable Console Logging");
 
             string filename = Path.Combine(LogPath, $"{UnixTime.Now()}-console.txt");
 
@@ -303,10 +303,10 @@ namespace Furball.Engine.Engine.DevConsole {
                 File.WriteAllLines(filename, GetLog());
             }
             catch (Exception e) {
-                return (ExecutionResult.Error, "Something went wrong. Make sure the `log` directory exists, and is not write protected.");
+                return new ConsoleResult(ExecutionResult.Error, "Something went wrong. Make sure the `log` directory exists, and is not write protected.");
             }
 
-            return (ExecutionResult.Success, $"Log successfully written to `{filename}`");
+            return new ConsoleResult(ExecutionResult.Success, $"Log successfully written to `{filename}`");
         }
     }
 }

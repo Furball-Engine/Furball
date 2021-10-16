@@ -131,14 +131,14 @@ namespace Furball.Engine {
                 ColorOverride = new(255, 255, 255, 0)
             };
 
-            ConsoleDrawable.OnCommandFinished += delegate(object _, (ExecutionResult result, string message) result) {
+            ConsoleDrawable.OnCommandFinished += delegate(object _, ConsoleResult result) {
                 consoleResult.Tweens.Clear();
                 consoleResult.Tweens.Add(new FloatTween(TweenType.Fade, consoleResult.ColorOverride.A / 255f, 1f, Time,        Time + 100));
                 consoleResult.Tweens.Add(new FloatTween(TweenType.Fade, 1f,                                   0f, Time + 4100, Time + 5100));
 
-                consoleResult.Text = result.message;
+                consoleResult.Text = result.Message;
 
-                consoleResult.ColorOverride = result.result switch {
+                consoleResult.ColorOverride = result.Result switch {
                     ExecutionResult.Success => Color.White,
                     ExecutionResult.Error   => Color.OrangeRed,
                     ExecutionResult.Warning => Color.Orange,

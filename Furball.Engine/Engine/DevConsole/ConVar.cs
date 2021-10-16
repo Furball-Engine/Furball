@@ -20,11 +20,11 @@ namespace Furball.Engine.Engine.DevConsole {
 
         public virtual bool CheckPrivledges(bool userRun) => this.PrivledgeCheck.Invoke(userRun);
 
-        public virtual (ExecutionResult result, string message) Set(string consoleInput) {
+        public virtual ConsoleResult Set(string consoleInput) {
             if(!this.DisableOnChange)
                 this.OnChange?.Invoke(this, null);
 
-            return (ExecutionResult.Success, string.Empty);
+            return new ConsoleResult(ExecutionResult.Success, string.Empty);
         }
     }
 }
