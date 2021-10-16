@@ -38,6 +38,9 @@ namespace Furball.Engine.Engine.Console.ConFuncs.Standard {
                 case "+int":
                     variable = new IntConVar(name);
                     break;
+                case "+long":
+                    variable = new LongConVar(name);
+                    break;
                 case "+intint":
                     variable = new IntIntConVar(name, "");
                     break;
