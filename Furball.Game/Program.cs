@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Threading;
-using Furball.Engine;
-using Console=Furball.Engine.Engine.Console.Console;
 
 namespace Furball.Game {
     public static class Program {
