@@ -2,6 +2,12 @@ using System.Collections.Generic;
 
 namespace Furball.Engine.Engine.Console.ConFuncs.Standard {
     public class DeleteVar : ConFunc {
+        /// <summary>
+        /// delete_var
+        /// Deletes a Variable
+        /// Syntax: `delete_var variable_name`
+        /// <remarks>Only Variables that have been created with `create_var` are allowed to be deleted</remarks>
+        /// </summary>
         public DeleteVar() : base("delete_var") {}
 
         public override (ExecutionResult result, string message) Run(string consoleInput) {

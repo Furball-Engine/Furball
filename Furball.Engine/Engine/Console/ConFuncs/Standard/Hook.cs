@@ -1,6 +1,11 @@
 using System.Collections.Generic;
 
 namespace Furball.Engine.Engine.Console.ConFuncs.Standard {
+    /// <summary>
+    /// hook
+    /// Establishes a Hook (works in a similiar way to Subscribing to OnChange on a Bindable) on a Function/Variable, upon Calling/Changing the Hooked Variable/Function the Hook Gets Invoked
+    /// Syntax: `hook +(variable/function) hook_target hook_action`
+    /// </summary>
     public class Hook : ConFunc {
         public Hook() : base("hook") {}
 

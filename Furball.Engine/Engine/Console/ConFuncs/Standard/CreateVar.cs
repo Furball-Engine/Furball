@@ -3,6 +3,11 @@ using Furball.Engine.Engine.Console.Types;
 using Microsoft.Xna.Framework;
 
 namespace Furball.Engine.Engine.Console.ConFuncs.Standard {
+    /// <summary>
+    /// create_var
+    /// Creates a Variable
+    /// Syntax: `create_var variable_type variable_name`
+    /// </summary>
     public class CreateVar : ConFunc {
         public CreateVar() : base("create_var") {}
 

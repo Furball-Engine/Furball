@@ -1,5 +1,9 @@
 namespace Furball.Engine.Engine.Console.ConFuncs.ContentManager {
     public class ClearContentCache : ConFunc {
+        /// <summary>
+        /// cmr_clear_cache
+        /// Clears the ContentManager Content Cache
+        /// </summary>
         public ClearContentCache() : base("cmr_clear_cache") {}
 
         public override (ExecutionResult result, string message) Run(string consoleInput) {

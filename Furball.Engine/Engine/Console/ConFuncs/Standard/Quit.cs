@@ -1,4 +1,8 @@
 namespace Furball.Engine.Engine.Console.ConFuncs.Standard {
+    /// <summary>
+    /// `quit`
+    /// Exits the Game
+    /// </summary>
     public class Quit: ConFunc {
         public Quit() : base("quit") {}
 
