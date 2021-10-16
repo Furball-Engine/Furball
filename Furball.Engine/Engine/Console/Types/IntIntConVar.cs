@@ -17,7 +17,7 @@ namespace Furball.Engine.Engine.Console.Types {
         }
 
         public override (ExecutionResult result, string message) Set(string consoleInput) {
-            string[] splitInput = consoleInput.Split(" ");
+            string[] splitInput = consoleInput.Split(":");
 
             try {
 
@@ -38,6 +38,11 @@ namespace Furball.Engine.Engine.Console.Types {
             }
         }
 
-        public override string ToString() => this.Value.ToString();
+        public override string ToString() {
+            int val1 = this.Value.Value.Item1;
+            int val2 = this.Value.Value.Item2;
+
+            return $"{val1}:{val2}";
+        }
     }
 }
