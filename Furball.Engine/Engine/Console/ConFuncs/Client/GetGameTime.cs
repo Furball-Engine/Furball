@@ -1,4 +1,4 @@
-namespace Furball.Engine.Engine.Console.ConFuncs.Client {
+namespace Furball.Engine.Engine.DevConsole.ConFuncs.Client {
     public class GetGameTime : ConFunc {
 
         public GetGameTime() : base("cl_get_game_time") {}

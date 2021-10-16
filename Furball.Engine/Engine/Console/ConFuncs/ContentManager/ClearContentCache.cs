@@ -1,4 +1,4 @@
-namespace Furball.Engine.Engine.Console.ConFuncs.ContentManager {
+namespace Furball.Engine.Engine.DevConsole.ConFuncs.ContentManager {
     public class ClearContentCache : ConFunc {
         /// <summary>
         /// cmr_clear_cache

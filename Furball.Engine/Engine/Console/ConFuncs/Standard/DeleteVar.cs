@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Furball.Engine.Engine.Console.ConFuncs.Standard {
+namespace Furball.Engine.Engine.DevConsole.ConFuncs.Standard {
     public class DeleteVar : ConFunc {
         /// <summary>
         /// delete_var

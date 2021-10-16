@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 
-namespace Furball.Engine.Engine.Console.ConFuncs.Client {
+namespace Furball.Engine.Engine.DevConsole.ConFuncs.Client {
     public class ClearLogFolder : ConFunc {
 
         public ClearLogFolder() : base("cl_clear_log_folder") {}

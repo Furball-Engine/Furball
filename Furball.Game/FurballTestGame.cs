@@ -1,5 +1,5 @@
 ﻿using Furball.Engine;
-using Furball.Engine.Engine.Console;
+using Furball.Engine.Engine.DevConsole;
 using Furball.Engine.Engine.Localization;
 using Furball.Game.Screens;
 

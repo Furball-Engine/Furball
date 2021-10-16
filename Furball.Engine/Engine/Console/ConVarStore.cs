@@ -1,3 +1,3 @@
-namespace Furball.Engine.Engine.Console {
+namespace Furball.Engine.Engine.DevConsole {
     public abstract class ConVarStore {}
 }

@@ -1,4 +1,4 @@
-namespace Furball.Engine.Engine.Console.ConFuncs.FurballNative {
+namespace Furball.Engine.Engine.DevConsole.ConFuncs.FurballNative {
     /// <summary>
     /// Not intended for actual Console use, only here so scripts can hook onto this function
     /// </summary>

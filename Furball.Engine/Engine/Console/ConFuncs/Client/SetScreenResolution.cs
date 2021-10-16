@@ -1,4 +1,4 @@
-namespace Furball.Engine.Engine.Console.ConFuncs.Client {
+namespace Furball.Engine.Engine.DevConsole.ConFuncs.Client {
     public class SetScreenResolution : ConFunc {
         /// <summary>
         /// `cl_set_screen_resolution`

@@ -2,7 +2,7 @@ using System;
 using Furball.Engine.Engine.Helpers;
 using Microsoft.Xna.Framework;
 
-namespace Furball.Engine.Engine.Console.Types {
+namespace Furball.Engine.Engine.DevConsole.Types {
     public class ColorConVar : ConVar {
         public Bindable<Color> Value;
 

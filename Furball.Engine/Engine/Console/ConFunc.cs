@@ -1,6 +1,6 @@
 using System;
 
-namespace Furball.Engine.Engine.Console {
+namespace Furball.Engine.Engine.DevConsole {
     public abstract class ConFunc {
         public string Name { get; init; }
         public EventHandler<string> OnCall;

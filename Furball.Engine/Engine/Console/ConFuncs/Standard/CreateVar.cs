@@ -1,8 +1,8 @@
 using System.Text.RegularExpressions;
-using Furball.Engine.Engine.Console.Types;
+using Furball.Engine.Engine.DevConsole.Types;
 using Microsoft.Xna.Framework;
 
-namespace Furball.Engine.Engine.Console.ConFuncs.Standard {
+namespace Furball.Engine.Engine.DevConsole.ConFuncs.Standard {
     /// <summary>
     /// create_var
     /// Creates a Variable

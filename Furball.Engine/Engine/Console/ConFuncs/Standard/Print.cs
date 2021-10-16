@@ -1,4 +1,4 @@
-namespace Furball.Engine.Engine.Console.ConFuncs.Standard {
+namespace Furball.Engine.Engine.DevConsole.ConFuncs.Standard {
     /// <summary>
     /// `print`
     /// Prints a line to console

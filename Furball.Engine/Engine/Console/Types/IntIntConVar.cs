@@ -1,7 +1,7 @@
 using System;
 using Furball.Engine.Engine.Helpers;
 
-namespace Furball.Engine.Engine.Console.Types {
+namespace Furball.Engine.Engine.DevConsole.Types {
     public class IntIntConVar : ConVar {
         public Bindable<(int, int)> Value = new((0, 0));
 

@@ -1,4 +1,4 @@
-namespace Furball.Engine.Engine.Console {
+namespace Furball.Engine.Engine.DevConsole {
     public enum ExecutionResult {
         Success,
         Warning,

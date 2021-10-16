@@ -1,6 +1,6 @@
 using System;
 
-namespace Furball.Engine.Engine.Console.ConFuncs.Client {
+namespace Furball.Engine.Engine.DevConsole.ConFuncs.Client {
     /// <summary>
     /// cl_set_target_fps
     /// Sets the Target Frame Rate

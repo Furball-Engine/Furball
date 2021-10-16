@@ -1,10 +1,10 @@
-using Furball.Engine.Engine.Console.ConFuncs.Client;
-using Furball.Engine.Engine.Console.ConFuncs.ContentManager;
-using Furball.Engine.Engine.Console.ConFuncs.Standard;
-using Furball.Engine.Engine.Console.Types;
+using Furball.Engine.Engine.DevConsole.ConFuncs.Client;
+using Furball.Engine.Engine.DevConsole.ConFuncs.ContentManager;
+using Furball.Engine.Engine.DevConsole.ConFuncs.Standard;
+using Furball.Engine.Engine.DevConsole.Types;
 using Furball.Engine.Engine.Platform;
 
-namespace Furball.Engine.Engine.Console {
+namespace Furball.Engine.Engine.DevConsole {
     public class ConVars : ConVarStore {
         /// <summary>
         /// Client Screen Resolution

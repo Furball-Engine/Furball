@@ -1,4 +1,4 @@
-namespace Furball.Engine.Engine.Console.ConFuncs.Client {
+namespace Furball.Engine.Engine.DevConsole.ConFuncs.Client {
     public class ClearLog : ConFunc {
         public ClearLog() : base("cl_clear_log") {}
 
