@@ -3,10 +3,10 @@ namespace Furball.Engine.Engine.Console.ConFuncs.Client {
         public FlushLog() : base("cl_flush_log") {}
 
         public override (ExecutionResult result, string message) Run(string consoleInput) {
-            if (Console.ConsoleLog.Count == 0)
+            if (DevConsole.ConsoleLog.Count == 0)
                 return (ExecutionResult.Warning, "No log to flush!");
 
-            var result = Console.WriteLog();
+            var result = DevConsole.WriteLog();
 
             return result;
         }

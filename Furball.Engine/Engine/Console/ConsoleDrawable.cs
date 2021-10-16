@@ -25,7 +25,7 @@ namespace Furball.Engine.Engine.Console {
         }
 
         private void OnTextCommit(object sender, string text) {
-            (ExecutionResult result, string message) result = Console.Run(text);
+            (ExecutionResult result, string message) result = DevConsole.Run(text);
 
             this.OnCommandFinished?.Invoke(this, result);
 

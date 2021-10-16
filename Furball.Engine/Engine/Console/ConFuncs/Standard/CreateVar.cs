@@ -20,7 +20,7 @@ namespace Furball.Engine.Engine.Console.ConFuncs.Standard {
             if (Regex.IsMatch(name, "/[!@#$%^&*()]/"))
                 return (ExecutionResult.Error, "Invalid Variable Name.");
 
-            if (Console.RegisteredConVars.ContainsKey(name))
+            if (DevConsole.RegisteredConVars.ContainsKey(name))
                 return (ExecutionResult.Error, "Variable of this name already exists.");
 
             ConVar variable = null;
@@ -53,7 +53,7 @@ namespace Furball.Engine.Engine.Console.ConFuncs.Standard {
 
             variable.ScriptCreated = true;
 
-            Console.AddConVar(variable);
+            DevConsole.AddConVar(variable);
 
             return (ExecutionResult.Success, $"Variable of name `{name}` has been created.");
         }

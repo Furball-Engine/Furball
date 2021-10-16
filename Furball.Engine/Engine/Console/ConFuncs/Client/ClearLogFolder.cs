@@ -6,7 +6,7 @@ namespace Furball.Engine.Engine.Console.ConFuncs.Client {
 
         public ClearLogFolder() : base("cl_clear_log_folder") {}
         public override (ExecutionResult result, string message) Run(string consoleInput) {
-            string[] directories = Directory.GetFiles(Console.LogPath);
+            string[] directories = Directory.GetFiles(DevConsole.LogPath);
 
             try {
                 for (int i = 0; i != directories.Length; i++) {

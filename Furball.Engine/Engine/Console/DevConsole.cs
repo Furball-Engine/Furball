@@ -13,7 +13,7 @@ using Jace;
 using Jace.Execution;
 
 namespace Furball.Engine.Engine.Console {
-    public class Console {
+    public class DevConsole {
         public static readonly Dictionary<string, ConVar>  RegisteredConVars   = new();
         public static readonly Dictionary<string, ConFunc> RegisteredFunctions = new();
 

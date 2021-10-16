@@ -22,8 +22,8 @@ namespace Furball.Engine.Engine.Console.ConFuncs.Standard {
             switch (hookType) {
                 //TODO: add function hooks
                 case "+variable": {
-                        ConVar variable = Console.RegisteredConVars.GetValueOrDefault(hookTarget, null);
-                        ConFunc action = Console.RegisteredFunctions.GetValueOrDefault(hookAction, null);
+                        ConVar variable = DevConsole.RegisteredConVars.GetValueOrDefault(hookTarget, null);
+                        ConFunc action = DevConsole.RegisteredFunctions.GetValueOrDefault(hookAction, null);
 
                         if (variable != null) {
                             if (action != null) {
@@ -36,8 +36,8 @@ namespace Furball.Engine.Engine.Console.ConFuncs.Standard {
                         break;
                     }
                 case "+function": {
-                    ConFunc function = Console.RegisteredFunctions.GetValueOrDefault(hookTarget, null);
-                    ConFunc action = Console.RegisteredFunctions.GetValueOrDefault(hookAction,   null);
+                    ConFunc function = DevConsole.RegisteredFunctions.GetValueOrDefault(hookTarget, null);
+                    ConFunc action = DevConsole.RegisteredFunctions.GetValueOrDefault(hookAction,   null);
 
                     if (function != null) {
                         if (action != null) {

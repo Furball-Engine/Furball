@@ -26,7 +26,6 @@ using Furball.Engine.Engine.Transitions;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Console=Furball.Engine.Engine.Console.Console;
 
 namespace Furball.Engine {
     public class FurballGame : Game {
@@ -120,7 +119,7 @@ namespace Furball.Engine {
             DrawableManager             = new();
             DebugOverlayDrawableManager = new();
 
-            Console.Initialize();
+            DevConsole.Initialize();
 
             ConsoleDrawable = new();
             DebugOverlayDrawableManager.Add(ConsoleDrawable);
@@ -171,8 +170,8 @@ namespace Furball.Engine {
         }
 
         protected override void OnExiting(object sender, EventArgs args) {
-            Console.Run(":nt_on_exiting", false, true);
-            Console.WriteLog();
+            DevConsole.Run(":nt_on_exiting", false, true);
+            DevConsole.WriteLog();
 
             base.OnExiting(sender, args);
         }
@@ -187,7 +186,7 @@ namespace Furball.Engine {
             if (input.StartsWith(':')) {
                 input = input.TrimStart(':');
 
-                IEnumerable<KeyValuePair<string, ConFunc>> functions = Console.RegisteredFunctions.Where(x => x.Key.StartsWith(input));
+                IEnumerable<KeyValuePair<string, ConFunc>> functions = DevConsole.RegisteredFunctions.Where(x => x.Key.StartsWith(input));
 
                 string text = "";
 
@@ -200,7 +199,7 @@ namespace Furball.Engine {
 
                 _ConsoleAutoComplete.Text = text.Trim();
             } else {
-                IEnumerable<KeyValuePair<string, ConVar>> convars = Console.RegisteredConVars.Where(x => x.Key.StartsWith(input));
+                IEnumerable<KeyValuePair<string, ConVar>> convars = DevConsole.RegisteredConVars.Where(x => x.Key.StartsWith(input));
 
                 string text = "";
 
@@ -229,7 +228,7 @@ namespace Furball.Engine {
         }
 
         protected override void BeginRun() {
-            Console.Run(":nt_begin_run", false, true);
+            DevConsole.Run(":nt_begin_run", false, true);
             ScreenManager.ChangeScreen(this._startScreen);
         }
 
