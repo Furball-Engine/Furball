@@ -24,13 +24,7 @@ namespace Furball.Engine.Engine.DevConsole.ConFuncs.Client {
 
             int value = ConVars.TargetFps.Value.Value;
 
-            if (value != -1) {
-                FurballGame.Instance.TargetElapsedTime = TimeSpan.FromMilliseconds(1000.0 / (double) value);
-                FurballGame.Instance.IsFixedTimeStep   = true;
-            } else {
-                FurballGame.Instance.TargetElapsedTime = TimeSpan.FromTicks(1);
-                FurballGame.Instance.IsFixedTimeStep   = false;
-            }
+            FurballGame.Instance.SetTargetFps(value);
 
             string fps = value == -1 ? "Unlimited" : value.ToString();
 

@@ -17,7 +17,7 @@ namespace Furball.Engine.Engine.DevConsole.ConFuncs.Standard {
                 return (ExecutionResult.Error, "Variable not found.");
 
             if (!variable.ScriptCreated)
-                return (ExecutionResult.Error, "Variables that have not been created by Script cannot be Removed.");
+                return (ExecutionResult.Error, "Variables that have not been created by a script cannot be removed.");
 
             DevConsole.RemoveConVar(variable.Name);
 

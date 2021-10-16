@@ -176,6 +176,16 @@ namespace Furball.Engine {
             base.OnExiting(sender, args);
         }
 
+        public void SetTargetFps(int fps) {
+            if (fps != -1) {
+                this.TargetElapsedTime = TimeSpan.FromMilliseconds(1000.0 / (double) fps);
+                this.IsFixedTimeStep   = true;
+            } else {
+                this.TargetElapsedTime = TimeSpan.FromTicks(1);
+                this.IsFixedTimeStep   = false;
+            }
+        }
+
         private void ConsoleOnLetterTyped(object? sender, char e) {
             _ConsoleAutoComplete.Tweens.Clear();
             _ConsoleAutoComplete.Tweens.Add(new FloatTween(TweenType.Fade, _ConsoleAutoComplete.ColorOverride.A / 255f, 1f, Time,        Time + 100));
