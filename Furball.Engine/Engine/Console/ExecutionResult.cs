@@ -3,6 +3,7 @@ namespace Furball.Engine.Engine.Console {
         Success,
         Warning,
         Error,
-        Log
+        Log,
+        Message
     }
 }

@@ -157,7 +157,11 @@ namespace Furball.Engine.Engine.Console {
 
             bool run = true;
             int evalIndex = 0;
-            //Check for evaluatable Code Blocks
+
+            //Considering adding a Lenient Eval Block which acts like the old eval blocks which returned either way
+            //Would also use &(<code>) instead of %(<code>)
+            #region Strict Eval Blocks (Breaks when Eval returns an Error)
+
             do {
                 try {
                     string match = (argumentString + " ").SubstringWithEnds("%(", ")");
@@ -179,9 +183,12 @@ namespace Furball.Engine.Engine.Console {
                 }
             } while (run);
 
+            #endregion
+
             run = true;
 
-            //Check for Math Expressions
+            #region Math Blocks
+
             do {
                 try {
                     string match = argumentString.SubstringWithEnds("#(", ")");
@@ -192,6 +199,8 @@ namespace Furball.Engine.Engine.Console {
                     run = false;
                 }
             } while (run);
+
+            #endregion
 
             if (variableAssign) {
                 string variableName = splitCommand[0];
@@ -237,14 +246,33 @@ namespace Furball.Engine.Engine.Console {
             List<string> lines = new List<string>();
 
             foreach ((string input, ExecutionResult result, string message) action in ConsoleLog) {
-                if(action.input != string.Empty)
-                    lines.Add($"] {action.input}");
-                if(action.result != ExecutionResult.Log)
-                    lines.Add($"[{action.result}] {action.message}");
-                else lines.Add($"::[Log] {action.message}");
+                lines.AddRange(FormatActionLine(action));
             }
 
             return lines.ToArray();
+        }
+
+        public static List<string> FormatActionLine((string input, ExecutionResult result, string message) action) {
+            List<string> lines = new List<string>();
+
+            if(action.input != string.Empty)
+                lines.Add($"] {action.input}");
+
+            switch (action.result) {
+                case ExecutionResult.Message:
+                    lines.Add(action.message);
+                    break;
+                case ExecutionResult.Log:
+                    lines.Add($"::[Log] {action.message}");
+                    break;
+                case ExecutionResult.Success:
+                case ExecutionResult.Warning:
+                case ExecutionResult.Error:
+                    lines.Add($"[{action.result}] {action.message}");
+                    break;
+            }
+
+            return lines;
         }
 
         public static (ExecutionResult result, string message) WriteLog() {
