@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -30,26 +32,39 @@ namespace Furball.Engine.Engine.Console {
         };
 
         public static void Initialize() {
-            AddConVar(ConVars.ScreenResolution);
-            AddConVar(ConVars.DebugOverlay);
-            AddConVar(ConVars.TargetFps);
-            AddConVar(ConVars.WriteLog);
+            if (!Directory.Exists(ScriptPath)) Directory.CreateDirectory(ScriptPath);
+            if (!Directory.Exists(LogPath)) Directory.CreateDirectory(LogPath);
 
-            AddConFunc(ConVars.QuitFunction);
-            AddConFunc(ConVars.ScreenResFunction);
-            AddConFunc(ConVars.PrintFunction);
-            AddConFunc(ConVars.ClearContentCache);
-            AddConFunc(ConVars.CreateVariable);
-            AddConFunc(ConVars.DeleteVariable);
-            AddConFunc(ConVars.Hook);
-            AddConFunc(ConVars.SetTargetFps);
+            //Get all ConVars defined in `ConVars`
+            FieldInfo[] fields = typeof(ConVars).GetFields();
 
+            for (int i = 0; i != fields.Length; i++) {
+                FieldInfo currentField = fields[i];
+
+                if(currentField.FieldType.IsSubclassOf(typeof(ConVar))) {
+                    //apperantly when the field is static u can use null in GetValue
+                    AddConVar((ConVar)currentField.GetValue(null));
+                }
+            }
+
+            //Get all classes that Inherit from `ConFunc` in all Loaded Assemblies
+            List<Type> types = AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(s => s.GetTypes())
+                .Where(p => p.IsSubclassOf(typeof(ConFunc)))
+                .ToList();
+
+            for (int i = 0; i != types.Count; i++) {
+                Type currentType = types[i];
+
+                ConFunc function = (ConFunc)Activator.CreateInstance(currentType);
+
+                AddConFunc(function);
+            }
+
+            //Run AutoRun
             for (int i = 0; i != AutoRun.Length; i++) {
                 Run(AutoRun[i]);
             }
-
-            if (!Directory.Exists(ScriptPath)) Directory.CreateDirectory(ScriptPath);
-            if (!Directory.Exists(LogPath)) Directory.CreateDirectory(LogPath);
         }
 
         public static void AddConVar(ConVar conVar) => RegisteredConVars.Add(conVar.Name, conVar);
