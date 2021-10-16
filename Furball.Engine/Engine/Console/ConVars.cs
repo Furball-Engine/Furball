@@ -9,6 +9,7 @@ namespace Furball.Engine.Engine.Console {
         public static IntIntConVar ScreenResolution = new("cl_screen_resolution", $"{FurballGame.DEFAULT_WINDOW_WIDTH} {FurballGame.DEFAULT_WINDOW_HEIGHT}");
         public static IntConVar    DebugOverlay     = new("cl_debug_overlay", RuntimeInfo.IsDebug() ? 1 : 0);
         public static IntConVar    TargetFps        = new("cl_target_fps", -1, OnTargetFpsChange);
+        public static IntConVar    WriteLog         = new("cl_console_log", 1);
         /// <summary>
         /// `quit`
         /// Exits the Game
@@ -55,10 +56,13 @@ namespace Furball.Engine.Engine.Console {
         private static void OnTargetFpsChange() {
             int value = TargetFps.Value.Value;
 
-            if(value != -1)
+            if (value != -1) {
                 FurballGame.Instance.TargetElapsedTime = TimeSpan.FromMilliseconds(1000.0 / (double) value);
-            else
+                FurballGame.Instance.IsFixedTimeStep   = true;
+            } else {
                 FurballGame.Instance.TargetElapsedTime = TimeSpan.FromTicks(1);
+                FurballGame.Instance.IsFixedTimeStep   = false;
+            }
         }
 
         #endregion

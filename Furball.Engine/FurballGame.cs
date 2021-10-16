@@ -169,6 +169,12 @@ namespace Furball.Engine {
             base.Initialize();
         }
 
+        protected override void OnExiting(object sender, EventArgs args) {
+            Console.WriteLog();
+
+            base.OnExiting(sender, args);
+        }
+
         private void ConsoleOnLetterTyped(object? sender, char e) {
             _ConsoleAutoComplete.Tweens.Clear();
             _ConsoleAutoComplete.Tweens.Add(new FloatTween(TweenType.Fade, _ConsoleAutoComplete.ColorOverride.A / 255f, 1f, Time,        Time + 100));

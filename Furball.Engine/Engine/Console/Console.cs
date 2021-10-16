@@ -17,9 +17,20 @@ namespace Furball.Engine.Engine.Console {
 
         public static readonly List<(string input, ExecutionResult result, string message)> ConsoleLog = new();
 
+        public static string ScriptPath = "scripts";
+        public static string LogPath = "logs";
+
+        private static readonly string[] AutoRun = new[] {
+            //Hooks cl_screen_resolution to cl_set_screen_resolution
+            //so that when cl_screen_resolution gets changed it automatically calls cl_set_screen_resolution
+            ":hook +variable cl_screen_resolution cl_set_screen_resolution"
+        };
+
         public static void Initialize() {
             AddConVar(ConVars.ScreenResolution);
             AddConVar(ConVars.DebugOverlay);
+            AddConVar(ConVars.TargetFps);
+            AddConVar(ConVars.WriteLog);
 
             AddConFunc(ConVars.QuitFunction);
             AddConFunc(ConVars.ScreenResFunction);
@@ -29,18 +40,18 @@ namespace Furball.Engine.Engine.Console {
             AddConFunc(ConVars.DeleteVariable);
             AddConFunc(ConVars.Hook);
 
-            var what = Console.Run(":hook +variable cl_screen_resolution cl_set_screen_resolution");
+            for (int i = 0; i != AutoRun.Length; i++) {
+                Run(AutoRun[i]);
+            }
 
             if (!Directory.Exists(ScriptPath)) Directory.CreateDirectory(ScriptPath);
+            if (!Directory.Exists(LogPath)) Directory.CreateDirectory(LogPath);
         }
 
         public static void AddConVar(ConVar conVar) => RegisteredConVars.Add(conVar.Name, conVar);
         public static void RemoveConVar(string name) => RegisteredConVars.Remove(name);
         public static void AddConFunc(ConFunc conFunc) => RegisteredFunctions.Add(conFunc.Name, conFunc);
         public static void RemoveConFunc(string name) => RegisteredFunctions.Remove(name);
-
-
-        public static string ScriptPath = "scripts";
 
         public static async Task RunFile(string filename) {
             byte[] data = ContentManager.LoadRawAsset(Path.Combine(ScriptPath, filename), ContentSource.External, true);
@@ -186,8 +197,20 @@ namespace Furball.Engine.Engine.Console {
             return returnResult;
         }
 
-        public void WriteLog() {
-            //Will soon do
+        public static void WriteLog() {
+            if (ConVars.WriteLog.Value.Value != 1)
+                return;
+
+            string filename = Path.Combine(LogPath, $"{UnixTime.Now()}-console.txt");
+
+            List<string> lines = new List<string>();
+
+            foreach ((string input, ExecutionResult result, string message) action in ConsoleLog) {
+                lines.Add($"] {action.input}");
+                lines.Add($"[{action.result}] {action.message}");
+            }
+
+            File.WriteAllLines(filename, lines);
         }
     }
 }
