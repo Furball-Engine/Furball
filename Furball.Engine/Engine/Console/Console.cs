@@ -233,12 +233,7 @@ namespace Furball.Engine.Engine.Console {
             return returnResult;
         }
 
-        public static void WriteLog() {
-            if (ConVars.WriteLog.Value.Value != 1)
-                return;
-
-            string filename = Path.Combine(LogPath, $"{UnixTime.Now()}-console.txt");
-
+        public static string[] GetLog() {
             List<string> lines = new List<string>();
 
             foreach ((string input, ExecutionResult result, string message) action in ConsoleLog) {
@@ -249,7 +244,23 @@ namespace Furball.Engine.Engine.Console {
                 else lines.Add($"::[Log] {action.message}");
             }
 
-            File.WriteAllLines(filename, lines);
+            return lines.ToArray();
+        }
+
+        public static (ExecutionResult result, string message) WriteLog() {
+            if (ConVars.WriteLog.Value.Value != 1)
+                return (ExecutionResult.Error, "Writing Logs disabled! change `cl_console_log` to 1 to enable Console Logging");
+
+            string filename = Path.Combine(LogPath, $"{UnixTime.Now()}-console.txt");
+
+            try {
+                File.WriteAllLines(filename, GetLog());
+            }
+            catch (Exception e) {
+                return (ExecutionResult.Error, "Something went wrong. Make sure the `log` directory exists, and is not write protected.");
+            }
+
+            return (ExecutionResult.Success, $"Log successfully written to `{filename}`");
         }
     }
 }
