@@ -108,7 +108,7 @@ namespace Furball.Engine.Engine.DevConsole {
         }
         
         public static ConsoleResult Run(string input, bool userRun = true, bool disableLog = false) {
-            ConsoleResult returnResult = new ConsoleResult(ExecutionResult.Error, "");
+            ConsoleResult returnResult = new ConsoleResult(ExecutionResult.Success, "");
 
             if (input.Length == 0) {
                 returnResult = new ConsoleResult(ExecutionResult.Error, returnResult.Message);
@@ -205,7 +205,7 @@ namespace Furball.Engine.Engine.DevConsole {
                     goto ConsoleEnd;
                 }
 
-                if (value.Protected && value.CheckPrivledges(userRun) == false) {
+                if (value.Protected && value.CheckPrivileges(userRun) == false) {
                     returnResult = new ConsoleResult(ExecutionResult.Error, $"Variable of name `{variableName}` is protected and you are not privledged to access it.");
                     goto ConsoleEnd;
 
@@ -225,7 +225,7 @@ namespace Furball.Engine.Engine.DevConsole {
                 if (var != null) {
                     if (var.ReadOnly)
                         returnResult = new ConsoleResult(ExecutionResult.Error, "Variable is read-only!");
-                    else if (var.Protected && var.CheckPrivledges(userRun) == false) {
+                    else if (var.Protected && var.CheckPrivileges(userRun) == false) {
                         returnResult = new ConsoleResult(ExecutionResult.Error, "Variable is protected and you are not privledged to access it.");
                     }
                     else {

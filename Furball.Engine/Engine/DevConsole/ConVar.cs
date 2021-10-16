@@ -8,7 +8,7 @@ namespace Furball.Engine.Engine.DevConsole {
         public bool             ReadOnly        = false;
         public bool             DisableOnChange = false;
         public bool             Protected       = false;
-        public Func<bool, bool> PrivledgeCheck;
+        public Func<bool, bool> PrivilegeCheck;
         public ConVar(string conVarName, Action onChange = null) {
             this.Name = conVarName;
 
@@ -18,7 +18,7 @@ namespace Furball.Engine.Engine.DevConsole {
                 };
         }
 
-        public virtual bool CheckPrivledges(bool userRun) => this.PrivledgeCheck.Invoke(userRun);
+        public virtual bool CheckPrivileges(bool userRun) => this.PrivilegeCheck.Invoke(userRun);
 
         public virtual ConsoleResult Set(string consoleInput) {
             if(!this.DisableOnChange)
