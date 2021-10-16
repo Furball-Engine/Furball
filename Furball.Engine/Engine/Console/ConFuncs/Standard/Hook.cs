@@ -16,19 +16,34 @@ namespace Furball.Engine.Engine.Console.ConFuncs.Standard {
 
             switch (hookType) {
                 //TODO: add function hooks
-                case "+variable":
-                    ConVar variable = Console.RegisteredConVars.GetValueOrDefault(hookTarget, null);
-                    ConFunc action = Console.RegisteredFunctions.GetValueOrDefault(hookAction, null);
+                case "+variable": {
+                        ConVar variable = Console.RegisteredConVars.GetValueOrDefault(hookTarget, null);
+                        ConFunc action = Console.RegisteredFunctions.GetValueOrDefault(hookAction, null);
 
-                    if (variable != null) {
+                        if (variable != null) {
+                            if (action != null) {
+                                variable.OnChange += delegate {
+                                    action.Run(string.Empty);
+                                };
+                            } else return (ExecutionResult.Error, "No such Function Found!");
+                        } else return (ExecutionResult.Error, "No such Variable found!");
+
+                        break;
+                    }
+                case "+function": {
+                    ConFunc function = Console.RegisteredFunctions.GetValueOrDefault(hookTarget, null);
+                    ConFunc action = Console.RegisteredFunctions.GetValueOrDefault(hookAction,   null);
+
+                    if (function != null) {
                         if (action != null) {
-                            variable.OnChange += delegate {
+                            function.OnCall += delegate {
                                 action.Run(string.Empty);
                             };
                         } else return (ExecutionResult.Error, "No such Function Found!");
                     } else return (ExecutionResult.Error, "No such Variable found!");
 
                     break;
+                }
             }
 
             return (ExecutionResult.Success, "Hook established.");

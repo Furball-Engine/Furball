@@ -47,7 +47,7 @@ namespace Furball.Engine.Engine.Console.ConFuncs.Standard {
 
             Console.AddConVar(variable);
 
-            return (ExecutionResult.Success, $"Variable of name \"{name}\" has been created.");
+            return (ExecutionResult.Success, $"Variable of name `{name}` has been created.");
         }
     }
 }

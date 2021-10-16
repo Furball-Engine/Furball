@@ -15,6 +15,8 @@ namespace Furball.Engine.Engine.Console {
         public static readonly Dictionary<string, ConVar>  RegisteredConVars   = new();
         public static readonly Dictionary<string, ConFunc> RegisteredFunctions = new();
 
+        public static readonly List<(string input, ExecutionResult result, string message)> ConsoleLog = new();
+
         public static void Initialize() {
             AddConVar(ConVars.ScreenResolution);
             AddConVar(ConVars.DebugOverlay);
@@ -26,6 +28,8 @@ namespace Furball.Engine.Engine.Console {
             AddConFunc(ConVars.CreateVariable);
             AddConFunc(ConVars.DeleteVariable);
             AddConFunc(ConVars.Hook);
+
+            var what = Console.Run(":hook +variable cl_screen_resolution cl_set_screen_resolution");
 
             if (!Directory.Exists(ScriptPath)) Directory.CreateDirectory(ScriptPath);
         }
@@ -55,14 +59,18 @@ namespace Furball.Engine.Engine.Console {
         
         public static (ExecutionResult result, string message) Run(string input) {
             (ExecutionResult result, string message) returnResult = (ExecutionResult.Error, "");
-            
-            if (input.Length == 0)
-                return (ExecutionResult.Error, returnResult.message);
+
+            if (input.Length == 0) {
+                returnResult = (ExecutionResult.Error, returnResult.message);
+                goto ConsoleEnd;
+            }
 
             string[] splitCommand = input.Split(" ");
 
-            if (splitCommand.Length == 0)
-                return (ExecutionResult.Error, "Invalid Syntax.");
+            if (splitCommand.Length == 0) {
+                returnResult =  (ExecutionResult.Error, "Invalid Syntax.");
+                goto ConsoleEnd;
+            }
 
             bool variableAssign = input[0] != ':';
 
@@ -81,10 +89,16 @@ namespace Furball.Engine.Engine.Console {
 
                     Match  match         = Regex.Match(subString, "^([\\S]+)");
                     string matchedString = match.Groups[0].Value;
+                    string variableName = matchedString.TrimStart('$');
 
-                    ConVar value = RegisteredConVars.GetValueOrDefault(matchedString.TrimStart('$'), null);
+                    ConVar value = RegisteredConVars.GetValueOrDefault(variableName, null);
 
-                    toConcat = toConcat.Replace(matchedString, value?.ToString() ?? "~~Error: Variable not found!");
+                    if (value == null) {
+                        returnResult = (ExecutionResult.Error, $"Variable of name `{variableName}` not found!");
+                        goto ConsoleEnd;
+                    }
+
+                    toConcat = toConcat.Replace(matchedString, value.ToString());
 
                 } while (true);
 
@@ -96,6 +110,7 @@ namespace Furball.Engine.Engine.Console {
             CalculationEngine jaceEngine = new(CultureInfo.InvariantCulture, ExecutionMode.Interpreted);
 
             bool run = true;
+            int evalIndex = 0;
             //Check for evaluatable Code Blocks
             do {
                 try {
@@ -104,7 +119,14 @@ namespace Furball.Engine.Engine.Console {
 
                     (ExecutionResult result, string message) result = Run(code);
 
+                    if (result.result == ExecutionResult.Error) {
+                        returnResult =  (ExecutionResult.Error, $"Eval at index {evalIndex} failed to finish. Error Message: \"{result.message}\"");
+                        goto ConsoleEnd;
+                    }
+
                     argumentString = argumentString.Replace(match, result.message);
+
+                    evalIndex++;
                 }
                 catch (ArgumentException ex) {
                     run = false;
@@ -133,10 +155,11 @@ namespace Furball.Engine.Engine.Console {
                 if (var != null) {
                     if (var.ReadOnly)
                         returnResult = (ExecutionResult.Error, "Variable is read-only!");
+                    else {
+                        (ExecutionResult result, string message) result = var.Set(argumentString);
 
-                    (ExecutionResult result, string message) result = var.Set(argumentString);
-
-                    returnResult = result;
+                        returnResult = result;
+                    }
                 } else {
                     returnResult = (ExecutionResult.Error, "Unknown Variable! Did you mean to use a function? Prefix it with :");
                 }
@@ -146,12 +169,25 @@ namespace Furball.Engine.Engine.Console {
 
                 ConFunc func = RegisteredFunctions.GetValueOrDefault(functionName, null);
 
-                (ExecutionResult result, string message) result = func?.Run(argumentString) ?? (ExecutionResult.Error, "Unknown Function! Did you mean to set a variable? Remove the :");
+                if (func != null) {
+                    (ExecutionResult result, string message) result = func.Run(argumentString);
+                    returnResult = result;
 
-                returnResult = result;
+                    func.CallOnCall(result.message);
+                } else {
+                    returnResult = (ExecutionResult.Error, "Unknown Function! Did you mean to set a variable? Remove the :");
+                }
             }
 
+            ConsoleEnd: ;
+
+            ConsoleLog.Add((input, returnResult.result, returnResult.message));
+
             return returnResult;
+        }
+
+        public void WriteLog() {
+            //Will soon do
         }
     }
 }
