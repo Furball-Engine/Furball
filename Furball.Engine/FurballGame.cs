@@ -87,7 +87,8 @@ namespace Furball.Engine {
             GameTimeScheduler = new();
             
             Logger.AddLogger(new ConsoleLogger());
-            
+            Logger.AddLogger(new DevConsoleLogger());
+
             this._startScreen = startScreen;
         }
 

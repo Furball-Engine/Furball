@@ -62,8 +62,6 @@ namespace Furball.Engine.Engine.Helpers.Logger {
             line.LineData = line.LineData.Replace("\r", "");
             line.LineData = line.LineData.Replace("\n", " ");
             _LoggerLines.Enqueue(line);
-
-            DevConsole.DevConsole.ConsoleLog.Add((string.Empty, ExecutionResult.Log, line.LineData));
         }
 
         public static void Log(string data, LoggerLevel level = null) {

@@ -15,10 +15,10 @@ namespace Furball.Engine.Engine.Helpers.Logger {
 
         public virtual void Initialize() {
             Logger.Log(
-            new LoggerLine {
-                LoggerLevel = LoggerLevelLoggerInfo.Instance,
-                LineData    = $"{this.GetType().Name} initialized!"
-            }
+                new LoggerLine {
+                    LoggerLevel = LoggerLevelLoggerInfo.Instance,
+                    LineData    = $"{this.GetType().Name} initialized!"
+                }
             );
         }
         
