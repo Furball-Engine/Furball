@@ -54,16 +54,17 @@ namespace Furball.Engine.Engine.Console {
             );
         }
         
-        public static string Run(string input) {
+        public static (ExecutionResult result, string message) Run(string input) {
             string returnString = "";
+            ExecutionResult executionResult = ExecutionResult.Error;
             
             if (input.Length == 0)
-                return returnString;
+                return (ExecutionResult.Error, returnString);
 
             string[] splitCommand = input.Split(" ");
 
             if (splitCommand.Length == 0)
-                return "Invalid Syntax.";
+                return (ExecutionResult.Error, "Invalid Syntax.");
 
             bool variableAssign = input[0] != ':';
 
@@ -102,9 +103,10 @@ namespace Furball.Engine.Engine.Console {
                 try {
                     string match = (argumentString + " ").SubstringWithEnds("%(", ")");
                     string code = match.Substring("%(", ")");
-                    string result = Run(code);
 
-                    argumentString = argumentString.Replace(match, result);
+                    (ExecutionResult result, string message) result = Run(code);
+
+                    argumentString = argumentString.Replace(match, result.message);
                 }
                 catch (ArgumentException ex) {
                     run = false;
@@ -131,15 +133,18 @@ namespace Furball.Engine.Engine.Console {
                 ConVar var = RegisteredConVars.GetValueOrDefault(variableName, null);
 
                 returnString = var?.Set(argumentString) ?? "Unknown Variable! Did you mean to use a function? Prefix it with :";
+
             } else {
                 string functionName   = splitCommand[0].TrimStart(':');
 
                 ConFunc func = RegisteredFunctions.GetValueOrDefault(functionName, null);
 
-                returnString = func?.Run(argumentString) ?? "Unknown Function! Did you mean to set a variable? Remove the :";
+                (ExecutionResult result, string message) result = func?.Run(argumentString) ?? (ExecutionResult.Error, "Unknown Function! Did you mean to set a variable? Remove the :");
+
+                returnString = result.message;
             }
 
-            return returnString;
+            return (executionResult, returnString);
         }
     }
 }

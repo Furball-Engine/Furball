@@ -4,7 +4,7 @@ namespace Furball.Engine.Engine.Console.ConFuncs {
 
         }
 
-        public override string Run(string consoleInput) {
+        public override (ExecutionResult result, string message) Run(string consoleInput) {
             if (consoleInput.Trim().Length != 0)
                 ConVars.ScreenResolution.Set(consoleInput);
 
@@ -12,7 +12,7 @@ namespace Furball.Engine.Engine.Console.ConFuncs {
 
             FurballGame.Instance.ChangeScreenSize(width, height);
 
-            return $"Setting the screen resolution to {width}x{height}!";
+            return (ExecutionResult.Success, $"Resolution has been set to {width}x{height}");
         }
     }
 }

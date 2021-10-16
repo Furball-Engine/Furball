@@ -5,11 +5,11 @@ namespace Furball.Engine.Engine.Console.ConFuncs.Standard {
         public Hook() : base("hook") {
 
         }
-        public override string Run(string consoleInput) {
+        public override (ExecutionResult result, string message) Run(string consoleInput) {
             string[] arguments = consoleInput.Split(" ");
 
             if (arguments.Length != 3)
-                return "Invalid Syntax. Example: `hook +variable hook_target hook_action`";
+                return (ExecutionResult.Error, "Invalid Syntax. Example: `hook +variable hook_target hook_action`");
 
             string hookType = arguments[0];
             string hookTarget = arguments[1];
@@ -26,13 +26,13 @@ namespace Furball.Engine.Engine.Console.ConFuncs.Standard {
                             variable.OnChange += delegate {
                                 action.Run(string.Empty);
                             };
-                        } else return "No such Function Found!";
-                    } else return "No such Variable found!";
+                        } else return (ExecutionResult.Error, "No such Function Found!");
+                    } else return (ExecutionResult.Error, "No such Variable found!");
 
                     break;
             }
 
-            return "Hook established.";
+            return (ExecutionResult.Success, "Hook established.");
         }
     }
 }

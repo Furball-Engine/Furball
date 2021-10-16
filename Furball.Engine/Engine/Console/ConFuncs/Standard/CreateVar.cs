@@ -7,17 +7,17 @@ namespace Furball.Engine.Engine.Console.ConFuncs.Standard {
         public CreateVar() : base("create_var") {
 
         }
-        public override string Run(string consoleInput) {
+        public override (ExecutionResult result, string message) Run(string consoleInput) {
             string[] split = consoleInput.Split(" ");
 
             string type = split[0];
             string name = split[1];
 
             if (Regex.IsMatch(name, "/[!@#$%^&*()]/"))
-                return "Invalid Variable Name.";
+                return (ExecutionResult.Error, "Invalid Variable Name.");
 
             if (Console.RegisteredConVars.ContainsKey(name))
-                return "Variable of this name already exists.";
+                return (ExecutionResult.Error, "Variable of this name already exists.");
 
             ConVar variable = null;
 
@@ -41,14 +41,14 @@ namespace Furball.Engine.Engine.Console.ConFuncs.Standard {
                     variable = new StringConVar(name);
                     break;
                 default:
-                    return "Invalid Variable Type";
+                    return (ExecutionResult.Error, "Invalid Variable type.");
             }
 
             variable.ScriptCreated = true;
 
             Console.AddConVar(variable);
 
-            return "Variable Created.";
+            return (ExecutionResult.Success, $"Variable of name \"{name}\" has been created.");
         }
     }
 }

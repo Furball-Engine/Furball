@@ -6,6 +6,6 @@ namespace Furball.Engine.Engine.Console {
             this.Name = conFuncName;
         }
 
-        public abstract string Run(string consoleInput);
+        public abstract (ExecutionResult result, string message) Run(string consoleInput);
     }
 }

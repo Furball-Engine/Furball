@@ -10,10 +10,10 @@ namespace Furball.Engine.Engine.Console {
             this.Name = conVarName;
         }
 
-        public virtual string Set(string consoleInput) {
+        public virtual (ExecutionResult result, string message) Set(string consoleInput) {
             this.OnChange?.Invoke(this, null);
 
-            return string.Empty;
+            return (ExecutionResult.Success, string.Empty);
         }
     }
 }

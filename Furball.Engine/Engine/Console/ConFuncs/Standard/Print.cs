@@ -4,8 +4,8 @@ namespace Furball.Engine.Engine.Console.ConFuncs.Standard {
 
         }
 
-        public override string Run(string consoleInput) {
-            return consoleInput;
+        public override (ExecutionResult result, string message) Run(string consoleInput) {
+            return (ExecutionResult.Success, consoleInput);
         }
     }
 }

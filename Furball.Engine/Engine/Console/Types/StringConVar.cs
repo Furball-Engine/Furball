@@ -6,12 +6,12 @@ namespace Furball.Engine.Engine.Console.Types {
 
         public StringConVar(string conVarName, string initialValue = "") : base(conVarName) => this.Value = new Bindable<string>(initialValue);
 
-        public override string Set(string consoleInput) {
+        public override (ExecutionResult result, string message) Set(string consoleInput) {
             this.Value.Value = consoleInput;
 
             base.Set(string.Empty);
 
-            return $"{this.Name} set to {this.Value.Value}";
+            return (ExecutionResult.Success, $"{this.Name} set to {this.Value.Value}");
         }
 
         public override string ToString() => this.Value;

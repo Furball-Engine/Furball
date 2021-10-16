@@ -4,9 +4,9 @@ namespace Furball.Engine.Engine.Console.ConFuncs.Standard {
 
         }
 
-        public override string Run(string consoleInput) {
+        public override (ExecutionResult result, string message) Run(string consoleInput) {
             FurballGame.Instance.Exit();
-            return "Exiting game!";
+            return (ExecutionResult.Success, "Exiting game.");
         }
     }
 }
