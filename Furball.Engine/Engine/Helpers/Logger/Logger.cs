@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Furball.Engine.Engine.DevConsole;
 using Microsoft.Xna.Framework;
 
 namespace Furball.Engine.Engine.Helpers.Logger {

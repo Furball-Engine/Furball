@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using FontStashSharp;
 using Furball.Engine.Engine;
 using Furball.Engine.Engine.Audio;
