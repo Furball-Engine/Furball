@@ -126,28 +126,6 @@ namespace Furball.Engine.Engine.Console {
             for (int i = 1; i != splitCommand.Length; i++) {
                 string toConcat = splitCommand[i];
 
-                int index;
-                do {
-                    index = toConcat.IndexOf('$');
-                    if (index == -1) break;
-
-                    string subString = toConcat[index..];
-
-                    Match  match         = Regex.Match(subString, "^([\\S]+)");
-                    string matchedString = match.Groups[0].Value;
-                    string variableName = matchedString.TrimStart('$');
-
-                    ConVar value = RegisteredConVars.GetValueOrDefault(variableName, null);
-
-                    if (value == null) {
-                        returnResult = (ExecutionResult.Error, $"Variable of name `{variableName}` not found!");
-                        goto ConsoleEnd;
-                    }
-
-                    toConcat = toConcat.Replace(matchedString, value.ToString());
-
-                } while (true);
-
                 argumentString += toConcat + " ";
             }
 
@@ -185,9 +163,9 @@ namespace Furball.Engine.Engine.Console {
 
             #endregion
 
-            run = true;
-
             #region Math Blocks
+
+            run = true;
 
             do {
                 try {
@@ -199,6 +177,33 @@ namespace Furball.Engine.Engine.Console {
                     run = false;
                 }
             } while (run);
+
+            #endregion
+
+            #region Variable Evals
+
+            int index;
+
+            do {
+                index = argumentString.IndexOf('$');
+                if (index == -1) break;
+
+                string subString = argumentString[index..];
+
+                Match  match         = Regex.Match(subString, "^([\\S]+)");
+                string matchedString = match.Groups[0].Value;
+                string variableName = matchedString.TrimStart('$');
+
+                ConVar value = RegisteredConVars.GetValueOrDefault(variableName, null);
+
+                if (value == null) {
+                    returnResult = (ExecutionResult.Error, $"Variable of name `{variableName}` not found!");
+                    goto ConsoleEnd;
+                }
+
+                argumentString = argumentString.Replace(matchedString, value.ToString());
+
+            } while (true);
 
             #endregion
 
@@ -220,7 +225,7 @@ namespace Furball.Engine.Engine.Console {
                 }
 
             } else {
-                string functionName   = splitCommand[0].TrimStart(':');
+                string functionName = splitCommand[0].TrimStart(':');
 
                 ConFunc func = RegisteredFunctions.GetValueOrDefault(functionName, null);
 
