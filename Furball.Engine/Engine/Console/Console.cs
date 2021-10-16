@@ -103,7 +103,7 @@ namespace Furball.Engine.Engine.Console {
             );
         }
         
-        public static (ExecutionResult result, string message) Run(string input) {
+        public static (ExecutionResult result, string message) Run(string input, bool disableLog = false) {
             (ExecutionResult result, string message) returnResult = (ExecutionResult.Error, "");
 
             if (input.Length == 0) {
@@ -227,7 +227,8 @@ namespace Furball.Engine.Engine.Console {
 
             ConsoleEnd: ;
 
-            ConsoleLog.Add((input, returnResult.result, returnResult.message));
+            if(!disableLog)
+                ConsoleLog.Add((input, returnResult.result, returnResult.message));
 
             return returnResult;
         }

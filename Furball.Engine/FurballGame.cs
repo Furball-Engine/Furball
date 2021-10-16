@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using FontStashSharp;
 using Furball.Engine.Engine;
 using Furball.Engine.Engine.Audio;
@@ -170,6 +171,7 @@ namespace Furball.Engine {
         }
 
         protected override void OnExiting(object sender, EventArgs args) {
+            Console.Run(":nt_on_exiting", true);
             Console.WriteLog();
 
             base.OnExiting(sender, args);
@@ -227,6 +229,7 @@ namespace Furball.Engine {
         }
 
         protected override void BeginRun() {
+            Console.Run(":nt_begin_run", true);
             ScreenManager.ChangeScreen(this._startScreen);
         }
 
