@@ -1,3 +1,4 @@
+using System;
 using Furball.Engine.Engine.Console.ConFuncs;
 using Furball.Engine.Engine.Console.ConFuncs.Standard;
 using Furball.Engine.Engine.Console.Types;
@@ -7,6 +8,7 @@ namespace Furball.Engine.Engine.Console {
     public class ConVars {
         public static IntIntConVar ScreenResolution = new("cl_screen_resolution", $"{FurballGame.DEFAULT_WINDOW_WIDTH} {FurballGame.DEFAULT_WINDOW_HEIGHT}");
         public static IntConVar    DebugOverlay     = new("cl_debug_overlay", RuntimeInfo.IsDebug() ? 1 : 0);
+        public static IntConVar    TargetFps        = new("cl_target_fps", -1, OnTargetFpsChange);
         /// <summary>
         /// `quit`
         /// Exits the Game
@@ -47,5 +49,18 @@ namespace Furball.Engine.Engine.Console {
         /// Syntax: `hook +(variable/function) hook_target hook_action`
         /// </summary>
         public static ConFunc Hook           = new Hook();
+
+        #region ConVar OnChanges
+        //TODO: move to a function hook once those work
+        private static void OnTargetFpsChange() {
+            int value = TargetFps.Value.Value;
+
+            if(value != -1)
+                FurballGame.Instance.TargetElapsedTime = TimeSpan.FromMilliseconds(1000.0 / (double) value);
+            else
+                FurballGame.Instance.TargetElapsedTime = TimeSpan.FromTicks(1);
+        }
+
+        #endregion
     }
 }

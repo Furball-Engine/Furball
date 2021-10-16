@@ -6,7 +6,7 @@ namespace Furball.Engine.Engine.Console.Types {
     public class ColorConVar : ConVar {
         public Bindable<Color> Value;
 
-        public ColorConVar(string conVarName, Color initialValue) : base(conVarName) => this.Value = new Bindable<Color>(initialValue);
+        public ColorConVar(string conVarName, Color initialValue, Action onChange = null) : base(conVarName, onChange) => this.Value = new Bindable<Color>(initialValue);
 
         public override (ExecutionResult result, string message) Set(string consoleInput) {
             string[] split = consoleInput.Split(" ");

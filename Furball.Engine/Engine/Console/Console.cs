@@ -44,12 +44,12 @@ namespace Furball.Engine.Engine.Console {
             string file = Encoding.Default.GetString(data);
 
             await Task.Run(
-            () => {
-                string[] split = file.Replace("\r", "").Split("\n");
+                () => {
+                    string[] split = file.Replace("\r", "").Split("\n");
 
-                foreach (string line in split)
-                    Run(line);
-            }
+                    foreach (string line in split)
+                        Run(line);
+                }
             );
         }
         
@@ -130,9 +130,16 @@ namespace Furball.Engine.Engine.Console {
 
                 ConVar var = RegisteredConVars.GetValueOrDefault(variableName, null);
 
-                (ExecutionResult result, string message) result = var?.Set(argumentString) ?? (ExecutionResult.Error, "Unknown Variable! Did you mean to use a function? Prefix it with :");
+                if (var != null) {
+                    if (var.ReadOnly)
+                        returnResult = (ExecutionResult.Error, "Variable is read-only!");
 
-                returnResult = result;
+                    (ExecutionResult result, string message) result = var.Set(argumentString);
+
+                    returnResult = result;
+                } else {
+                    returnResult = (ExecutionResult.Error, "Unknown Variable! Did you mean to use a function? Prefix it with :");
+                }
 
             } else {
                 string functionName   = splitCommand[0].TrimStart(':');

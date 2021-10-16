@@ -5,7 +5,7 @@ namespace Furball.Engine.Engine.Console.Types {
     public class IntIntConVar : ConVar {
         public Bindable<(int, int)> Value = new((0, 0));
 
-        public IntIntConVar(string conVarName, string defaultValue) : base(conVarName) {
+        public IntIntConVar(string conVarName, string defaultValue, Action onChange = null) : base(conVarName, onChange) {
             if (defaultValue.Length != 0) {
                 string[] splitInput = defaultValue.Split(" ");
 

@@ -5,7 +5,7 @@ namespace Furball.Engine.Engine.Console.Types {
     public class IntConVar : ConVar {
         public Bindable<int> Value;
 
-        public IntConVar(string conVarName, int initialValue = 0) : base(conVarName) => this.Value = new Bindable<int>(initialValue);
+        public IntConVar(string conVarName, int initialValue = 0, Action onChange = null) : base(conVarName, onChange) => this.Value = new Bindable<int>(initialValue);
 
         public override (ExecutionResult result, string message) Set(string consoleInput) {
             try {

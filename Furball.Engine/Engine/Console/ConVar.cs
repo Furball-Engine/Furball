@@ -5,9 +5,15 @@ namespace Furball.Engine.Engine.Console {
         public string Name { get; init; }
         public EventHandler OnChange;
         public bool         ScriptCreated = false;
+        public bool         ReadOnly      = false;
 
-        public ConVar(string conVarName) {
+        public ConVar(string conVarName, Action onChange = null) {
             this.Name = conVarName;
+
+            if (onChange != null)
+                this.OnChange += delegate {
+                    onChange();
+                };
         }
 
         public virtual (ExecutionResult result, string message) Set(string consoleInput) {
