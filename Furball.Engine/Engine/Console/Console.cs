@@ -61,10 +61,14 @@ namespace Furball.Engine.Engine.Console {
                 AddConFunc(function);
             }
 
+            ConsoleLog.Add((string.Empty, ExecutionResult.Message, "Executing AutoRun..."));
+
             //Run AutoRun
             for (int i = 0; i != AutoRun.Length; i++) {
                 Run(AutoRun[i]);
             }
+
+            ConsoleLog.Add((string.Empty, ExecutionResult.Message, "AutoRun script complete!"));
         }
         //Because the fields are required to be static this is the only way that i can think of for devs to add their own ConVarStores like `ConVars`
         public static void AddConVarStore(Type store) {
