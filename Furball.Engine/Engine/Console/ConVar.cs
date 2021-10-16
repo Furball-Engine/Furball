@@ -4,8 +4,9 @@ namespace Furball.Engine.Engine.Console {
     public abstract class ConVar {
         public string Name { get; init; }
         public EventHandler OnChange;
-        public bool         ScriptCreated = false;
-        public bool         ReadOnly      = false;
+        public bool         ScriptCreated   = false;
+        public bool         ReadOnly        = false;
+        public bool         DisableOnChange = false;
 
         public ConVar(string conVarName, Action onChange = null) {
             this.Name = conVarName;
@@ -17,7 +18,8 @@ namespace Furball.Engine.Engine.Console {
         }
 
         public virtual (ExecutionResult result, string message) Set(string consoleInput) {
-            this.OnChange?.Invoke(this, null);
+            if(!this.DisableOnChange)
+                this.OnChange?.Invoke(this, null);
 
             return (ExecutionResult.Success, string.Empty);
         }

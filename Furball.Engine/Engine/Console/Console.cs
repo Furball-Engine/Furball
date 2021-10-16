@@ -23,7 +23,10 @@ namespace Furball.Engine.Engine.Console {
         private static readonly string[] AutoRun = new[] {
             //Hooks cl_screen_resolution to cl_set_screen_resolution
             //so that when cl_screen_resolution gets changed it automatically calls cl_set_screen_resolution
-            ":hook +variable cl_screen_resolution cl_set_screen_resolution"
+            ":hook +variable cl_screen_resolution cl_set_screen_resolution",
+            //Hooks cl_target_fps to cl_set_target_fps
+            //So that when cl_target_fps gets changed it automatically calls cl_set_target_fps
+            ":hook +variable cl_target_fps cl_set_target_fps"
         };
 
         public static void Initialize() {
@@ -39,6 +42,7 @@ namespace Furball.Engine.Engine.Console {
             AddConFunc(ConVars.CreateVariable);
             AddConFunc(ConVars.DeleteVariable);
             AddConFunc(ConVars.Hook);
+            AddConFunc(ConVars.SetTargetFps);
 
             for (int i = 0; i != AutoRun.Length; i++) {
                 Run(AutoRun[i]);

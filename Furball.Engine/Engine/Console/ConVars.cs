@@ -10,7 +10,7 @@ namespace Furball.Engine.Engine.Console {
     public class ConVars {
         public static IntIntConVar ScreenResolution = new("cl_screen_resolution", $"{FurballGame.DEFAULT_WINDOW_WIDTH} {FurballGame.DEFAULT_WINDOW_HEIGHT}");
         public static IntConVar    DebugOverlay     = new("cl_debug_overlay", RuntimeInfo.IsDebug() ? 1 : 0);
-        public static IntConVar    TargetFps        = new("cl_target_fps", -1, OnTargetFpsChange);
+        public static IntConVar    TargetFps        = new("cl_target_fps", -1);
         public static IntConVar    WriteLog         = new("cl_console_log", 1);
         /// <summary>
         /// `quit`
@@ -52,21 +52,13 @@ namespace Furball.Engine.Engine.Console {
         /// Syntax: `hook +(variable/function) hook_target hook_action`
         /// </summary>
         public static ConFunc Hook           = new Hook();
-
-        #region ConVar OnChanges
-        //TODO: move to a function hook once those work
-        private static void OnTargetFpsChange() {
-            int value = TargetFps.Value.Value;
-
-            if (value != -1) {
-                FurballGame.Instance.TargetElapsedTime = TimeSpan.FromMilliseconds(1000.0 / (double) value);
-                FurballGame.Instance.IsFixedTimeStep   = true;
-            } else {
-                FurballGame.Instance.TargetElapsedTime = TimeSpan.FromTicks(1);
-                FurballGame.Instance.IsFixedTimeStep   = false;
-            }
-        }
-
-        #endregion
+        /// <summary>
+        /// cl_set_target_fps
+        /// Sets the Target Frame Rate
+        /// Syntax: `cl_set_target_fps target_frame_rate`
+        /// <remarks>if called without parameters, it will set the frame rate to whatever `cl_target_fps` is</remarks>
+        /// <remarks>if called with the value of -1, it sets it to unlimited</remarks>
+        /// </summary>
+        public static ConFunc SetTargetFps = new SetTargetFps();
     }
 }
