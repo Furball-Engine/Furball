@@ -34,18 +34,18 @@ namespace Furball.Engine.Engine.Console {
         public static void Initialize() {
             if (!Directory.Exists(ScriptPath)) Directory.CreateDirectory(ScriptPath);
             if (!Directory.Exists(LogPath)) Directory.CreateDirectory(LogPath);
-
-            //Get all ConVars defined in `ConVars`
-            FieldInfo[] fields = typeof(ConVars).GetFields();
-
-            for (int i = 0; i != fields.Length; i++) {
-                FieldInfo currentField = fields[i];
-
-                if(currentField.FieldType.IsSubclassOf(typeof(ConVar))) {
-                    //apperantly when the field is static u can use null in GetValue
-                    AddConVar((ConVar)currentField.GetValue(null));
-                }
-            }
+            //Disabled for testing
+            ////Get all ConVars defined in `ConVars`
+            //FieldInfo[] fields = typeof(ConVars).GetFields();
+//
+            //for (int i = 0; i != fields.Length; i++) {
+            //    FieldInfo currentField = fields[i];
+//
+            //    if(currentField.FieldType.IsSubclassOf(typeof(ConVar))) {
+            //        //apperantly when the field is static u can use null in GetValue
+            //        AddConVar((ConVar)currentField.GetValue(null));
+            //    }
+            //}
 
             //Get all classes that Inherit from `ConFunc` in all Loaded Assemblies
             List<Type> types = AppDomain.CurrentDomain.GetAssemblies()
@@ -64,6 +64,22 @@ namespace Furball.Engine.Engine.Console {
             //Run AutoRun
             for (int i = 0; i != AutoRun.Length; i++) {
                 Run(AutoRun[i]);
+            }
+        }
+        //Because the fields are required to be static this is the only way that i can think of for devs to add their own ConVarStores like `ConVars`
+        public static void AddConVarStore(Type store) {
+            if (!store.IsSubclassOf(typeof(ConVarStore)))
+                throw new Exception("What you are trying to add is not a ConVarStore!");
+
+            FieldInfo[] fields = store.GetFields();
+
+            for (int i = 0; i != fields.Length; i++) {
+                FieldInfo currentField = fields[i];
+
+                if(currentField.FieldType.IsSubclassOf(typeof(ConVar))) {
+                    //apperantly when the field is static u can use null in GetValue
+                    AddConVar((ConVar)currentField.GetValue(null));
+                }
             }
         }
 
