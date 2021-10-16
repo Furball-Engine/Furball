@@ -9,12 +9,6 @@ namespace Furball.Game {
             this.Window.AllowUserResizing = true;
         }
 
-        protected override void Initialize() {
-            Console.AddConVarStore(typeof(ConVars));
-
-            base.Initialize();
-        }
-
         public override void InitializeLocalizations() {
             LocalizationManager.AddDefaultTranslation("cat", "Cat");
         }

@@ -34,18 +34,18 @@ namespace Furball.Engine.Engine.Console {
         public static void Initialize() {
             if (!Directory.Exists(ScriptPath)) Directory.CreateDirectory(ScriptPath);
             if (!Directory.Exists(LogPath)) Directory.CreateDirectory(LogPath);
-            //Disabled for testing
-            ////Get all ConVars defined in `ConVars`
-            //FieldInfo[] fields = typeof(ConVars).GetFields();
-//
-            //for (int i = 0; i != fields.Length; i++) {
-            //    FieldInfo currentField = fields[i];
-//
-            //    if(currentField.FieldType.IsSubclassOf(typeof(ConVar))) {
-            //        //apperantly when the field is static u can use null in GetValue
-            //        AddConVar((ConVar)currentField.GetValue(null));
-            //    }
-            //}
+
+            //Get all ConVars defined in `ConVars`
+            FieldInfo[] fields = typeof(ConVars).GetFields();
+
+            for (int i = 0; i != fields.Length; i++) {
+                FieldInfo currentField = fields[i];
+
+                if(currentField.FieldType.IsSubclassOf(typeof(ConVar))) {
+                    //apperantly when the field is static u can use null in GetValue
+                    AddConVar((ConVar)currentField.GetValue(null));
+                }
+            }
 
             //Get all classes that Inherit from `ConFunc` in all Loaded Assemblies
             List<Type> types = AppDomain.CurrentDomain.GetAssemblies()
