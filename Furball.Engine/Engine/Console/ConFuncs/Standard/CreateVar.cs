@@ -4,9 +4,8 @@ using Microsoft.Xna.Framework;
 
 namespace Furball.Engine.Engine.Console.ConFuncs.Standard {
     public class CreateVar : ConFunc {
-        public CreateVar() : base("create_var") {
+        public CreateVar() : base("create_var") {}
 
-        }
         public override (ExecutionResult result, string message) Run(string consoleInput) {
             string[] split = consoleInput.Split(" ");
 

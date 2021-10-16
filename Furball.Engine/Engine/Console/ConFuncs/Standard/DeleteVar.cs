@@ -2,8 +2,8 @@ using System.Collections.Generic;
 
 namespace Furball.Engine.Engine.Console.ConFuncs.Standard {
     public class DeleteVar : ConFunc {
-
         public DeleteVar() : base("delete_var") {}
+
         public override (ExecutionResult result, string message) Run(string consoleInput) {
             ConVar variable = Console.RegisteredConVars.GetValueOrDefault(consoleInput, null);
 

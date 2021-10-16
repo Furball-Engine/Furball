@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Furball.Engine.Engine.Console {
     public class ConsoleDrawable : UiTextBoxDrawable {
-        public event EventHandler<string> OnCommandFinished;
+        public event EventHandler<(ExecutionResult, string)> OnCommandFinished;
     
         public ConsoleDrawable() : base(new(FurballGame.DEFAULT_WINDOW_WIDTH / 2f, FurballGame.DEFAULT_WINDOW_HEIGHT / 2f), FurballGame.DEFAULT_FONT, "", 30, 300) {
             this.OriginType = OriginType.Center;
@@ -25,7 +25,7 @@ namespace Furball.Engine.Engine.Console {
         }
 
         private void OnTextCommit(object sender, string text) {
-            string result = Console.Run(text);
+            (ExecutionResult result, string message) result = Console.Run(text);
 
             this.OnCommandFinished?.Invoke(this, result);
 

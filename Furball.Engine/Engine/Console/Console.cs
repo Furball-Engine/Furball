@@ -54,11 +54,10 @@ namespace Furball.Engine.Engine.Console {
         }
         
         public static (ExecutionResult result, string message) Run(string input) {
-            string returnString = "";
-            ExecutionResult executionResult = ExecutionResult.Error;
+            (ExecutionResult result, string message) returnResult = (ExecutionResult.Error, "");
             
             if (input.Length == 0)
-                return (ExecutionResult.Error, returnString);
+                return (ExecutionResult.Error, returnResult.message);
 
             string[] splitCommand = input.Split(" ");
 
@@ -131,7 +130,9 @@ namespace Furball.Engine.Engine.Console {
 
                 ConVar var = RegisteredConVars.GetValueOrDefault(variableName, null);
 
-                returnString = var?.Set(argumentString) ?? "Unknown Variable! Did you mean to use a function? Prefix it with :";
+                (ExecutionResult result, string message) result = var?.Set(argumentString) ?? (ExecutionResult.Error, "Unknown Variable! Did you mean to use a function? Prefix it with :");
+
+                returnResult = result;
 
             } else {
                 string functionName   = splitCommand[0].TrimStart(':');
@@ -140,10 +141,10 @@ namespace Furball.Engine.Engine.Console {
 
                 (ExecutionResult result, string message) result = func?.Run(argumentString) ?? (ExecutionResult.Error, "Unknown Function! Did you mean to set a variable? Remove the :");
 
-                returnString = result.message;
+                returnResult = result;
             }
 
-            return (executionResult, returnString);
+            return returnResult;
         }
     }
 }

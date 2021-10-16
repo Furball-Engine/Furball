@@ -1,8 +1,6 @@
 namespace Furball.Engine.Engine.Console.ConFuncs {
     public class SetScreenResolution : ConFunc {
-        public SetScreenResolution() : base("cl_set_screen_resolution") {
-
-        }
+        public SetScreenResolution() : base("cl_set_screen_resolution") {}
 
         public override (ExecutionResult result, string message) Run(string consoleInput) {
             if (consoleInput.Trim().Length != 0)

@@ -2,9 +2,8 @@ using System.Collections.Generic;
 
 namespace Furball.Engine.Engine.Console.ConFuncs.Standard {
     public class Hook : ConFunc {
-        public Hook() : base("hook") {
+        public Hook() : base("hook") {}
 
-        }
         public override (ExecutionResult result, string message) Run(string consoleInput) {
             string[] arguments = consoleInput.Split(" ");
 
