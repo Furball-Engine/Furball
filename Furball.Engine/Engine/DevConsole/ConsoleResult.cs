@@ -7,5 +7,11 @@ namespace Furball.Engine.Engine.DevConsole {
             this.Message = message;
             this.Result  = result;
         }
+
+        public ExecutionResult GetResult(out string result) {
+            result = this.Message;
+
+            return this.Result;
+        }
     }
 }
