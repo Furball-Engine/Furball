@@ -241,8 +241,11 @@ namespace Furball.Engine.Engine.Console {
             List<string> lines = new List<string>();
 
             foreach ((string input, ExecutionResult result, string message) action in ConsoleLog) {
-                lines.Add($"] {action.input}");
-                lines.Add($"[{action.result}] {action.message}");
+                if(action.input != string.Empty)
+                    lines.Add($"] {action.input}");
+                if(action.result != ExecutionResult.Log)
+                    lines.Add($"[{action.result}] {action.message}");
+                else lines.Add($"::[Log] {action.message}");
             }
 
             File.WriteAllLines(filename, lines);

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Furball.Engine.Engine.Console;
 using Microsoft.Xna.Framework;
 
 namespace Furball.Engine.Engine.Helpers.Logger {
@@ -61,6 +62,8 @@ namespace Furball.Engine.Engine.Helpers.Logger {
             line.LineData = line.LineData.Replace("\r", "");
             line.LineData = line.LineData.Replace("\n", " ");
             _LoggerLines.Enqueue(line);
+
+            Console.Console.ConsoleLog.Add((string.Empty, ExecutionResult.Log, line.LineData));
         }
 
         public static void Log(string data, LoggerLevel level = null) {
