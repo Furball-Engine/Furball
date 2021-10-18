@@ -3,17 +3,25 @@ using Furball.Engine.Engine.Helpers;
 
 namespace Furball.Engine.Engine.DevConsole.Types {
     public class LongConVar : ConVar {
-        public Bindable<long> Value;
+        public Bindable<long> BindableValue;
+        public long Value {
+            get {
+                return this.BindableValue.Value;
+            }
+            set {
+                this.BindableValue.Value = value;
+            }
+        }
 
-        public LongConVar(string conVarName, long initialValue = 0, Action onChange = null) : base(conVarName, onChange) => this.Value = new Bindable<long>(initialValue);
+        public LongConVar(string conVarName, long initialValue = 0, Action onChange = null) : base(conVarName, onChange) => this.BindableValue = new Bindable<long>(initialValue);
 
         public override ConsoleResult Set(string consoleInput) {
             try {
-                this.Value.Value = long.Parse(consoleInput);
+                this.Value = long.Parse(consoleInput);
 
                 base.Set(string.Empty);
 
-                return new ConsoleResult(ExecutionResult.Success, $"{this.Name} set to {this.Value.Value}");
+                return new ConsoleResult(ExecutionResult.Success, $"{this.Name} set to {this.Value}");
             } catch (ArgumentException) {
                 return new ConsoleResult(ExecutionResult.Error, "`consoleInput` was null, how? i have no clue");
             } catch (FormatException) {

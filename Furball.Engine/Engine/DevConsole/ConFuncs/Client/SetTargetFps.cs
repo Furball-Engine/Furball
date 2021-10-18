@@ -20,7 +20,7 @@ namespace Furball.Engine.Engine.DevConsole.ConFuncs.Client {
                     return result;
             }
 
-            int value = ConVars.TargetFps.Value.Value;
+            int value = ConVars.TargetFps.Value;
 
             FurballGame.Instance.SetTargetFps(value);
 

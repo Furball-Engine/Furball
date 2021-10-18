@@ -296,7 +296,7 @@ namespace Furball.Engine.Engine.DevConsole {
         }
 
         public static ConsoleResult WriteLog() {
-            if (ConVars.WriteLog.Value.Value != 1)
+            if (ConVars.WriteLog.Value != 1)
                 return new ConsoleResult(ExecutionResult.Error, "Writing Logs disabled! change `cl_console_log` to 1 to enable Console Logging");
 
             string filename = Path.Combine(LogPath, $"{UnixTime.Now()}-console.txt");

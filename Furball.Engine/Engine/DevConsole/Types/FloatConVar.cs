@@ -3,17 +3,25 @@ using Furball.Engine.Engine.Helpers;
 
 namespace Furball.Engine.Engine.DevConsole.Types {
     public class FloatConVar : ConVar {
-        public Bindable<float> Value;
+        public Bindable<float> BindableValue;
+        public float Value {
+            get {
+                return this.BindableValue.Value;
+            }
+            set {
+                this.BindableValue.Value = value;
+            }
+        }
 
-        public FloatConVar(string conVarName, float initialValue = 0f, Action onChange = null) : base(conVarName, onChange) => this.Value = new Bindable<float>(initialValue);
+        public FloatConVar(string conVarName, float initialValue = 0f, Action onChange = null) : base(conVarName, onChange) => this.BindableValue = new Bindable<float>(initialValue);
 
         public override ConsoleResult Set(string consoleInput) {
             try {
-                this.Value.Value = float.Parse(consoleInput);
+                this.Value = float.Parse(consoleInput);
 
                 base.Set(string.Empty);
 
-                return new ConsoleResult(ExecutionResult.Success, $"{this.Name} set to {this.Value.Value}");
+                return new ConsoleResult(ExecutionResult.Success, $"{this.Name} set to {this.Value}");
             } catch (ArgumentException) {
                 return new ConsoleResult(ExecutionResult.Error, "`consoleInput` was null, how? i have no clue");
             } catch (FormatException) {

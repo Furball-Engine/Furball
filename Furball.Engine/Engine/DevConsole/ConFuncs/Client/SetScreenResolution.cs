@@ -11,7 +11,7 @@ namespace Furball.Engine.Engine.DevConsole.ConFuncs.Client {
             if (consoleInput.Trim().Length != 0)
                 ConVars.ScreenResolution.Set(consoleInput);
 
-            (int width, int height) = ConVars.ScreenResolution.Value.Value;
+            (int width, int height) = ConVars.ScreenResolution.Value;
 
             FurballGame.Instance.ChangeScreenSize(width, height);
 

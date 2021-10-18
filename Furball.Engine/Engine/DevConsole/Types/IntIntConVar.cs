@@ -3,7 +3,15 @@ using Furball.Engine.Engine.Helpers;
 
 namespace Furball.Engine.Engine.DevConsole.Types {
     public class IntIntConVar : ConVar {
-        public Bindable<(int, int)> Value = new((0, 0));
+        public Bindable<(int, int)> BindableValue = new((0, 0));
+        public (int, int) Value {
+            get {
+                return this.BindableValue.Value;
+            }
+            set {
+                this.BindableValue.Value = value;
+            }
+        }
 
         public IntIntConVar(string conVarName, string defaultValue, Action onChange = null) : base(conVarName, onChange) {
             if (defaultValue.Length != 0) {
@@ -12,7 +20,7 @@ namespace Furball.Engine.Engine.DevConsole.Types {
                 int x = int.Parse(splitInput[0]);
                 int y = int.Parse(splitInput[1]);
 
-                this.Value.Value = (x, y);
+                this.Value = (x, y);
             }
         }
 
@@ -24,7 +32,7 @@ namespace Furball.Engine.Engine.DevConsole.Types {
                 int x = int.Parse(splitInput[0]);
                 int y = int.Parse(splitInput[1]);
 
-                this.Value.Value = (x, y);
+                this.Value = (x, y);
 
                 base.Set(string.Empty);
 
@@ -39,8 +47,8 @@ namespace Furball.Engine.Engine.DevConsole.Types {
         }
 
         public override string ToString() {
-            int val1 = this.Value.Value.Item1;
-            int val2 = this.Value.Value.Item2;
+            int val1 = this.Value.Item1;
+            int val2 = this.Value.Item2;
 
             return $"{val1}:{val2}";
         }

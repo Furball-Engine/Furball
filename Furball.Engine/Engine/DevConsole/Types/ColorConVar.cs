@@ -4,9 +4,17 @@ using Microsoft.Xna.Framework;
 
 namespace Furball.Engine.Engine.DevConsole.Types {
     public class ColorConVar : ConVar {
-        public Bindable<Color> Value;
+        public Bindable<Color> BindableValue;
+        public Color Value {
+            get {
+                return this.BindableValue.Value;
+            }
+            set {
+                this.BindableValue.Value = value;
+            }
+        }
 
-        public ColorConVar(string conVarName, Color initialValue, Action onChange = null) : base(conVarName, onChange) => this.Value = new Bindable<Color>(initialValue);
+        public ColorConVar(string conVarName, Color initialValue, Action onChange = null) : base(conVarName, onChange) => this.BindableValue = new Bindable<Color>(initialValue);
 
         public override ConsoleResult Set(string consoleInput) {
             string[] split = consoleInput.Split(" ");
@@ -14,7 +22,7 @@ namespace Furball.Engine.Engine.DevConsole.Types {
             try {
                 switch (split.Length) {
                     case 1:
-                        this.Value.Value.FromHexString(consoleInput);
+                        this.Value.FromHexString(consoleInput);
                         break;
                     case 3: {
                         Color tempColor = new() {
@@ -24,7 +32,7 @@ namespace Furball.Engine.Engine.DevConsole.Types {
                             A = 255
                         };
 
-                        this.Value.Value = tempColor;
+                        this.Value = tempColor;
                         break;
                     }
                     case 4: {
@@ -35,7 +43,7 @@ namespace Furball.Engine.Engine.DevConsole.Types {
                             A = byte.Parse(split[3])
                         };
 
-                        this.Value.Value = tempColor;
+                        this.Value = tempColor;
                         break;
                     }
                     default:
@@ -51,9 +59,9 @@ namespace Furball.Engine.Engine.DevConsole.Types {
 
             base.Set(string.Empty);
 
-            return new ConsoleResult(ExecutionResult.Success, $"{this.Name} set to {this.Value.Value.ToHexString()}!");
+            return new ConsoleResult(ExecutionResult.Success, $"{this.Name} set to {this.Value.ToHexString()}!");
         }
 
-        public override string ToString() => this.Value.Value.ToHexString();
+        public override string ToString() => this.Value.ToHexString();
     }
 }
