@@ -1,10 +1,10 @@
 namespace Furball.Engine.Engine.DevConsole.ConFuncs.Client {
+    /// <summary>
+    /// `cl_set_screen_resolution`
+    /// Changes the Screen Resolution
+    /// Syntax: `cl_set_screen_resolution width height`
+    /// </summary>
     public class SetScreenResolution : ConFunc {
-        /// <summary>
-        /// `cl_set_screen_resolution`
-        /// Changes the Screen Resolution
-        /// Syntax: `cl_set_screen_resolution width height`
-        /// </summary>
         public SetScreenResolution() : base("cl_set_screen_resolution") {}
 
         public override ConsoleResult Run(string consoleInput) {

@@ -2,9 +2,13 @@ using System;
 using System.IO;
 
 namespace Furball.Engine.Engine.DevConsole.ConFuncs.Client {
+    /// <summary>
+    /// cl_clear_log_folder
+    /// Clears the `logs/` Folder
+    /// </summary>
     public class ClearLogFolder : ConFunc {
-
         public ClearLogFolder() : base("cl_clear_log_folder") {}
+
         public override ConsoleResult Run(string consoleInput) {
             string[] directories = Directory.GetFiles(DevConsole.LogPath);
 

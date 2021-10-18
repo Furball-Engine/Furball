@@ -1,4 +1,11 @@
 namespace Furball.Engine.Engine.DevConsole.ConFuncs.Client {
+    /// <summary>
+    /// cl_set_fps_unfocused_scale
+    /// Sets the Unfocused FPS Multiplier for when the window is out of focus
+    /// Example:
+    /// If the FPS limiter is set to 1000fps, and the Unfocused multiplier is set to 0.25,
+    /// the FPS when the window is unfocused is gonna be 250fps
+    /// </summary>
     public class SetFpsUnfocusedScale : ConFunc {
         public SetFpsUnfocusedScale() : base("cl_set_fps_unfocused_scale") {}
 

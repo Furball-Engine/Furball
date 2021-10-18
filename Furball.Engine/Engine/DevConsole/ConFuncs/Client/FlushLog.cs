@@ -1,4 +1,8 @@
 namespace Furball.Engine.Engine.DevConsole.ConFuncs.Client {
+    /// <summary>
+    /// cl_flush_log
+    /// Forces the log to be written
+    /// </summary>
     public class FlushLog : ConFunc {
         public FlushLog() : base("cl_flush_log") {}
 
