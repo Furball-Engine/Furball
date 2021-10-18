@@ -8,7 +8,7 @@ namespace Furball.Engine.Engine.DevConsole.ConFuncs.Input {
     public class AvailableInputMethods : ConFunc {
         public AvailableInputMethods() : base("im_input_methods") {}
 
-        public override ConsoleResult Run(string consoleInput) {
+        public override ConsoleResult Run(string[] consoleInput) {
             string result = "";
 
             for (int i = 0; i != FurballGame.InputManager.RegisteredInputMethods.Count; i++) {

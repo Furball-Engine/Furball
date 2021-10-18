@@ -4,6 +4,6 @@ namespace Furball.Engine.Engine.DevConsole.ConFuncs.FurballNative {
     /// </summary>
     public class OnExiting : ConFunc {
         public OnExiting () : base("nt_on_exiting") {}
-        public override ConsoleResult Run(string consoleInput) => new(ExecutionResult.Success, string.Empty);
+        public override ConsoleResult Run(string[] consoleInput) => new(ExecutionResult.Success, string.Empty);
     }
 }

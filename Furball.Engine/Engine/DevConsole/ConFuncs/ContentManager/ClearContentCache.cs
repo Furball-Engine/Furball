@@ -6,7 +6,7 @@ namespace Furball.Engine.Engine.DevConsole.ConFuncs.ContentManager {
         /// </summary>
         public ClearContentCache() : base("cmr_clear_cache") {}
 
-        public override ConsoleResult Run(string consoleInput) {
+        public override ConsoleResult Run(string[] consoleInput) {
             Graphics.ContentManager.ClearCache();
 
             return new ConsoleResult(ExecutionResult.Success, "ContentManager cache has been cleared.");

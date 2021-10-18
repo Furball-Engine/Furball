@@ -290,7 +290,16 @@ namespace Furball.Engine.Engine.DevConsole {
                 ConFunc func = RegisteredFunctions.GetValueOrDefault(functionName, null);
 
                 if (func != null) {
-                    ConsoleResult result = func.Run(argumentString);
+                    Regex regex = new("[^\\s\"']+|\"([^\"]*)\"|'([^']*)'");
+                    MatchCollection matches = regex.Matches(argumentString);
+
+                    List<string> matchesList = new();
+                    
+                    for (int i = 0; i < matches.Count; i++) {
+                        matchesList.Add(matches[i].Value.Trim('"'));
+                    }
+                    
+                    ConsoleResult result = func.Run(matchesList.ToArray());
                     returnResult = result;
 
                     func.CallOnCall(result.Message);

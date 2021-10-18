@@ -9,11 +9,13 @@ namespace Furball.Engine.Engine.DevConsole.ConFuncs.Client {
     public class SetTargetFps : ConFunc {
         public SetTargetFps() : base("cl_set_target_fps") {}
 
-        public override ConsoleResult Run(string consoleInput) {
-            if (consoleInput.Trim().Length != 0) {
+        public override ConsoleResult Run(string[] consoleInput) {
+            string input = consoleInput[0];
+            
+            if (input.Trim().Length != 0) {
                 //Done to prevent a stack overflow
                 ConVars.TargetFps.DisableOnChange = true;
-                var result = ConVars.TargetFps.Set(consoleInput);
+                ConsoleResult result = ConVars.TargetFps.Set(input.Trim());
                 ConVars.TargetFps.DisableOnChange = false;
 
                 if (result.Result == ExecutionResult.Error)

@@ -11,11 +11,9 @@ namespace Furball.Engine.Engine.DevConsole.ConFuncs.Standard {
     public class CreateVar : ConFunc {
         public CreateVar() : base("create_var") {}
 
-        public override ConsoleResult Run(string consoleInput) {
-            string[] split = consoleInput.Split(" ");
-
-            string type = split[0];
-            string name = split[1];
+        public override ConsoleResult Run(string[] consoleInput) {
+            string type = consoleInput[0];
+            string name = consoleInput[1];
 
             if (Regex.IsMatch(name, "/[!@#$%^&*()]/"))
                 return new ConsoleResult(ExecutionResult.Error, "Invalid Variable Name.");
@@ -23,7 +21,7 @@ namespace Furball.Engine.Engine.DevConsole.ConFuncs.Standard {
             if (DevConsole.RegisteredConVars.ContainsKey(name))
                 return new ConsoleResult(ExecutionResult.Error, "Variable of this name already exists.");
 
-            ConVar variable = null;
+            ConVar variable;
 
             switch (type) {
                 case "+color":

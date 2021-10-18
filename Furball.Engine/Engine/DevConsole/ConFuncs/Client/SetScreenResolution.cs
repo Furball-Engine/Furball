@@ -7,9 +7,11 @@ namespace Furball.Engine.Engine.DevConsole.ConFuncs.Client {
     public class SetScreenResolution : ConFunc {
         public SetScreenResolution() : base("cl_set_screen_resolution") {}
 
-        public override ConsoleResult Run(string consoleInput) {
-            if (consoleInput.Trim().Length != 0)
-                ConVars.ScreenResolution.Set(consoleInput);
+        public override ConsoleResult Run(string[] consoleInput) {
+            string input = consoleInput[0];
+            
+            if (input.Trim().Length != 0)
+                ConVars.ScreenResolution.Set(input.Trim());
 
             (int width, int height) = ConVars.ScreenResolution.Value;
 

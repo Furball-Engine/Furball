@@ -10,8 +10,8 @@ namespace Furball.Engine.Engine.DevConsole.ConFuncs.Standard {
         /// </summary>
         public DeleteVar() : base("delete_var") {}
 
-        public override ConsoleResult Run(string consoleInput) {
-            ConVar variable = DevConsole.RegisteredConVars.GetValueOrDefault(consoleInput, null);
+        public override ConsoleResult Run(string[] consoleInput) {
+            ConVar variable = DevConsole.RegisteredConVars.GetValueOrDefault(consoleInput[0], null);
 
             if (variable == null)
                 return new ConsoleResult(ExecutionResult.Error, "Variable not found.");

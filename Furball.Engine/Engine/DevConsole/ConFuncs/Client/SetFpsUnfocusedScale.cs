@@ -9,11 +9,13 @@ namespace Furball.Engine.Engine.DevConsole.ConFuncs.Client {
     public class SetFpsUnfocusedScale : ConFunc {
         public SetFpsUnfocusedScale() : base("cl_set_fps_unfocused_scale") {}
 
-        public override ConsoleResult Run(string consoleInput) {
-            if (consoleInput.Trim().Length != 0) {
+        public override ConsoleResult Run(string[] consoleInput) {
+            string input = consoleInput[0];
+            
+            if (input.Trim().Length != 0) {
                 //Done to prevent a stack overflow
                 ConVars.TargetFpsUnfocusedScale.DisableOnChange = true;
-                var result = ConVars.TargetFpsUnfocusedScale.Set(consoleInput);
+                var result = ConVars.TargetFpsUnfocusedScale.Set(input.Trim());
                 ConVars.TargetFpsUnfocusedScale.DisableOnChange = false;
 
                 if (result.Result == ExecutionResult.Error)

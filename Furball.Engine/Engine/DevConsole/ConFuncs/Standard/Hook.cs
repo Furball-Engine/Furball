@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace Furball.Engine.Engine.DevConsole.ConFuncs.Standard {
@@ -9,15 +10,13 @@ namespace Furball.Engine.Engine.DevConsole.ConFuncs.Standard {
     public class Hook : ConFunc {
         public Hook() : base("hook") {}
 
-        public override ConsoleResult Run(string consoleInput) {
-            string[] arguments = consoleInput.Split(" ");
-
-            if (arguments.Length != 3)
+        public override ConsoleResult Run(string[] consoleInput) {
+            if (consoleInput.Length != 3)
                 return new ConsoleResult(ExecutionResult.Error, "Invalid Syntax. Example: `hook +variable hook_target hook_action`");
 
-            string hookType = arguments[0];
-            string hookTarget = arguments[1];
-            string hookAction = arguments[2];
+            string hookType   = consoleInput[0];
+            string hookTarget = consoleInput[1];
+            string hookAction = consoleInput[2];
 
             switch (hookType) {
                 //TODO: add function hooks
@@ -28,7 +27,7 @@ namespace Furball.Engine.Engine.DevConsole.ConFuncs.Standard {
                         if (variable != null) {
                             if (action != null) {
                                 variable.OnChange += delegate {
-                                    action.Run(string.Empty);
+                                    action.Run(Array.Empty<string>());
                                 };
                             } else return new ConsoleResult(ExecutionResult.Error, "No such Function Found!");
                         } else return new ConsoleResult(ExecutionResult.Error, "No such Variable found!");
@@ -42,7 +41,7 @@ namespace Furball.Engine.Engine.DevConsole.ConFuncs.Standard {
                     if (function != null) {
                         if (action != null) {
                             function.OnCall += delegate {
-                                action.Run(string.Empty);
+                                action.Run(Array.Empty<string>());
                             };
                         } else return new ConsoleResult(ExecutionResult.Error, "No such Function Found!");
                     } else return new ConsoleResult(ExecutionResult.Error, "No such Variable found!");

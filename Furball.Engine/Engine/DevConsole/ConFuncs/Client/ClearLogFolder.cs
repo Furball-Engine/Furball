@@ -9,7 +9,7 @@ namespace Furball.Engine.Engine.DevConsole.ConFuncs.Client {
     public class ClearLogFolder : ConFunc {
         public ClearLogFolder() : base("cl_clear_log_folder") {}
 
-        public override ConsoleResult Run(string consoleInput) {
+        public override ConsoleResult Run(string[] consoleInput) {
             string[] directories = Directory.GetFiles(DevConsole.LogPath);
 
             try {
