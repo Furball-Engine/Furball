@@ -1,5 +1,3 @@
-using System;
-
 namespace Furball.Engine.Engine.DevConsole.ConFuncs.Client {
     /// <summary>
     /// cl_set_target_fps
