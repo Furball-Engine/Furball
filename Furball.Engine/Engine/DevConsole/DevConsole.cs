@@ -29,8 +29,13 @@ namespace Furball.Engine.Engine.DevConsole {
             //Hooks cl_target_fps to cl_set_target_fps
             //So that when cl_target_fps gets changed it automatically calls cl_set_target_fps
             ":hook +variable cl_target_fps cl_set_target_fps",
-            //Sets target framerate to 1000fps
-            ":cl_set_target_fps 1000"
+            //Hooks cl_fps_unfocused_scale to cl_set_fps_unfocused_scale
+            //So that when cl_fps_unfocused_scale gets changed it automatically calls cl_set_fps_unfocused_scale
+            ":hook +variable cl_fps_unfocused_scale cl_set_fps_unfocused_scale",
+            //Sets target framerate to cl_target_fps
+            ":cl_set_target_fps $cl_target_fps",
+            //Sets the Unfocused Scale to cl_fps_unfocused_scale
+            ":cl_set_fps_unfocused_scale $cl_fps_unfocused_scale"
         };
 
         public static void Initialize() {

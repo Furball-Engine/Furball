@@ -174,13 +174,20 @@ namespace Furball.Engine {
             base.OnExiting(sender, args);
         }
 
-        public void SetTargetFps(int fps) {
+        public void SetTargetFps(int fps, double unfocusedScale = -1) {
             if (fps != -1) {
                 this.TargetElapsedTime = TimeSpan.FromMilliseconds(1000.0 / (double) fps);
                 this.IsFixedTimeStep   = true;
             } else {
                 this.TargetElapsedTime = TimeSpan.FromTicks(1);
                 this.IsFixedTimeStep   = false;
+            }
+
+            if (unfocusedScale != -1) {
+                double newFps = fps * unfocusedScale;
+                double milliseconds = 1000.0 / (double) newFps;
+
+                this.InactiveSleepTime = TimeSpan.FromMilliseconds(milliseconds);
             }
         }
 

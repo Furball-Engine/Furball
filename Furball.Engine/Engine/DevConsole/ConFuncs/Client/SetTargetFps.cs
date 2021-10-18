@@ -7,8 +7,8 @@ namespace Furball.Engine.Engine.DevConsole.ConFuncs.Client {
     /// <remarks>if called with the value of -1, it sets it to unlimited</remarks>
     /// </summary>
     public class SetTargetFps : ConFunc {
-
         public SetTargetFps() : base("cl_set_target_fps") {}
+
         public override ConsoleResult Run(string consoleInput) {
             if (consoleInput.Trim().Length != 0) {
                 //Done to prevent a stack overflow
