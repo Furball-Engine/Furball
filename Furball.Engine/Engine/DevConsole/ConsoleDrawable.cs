@@ -1,13 +1,14 @@
 using System;
 using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Graphics.Drawables.UiElements;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 namespace Furball.Engine.Engine.DevConsole {
     public class ConsoleDrawable : UiTextBoxDrawable {
         public event EventHandler<ConsoleResult> OnCommandFinished;
     
-        public ConsoleDrawable() : base(new(FurballGame.DEFAULT_WINDOW_WIDTH / 2f, FurballGame.DEFAULT_WINDOW_HEIGHT / 2f), FurballGame.DEFAULT_FONT, "", 30, 300) {
+        public ConsoleDrawable() : base(new Vector2(FurballGame.DEFAULT_WINDOW_WIDTH / 2f, FurballGame.DEFAULT_WINDOW_HEIGHT / 2f), FurballGame.DEFAULT_FONT, "", 30, 300) {
             this.OriginType = OriginType.Center;
             this.Visible    = false;
 

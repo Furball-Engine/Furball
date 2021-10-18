@@ -34,7 +34,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
             this.OutlineColor  = outlineColor;
             this.ColorOverride = barColor;
 
-            this.TextDrawable = new(Vector2.Zero, font, "", (int)(size.Y * 0.9f)) {
+            this.TextDrawable = new TextDrawable(Vector2.Zero, font, "", (int)(size.Y * 0.9f)) {
                 ColorOverride = textColor
             };
         }

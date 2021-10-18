@@ -7,7 +7,7 @@ namespace Furball.Engine.Engine.DevConsole.ConFuncs.Standard {
         public Print() : base("print") {}
 
         public override ConsoleResult Run(string consoleInput) {
-            return new ConsoleResult(ExecutionResult.Success, consoleInput);
+            return new(ExecutionResult.Success, consoleInput);
         }
     }
 }

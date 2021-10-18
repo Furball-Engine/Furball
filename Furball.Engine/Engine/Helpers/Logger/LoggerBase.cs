@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Furball.Engine.Engine.Helpers.Logger {
     public abstract class LoggerBase : IDisposable {
         public LoggerBase(List<LoggerLevel> level = null) {
-            level ??= new() {
+            level ??= new List<LoggerLevel>() {
                 LoggerLevel.All
             };
             

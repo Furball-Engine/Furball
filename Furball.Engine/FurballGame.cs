@@ -83,7 +83,7 @@ namespace Furball.Engine {
 
             GameTimeSource    = new GameTimeSource();
             Instance          = this;
-            GameTimeScheduler = new();
+            GameTimeScheduler = new Scheduler();
             
             Logger.AddLogger(new ConsoleLogger());
             Logger.AddLogger(new DevConsoleLogger());
@@ -95,7 +95,8 @@ namespace Furball.Engine {
             this.InitializeLocalizations();
             
             Logger.Log(
-                $@"Starting Furball {(Environment.Is64BitProcess ? "64-bit" : "32-bit")} on {Environment.OSVersion.VersionString} {(Environment.Is64BitOperatingSystem ? "64-bit" : "32-bit")}",
+                $@"Starting Furball {(Environment.Is64BitProcess ? "64-bit" : "32-bit")}"+
+                $@"on {Environment.OSVersion.VersionString} {(Environment.Is64BitOperatingSystem ? "64-bit" : "32-bit")}",
                 LoggerLevelEngineInfo.Instance
             );
 
@@ -104,7 +105,7 @@ namespace Furball.Engine {
 
             _stopwatch.Start();
 
-            InputManager = new();
+            InputManager = new InputManager();
             InputManager.RegisterInputMethod(new MonogameMouseInputMethod());
             InputManager.RegisterInputMethod(new MonogameKeyboardInputMethod());
 
@@ -116,17 +117,17 @@ namespace Furball.Engine {
 
             AudioEngine.Initialize(this.Window.Handle);
 
-            DrawableManager             = new();
-            DebugOverlayDrawableManager = new();
+            DrawableManager             = new DrawableManager();
+            DebugOverlayDrawableManager = new DrawableManager();
 
             #region Console result
 
-            ConsoleDrawable = new();
+            ConsoleDrawable = new ConsoleDrawable();
             DebugOverlayDrawableManager.Add(ConsoleDrawable);
 
             TextDrawable consoleResult = new(new Vector2(DEFAULT_WINDOW_WIDTH / 2f, DEFAULT_WINDOW_HEIGHT * 0.75f), DEFAULT_FONT, "", 30) {
                 OriginType    = OriginType.Center,
-                ColorOverride = new(255, 255, 255, 0)
+                ColorOverride = new Color(255, 255, 255, 0)
             };
 
             ConsoleDrawable.OnCommandFinished += delegate(object _, ConsoleResult result) {
@@ -148,9 +149,9 @@ namespace Furball.Engine {
 
             #endregion
 
-            _ConsoleAutoComplete = new(new(DEFAULT_WINDOW_WIDTH / 2f, DEFAULT_WINDOW_HEIGHT * 0.4f), DEFAULT_FONT, "", 30) {
+            _ConsoleAutoComplete = new TextDrawable(new Vector2(DEFAULT_WINDOW_WIDTH / 2f, DEFAULT_WINDOW_HEIGHT * 0.4f), DEFAULT_FONT, "", 30) {
                 OriginType    = OriginType.BottomCenter,
-                ColorOverride = new(255, 255, 255, 0)
+                ColorOverride = new Color(255, 255, 255, 0)
             };
 
             ConsoleDrawable.OnLetterTyped   += this.ConsoleOnLetterTyped;
@@ -268,7 +269,7 @@ namespace Furball.Engine {
 
             this.ChangeScreenSize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
 
-            DebugCounter = new();
+            DebugCounter = new DebugCounter();
             DebugOverlayDrawableManager.Add(DebugCounter);
 
             DevConsole.Initialize();

@@ -16,7 +16,7 @@ namespace Furball.Engine.Engine {
         /// <summary>
         /// Lock for CurrentFadeState because Threads...
         /// </summary>
-        private static object _fadeLock = new object();
+        private static object _fadeLock = new();
         /// <summary>
         /// Calls the Transition Draw Method
         /// </summary>
