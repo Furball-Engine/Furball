@@ -15,7 +15,7 @@ namespace Furball.Engine.Engine.DevConsole.Types {
 
         public IntIntConVar(string conVarName, string defaultValue, Action onChange = null) : base(conVarName, onChange) {
             if (defaultValue.Length != 0) {
-                string[] splitInput = defaultValue.Split(" ");
+                string[] splitInput = defaultValue.Split(":");
 
                 int x = int.Parse(splitInput[0]);
                 int y = int.Parse(splitInput[1]);
