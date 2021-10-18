@@ -54,6 +54,8 @@ namespace Furball.Engine.Engine.DevConsole {
                 }
             }
 
+            AddMessage($"Found all Engine ConVars, {RegisteredConVars.Count} ConVars found");
+
             //Get all classes that Inherit from `ConFunc` in all Loaded Assemblies
             List<Type> types = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(s => s.GetTypes())
@@ -68,14 +70,16 @@ namespace Furball.Engine.Engine.DevConsole {
                 AddConFunc(function);
             }
 
-            ConsoleLog.Add((string.Empty, new ConsoleResult(ExecutionResult.Message, "Executing AutoRun...")));
+            AddMessage($"Found all ConFuncs, {RegisteredFunctions.Count} ConFuncs found");
+
+            AddMessage("Executing AutoRun...");
 
             //Run AutoRun
             for (int i = 0; i != AutoRun.Length; i++) {
                 Run(AutoRun[i]);
             }
 
-            ConsoleLog.Add((string.Empty, new ConsoleResult(ExecutionResult.Message, "AutoRun script complete!")));
+            AddMessage("AutoRun script complete!");
         }
         //Because the fields are required to be static this is the only way that i can think of for devs to add their own ConVarStores like `ConVars`
         public static void AddConVarStore(Type store) {
@@ -84,14 +88,20 @@ namespace Furball.Engine.Engine.DevConsole {
 
             FieldInfo[] fields = store.GetFields();
 
+            int count = 0;
+
             for (int i = 0; i != fields.Length; i++) {
                 FieldInfo currentField = fields[i];
 
                 if(currentField.FieldType.IsSubclassOf(typeof(ConVar))) {
                     //apperantly when the field is static u can use null in GetValue
                     AddConVar((ConVar)currentField.GetValue(null));
+
+                    count++;
                 }
             }
+
+            AddMessage($"Added ConVarStore {store.Name}, {count} ConVars found. {RegisteredConVars.Count} total");
         }
 
         public static void AddConVar(ConVar conVar) => RegisteredConVars.Add(conVar.Name, conVar);
@@ -103,6 +113,8 @@ namespace Furball.Engine.Engine.DevConsole {
             byte[] data = ContentManager.LoadRawAsset(Path.Combine(ScriptPath, filename), ContentSource.External, true);
 
             string file = Encoding.Default.GetString(data);
+
+            AddMessage($"Running file { Path.GetFileName(filename) }");
 
             await Task.Run(
                 () => {
@@ -116,6 +128,8 @@ namespace Furball.Engine.Engine.DevConsole {
         
         public static ConsoleResult Run(string input, bool userRun = true, bool disableLog = false) {
             ConsoleResult returnResult = new ConsoleResult(ExecutionResult.Success, "");
+
+            List<(string, ConsoleResult)> postExecResults = new();
 
             if (input.Length == 0) {
                 returnResult = new ConsoleResult(ExecutionResult.Error, returnResult.Message);
@@ -147,8 +161,6 @@ namespace Furball.Engine.Engine.DevConsole {
             bool run = true;
             int evalIndex = 0;
 
-            //Considering adding a Lenient Eval Block which acts like the old eval blocks which returned either way
-            //Would also use &(<code>) instead of %(<code>)
             #region Strict Eval Blocks (Breaks when Eval returns an Error)
 
             do {
@@ -156,7 +168,7 @@ namespace Furball.Engine.Engine.DevConsole {
                     string match = (argumentString + " ").SubstringWithEnds("%(", ")");
                     string code = match.Substring("%(", ")");
 
-                    ConsoleResult result = Run(code);
+                    ConsoleResult result = Run(code, userRun, true);
 
                     if (result.Result == ExecutionResult.Error) {
                         returnResult = new ConsoleResult(ExecutionResult.Error, $"Eval at index {evalIndex} failed to finish. Error Message: \"{result.Message}\"");
@@ -171,6 +183,34 @@ namespace Furball.Engine.Engine.DevConsole {
                     run = false;
                 }
             } while (run);
+
+            #endregion
+
+            #region Lenient Eval Blocks (Dont break when Eval returns an error, instead just returns string.Empty)
+
+            run = true;
+
+            do {
+                try {
+                    string match = (argumentString + " ").SubstringWithEnds("&(", ")");
+                    string code = match.Substring("&(", ")");
+
+                    ConsoleResult result = Run(code, userRun, true);
+
+                    if (result.Result == ExecutionResult.Error) {
+                        postExecResults.Add((string.Empty, new ConsoleResult(ExecutionResult.Warning, $"Eval at index {evalIndex} failed to finish. Error Message: \"{result.Message}\"")));
+                        result.Message = "";
+                    }
+
+                    argumentString = argumentString.Replace(match, result.Message);
+
+                    evalIndex++;
+                }
+                catch (ArgumentException ex) {
+                    run = false;
+                }
+            } while (run);
+
 
             #endregion
 
@@ -261,11 +301,23 @@ namespace Furball.Engine.Engine.DevConsole {
 
             ConsoleEnd: ;
 
-            if(!disableLog)
+            if (!disableLog) {
                 ConsoleLog.Add((input, returnResult));
+
+                if (postExecResults.Count != 0) {
+                    AddMessage("Post Execution Warnings/Messages:");
+                    ConsoleLog.AddRange(postExecResults);
+                }
+            }
 
             return returnResult;
         }
+
+        #region Console Log Helper
+
+        public static void AddMessage(string message) => ConsoleLog.Add((string.Empty, new ConsoleResult(ExecutionResult.Message, message)));
+
+        #endregion
 
         public static string[] GetLog() {
             List<string> lines = new List<string>();
