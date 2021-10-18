@@ -14,7 +14,7 @@ namespace Furball.Engine.Engine.DevConsole {
         /// <summary>
         /// Target FPS for the Client
         /// </summary>
-        public static IntConVar    TargetFps        = new("cl_target_fps", -1);
+        public static IntConVar    TargetFps        = new("cl_target_fps", 1000);
         /// <summary>
         /// Whether or not the Console should be logged and saved upon closing the game
         /// </summary>

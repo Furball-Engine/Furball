@@ -28,7 +28,9 @@ namespace Furball.Engine.Engine.DevConsole {
             ":hook +variable cl_screen_resolution cl_set_screen_resolution",
             //Hooks cl_target_fps to cl_set_target_fps
             //So that when cl_target_fps gets changed it automatically calls cl_set_target_fps
-            ":hook +variable cl_target_fps cl_set_target_fps"
+            ":hook +variable cl_target_fps cl_set_target_fps",
+            //Sets target framerate to 1000fps
+            ":cl_set_target_fps 1000"
         };
 
         public static void Initialize() {
@@ -286,7 +288,7 @@ namespace Furball.Engine.Engine.DevConsole {
                 case ExecutionResult.Success:
                 case ExecutionResult.Warning:
                 case ExecutionResult.Error:
-                    lines.Add($"[{action.result}] {action.result.Message}");
+                    lines.Add($"[{action.result.Result}] {action.result.Message}");
                     break;
             }
 

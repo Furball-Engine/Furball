@@ -119,12 +119,10 @@ namespace Furball.Engine {
             DrawableManager             = new();
             DebugOverlayDrawableManager = new();
 
-            DevConsole.Initialize();
+            #region Console result
 
             ConsoleDrawable = new();
             DebugOverlayDrawableManager.Add(ConsoleDrawable);
-
-            #region Console result
 
             TextDrawable consoleResult = new(new Vector2(DEFAULT_WINDOW_WIDTH / 2f, DEFAULT_WINDOW_HEIGHT * 0.75f), DEFAULT_FONT, "", 30) {
                 OriginType    = OriginType.Center,
@@ -165,7 +163,7 @@ namespace Furball.Engine {
             WhitePixel.SetData(white);
 
             LocalizationManager.ReadTranslations();
-            
+
             base.Initialize();
         }
 
@@ -264,8 +262,9 @@ namespace Furball.Engine {
             this.ChangeScreenSize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
 
             DebugCounter = new();
-
             DebugOverlayDrawableManager.Add(DebugCounter);
+
+            DevConsole.Initialize();
 
             ScreenManager.SetTransition(new FadeTransition());
         }
