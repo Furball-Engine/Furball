@@ -1,6 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
@@ -44,6 +44,8 @@ namespace Furball.Engine.Engine.Input {
         /// The currently registered InputMethods
         /// </summary>
         private List<InputMethod> registeredInputMethods = new();
+
+        public IReadOnlyList<InputMethod> RegisteredInputMethods => new List<InputMethod>(this.registeredInputMethods);
 
         /// <summary>
         /// Called when a key is pressed

@@ -41,7 +41,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         }
 
         private void OnKeyDown(object sender, Keys e) {
-            if (!this.Selected) return;
+            if (!this.Selected && !this.Visible) return;
             
             switch(e) {
                 case Keys.V when FurballGame.InputManager.HeldKeys.Contains(Keys.LeftControl): {
@@ -56,7 +56,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
 
         private void OnMouseDown(object sender, ((MouseButton heldButton, Point position) args, string name) e) {
             Vector2   tempSize = this.Size;
-            Rectangle sizeRect = new(new Point((int)this.Position.X, (int)this.Position.Y) - this.LastCalculatedOrigin.ToPoint(), new((int)tempSize.X, (int)tempSize.Y));
+            Rectangle sizeRect = new(new Point((int)this.Position.X, (int)this.Position.Y) - this.LastCalculatedOrigin.ToPoint(), new Point((int)tempSize.X, (int)tempSize.Y));
             
             if (sizeRect.Contains(e.args.position) && this.Visible && this.Clickable) {
                 this.Selected = true;

@@ -205,7 +205,16 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                 
                 Vector2 origin = CalculateNewOriginPosition(currentDrawable);
                 currentDrawable.LastCalculatedOrigin = origin;
-                
+                //TODO:
+                //Potentially give ScaledPosition and ScaledScale
+                //Which would just be:
+                /*
+                    args.Position *= FurballGame.VerticalRatio;
+                    args.Scale    *= FurballGame.VerticalRatio;
+                 */
+                //Since literally every single drawable does this, might aswell make it easier,
+                //also given that drawablemanagers will have to scale on their own width and height instead of screen width and height,
+                //itll def make developing easier
                 DrawableManagerArgs args = new() {
                     Color      = currentDrawable.ColorOverride,
                     Effects    = currentDrawable.SpriteEffect,

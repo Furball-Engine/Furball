@@ -23,7 +23,7 @@ namespace Furball.Engine.Engine.Helpers {
         public void ScheduleMethod(ScheduledMethod.Method method, int time, bool runOnDispose = false) {
             Logger.Logger.Log($"ScheduledMethod scheduled at {time}, {(runOnDispose ? "does" : "does not")} run on dispose", LoggerLevelSchedulerInfo.Instance);
 
-            this._scheduledMethods.Add(new(method, time, runOnDispose));
+            this._scheduledMethods.Add(new ScheduledMethod(method, time, runOnDispose));
         }
 
         public void Dispose(int time) {

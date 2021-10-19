@@ -1,0 +1,11 @@
+Most ConVars and ConFuncs will be prefixed with a 2-3 letter prefix, which is how most ConVars/Funcs are named
+Here are the prefixes and their meanings:
+
+cl  : Client (anything to do with the client, stuff like screen resolution etc)
+sl  : Sound Library (anything to do with audio)
+gl  : Graphics Library (anything to do with graphics)
+net : Networking
+cmr : Content Manager
+sv  : Server
+im  : Input Manager
+nt  : Native Function (Stuff like nt_begin_run nt_on_exiting, they get called when the Game BeginRun() or OnExiting() Methods get called)

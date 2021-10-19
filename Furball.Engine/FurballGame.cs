@@ -1,13 +1,19 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using FontStashSharp;
 using Furball.Engine.Engine;
 using Furball.Engine.Engine.Audio;
+using Furball.Engine.Engine.DevConsole;
 using Furball.Engine.Engine.Debug;
 using Furball.Engine.Engine.Graphics;
+using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
+using Furball.Engine.Engine.Graphics.Drawables.Tweens;
+using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes;
 using Furball.Engine.Engine.Helpers;
 using Furball.Engine.Engine.Helpers.Logger;
 using Furball.Engine.Engine.Input;
@@ -53,6 +59,9 @@ namespace Furball.Engine {
         public static Rectangle DisplayRect => new(0, 0, (int)Math.Ceiling(Instance.GraphicsDevice.Viewport.Width / VerticalRatio), (int)Math.Ceiling(Instance.GraphicsDevice.Viewport.Height / VerticalRatio));
         public static Rectangle DisplayRectActual => new(0, 0, Instance.GraphicsDevice.Viewport.Width, Instance.GraphicsDevice.Viewport.Height);
 
+        public static  ConsoleDrawable ConsoleDrawable;
+        private static TextDrawable    _ConsoleAutoComplete;
+        
         public static byte[] DefaultFontData;
         public static readonly FontSystem DEFAULT_FONT = new(new FontSystemSettings {
             FontResolutionFactor = 2f,
@@ -74,10 +83,10 @@ namespace Furball.Engine {
 
             GameTimeSource    = new GameTimeSource();
             Instance          = this;
-            GameTimeScheduler = new();
+            GameTimeScheduler = new Scheduler();
             
             Logger.AddLogger(new ConsoleLogger());
-
+            Logger.AddLogger(new DevConsoleLogger());
 
             this._startScreen = startScreen;
         }
@@ -86,7 +95,8 @@ namespace Furball.Engine {
             this.InitializeLocalizations();
             
             Logger.Log(
-                $@"Starting Furball {(Environment.Is64BitProcess ? "64-bit" : "32-bit")} on {Environment.OSVersion.VersionString} {(Environment.Is64BitOperatingSystem ? "64-bit" : "32-bit")}",
+                $@"Starting Furball {(Environment.Is64BitProcess ? "64-bit" : "32-bit")}"+
+                $@"on {Environment.OSVersion.VersionString} {(Environment.Is64BitOperatingSystem ? "64-bit" : "32-bit")}",
                 LoggerLevelEngineInfo.Instance
             );
 
@@ -95,11 +105,11 @@ namespace Furball.Engine {
 
             _stopwatch.Start();
 
-            InputManager = new();
+            InputManager = new InputManager();
             InputManager.RegisterInputMethod(new MonogameMouseInputMethod());
             InputManager.RegisterInputMethod(new MonogameKeyboardInputMethod());
 
-            if (RuntimeInfo.IsDebug()) {
+            if (ConVars.DebugOverlay.Value == 1) {
                 InputManager.OnKeyDown += delegate(object _, Keys keys) {
                     if (keys == Keys.F11) DrawDebugOverlay = !DrawDebugOverlay;
                 };
@@ -107,16 +117,117 @@ namespace Furball.Engine {
 
             AudioEngine.Initialize(this.Window.Handle);
 
-            DrawableManager             = new();
-            DebugOverlayDrawableManager = new();
+            DrawableManager             = new DrawableManager();
+            DebugOverlayDrawableManager = new DrawableManager();
+
+            #region Console result
+
+            ConsoleDrawable = new ConsoleDrawable();
+            DebugOverlayDrawableManager.Add(ConsoleDrawable);
+
+            TextDrawable consoleResult = new(new Vector2(DEFAULT_WINDOW_WIDTH / 2f, DEFAULT_WINDOW_HEIGHT * 0.75f), DEFAULT_FONT, "", 30) {
+                OriginType    = OriginType.Center,
+                ColorOverride = new Color(255, 255, 255, 0)
+            };
+
+            ConsoleDrawable.OnCommandFinished += delegate(object _, ConsoleResult result) {
+                consoleResult.Tweens.Clear();
+                consoleResult.Tweens.Add(new FloatTween(TweenType.Fade, consoleResult.ColorOverride.A / 255f, 1f, Time,        Time + 100));
+                consoleResult.Tweens.Add(new FloatTween(TweenType.Fade, 1f,                                   0f, Time + 4100, Time + 5100));
+
+                consoleResult.Text = result.Message;
+
+                consoleResult.ColorOverride = result.Result switch {
+                    ExecutionResult.Success => Color.White,
+                    ExecutionResult.Error   => Color.OrangeRed,
+                    ExecutionResult.Warning => Color.Orange,
+                    _                       => throw new ArgumentOutOfRangeException()
+                };
+            };
+
+            DebugOverlayDrawableManager.Add(consoleResult);
+
+            #endregion
+
+            _ConsoleAutoComplete = new TextDrawable(new Vector2(DEFAULT_WINDOW_WIDTH / 2f, DEFAULT_WINDOW_HEIGHT * 0.4f), DEFAULT_FONT, "", 30) {
+                OriginType    = OriginType.BottomCenter,
+                ColorOverride = new Color(255, 255, 255, 0)
+            };
+
+            ConsoleDrawable.OnLetterTyped   += this.ConsoleOnLetterTyped;
+            ConsoleDrawable.OnLetterRemoved += this.ConsoleOnLetterTyped;
+
+            DebugOverlayDrawableManager.Add(_ConsoleAutoComplete);
 
             WhitePixel = new Texture2D(this.GraphicsDevice, 1, 1);
             Color[] white = { Color.White };
             WhitePixel.SetData(white);
 
             LocalizationManager.ReadTranslations();
-            
+
             base.Initialize();
+        }
+
+        protected override void OnExiting(object sender, EventArgs args) {
+            DevConsole.Run(":nt_on_exiting", false, true);
+            DevConsole.WriteLog();
+
+            base.OnExiting(sender, args);
+        }
+
+        public void SetTargetFps(int fps, double unfocusedScale = -1) {
+            if (fps != -1) {
+                this.TargetElapsedTime = TimeSpan.FromMilliseconds(1000.0 / (double) fps);
+                this.IsFixedTimeStep   = true;
+            } else {
+                this.TargetElapsedTime = TimeSpan.FromTicks(1);
+                this.IsFixedTimeStep   = false;
+            }
+
+            if (unfocusedScale != -1) {
+                double newFps = fps * unfocusedScale;
+                double milliseconds = 1000.0 / (double) newFps;
+
+                this.InactiveSleepTime = TimeSpan.FromMilliseconds(milliseconds);
+            }
+        }
+
+        private void ConsoleOnLetterTyped(object? sender, char e) {
+            _ConsoleAutoComplete.Tweens.Clear();
+            _ConsoleAutoComplete.Tweens.Add(new FloatTween(TweenType.Fade, _ConsoleAutoComplete.ColorOverride.A / 255f, 1f, Time,        Time + 100));
+            _ConsoleAutoComplete.Tweens.Add(new FloatTween(TweenType.Fade, 1f,                                          0f, Time + 2100, Time + 3100));
+
+            string input = ConsoleDrawable.Text;
+
+            if (input.StartsWith(':')) {
+                input = input.TrimStart(':');
+
+                IEnumerable<KeyValuePair<string, ConFunc>> functions = DevConsole.RegisteredFunctions.Where(x => x.Key.StartsWith(input));
+
+                string text = "";
+
+                int i = 0;
+                foreach (KeyValuePair<string, ConFunc> pair in functions) {
+                    if (i == 5) break;
+                    text += $"{pair.Key}\n";
+                    i++;
+                }
+
+                _ConsoleAutoComplete.Text = text.Trim();
+            } else {
+                IEnumerable<KeyValuePair<string, ConVar>> convars = DevConsole.RegisteredConVars.Where(x => x.Key.StartsWith(input));
+
+                string text = "";
+
+                int i = 0;
+                foreach (KeyValuePair<string, ConVar> pair in convars) {
+                    if (i == 5) break;
+                    text += $"{pair.Key}\n";
+                    i++;
+                }
+
+                _ConsoleAutoComplete.Text = text.Trim();
+            }
         }
 
         protected override void EndRun() {
@@ -133,6 +244,7 @@ namespace Furball.Engine {
         }
 
         protected override void BeginRun() {
+            DevConsole.Run(":nt_begin_run", false, true);
             ScreenManager.ChangeScreen(this._startScreen);
         }
 
@@ -157,9 +269,10 @@ namespace Furball.Engine {
 
             this.ChangeScreenSize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
 
-            DebugCounter = new();
-
+            DebugCounter = new DebugCounter();
             DebugOverlayDrawableManager.Add(DebugCounter);
+
+            DevConsole.Initialize();
 
             ScreenManager.SetTransition(new FadeTransition());
         }
@@ -180,7 +293,7 @@ namespace Furball.Engine {
 
             DrawableManager.Update(gameTime);
 
-            if (RuntimeInfo.IsDebug())
+            if (ConVars.DebugOverlay.Value == 1)
                 DebugOverlayDrawableManager.Update(gameTime);
 
             if (RuntimeInfo.LoggerEnabled())
@@ -204,7 +317,8 @@ namespace Furball.Engine {
             ScreenManager.DrawTransition(gameTime, DrawableBatch);
             
             DrawableManager.Draw(gameTime, DrawableBatch);
-            if (RuntimeInfo.IsDebug() && DrawDebugOverlay)
+
+            if (ConVars.DebugOverlay.Value == 1)
                 DebugOverlayDrawableManager.Draw(gameTime, DrawableBatch);
         }
 

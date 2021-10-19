@@ -22,6 +22,8 @@ namespace Furball.Engine.Engine.Helpers {
             this.OnChange = null;
         }
 
+        public override string ToString() => this._value?.ToString();
+
         public static implicit operator pT(Bindable<pT> bindable) => bindable.Value;
     }
 }

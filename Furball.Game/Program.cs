@@ -1,12 +1,8 @@
-﻿using System;
-
-namespace Furball.Game {
+﻿namespace Furball.Game {
     public static class Program {
-        [STAThread]
         private static void Main() {
-            using (FurballTestGame game = new()) {
+            using(FurballTestGame game = new FurballTestGame())
                 game.Run();
-            }
         }
     }
 }

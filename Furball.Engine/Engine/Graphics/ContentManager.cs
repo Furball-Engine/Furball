@@ -16,6 +16,8 @@ namespace Furball.Engine.Engine.Graphics {
         /// </summary>
         public static void ClearCache() {
             CONTENT_CACHE.Clear();
+
+            Logger.Log("Content cache cleared!", LoggerLevelCacheEvent.Instance);
         }
         /// <summary>
         /// Looks for `filename` and returns it if it finds it at `source`
