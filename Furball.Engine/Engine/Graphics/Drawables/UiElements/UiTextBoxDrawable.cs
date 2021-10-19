@@ -112,7 +112,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
                 args.Position * FurballGame.VerticalRatio, 
                 this.Size * FurballGame.VerticalRatio, 
                 this.Selected ? Color.LightGray : Color.DarkGray, 
-                args.LayerDepth
+                0f
             );
             
             base.Draw(time, batch, args);

@@ -59,7 +59,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
                 this.BarSize * FurballGame.VerticalRatio, 
                 this.OutlineColor, 
                 this.OutlineThickness * FurballGame.VerticalRatio, 
-                args.LayerDepth
+                0f
             );
             
             // FIXME: this is a bit of a hack, it should definitely be done differently
