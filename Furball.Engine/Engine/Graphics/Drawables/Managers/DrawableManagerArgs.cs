@@ -8,6 +8,5 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
         public float         Rotation;
         public Vector2       Scale;
         public SpriteEffects Effects;
-        public float         LayerDepth;
     }
 }

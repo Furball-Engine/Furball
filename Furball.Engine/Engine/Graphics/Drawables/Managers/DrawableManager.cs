@@ -218,7 +218,6 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                 DrawableManagerArgs args = new() {
                     Color      = currentDrawable.ColorOverride,
                     Effects    = currentDrawable.SpriteEffect,
-                    LayerDepth = currentDrawable.Depth,
                     Position   = currentDrawable.Position - origin,
                     Rotation   = currentDrawable.Rotation,
                     Scale      = currentDrawable.Scale
@@ -247,7 +246,6 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                 DrawableManagerArgs args = new() {
                     Color      = currentDrawable.ColorOverride,
                     Effects    = currentDrawable.SpriteEffect,
-                    LayerDepth = currentDrawable.Depth,
                     Position   = currentDrawable.Position - origin,
                     Rotation   = currentDrawable.Rotation,
                     Scale      = currentDrawable.Scale
