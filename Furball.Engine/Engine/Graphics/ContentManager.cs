@@ -4,6 +4,7 @@ using System.IO;
 using System.Reflection;
 using Furball.Engine.Engine.Helpers;
 using Furball.Engine.Engine.Helpers.Logger;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Furball.Engine.Engine.Graphics {
     public static class ContentManager {
@@ -57,6 +58,9 @@ namespace Furball.Engine.Engine.Graphics {
 
             throw new FileNotFoundException();
         }
+
+        public static Texture2D LoadTextureFromFile(string filename, ContentSource source = ContentSource.Game, bool bypassCache = false) 
+            => Texture2D.FromStream(FurballGame.Instance.GraphicsDevice, new MemoryStream(LoadRawAsset(filename, source, bypassCache)));
 
         public static byte[] LoadRawAsset(string filename, ContentSource source = ContentSource.Game, bool bypassCache = false) {
             if (CONTENT_CACHE.TryGetValue(filename, out byte[] cacheData) && !bypassCache)
