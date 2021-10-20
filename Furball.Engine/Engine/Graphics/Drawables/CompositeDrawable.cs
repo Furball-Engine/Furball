@@ -17,6 +17,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
 
         public override void Draw(GameTime time, DrawableBatch batch, DrawableManagerArgs args) {
             foreach (ManagedDrawable drawable in this.Drawables) {
+                if (!drawable.Visible) continue;
+                
                 DrawableManagerArgs drawableArgs = new() {
                     Color    = drawable.ColorOverride,
                     Effects  = args.Effects,
