@@ -65,9 +65,16 @@ namespace Furball.Engine {
         public static byte[] DefaultFontData;
         public static readonly FontSystem DEFAULT_FONT = new(new FontSystemSettings {
             FontResolutionFactor = 2f,
-            KernelWidth = 2,
-            KernelHeight = 2,
-            Effect = FontSystemEffect.None
+            KernelWidth          = 2,
+            KernelHeight         = 2,
+            Effect               = FontSystemEffect.None
+        });
+        public static readonly FontSystem DEFAULT_FONT_STROKED = new(new FontSystemSettings {
+            FontResolutionFactor = 2f,
+            KernelWidth          = 2,
+            KernelHeight         = 2,
+            Effect               = FontSystemEffect.Stroked,
+            EffectAmount         = 2
         });
 
         public static Texture2D WhitePixel;
@@ -102,6 +109,7 @@ namespace Furball.Engine {
 
             DefaultFontData = ContentManager.LoadRawAsset("default-font.ttf");
             DEFAULT_FONT.AddFont(DefaultFontData);
+            DEFAULT_FONT_STROKED.AddFont(DefaultFontData);
 
             _stopwatch.Start();
 
