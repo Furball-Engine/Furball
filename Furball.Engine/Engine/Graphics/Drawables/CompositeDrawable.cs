@@ -20,7 +20,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
                 DrawableManagerArgs drawableArgs = new() {
                     Color    = drawable.ColorOverride,
                     Effects  = args.Effects,
-                    Position = args.Position + drawable.Position,
+                    Position = args.Position + (drawable.Position * args.Scale),
                     Rotation = args.Rotation,
                     Scale    = args.Scale * drawable.Scale
                 };
