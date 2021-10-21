@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using FontStashSharp;
 using Furball.Engine.Engine.Helpers;
 using Furball.Engine.Engine.Helpers.Logger;
 using Kettu;
@@ -9,7 +10,8 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Furball.Engine.Engine.Graphics {
     public static class ContentManager {
-        private static readonly Dictionary<string, byte[]>  CONTENT_CACHE = new();
+        private static readonly Dictionary<string, byte[]>                         CONTENT_CACHE = new();
+        public static readonly  Dictionary<(FontSystem, int), DynamicSpriteFont> FSS_CACHE     = new();
         
         public static int CacheSizeLimit = 40000000;//4 MB
 
@@ -18,6 +20,7 @@ namespace Furball.Engine.Engine.Graphics {
         /// </summary>
         public static void ClearCache() {
             CONTENT_CACHE.Clear();
+            FSS_CACHE.Clear();
 
             Logger.Log("Content cache cleared!", LoggerLevelCacheEvent.Instance);
         }

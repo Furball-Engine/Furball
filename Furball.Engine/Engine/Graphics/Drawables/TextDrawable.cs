@@ -1,6 +1,8 @@
 using FontStashSharp;
 using Microsoft.Xna.Framework;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
+using Furball.Engine.Engine.Helpers.Logger;
+using Kettu;
 
 namespace Furball.Engine.Engine.Graphics.Drawables {
     /// <summary>
@@ -30,6 +32,12 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// <param name="size">The size of the text as a float</param>
         public TextDrawable(Vector2 position, FontSystem font, string text, int size) {
             this.Position = position;
+
+            if (!ContentManager.FSS_CACHE.TryGetValue((font, size), out this.Font)) {
+                this.Font = font.GetFont(size);
+                ContentManager.FSS_CACHE.Add((font, size), this.Font);
+                Logger.Log($"Caching DynamicSpriteFont of size {size}", LoggerLevelCacheEvent.Instance);
+            }
             
             this.Font = font.GetFont(size);
 
