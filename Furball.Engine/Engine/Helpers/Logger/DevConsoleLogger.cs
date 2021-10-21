@@ -1,4 +1,5 @@
 using Furball.Engine.Engine.DevConsole;
+using Kettu;
 
 namespace Furball.Engine.Engine.Helpers.Logger {
     public class DevConsoleLogger : LoggerBase {

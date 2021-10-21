@@ -6,14 +6,14 @@ namespace Furball.Engine.Engine.Helpers {
         private readonly List<ScheduledMethod> _scheduledMethods = new();
 
         public Scheduler() {
-            Logger.Logger.Log("Scheduler Initialized!", LoggerLevelSchedulerInfo.Instance);
+            Kettu.Logger.Log("Scheduler Initialized!", LoggerLevelSchedulerInfo.Instance);
         }
 
         public void Update(int time) {
             for (int i = 0; i < this._scheduledMethods.Count; i++) {
                 ScheduledMethod method = this._scheduledMethods[i];
                 if (time > method.Time) {
-                    Logger.Logger.Log($"ScheduledMethod invoked at {time}", LoggerLevelSchedulerInfo.Instance);
+                    Kettu.Logger.Log($"ScheduledMethod invoked at {time}", LoggerLevelSchedulerInfo.Instance);
                     method.MethodToRun.Invoke(time);
                     this._scheduledMethods.Remove(method);
                 }
@@ -21,16 +21,16 @@ namespace Furball.Engine.Engine.Helpers {
         }
 
         public void ScheduleMethod(ScheduledMethod.Method method, int time, bool runOnDispose = false) {
-            Logger.Logger.Log($"ScheduledMethod scheduled at {time}, {(runOnDispose ? "does" : "does not")} run on dispose", LoggerLevelSchedulerInfo.Instance);
+            Kettu.Logger.Log($"ScheduledMethod scheduled at {time}, {(runOnDispose ? "does" : "does not")} run on dispose", LoggerLevelSchedulerInfo.Instance);
 
             this._scheduledMethods.Add(new ScheduledMethod(method, time, runOnDispose));
         }
 
         public void Dispose(int time) {
-            Logger.Logger.Log($"Scheduler disposed at {time}", LoggerLevelSchedulerInfo.Instance);
+            Kettu.Logger.Log($"Scheduler disposed at {time}", LoggerLevelSchedulerInfo.Instance);
 
             foreach (ScheduledMethod method in this._scheduledMethods) {
-                Logger.Logger.Log($"ScheduledMethod invoked at {time} during dispose", LoggerLevelSchedulerInfo.Instance);
+                Kettu.Logger.Log($"ScheduledMethod invoked at {time} during dispose", LoggerLevelSchedulerInfo.Instance);
                 method.MethodToRun.Invoke(time);
             }
 

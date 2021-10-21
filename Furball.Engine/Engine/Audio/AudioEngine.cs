@@ -5,6 +5,7 @@ using Furball.Engine.Engine.Audio.Exceptions;
 using Furball.Engine.Engine.Helpers.Logger;
 using Furball.Engine.Engine.Platform;
 using Furball.Engine.Engine.Platform.Linux;
+using Kettu;
 using ManagedBass;
 using ManagedBass.Fx;
 

@@ -22,6 +22,7 @@ using Furball.Engine.Engine.Localization;
 using Furball.Engine.Engine.Platform;
 using Furball.Engine.Engine.Timing;
 using Furball.Engine.Engine.Transitions;
+using Kettu;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -305,7 +306,7 @@ namespace Furball.Engine {
                 DebugOverlayDrawableManager.Update(gameTime);
 
             if (RuntimeInfo.LoggerEnabled())
-                Logger.Update(gameTime);
+                Logger.XnaUpdate(gameTime.ElapsedGameTime.TotalSeconds);
 
             ScreenManager.UpdateTransition(gameTime);
 

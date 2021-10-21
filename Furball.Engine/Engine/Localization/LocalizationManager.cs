@@ -4,6 +4,7 @@ using System.IO;
 using Furball.Engine.Engine.Helpers.Logger;
 using Furball.Engine.Engine.Localization.Exceptions;
 using Furball.Engine.Engine.Localization.Languages;
+using Kettu;
 
 namespace Furball.Engine.Engine.Localization {
     public class LocalizationManager {

@@ -4,6 +4,7 @@ using System.IO;
 using System.Reflection;
 using Furball.Engine.Engine.Helpers;
 using Furball.Engine.Engine.Helpers.Logger;
+using Kettu;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Furball.Engine.Engine.Graphics {
