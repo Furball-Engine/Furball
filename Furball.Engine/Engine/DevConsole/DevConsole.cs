@@ -81,6 +81,7 @@ namespace Furball.Engine.Engine.DevConsole {
 
             AddMessage("AutoRun script complete!");
         }
+        
         //Because the fields are required to be static this is the only way that i can think of for devs to add their own ConVarStores like `ConVars`
         public static void AddConVarStore(Type store) {
             if (!store.IsSubclassOf(typeof(ConVarStore)))
