@@ -4,6 +4,14 @@
         <PublishReadyToRun>false</PublishReadyToRun>
         <TieredCompilation>false</TieredCompilation>
         <Nullable>disable</Nullable>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Title>Furball.Engine</Title>
+        <Description>A Flexible Game Engine written with MonoGame which is meant to resemble the osu!b394a engine while allowing Shader development to be easy.</Description>
+        <PackageProjectUrl>https://github.com/Eeveelution/Furball</PackageProjectUrl>
+        <PackageLicenseUrl>https://github.com/Eeveelution/Furball/blob/master/LICENSE</PackageLicenseUrl>
+        <RepositoryUrl>https://github.com/Eeveelution/Furball</RepositoryUrl>
+        <PackageTags>game_engine engine game monogame furball eeveelution beyley games osu</PackageTags>
+        <AssemblyVersion>1.0.0</AssemblyVersion>
     </PropertyGroup>
     <PropertyGroup>
         <ApplicationManifest>app.manifest</ApplicationManifest>
