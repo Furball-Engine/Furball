@@ -9,8 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - name: Setup MonoGame dev build  
-      - run: dotnet nuget add source -n MonoGame http://teamcity.monogame.net/guestAuth/app/nuget/feed/_Root/default/v3/index.json; cd Furball.Engine; dotnet add package MonoGame.Framework.DesktopGL --prerelease; dotnet add package MonoGame.Content.Builder.Task --prerelease; dotnet tool update --global dotnet-mgcb-editor --version *-*; mgcb-editor --register;
+       name: Setup MonoGame dev build  
+       run: dotnet nuget add source -n MonoGame http://teamcity.monogame.net/guestAuth/app/nuget/feed/_Root/default/v3/index.json; cd Furball.Engine; dotnet add package MonoGame.Framework.DesktopGL --prerelease; dotnet add package MonoGame.Content.Builder.Task --prerelease; dotnet tool update --global dotnet-mgcb-editor --version *-*; mgcb-editor --register;
       
       
       - uses: actions/checkout@v2
