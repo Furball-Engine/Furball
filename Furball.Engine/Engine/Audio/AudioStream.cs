@@ -172,8 +172,8 @@ namespace Furball.Engine.Engine.Audio {
             }
             set {
                 if (!this.TempoFrequencyLock) {
-                    bool successFrequency = Bass.ChannelSetAttribute(this._audioHandle, ChannelAttribute.Frequency,  (this.Frequency * value));
-                    bool successTempo = Bass.ChannelSetAttribute(this._audioHandle, ChannelAttribute.Tempo, 0);
+                    bool successFrequency = Bass.ChannelSetAttribute(this._audioHandle, ChannelAttribute.Frequency, this.InitialAudioFrequency * value);
+                    bool successTempo     = Bass.ChannelSetAttribute(this._audioHandle, ChannelAttribute.Tempo,     0);
 
                     if (successFrequency && successTempo)
                         return;
@@ -185,8 +185,8 @@ namespace Furball.Engine.Engine.Audio {
                         _                => new BassUnknownException()
                     };
                 } else {
-                    bool successFrequency = Bass.ChannelSetAttribute(this._audioHandle, ChannelAttribute.Frequency, (this.Frequency));
-                    bool successTempo = Bass.ChannelSetAttribute(this._audioHandle,     ChannelAttribute.Tempo,    (value * 100) - 100);
+                    bool successFrequency = Bass.ChannelSetAttribute(this._audioHandle, ChannelAttribute.Frequency, this.InitialAudioFrequency);
+                    bool successTempo     = Bass.ChannelSetAttribute(this._audioHandle, ChannelAttribute.Tempo,     value * 100 - 100);
 
                     if (successFrequency && successTempo)
                         return;
