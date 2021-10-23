@@ -92,7 +92,7 @@ namespace Furball.Engine.Engine.Input {
         private static void DrawableOnMouseDown(object _, ((MouseButton mouseButton, Point position) args, string cursorName) e) {
             List<ManagedDrawable> drawables = new();
             DrawableManager.DrawableManagers.Where(x => x.Visible).ToList().ForEach(
-            x => drawables.AddRange(x.Drawables.Where(y => y is ManagedDrawable && y.Clickable).Cast<ManagedDrawable>())
+            x => drawables.AddRange(x.Drawables.Where(y => y is ManagedDrawable && y.Clickable && y.Visible).Cast<ManagedDrawable>())
             );
 
             drawables = drawables.OrderBy(o => o.Depth).ToList();
