@@ -131,10 +131,7 @@ namespace Furball.Engine {
 
             #region Console result
 
-            ConsoleDrawable = new ConsoleDrawable {
-                Clickable   = false,
-                CoverClicks = false
-            };
+            ConsoleDrawable = new ConsoleDrawable();
             DebugOverlayDrawableManager.Add(ConsoleDrawable);
 
             TextDrawable consoleResult = new(new Vector2(DEFAULT_WINDOW_WIDTH / 2f, DEFAULT_WINDOW_HEIGHT * 0.75f), DEFAULT_FONT, "", 30) {
