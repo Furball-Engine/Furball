@@ -12,8 +12,10 @@ namespace Furball.Engine.Engine.Transitions {
 
         public FadeTransition() {
             this._fadeScreen = new TexturedDrawable(FurballGame.WhitePixel, new Vector2(0, 0)) {
-                Scale = new Vector2(1280, 720),
-                ColorOverride = Color.Transparent
+                Scale         = new Vector2(1280, 720),
+                ColorOverride = Color.Transparent,
+                Clickable     = false,
+                CoverClicks   = false
             };
 
             this.Manager.Add(this._fadeScreen);

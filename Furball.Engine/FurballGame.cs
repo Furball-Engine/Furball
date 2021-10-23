@@ -7,8 +7,8 @@ using System.Reflection;
 using FontStashSharp;
 using Furball.Engine.Engine;
 using Furball.Engine.Engine.Audio;
-using Furball.Engine.Engine.DevConsole;
 using Furball.Engine.Engine.Debug;
+using Furball.Engine.Engine.DevConsole;
 using Furball.Engine.Engine.Graphics;
 using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
@@ -131,12 +131,17 @@ namespace Furball.Engine {
 
             #region Console result
 
-            ConsoleDrawable = new ConsoleDrawable();
+            ConsoleDrawable = new ConsoleDrawable {
+                Clickable   = false,
+                CoverClicks = false
+            };
             DebugOverlayDrawableManager.Add(ConsoleDrawable);
 
             TextDrawable consoleResult = new(new Vector2(DEFAULT_WINDOW_WIDTH / 2f, DEFAULT_WINDOW_HEIGHT * 0.75f), DEFAULT_FONT, "", 30) {
                 OriginType    = OriginType.Center,
-                ColorOverride = new Color(255, 255, 255, 0)
+                ColorOverride = new Color(255, 255, 255, 0),
+                Clickable     = false,
+                CoverClicks   = false
             };
 
             ConsoleDrawable.OnCommandFinished += delegate(object _, ConsoleResult result) {
@@ -160,7 +165,9 @@ namespace Furball.Engine {
 
             _ConsoleAutoComplete = new TextDrawable(new Vector2(DEFAULT_WINDOW_WIDTH / 2f, DEFAULT_WINDOW_HEIGHT * 0.4f), DEFAULT_FONT, "", 30) {
                 OriginType    = OriginType.BottomCenter,
-                ColorOverride = new Color(255, 255, 255, 0)
+                ColorOverride = new Color(255, 255, 255, 0),
+                Clickable     = false,
+                CoverClicks   = false
             };
 
             ConsoleDrawable.OnLetterTyped   += this.ConsoleOnLetterTyped;
@@ -278,7 +285,10 @@ namespace Furball.Engine {
 
             this.ChangeScreenSize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
 
-            DebugCounter = new DebugCounter();
+            DebugCounter = new DebugCounter {
+                Clickable   = false,
+                CoverClicks = false
+            };
             DebugOverlayDrawableManager.Add(DebugCounter);
 
             DevConsole.Initialize();

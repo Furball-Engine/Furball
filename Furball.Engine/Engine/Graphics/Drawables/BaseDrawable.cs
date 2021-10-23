@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Furball.Engine.Engine.Timing;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes;
+using Furball.Engine.Engine.Timing;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -37,6 +37,15 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
                 this.OnMove?.Invoke(this, value);
                 this._position = value;
             }
+        }
+
+        public Rectangle Rectangle => new((this.Position - this.LastCalculatedOrigin).ToPoint(), this.Size.ToPoint());
+
+        public bool Contains(Point point) {
+            if (this.Circular)
+                return Vector2.Distance(point.ToVector2(), this._position - this.LastCalculatedOrigin) < this.CircleRadius;
+
+            return this.Rectangle.Contains(point);
         }
 
         public Vector2 LastCalculatedOrigin = Vector2.Zero;
@@ -96,15 +105,59 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// <summary>
         /// Whether a cursor is hovering over the drawable
         /// </summary>
-        public bool IsHovered;
+        public bool IsHovered {
+            get;
+            private set;
+        } = false;
+        public void Hover(bool value) {
+            if (value == this.IsHovered) return;
+
+            if (value)
+                this.OnHover?.Invoke(this, EventArgs.Empty);
+            else
+                this.OnHoverLost?.Invoke(this, EventArgs.Empty);
+
+            this.IsHovered = value;
+        }
         /// <summary>
         /// Whether the drawable is being clicked
         /// </summary>
-        public bool IsClicked;
+        public bool IsClicked {
+            get;
+            private set;
+        } = false;
+        public void Click(bool value, Point point) {
+            if (value == this.IsClicked) return;
+
+            if (value)
+                this.OnClick?.Invoke(this, point);
+            else
+                this.OnClickUp?.Invoke(this, point);
+
+            this.IsClicked = value;
+        }
         /// <summary>
         /// Is the Drawable being dragged?
         /// </summary>
-        public bool IsDragging;
+        public bool IsDragging {
+            get;
+            private set;
+        } = false;
+        public void DragState(bool value, Point point) {
+            if (value == this.IsDragging) return;
+
+            if (value)
+                this.OnDragBegin?.Invoke(this, point);
+            else
+                this.OnDragEnd?.Invoke(this, point);
+
+            this.IsDragging = value;
+        }
+        public void Drag(Point point) {
+            if (!this.IsDragging) return;
+
+            this.OnDrag?.Invoke(this, point);
+        }
         /// <summary>
         /// Whether the drawable is able to be clicked
         /// </summary>
@@ -130,89 +183,29 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// </summary>
         public event EventHandler OnHover;
         /// <summary>
-        /// Invokes the OnHover event
-        /// </summary>
-        /// <param name="sender">The sender of the OnHover event</param>
-        public void InvokeOnHover(object sender) {
-            this.OnHover?.Invoke(sender, null!);
-            this.IsHovered = true;
-        }
-        /// <summary>
         /// Called whenever a cursor moves off of the drawable
         /// </summary>
         public event EventHandler OnHoverLost;
-        /// <summary>
-        /// Invokes the OnUnHover event
-        /// </summary>
-        /// <param name="sender">The sender of the OnUnHover event</param>
-        public void InvokeOnHoverLost(object sender) {
-            this.OnHoverLost?.Invoke(sender, null!);
-            this.IsHovered = false;
-        }
         /// <summary>
         /// Called when the drawable is clicked
         /// </summary>
         public event EventHandler<Point> OnClick;
         /// <summary>
-        /// Invokes the OnClick event
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="position">The position of the click</param>
-        public void InvokeOnClick(object sender, Point position) {
-            this.OnClick?.Invoke(sender, position);
-            this.IsClicked = true;
-        }
-        /// <summary>
         /// Called when the drawable is no longer being clicked
         /// </summary>
         public event EventHandler<Point> OnClickUp;
-        /// <summary>
-        /// Invokes the OnUnClick event
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="position">The position when the click was released</param>
-        public void InvokeOnClickUp(object sender, Point position) {
-            this.OnClickUp?.Invoke(sender, position);
-            this.IsClicked = false;
-        }
         /// <summary>
         /// Gets fired when the Drawable is first getting started to Drag
         /// </summary>
         public event EventHandler<Point> OnDragBegin;
         /// <summary>
-        /// Invokes the OnDragBegin event
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="position">The position when dragging began</param>
-        public void InvokeOnDragBegin(object sender, Point position) {
-            this.IsDragging = true;
-            this.OnDragBegin?.Invoke(sender, position);
-        }
-        /// <summary>
         /// Gets fired every Input Frame for the duration of the drag
         /// </summary>
         public event EventHandler<Point> OnDrag;
         /// <summary>
-        /// Invokes the OnDrag event
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="position">Position where the cursor currently is</param>
-        public void InvokeOnDrag(object sender, Point position) {
-            this.OnDrag?.Invoke(sender, position);
-        }
-        /// <summary>
         /// Gets Fired when the Dragging stops
         /// </summary>
         public event EventHandler<Point> OnDragEnd;
-        /// <summary>
-        /// Invokes the OnDragEnd event
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="position">Where dragging stopped</param>
-        public void InvokeOnDragEnd(object sender, Point position) {
-            this.IsDragging = false;
-            this.OnDragEnd?.Invoke(sender, position);
-        }
 
         public virtual void ClearEvents() {
             this.OnClick     = null;

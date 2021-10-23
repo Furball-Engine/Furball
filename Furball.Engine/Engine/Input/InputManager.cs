@@ -1,6 +1,8 @@
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
+using Furball.Engine.Engine.Graphics.Drawables;
+using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
@@ -23,6 +25,86 @@ namespace Furball.Engine.Engine.Input {
                     temp.AddRange(this.registeredInputMethods[i].CursorPositions);
 
                 return temp;
+            }
+        }
+
+        public InputManager() {
+            this.OnMouseDown += DrawableOnMouseDown;
+            this.OnMouseUp   += DrawableOnMouseUp;
+            this.OnMouseDrag += DrawableOnMouseDrag;
+            this.OnMouseMove += DrawableOnMouseMove;
+        }
+
+        private static void DrawableOnMouseMove(object? sender, (Point mousePosition, string cursorName) e) {
+            List<ManagedDrawable> drawables = new();
+            DrawableManager.DrawableManagers.Where(x => x.Visible).ToList().ForEach(
+            x => drawables.AddRange(x.Drawables.Where(y => y is ManagedDrawable && y.Hoverable).Cast<ManagedDrawable>())
+            );
+
+            drawables = drawables.OrderBy(o => o.Depth).ToList();
+
+            for (int i = 0; i < drawables.Count; i++) {
+                ManagedDrawable drawable = drawables[i];
+
+                if (drawable.Contains(e.mousePosition)) {
+                    if (!drawable.IsHovered && drawable.Hoverable) {
+                        drawable.Hover(true);
+                        if (drawable.CoverHovers)
+                            break;
+                    }
+                } else {
+                    drawable.Hover(false);
+                }
+            }
+        }
+
+        private static void DrawableOnMouseDrag(object? sender, ((Point lastPosition, Point newPosition), string cursorName) e) {
+            List<ManagedDrawable> drawables = new();
+            DrawableManager.DrawableManagers.Where(x => x.Visible).ToList()
+                           .ForEach(x => drawables.AddRange(x.Drawables.Where(y => y is ManagedDrawable).Cast<ManagedDrawable>()));
+
+            for (int i = 0; i < drawables.Count; i++) {
+                ManagedDrawable drawable = drawables[i];
+
+                if (drawable.IsClicked && !drawable.IsDragging)
+                    drawable.DragState(true, e.Item1.newPosition);
+
+                if (drawable.IsDragging)
+                    drawable.Drag(e.Item1.newPosition);
+            }
+        }
+
+        private static void DrawableOnMouseUp(object _, ((MouseButton mouseButton, Point position) args, string cursorName) e) {
+            List<ManagedDrawable> drawables = new();
+            DrawableManager.DrawableManagers.Where(x => x.Visible).ToList()
+                           .ForEach(x => drawables.AddRange(x.Drawables.Where(y => y is ManagedDrawable).Cast<ManagedDrawable>()));
+
+            for (int i = 0; i < drawables.Count; i++) {
+                ManagedDrawable drawable = drawables[i];
+
+                if (drawable.IsClicked)
+                    drawable.Click(false, e.args.position);
+                if (drawable.IsDragging)
+                    drawable.DragState(false, e.args.position);
+            }
+        }
+
+        private static void DrawableOnMouseDown(object _, ((MouseButton mouseButton, Point position) args, string cursorName) e) {
+            List<ManagedDrawable> drawables = new();
+            DrawableManager.DrawableManagers.Where(x => x.Visible).ToList().ForEach(
+            x => drawables.AddRange(x.Drawables.Where(y => y is ManagedDrawable && y.Clickable).Cast<ManagedDrawable>())
+            );
+
+            drawables = drawables.OrderBy(o => o.Depth).ToList();
+
+            for (int i = 0; i < drawables.Count; i++) {
+                ManagedDrawable drawable = drawables[i];
+
+                if (drawable.Contains(e.args.position)) {
+                    drawable.Click(true, e.args.position);
+
+                    if (drawable.CoverClicks) break;
+                }
             }
         }
 

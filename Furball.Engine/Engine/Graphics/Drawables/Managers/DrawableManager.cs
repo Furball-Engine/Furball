@@ -1,7 +1,6 @@
 using System;
-using System.Linq;
 using System.Collections.Generic;
-using Furball.Engine.Engine.Input;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -14,6 +13,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
         private List<UnmanagedDrawable> _tempDrawUnmanaged   = new();
         private List<UnmanagedDrawable> _tempUpdateUnmanaged = new();
 
+        public IReadOnlyList<BaseDrawable> Drawables => this._drawables.AsReadOnly();
+
         public int CountManaged { get; private set; }
         public int CountUnmanaged { get; private set; }
 
@@ -25,151 +26,6 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
             lock (StatLock) {
                 Instances++;
                 DrawableManagers.Add(this);
-            }
-            
-            FurballGame.InputManager.OnMouseDown += this.InputManagerOnMouseDown;
-            FurballGame.InputManager.OnMouseUp   += this.InputManagerOnMouseUp;
-            FurballGame.InputManager.OnMouseMove += this.InputManagerOnMouseMove; 
-        }
-        
-        private List<ManagedDrawable> _tempClickUpManaged = new();
-        private void InputManagerOnMouseUp(object sender, ((MouseButton mouseButton, Point position) args, string cursorName) e) {
-            // should we lock these here?
-            lock(this._tempClickUpManaged) {
-                // Split _drawables into 2 lists containing the ManagedDrawables and the UnmanagedDrawables
-                this._tempClickUpManaged.Clear();
-
-                int tempCount = this._drawables.Count;
-                for (int i = 0; i < tempCount; i++) {
-                    BaseDrawable baseDrawable = this._drawables[i];
-
-                    switch (baseDrawable) {
-                        case ManagedDrawable managedDrawable:
-                            this._tempClickUpManaged.Add(managedDrawable);
-                            break;
-                    }
-                }
-                
-                this._tempClickUpManaged = this._tempClickUpManaged.OrderBy(o => o.Depth).ToList();
-
-                for (int i = 0; i < this._tempClickUpManaged.Count; i++) {
-                    ManagedDrawable drawable = this._tempClickUpManaged[i];
-
-                    if(drawable.IsClicked)
-                        drawable.InvokeOnClickUp(this, e.args.position);
-                    if(drawable.IsDragging)
-                        drawable.InvokeOnDragEnd(this, e.args.position);
-                }
-            }
-        }
-
-        private List<ManagedDrawable> _tempHoverManaged = new();
-        private void InputManagerOnMouseMove(object sender, (Point mousePosition, string cursorName) e) {
-            // should we lock these here?
-            lock(this._tempClickManaged) {
-                // Split _drawables into 2 lists containing the ManagedDrawables and the UnmanagedDrawables
-                this._tempClickManaged.Clear();
-
-                int tempCount = this._drawables.Count;
-                for (int i = 0; i < tempCount; i++) {
-                    BaseDrawable baseDrawable = this._drawables[i];
-
-                    switch (baseDrawable) {
-                        case ManagedDrawable managedDrawable:
-                            this._tempClickManaged.Add(managedDrawable);
-                            break;
-                    }
-                }
-                
-                this._tempHoverManaged = this._tempHoverManaged.OrderBy(o => o.Depth).ToList();
-
-                for (var i = 0; i < this._tempClickManaged.Count; i++) {
-                    ManagedDrawable drawable = this._tempClickManaged[i];
-
-                    if (!drawable.Hoverable) continue;
-                    
-                    Rectangle rect = new(drawable.Position.ToPoint() - drawable.LastCalculatedOrigin.ToPoint(), drawable.Size.ToPoint());
-
-                    //Whether the we are intersecting with the circle radius of the drawable
-                    bool circleIntersect = false;
-                    if (drawable.Circular) {
-                        // Get the distance of the cursor to the drawable
-                        float distanceToCentre = Vector2.Distance(e.mousePosition.ToVector2(), drawable.Position - drawable.LastCalculatedOrigin);
-                    
-                        // Checks if we are within the radius of the drawable
-                        if (distanceToCentre < drawable.CircleRadius)
-                            circleIntersect = true;
-                    }
-
-                    if (drawable.IsDragging) {
-                        drawable.InvokeOnDrag(this, e.mousePosition);
-                    }
-                    
-                    if (rect.Contains(e.mousePosition) && !drawable.Circular || circleIntersect) {
-                        if(drawable.IsClicked && !drawable.IsHovered)
-                            drawable.InvokeOnDragBegin(this, e.mousePosition);
-                        
-                        if (drawable.IsHovered) {
-                            if (drawable.CoverHovers) break;
-                            //If we dont cover hovers, just continue to the next one
-                            continue;
-                        }
-                        
-                        drawable.InvokeOnHover(this);
-                        if (drawable.CoverHovers) break;
-                    } else {
-                        if (drawable.IsHovered) {
-                            drawable.InvokeOnHoverLost(this);
-                        }
-                    }
-                }
-            }
-        }
-        
-        private List<ManagedDrawable> _tempClickManaged = new();
-        private void InputManagerOnMouseDown(object sender, ((MouseButton mouseButton, Point position) args, string cursorName) e) {
-            // should we lock these here?
-            lock(this._tempClickManaged) {
-                // Split _drawables into 2 lists containing the ManagedDrawables and the UnmanagedDrawables
-                this._tempClickManaged.Clear();
-
-                int tempCount = this._drawables.Count;
-                for (int i = 0; i < tempCount; i++) {
-                    BaseDrawable baseDrawable = this._drawables[i];
-
-                    switch (baseDrawable) {
-                        case ManagedDrawable managedDrawable:
-                            this._tempClickManaged.Add(managedDrawable);
-                            break;
-                    }
-                }
-                
-                this._tempClickManaged = this._tempClickManaged.OrderBy(o => o.Depth).ToList();
-
-                for (var i = 0; i < this._tempClickManaged.Count; i++) {
-                    ManagedDrawable drawable = this._tempClickManaged[i];
-
-                    if (!drawable.Clickable) continue;
-                    
-                    // Calculate the rectangle of the drawable
-                    Rectangle rect = new(drawable.Position.ToPoint() - drawable.LastCalculatedOrigin.ToPoint(), drawable.Size.ToPoint());
-
-                    //Whether the we are intersecting with the circle radius of the drawable
-                    bool circleIntersect = false;
-                    if (drawable.Circular) {
-                        // Get the distance of the cursor to the drawable
-                        float distanceToCentre = Vector2.Distance(e.args.position.ToVector2(), drawable.Position - drawable.LastCalculatedOrigin);
-                    
-                        // Checks if we are within the radius of the drawable
-                        if (distanceToCentre < drawable.CircleRadius)
-                            circleIntersect = true;
-                    }
-                    
-                    if (rect.Contains(e.args.position) && !drawable.Circular || circleIntersect) {
-                        drawable.InvokeOnClick(this, e.args.position);
-                        if (drawable.CoverClicks) break;
-                    }
-                }
             }
         }
 
@@ -194,7 +50,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
 
             drawableBatch.Begin();
 
-            this._tempDrawManaged.Sort((x, y) => (int)((y.Depth - x.Depth) * 100f));
+            this._tempDrawManaged = this._tempDrawManaged.OrderByDescending(o => o.Depth).ToList();
             
             tempCount    = this._tempDrawManaged.Count;
             CountManaged = tempCount;
@@ -205,6 +61,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                 
                 Vector2 origin = CalculateNewOriginPosition(currentDrawable);
                 currentDrawable.LastCalculatedOrigin = origin;
+                
                 //TODO:
                 //Potentially give ScaledPosition and ScaledScale
                 //Which would just be:
@@ -215,6 +72,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                 //Since literally every single drawable does this, might aswell make it easier,
                 //also given that drawablemanagers will have to scale on their own width and height instead of screen width and height,
                 //itll def make developing easier
+                
                 DrawableManagerArgs args = new() {
                     Color      = currentDrawable.ColorOverride,
                     Effects    = currentDrawable.SpriteEffect,
@@ -222,8 +80,11 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                     Rotation   = currentDrawable.Rotation,
                     Scale      = currentDrawable.Scale
                 };
-                
-                Rectangle rect = new((args.Position).ToPoint(), new Point((int)Math.Ceiling(currentDrawable.Size.X * args.Scale.X), (int)Math.Ceiling(currentDrawable.Size.Y * args.Scale.Y)));
+
+                Rectangle rect = new(
+                (args.Position - origin).ToPoint(),
+                new Point((int)Math.Ceiling(currentDrawable.Size.X * args.Scale.X), (int)Math.Ceiling(currentDrawable.Size.Y * args.Scale.Y))
+                );
 
                 if(rect.Intersects(FurballGame.DisplayRect))
                     currentDrawable.Draw(time, drawableBatch, args);
@@ -231,7 +92,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
 
             drawableBatch.End();
 
-            this._tempDrawUnmanaged.Sort((x, y) => (int)((y.Depth - x.Depth) * 100f));
+            this._tempDrawUnmanaged = this._tempDrawUnmanaged.OrderByDescending(o => o.Depth).ToList();
 
             tempCount      = this._tempDrawUnmanaged.Count;
             CountUnmanaged = tempCount;
@@ -304,8 +165,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                 }
             }
 
-            this._tempUpdateManaged   = this._tempUpdateManaged.OrderBy(o => o.Depth).ToList();
-            this._tempUpdateUnmanaged = this._tempUpdateUnmanaged.OrderBy(o => o.Depth).ToList();
+            this._tempUpdateManaged   = this._tempUpdateManaged.OrderByDescending(o => o.Depth).ToList();
+            this._tempUpdateUnmanaged = this._tempUpdateUnmanaged.OrderByDescending(o => o.Depth).ToList();
 
             // bool hoverHandled = false;
             // bool clickHandled = false;
@@ -338,10 +199,6 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                 Instances--;
                 DrawableManagers.Remove(this);
             }
-            
-            FurballGame.InputManager.OnMouseDown -= this.InputManagerOnMouseDown;
-            FurballGame.InputManager.OnMouseUp   -= this.InputManagerOnMouseUp;
-            FurballGame.InputManager.OnMouseMove -= this.InputManagerOnMouseMove; 
 
             base.Dispose(disposing);
         }
