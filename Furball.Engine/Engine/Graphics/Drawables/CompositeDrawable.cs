@@ -26,7 +26,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         public CompositeDrawable() => this.OnClick += this.OnDrawableClick;
 
         private void OnDrawableClick(object sender, Point e) {
-            Point adjustedPoint = e - this.Position.ToPoint();
+            Point adjustedPoint = e - this.Position.ToPoint() + this.LastCalculatedOrigin.ToPoint();
 
             for (int i = 0; i < this.Drawables.Count; i++) {
                 ManagedDrawable drawable = this.Drawables[i];
