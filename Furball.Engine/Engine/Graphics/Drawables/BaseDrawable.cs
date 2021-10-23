@@ -25,6 +25,10 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
     public abstract class BaseDrawable {
         private Vector2 _position = Vector2.Zero;
 
+        public List<string> Tags = null;
+
+        public bool ContainsTag(string tag) => this.Tags.Contains(tag);
+
         /// <summary>
         /// Unprocessed Position where the Drawable is expected to be drawn
         /// <remarks>This variable does not get changed as the DrawableManager translates the Drawable to be Scaled to be properly visible on all resolutions</remarks>
