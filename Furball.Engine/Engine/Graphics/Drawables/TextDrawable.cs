@@ -1,8 +1,10 @@
+using System;
+using System.Linq;
 using FontStashSharp;
-using Microsoft.Xna.Framework;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Furball.Engine.Engine.Helpers.Logger;
 using Kettu;
+using Microsoft.Xna.Framework;
 
 namespace Furball.Engine.Engine.Graphics.Drawables {
     /// <summary>
@@ -22,6 +24,11 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// The height of the text
         /// </summary>
         public override Vector2 Size => this.Font.MeasureString(this.Text) * this.Scale;
+
+        public TextColorType ColorType = TextColorType.Solid;
+        public Color[] Colors = {
+            Color.Cyan, Color.Pink, Color.White, Color.Pink, Color.Cyan
+        };
         
         /// <summary>
         /// Creates a new TextDrawable
@@ -44,13 +51,44 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
             this.Text = text;
         }
 
+        public static Color[] StretchColours(Color[] colours, int size) => throw new NotImplementedException();
+
         public override void Draw(GameTime time, DrawableBatch batch, DrawableManagerArgs args) {
             args.Position *= FurballGame.VerticalRatio;
             args.Scale    *= FurballGame.VerticalRatio;
-            
-            batch.SpriteBatch.DrawString(
-                this.Font, this.Text, args.Position, args.Color, args.Scale, args.Rotation, Vector2.Zero
-            );
+
+            switch (this.ColorType) {
+                case TextColorType.Solid: {
+                    batch.SpriteBatch.DrawString(this.Font, this.Text, args.Position, args.Color, args.Scale, args.Rotation, Vector2.Zero);
+                    break;
+                }
+                case TextColorType.Repeating: {
+                    Color[] colors = this.Colors;
+                    while (colors.Length < this.Text.Length)
+                        colors = colors.Concat(colors).ToArray();
+
+                    batch.SpriteBatch.DrawString(this.Font, this.Text, args.Position, colors, args.Scale, args.Rotation, Vector2.Zero);
+                    break;
+                }
+                case TextColorType.Stretch: {
+                    batch.SpriteBatch.DrawString(
+                    this.Font,
+                    this.Text,
+                    args.Position,
+                    StretchColours(this.Colors, this.Text.Length),
+                    args.Scale,
+                    args.Rotation,
+                    Vector2.Zero
+                    );
+                    break;
+                }
+            }
         }
+    }
+
+    public enum TextColorType {
+        Solid,
+        Repeating,
+        Stretch
     }
 }
