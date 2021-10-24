@@ -11,7 +11,7 @@ jobs:
         # Setup monogame
       - name: monogame dev
         id: monogame
-        run: WORKINGDIR=$(pwd); dotnet nuget add source -n MonoGame http://teamcity.monogame.net/guestAuth/app/nuget/feed/_Root/default/v3/index.json; dotnet tool update --global dotnet-mgcb-editor --version *-*; mgcb-editor --register; echo $WORKINGDIR; echo "im suffering aaaaaaaaaaaaaaaaa"; cd $WORKINGDIR;
+        run: echo $(ls); dotnet nuget add source -n MonoGame http://teamcity.monogame.net/guestAuth/app/nuget/feed/_Root/default/v3/index.json; dotnet tool update --global dotnet-mgcb-editor --version *-*; mgcb-editor --register; echo $WORKINGDIR;
 
 
       # - name: Setup dotnet
