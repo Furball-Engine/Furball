@@ -8,10 +8,12 @@ jobs:
     name: build, pack & publish
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
+    
         # Setup monogame
       - name: monogame dev
         id: monogame
-        run: echo $(ls -a); echo $(pwd); dotnet nuget add source -n MonoGame http://teamcity.monogame.net/guestAuth/app/nuget/feed/_Root/default/v3/index.json; dotnet tool update --global dotnet-mgcb-editor --version *-*; mgcb-editor --register; echo $WORKINGDIR;
+        run: dotnet nuget add source -n MonoGame http://teamcity.monogame.net/guestAuth/app/nuget/feed/_Root/default/v3/index.json; dotnet tool update --global dotnet-mgcb-editor --version *-*; mgcb-editor --register;
 
 
       # - name: Setup dotnet
@@ -22,7 +24,7 @@ jobs:
       # Publish
       - name: publish on version change
         id: publish_nuget
-        uses: Beyley/publish-nuget@v2.5.6
+        uses: rohith/publish-nuget@v2
         with:
           # Filepath of the project to be packaged, relative to root of repository
           PROJECT_FILE_PATH: Furball.Engine/Furball.Engine.csproj
