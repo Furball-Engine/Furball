@@ -205,7 +205,7 @@ namespace Furball.Engine {
             }
         }
 
-        private void ConsoleOnLetterTyped(object? sender, char e) {
+        private void ConsoleOnLetterTyped(object sender, char e) {
             _ConsoleAutoComplete.Tweens.Clear();
             _ConsoleAutoComplete.Tweens.Add(new FloatTween(TweenType.Fade, _ConsoleAutoComplete.ColorOverride.A / 255f, 1f, Time,        Time + 100));
             _ConsoleAutoComplete.Tweens.Add(new FloatTween(TweenType.Fade, 1f,                                          0f, Time + 2100, Time + 3100));

@@ -28,15 +28,21 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         /// <param name="text">Initial Text</param>
         /// <param name="size">Size of the text</param>
         /// <param name="width">Width/Length of the Textbox</param>
-        public UiTextBoxDrawable(Vector2 position, FontSystem font, string text, int size, float width) : base(Vector2.Zero, font, text, size) {
+        public UiTextBoxDrawable(Vector2 position, FontSystem font, string text, int size, float width, bool isInContainerDrawable = false) : base(
+        Vector2.Zero,
+        font,
+        text,
+        size
+        ) {
             this.Position     = position;
             this.TextBoxWidth = width;
-            this.RegisterHandlers();
+            this.RegisterHandlers(isInContainerDrawable);
         }
 
-        private void RegisterHandlers() {
+        private void RegisterHandlers(bool isInContainerDrawable) {
             FurballGame.Instance.Window.TextInput += this.OnTextInput;
-            FurballGame.InputManager.OnMouseDown += this.OnMouseDown;
+            if (!isInContainerDrawable)
+                FurballGame.InputManager.OnMouseDown += this.OnMouseDown;
             FurballGame.InputManager.OnKeyDown += this.OnKeyDown;
         }
 
@@ -54,15 +60,11 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
             }
         }
 
-        private void OnMouseDown(object sender, ((MouseButton heldButton, Point position) args, string name) e) {
-            Vector2   tempSize = this.Size;
-            Rectangle sizeRect = new(new Point((int)this.Position.X, (int)this.Position.Y) - this.LastCalculatedOrigin.ToPoint(), new Point((int)tempSize.X, (int)tempSize.Y));
-            
-            if (sizeRect.Contains(e.args.position) && this.Visible && this.Clickable) {
+        public void OnMouseDown(object sender, ((MouseButton heldButton, Point position) args, string name) e) {
+            if (this.Rectangle.Contains(e.args.position) && this.Visible && this.Clickable)
                 this.Selected = true;
-            } else {
+            else
                 this.Selected = false;
-            }
         }
 
         private void OnTextInput(object sender, TextInputEventArgs e) {
@@ -84,6 +86,15 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
                     this.OnCommit?.Invoke(this, this.Text);
                     this.Selected = false;
                     wasSpecial    = true;
+                    break;
+                }
+                case Keys.Escape: {
+                    this.Selected = false;
+                    wasSpecial    = true;
+                    break;
+                }
+                case Keys.Tab: {
+                    wasSpecial = true;
                     break;
                 }
             }

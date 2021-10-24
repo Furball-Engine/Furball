@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 
 namespace Furball.Engine.Engine.DevConsole.ConFuncs.Client {
@@ -19,7 +18,7 @@ namespace Furball.Engine.Engine.DevConsole.ConFuncs.Client {
                     File.Delete(currentFile);
                 }
             }
-            catch (Exception e) {
+            catch {
                 return new ConsoleResult(ExecutionResult.Error, "Something went wrong. Make sure the `log` directory exists, and that the `log` directory and its files aren't write protected.");
             }
 

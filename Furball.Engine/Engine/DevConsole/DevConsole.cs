@@ -180,7 +180,7 @@ namespace Furball.Engine.Engine.DevConsole {
 
                     evalIndex++;
                 }
-                catch (ArgumentException ex) {
+                catch {
                     run = false;
                 }
             } while (run);
@@ -207,7 +207,7 @@ namespace Furball.Engine.Engine.DevConsole {
 
                     evalIndex++;
                 }
-                catch (ArgumentException ex) {
+                catch {
                     run = false;
                 }
             } while (run);
@@ -225,7 +225,7 @@ namespace Furball.Engine.Engine.DevConsole {
 
                     argumentString = argumentString.Replace(match, jaceEngine.Calculate(argumentString.Substring("#(", ")")).ToString(CultureInfo.InvariantCulture));
                 }
-                catch (ArgumentException ex) {
+                catch {
                     run = false;
                 }
             } while (run);
@@ -371,7 +371,7 @@ namespace Furball.Engine.Engine.DevConsole {
             try {
                 File.WriteAllLines(filename, GetLog());
             }
-            catch (Exception e) {
+            catch {
                 return new ConsoleResult(ExecutionResult.Error, "Something went wrong. Make sure the `log` directory exists, and is not write protected.");
             }
 

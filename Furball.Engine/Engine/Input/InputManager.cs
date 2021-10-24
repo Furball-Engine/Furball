@@ -35,7 +35,7 @@ namespace Furball.Engine.Engine.Input {
             this.OnMouseMove += DrawableOnMouseMove;
         }
 
-        private static void DrawableOnMouseMove(object? sender, (Point mousePosition, string cursorName) e) {
+        private static void DrawableOnMouseMove(object sender, (Point mousePosition, string cursorName) e) {
             List<ManagedDrawable> drawables = new();
             DrawableManager.DrawableManagers.Where(x => x.Visible).ToList().ForEach(
             x => drawables.AddRange(x.Drawables.Where(y => y is ManagedDrawable && y.Hoverable).Cast<ManagedDrawable>())
@@ -58,7 +58,7 @@ namespace Furball.Engine.Engine.Input {
             }
         }
 
-        private static void DrawableOnMouseDrag(object? sender, ((Point lastPosition, Point newPosition), string cursorName) e) {
+        private static void DrawableOnMouseDrag(object sender, ((Point lastPosition, Point newPosition), string cursorName) e) {
             List<ManagedDrawable> drawables = new();
             DrawableManager.DrawableManagers.Where(x => x.Visible).ToList()
                            .ForEach(x => drawables.AddRange(x.Drawables.Where(y => y is ManagedDrawable).Cast<ManagedDrawable>()));
