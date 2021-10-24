@@ -1,7 +1,7 @@
-using System;
 using System.Linq;
 using FontStashSharp;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
+using Furball.Engine.Engine.Helpers;
 using Furball.Engine.Engine.Helpers.Logger;
 using Kettu;
 using Microsoft.Xna.Framework;
@@ -51,8 +51,6 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
             this.Text = text;
         }
 
-        public static Color[] StretchColours(Color[] colours, int size) => throw new NotImplementedException();
-
         public override void Draw(GameTime time, DrawableBatch batch, DrawableManagerArgs args) {
             args.Position *= FurballGame.VerticalRatio;
             args.Scale    *= FurballGame.VerticalRatio;
@@ -75,7 +73,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
                     this.Font,
                     this.Text,
                     args.Position,
-                    StretchColours(this.Colors, this.Text.Length),
+                    ArrayHelper.FitElementsInANewArray(this.Colors, this.Text.Length),
                     args.Scale,
                     args.Rotation,
                     Vector2.Zero
