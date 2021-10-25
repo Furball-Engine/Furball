@@ -88,18 +88,9 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
                     wasSpecial    = true;
                     break;
                 }
-                case Keys.Escape: {
-                    this.Selected = false;
-                    wasSpecial    = true;
-                    break;
-                }
-                case Keys.Tab: {
-                    wasSpecial = true;
-                    break;
-                }
             }
 
-            if (wasSpecial) return;
+            if (wasSpecial || char.IsControl(e.Character)) return;
 
             this.Text += e.Character;
             this.OnLetterTyped?.Invoke(this, e.Character);
