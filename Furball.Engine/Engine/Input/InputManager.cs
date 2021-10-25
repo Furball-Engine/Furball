@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Furball.Engine.Engine.DevConsole;
 using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
+using Furball.Engine.Engine.Graphics.Drawables.Tweens;
+using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
@@ -43,14 +46,35 @@ namespace Furball.Engine.Engine.Input {
 
             drawables = drawables.OrderBy(o => o.Depth).ToList();
 
+            bool tooltipSet = false;
             for (int i = 0; i < drawables.Count; i++) {
                 ManagedDrawable drawable = drawables[i];
 
                 if (drawable.Contains(e.mousePosition)) {
                     if (!drawable.IsHovered && drawable.Hoverable) {
                         drawable.Hover(true);
+
                         if (drawable.CoverHovers)
                             break;
+                    } else if (drawable.Hoverable && !tooltipSet) {
+                        if (drawable.ToolTip != string.Empty && ConVars.ToolTips.Value == 1) {
+                            FurballGame.TooltipDrawable.SetTooltip(drawable.ToolTip);
+                            FurballGame.TooltipDrawable.Tweens.Clear();
+                            FurballGame.TooltipDrawable.Tweens.Add(
+                            new VectorTween(
+                            TweenType.Movement,
+                            FurballGame.TooltipDrawable.Position,
+                            e.mousePosition.ToVector2() + new Vector2(10f),
+                            FurballGame.Time,
+                            FurballGame.Time + 1
+                            )
+                            );
+                            FurballGame.TooltipDrawable.Visible = true;
+
+                            tooltipSet = true;
+                        } else {
+                            FurballGame.TooltipDrawable.Visible = false;
+                        }
                     }
                 } else {
                     drawable.Hover(false);

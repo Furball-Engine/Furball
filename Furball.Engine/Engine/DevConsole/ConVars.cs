@@ -23,5 +23,9 @@ namespace Furball.Engine.Engine.DevConsole {
         /// Whether or not the Console should be logged and saved upon closing the game
         /// </summary>
         public static IntConVar    WriteLog                = new("cl_console_log", 1);
+        /// <summary>
+        ///     Whether or not to enable tool tips when hovering over things
+        /// </summary>
+        public static IntConVar ToolTips = new("cl_tooltipping", 1);
     }
 }

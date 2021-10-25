@@ -29,6 +29,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
 
         public bool ContainsTag(string tag) => this.Tags.Contains(tag);
 
+        public string ToolTip = string.Empty;
+        
         /// <summary>
         /// Unprocessed Position where the Drawable is expected to be drawn
         /// <remarks>This variable does not get changed as the DrawableManager translates the Drawable to be Scaled to be properly visible on all resolutions</remarks>

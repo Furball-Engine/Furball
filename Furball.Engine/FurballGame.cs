@@ -62,6 +62,7 @@ namespace Furball.Engine {
 
         public static  ConsoleDrawable ConsoleDrawable;
         private static TextDrawable    _ConsoleAutoComplete;
+        public static  TooltipDrawable TooltipDrawable;
         
         public static byte[] DefaultFontData;
         public static readonly FontSystem DEFAULT_FONT = new(new FontSystemSettings {
@@ -177,6 +178,9 @@ namespace Furball.Engine {
             WhitePixel.SetData(white);
 
             LocalizationManager.ReadTranslations();
+
+            TooltipDrawable = new();
+            DrawableManager.Add(TooltipDrawable);
 
             base.Initialize();
         }
