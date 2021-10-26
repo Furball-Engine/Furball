@@ -2,11 +2,6 @@ using Furball.Engine;
 using Furball.Engine.Engine;
 using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes.BezierPathTween;
-using Furball.Engine.Engine.Graphics.Drawables.UiElements;
-using Furball.Engine.Engine.Helpers;
-using Furball.Engine.Engine.Localization;
-using Furball.Engine.Engine.Localization.Languages;
-using Kettu;
 using Microsoft.Xna.Framework;
 
 namespace Furball.Game.Screens {
