@@ -64,8 +64,11 @@ namespace Furball.Engine.Engine.Debug {
                 this._updates               = 0;
             }
 
+
+
             this._textDrawable.Text = string.Format(
-                "fps: {0} ({1:N2}ms); ups: {2} ({3:N2}ms); dmi: {4}; ud/md: {5}/{6};\nbound: {7} (d: ~{8}ms; u: ~{9}ms)",
+                "fps: {0} ({1:N2}ms); ups: {2} ({3:N2}ms); dmi: {4}; ud/md: {5}/{6};\n" +
+                "gt: {7}; bound: {8} (d: ~{9}ms; u: ~{10}ms) cci: {11};",
 
                 this._lastUpdatedFramerate,
                 (1000.0 / this._lastUpdatedFramerate),
@@ -74,9 +77,11 @@ namespace Furball.Engine.Engine.Debug {
                 DrawableManager.Instances,
                 this._lastUpdatedUnmanagedDrawables,
                 this._lastUpdatedManagedDrawables,
+                FurballGame.GameTimeSource.GetCurrentTime(),
                 (FurballGame.Instance.LastDrawTime > FurballGame.Instance.LastUpdateTime ? "draw" : "update"),
                 this._lastUpdatedDrawTime.ToString(CultureInfo.InvariantCulture),
-                this._lastUpdatedUpdateTime.ToString(CultureInfo.InvariantCulture)
+                this._lastUpdatedUpdateTime.ToString(CultureInfo.InvariantCulture),
+                ContentManager.ContentCacheItems + ContentManager.FSSCacheItems
             );
 
             this._size = this._textDrawable.Size;

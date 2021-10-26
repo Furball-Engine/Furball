@@ -45,6 +45,11 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
                         (float x, float y)   = BezierHelper.CubicBezier(this.P0, this.P1, this.P2, this.P3, t);
                         (float x1, float y1) = BezierHelper.CubicBezier(this.P0, this.P1, this.P2, this.P3, nextT);
 
+                        x *= FurballGame.VerticalRatio;
+                        y *= FurballGame.VerticalRatio;
+                        x1 *= FurballGame.VerticalRatio;
+                        y1 *= FurballGame.VerticalRatio;
+
                         batch.SpriteBatch.DrawLine(x, y, x1, y1, args.Color, this.Thickness, 0);
                         batch.SpriteBatch.DrawLine(x, y, x1, y1, args.Color, this.Thickness, 0);
 
@@ -53,6 +58,11 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
                     case BezierCurveType.Quadratic: {
                         (float x, float y)   = BezierHelper.QuadraticBezier(this.P0, this.P1, this.P2, t);
                         (float x1, float y1) = BezierHelper.QuadraticBezier(this.P0, this.P1, this.P2, nextT);
+
+                        x  *= FurballGame.VerticalRatio;
+                        y  *= FurballGame.VerticalRatio;
+                        x1 *= FurballGame.VerticalRatio;
+                        y1 *= FurballGame.VerticalRatio;
 
                         batch.SpriteBatch.DrawLine(x, y, x1, y1, args.Color, this.Thickness, 0);
                         batch.SpriteBatch.DrawLine(x, y, x1, y1, args.Color, this.Thickness, 0);

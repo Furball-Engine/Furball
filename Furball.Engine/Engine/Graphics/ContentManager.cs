@@ -15,6 +15,9 @@ namespace Furball.Engine.Engine.Graphics {
         
         public static int CacheSizeLimit = 40000000;//4 MB
 
+        public static int ContentCacheItems => CONTENT_CACHE.Count;
+        public static int FSSCacheItems => FSS_CACHE.Count;
+
         /// <summary>
         /// Clears the content cache, allowing changed assets to reload
         /// </summary>
