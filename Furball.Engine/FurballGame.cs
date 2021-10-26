@@ -308,7 +308,15 @@ namespace Furball.Engine {
             this._graphics.ApplyChanges();
         }
 
+        private Stopwatch _updateWatch    = new ();
+        public double    LastUpdateTime { get; private set; } = 0.0;
+
         protected override void Update(GameTime gameTime) {
+            if (RuntimeInfo.IsDebug()) {
+                this._updateWatch.Reset();
+                this._updateWatch.Start();
+            }
+
             InputManager.Update();
 
             DrawableManager.Update(gameTime);
@@ -324,9 +332,22 @@ namespace Furball.Engine {
             GameTimeScheduler.Update(Time);
             
             base.Update(gameTime);
+
+            if (RuntimeInfo.IsDebug()) {
+                this._updateWatch.Stop();
+                this.LastUpdateTime = this._updateWatch.Elapsed.TotalMilliseconds;
+            }
         }
 
+        private Stopwatch _drawWatch = new ();
+        public double    LastDrawTime { get; private set; } = 0.0;
+
         protected override void Draw(GameTime gameTime) {
+            if (RuntimeInfo.IsDebug()) {
+                this._drawWatch.Reset();
+                this._drawWatch.Start();
+            }
+
             this.GraphicsDevice.Clear(Color.Black);
 
             base.Draw(gameTime);
@@ -340,6 +361,11 @@ namespace Furball.Engine {
 
             if (ConVars.DebugOverlay.Value == 1)
                 DebugOverlayDrawableManager.Draw(gameTime, DrawableBatch);
+
+            if (RuntimeInfo.IsDebug()) {
+                this._drawWatch.Stop();
+                this.LastDrawTime = this._drawWatch.Elapsed.TotalMilliseconds;
+            }
         }
 
         #region Timing

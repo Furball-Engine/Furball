@@ -1,3 +1,5 @@
+using System;
+using System.Globalization;
 using Furball.Engine.Engine.Graphics;
 using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
@@ -14,6 +16,8 @@ namespace Furball.Engine.Engine.Debug {
         private double _lastUpdatedUpdaterate         = 0;
         private int    _lastUpdatedManagedDrawables   = 0;
         private int    _lastUpdatedUnmanagedDrawables = 0;
+        private double _lastUpdatedDrawTime           = 0;
+        private double _lastUpdatedUpdateTime         = 0;
 
         private double _frameDeltaTime  = 0;
         private int    _frames          = 0;
@@ -21,7 +25,7 @@ namespace Furball.Engine.Engine.Debug {
         private int    _updates         = 0;
 
         public DebugCounter() {
-            this.Position = new Vector2(0, 720 - this._textDrawable.Size.Y);
+            this.Position = new Vector2(0, 695 - this._textDrawable.Size.Y);
         }
 
         public override void Draw(GameTime time, DrawableBatch batch, DrawableManagerArgs args) {
@@ -49,6 +53,9 @@ namespace Furball.Engine.Engine.Debug {
                     this._lastUpdatedManagedDrawables   += current.CountManaged;
                     this._lastUpdatedUnmanagedDrawables += current.CountUnmanaged;
                 }
+
+                this._lastUpdatedDrawTime   = Math.Round(FurballGame.Instance.LastDrawTime, 2);
+                this._lastUpdatedUpdateTime = Math.Round(FurballGame.Instance.LastUpdateTime, 2);
             }
 
             if (this._updateDeltaTime >= 1.0) {
@@ -58,7 +65,7 @@ namespace Furball.Engine.Engine.Debug {
             }
 
             this._textDrawable.Text = string.Format(
-                "fps: {0} ({1:N2}ms); ups: {2} ({3:N2}ms); dmi: {4}; ud/md: {5}/{6};",
+                "fps: {0} ({1:N2}ms); ups: {2} ({3:N2}ms); dmi: {4}; ud/md: {5}/{6};\nbound: {7} (d: ~{8}ms; u: ~{9}ms)",
 
                 this._lastUpdatedFramerate,
                 (1000.0 / this._lastUpdatedFramerate),
@@ -66,7 +73,10 @@ namespace Furball.Engine.Engine.Debug {
                 (1000.0 / this._lastUpdatedUpdaterate),
                 DrawableManager.Instances,
                 this._lastUpdatedUnmanagedDrawables,
-                this._lastUpdatedManagedDrawables
+                this._lastUpdatedManagedDrawables,
+                (FurballGame.Instance.LastDrawTime > FurballGame.Instance.LastUpdateTime ? "draw" : "update"),
+                this._lastUpdatedDrawTime.ToString(CultureInfo.InvariantCulture),
+                this._lastUpdatedUpdateTime.ToString(CultureInfo.InvariantCulture)
             );
 
             this._size = this._textDrawable.Size;
