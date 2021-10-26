@@ -2,7 +2,6 @@ using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Furball.Engine.Engine.Helpers;
 using Microsoft.Xna.Framework;
 using Xssp.MonoGame.Primitives2D;
-using MathHelper=Furball.Engine.Engine.Helpers.MathHelper;
 
 namespace Furball.Engine.Engine.Graphics.Drawables {
     public class BezierCurveDrawable : ManagedDrawable {
@@ -43,8 +42,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
 
                 switch (this.Type) {
                     case BezierCurveType.Cubic: {
-                        (float x, float y)   = MathHelper.CubicBezier(this.P0, this.P1, this.P2, this.P3, t);
-                        (float x1, float y1) = MathHelper.CubicBezier(this.P0, this.P1, this.P2, this.P3, nextT);
+                        (float x, float y)   = BezierHelper.CubicBezier(this.P0, this.P1, this.P2, this.P3, t);
+                        (float x1, float y1) = BezierHelper.CubicBezier(this.P0, this.P1, this.P2, this.P3, nextT);
 
                         batch.SpriteBatch.DrawLine(x, y, x1, y1, args.Color, this.Thickness, 0);
                         batch.SpriteBatch.DrawLine(x, y, x1, y1, args.Color, this.Thickness, 0);
@@ -52,8 +51,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
                         break;
                     }
                     case BezierCurveType.Quadratic: {
-                        (float x, float y)   = MathHelper.QuadraticBezier(this.P0, this.P1, this.P2, t);
-                        (float x1, float y1) = MathHelper.QuadraticBezier(this.P0, this.P1, this.P2, nextT);
+                        (float x, float y)   = BezierHelper.QuadraticBezier(this.P0, this.P1, this.P2, t);
+                        (float x1, float y1) = BezierHelper.QuadraticBezier(this.P0, this.P1, this.P2, nextT);
 
                         batch.SpriteBatch.DrawLine(x, y, x1, y1, args.Color, this.Thickness, 0);
                         batch.SpriteBatch.DrawLine(x, y, x1, y1, args.Color, this.Thickness, 0);
@@ -63,10 +62,5 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
                 }
             }
         }
-    }
-
-    public enum BezierCurveType {
-        Quadratic,
-        Cubic
     }
 }
