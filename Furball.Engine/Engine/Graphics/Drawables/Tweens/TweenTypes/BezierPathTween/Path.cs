@@ -6,14 +6,15 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes.BezierPathT
     internal record PathRange(double begin, double end);
 
     public class Path {
-        private PathSegment[]   _path;
+        public readonly PathSegment[] PathSegments;
+
         private List<PathRange> _pathRanges;
         private double          _segmentLength;
 
         public Path(params PathSegment[] segments) {
-            this._path = segments;
+            this.PathSegments = segments;
 
-            int segmentCount = this._path.Length;
+            int segmentCount = this.PathSegments.Length;
             double segmentLength = 1.0 / segmentCount;
 
             List<PathRange> ranges = new();
@@ -21,7 +22,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes.BezierPathT
             double current = 0.0;
 
             for (int i = 0; i != segmentCount; i++) {
-                PathSegment currentSegment = this._path[i];
+                PathSegment currentSegment = this.PathSegments[i];
                 currentSegment.Index = i;
 
                 double begin = current;
@@ -43,8 +44,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes.BezierPathT
             if (progress > 1.0 || progress < 0.0)
                 throw new InvalidOperationException("SegmentFromProgress requires `progress` to be between 0 and 1..");
 
-            for (int i = 0; i != this._path.Length; i++) {
-                PathSegment current = this._path[i];
+            for (int i = 0; i != this.PathSegments.Length; i++) {
+                PathSegment current = this.PathSegments[i];
 
                 if (current.IsBetween(progress))
                     return current;
@@ -55,7 +56,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes.BezierPathT
 
         public Vector2 GetCurrent(double progress) {
             PathSegment segment = this.SegmentFromProgress(progress);
-            return segment.GetPosition(progress, this._path.Length);
+            return segment.GetPosition(progress, this.PathSegments.Length);
         }
     }
 }

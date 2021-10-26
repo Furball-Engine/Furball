@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes;
+using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes.BezierPathTween;
 using Furball.Engine.Engine.Timing;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -256,6 +257,12 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
 
                         if (vectorTween != null)
                             this.Position = vectorTween.GetCurrent();
+                        break;
+                    case TweenType.Path:
+                        PathTween pathTween = currentTween as PathTween;
+
+                        if (pathTween != null)
+                            this.Position = pathTween.GetCurrent();
                         break;
                     case TweenType.Scale:
                         VectorTween scaleTween = currentTween as VectorTween;

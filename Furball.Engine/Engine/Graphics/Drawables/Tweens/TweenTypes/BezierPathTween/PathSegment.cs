@@ -55,6 +55,6 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes.BezierPathT
             return Vector2.Zero;
         }
 
-        internal bool IsBetween(double progress) => this.PathProgressRange.begin >= progress && this.PathProgressRange.end <= progress;
+        internal bool IsBetween(double progress) => this.PathProgressRange.begin <= progress && this.PathProgressRange.end >= progress;
     }
 }

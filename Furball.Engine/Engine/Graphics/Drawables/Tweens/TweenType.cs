@@ -5,6 +5,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Tweens {
     /// </summary>
     public enum TweenType {
         Movement,
+        Path,
         Fade,
         Color,
         Scale,
