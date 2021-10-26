@@ -98,7 +98,7 @@ namespace Furball.Engine.Engine.Graphics {
                 if (File.Exists(filename))
                     data = File.ReadAllBytes(filename);
             }
-
+            
             if (data.Length == 0)
                 throw new FileNotFoundException("The specified content file was not found.", filename);
 
