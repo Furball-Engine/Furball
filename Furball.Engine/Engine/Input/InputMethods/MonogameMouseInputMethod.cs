@@ -17,18 +17,8 @@ namespace Furball.Engine.Engine.Input.InputMethods {
                 HorizontalScrollWheelValue = currentMouseState.HorizontalScrollWheelValue
             };
 
-            if (!FurballGame.Instance.IsActive) {
-                state.LeftButton   = ButtonState.Released;
-                state.MiddleButton = ButtonState.Released;
-                state.RightButton  = ButtonState.Released;
-                state.XButton1     = ButtonState.Released;
-                state.XButton2     = ButtonState.Released;
-
-                state.ScrollWheelValue           = 0;
-                state.HorizontalScrollWheelValue = 0;
-            }
-            
-            this.CursorPositions[0] = state;
+            if(FurballGame.Instance.IsActive)
+                this.CursorPositions[0] = state;
         }
         public override void Dispose() {}
         public override void Initialize() {
@@ -44,19 +34,9 @@ namespace Furball.Engine.Engine.Input.InputMethods {
                 ScrollWheelValue           = currentMouseState.ScrollWheelValue,
                 HorizontalScrollWheelValue = currentMouseState.HorizontalScrollWheelValue
             };
-            
-            if (!FurballGame.Instance.IsActive) {
-                state.LeftButton   = ButtonState.Released;
-                state.MiddleButton = ButtonState.Released;
-                state.RightButton  = ButtonState.Released;
-                state.XButton1     = ButtonState.Released;
-                state.XButton2     = ButtonState.Released;
 
-                state.ScrollWheelValue           = 0;
-                state.HorizontalScrollWheelValue = 0;
-            }
-            
-            this.CursorPositions.Add(state);
+            if (FurballGame.Instance.IsActive)
+                this.CursorPositions.Add(state);
         }
     }
 }
