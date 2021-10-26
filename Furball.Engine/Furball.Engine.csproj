@@ -11,8 +11,8 @@
         <PackageLicenseUrl>https://github.com/Eeveelution/Furball/blob/master/LICENSE</PackageLicenseUrl>
         <RepositoryUrl>https://github.com/Eeveelution/Furball</RepositoryUrl>
         <PackageTags>game_engine engine game monogame furball eeveelution beyley games osu</PackageTags>
-        <AssemblyVersion>1.0.1</AssemblyVersion>
-        <FileVersion>1.0.1</FileVersion>
+        <AssemblyVersion>1.0.2</AssemblyVersion>
+        <FileVersion>1.0.2</FileVersion>
         <Version>1.0.1</Version>
         <PackageVersion>1.0.2</PackageVersion>
         <PackageReleaseNotes>+ Added PathTweens which allow Moving of Drawables in a Bezier Curve,
