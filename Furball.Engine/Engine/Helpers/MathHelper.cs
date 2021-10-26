@@ -1,4 +1,5 @@
 using System;
+using Microsoft.Xna.Framework;
 
 namespace Furball.Engine.Engine.Helpers {
     public static class MathHelper {
@@ -17,11 +18,28 @@ namespace Furball.Engine.Engine.Helpers {
         /// Adding half of difference to start should be half of the way to end from start, 1/4th of difference is 1/4th the way to end from start,
         /// which is the lerped value we want 
         /// </summary>
-        /// <param name="start"></param>
-        /// <param name="end"></param>
-        /// <param name="amount"></param>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <param name="t"></param>
         /// <returns>The interpolated value</returns>
-        public static double Lerp(double start, double end, double amount) => start + (end - start) * amount;
+        public static double Lerp(double a, double b, double t) => a + (b - a) * t;
+
+        public static Vector2 Lerp(Vector2 a, Vector2 b, float t) => (1f - t) * a + t * b;
+
+        public static Vector2 QuadraticBezier(Vector2 p0, Vector2 p1, Vector2 p2, float t) {
+            Vector2 a = Lerp(p0, p1, t);
+            Vector2 b = Lerp(p1, p2, t);
+            return Lerp(a, b, t);
+        }
+
+        public static Vector2 CubicBezier(Vector2 p0, Vector2 p1, Vector2 p2, Vector2 p3, float t) {
+            Vector2 a = Lerp(p0, p1, t);
+            Vector2 b = Lerp(p1, p2, t);
+            Vector2 c = Lerp(p2, p3, t);
+            Vector2 d = Lerp(a,  b,  t);
+            Vector2 e = Lerp(b,  c,  t);
+            return Lerp(d, e, t);
+        }
         
         /// <summary>
         /// Convert a rotation amount in degrees to radians 
