@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Numerics;
-using Vector2=Microsoft.Xna.Framework.Vector2;
+using Microsoft.Xna.Framework;
 
 namespace Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes.BezierPathTween {
     internal record PathRange(double begin, double end);

@@ -2,7 +2,6 @@ using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Furball.Engine.Engine.Helpers;
 using Microsoft.Xna.Framework;
 using Xssp.MonoGame.Primitives2D;
-using MathHelper=Furball.Engine.Engine.Helpers.MathHelper;
 
 namespace Furball.Engine.Engine.Graphics.Drawables {
     public class BezierCurveDrawable : ManagedDrawable {

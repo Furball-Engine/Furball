@@ -1,4 +1,3 @@
-using System;
 using Furball.Engine.Engine.Helpers;
 using Microsoft.Xna.Framework;
 
