@@ -15,6 +15,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
 
         public int Quality = 20;
 
+        public float Thickness = 2f;
+
         public override Vector2 Size => new(100);
 
         public BezierCurveDrawable(Vector2 p0, Vector2 p1, Vector2 p2) {
@@ -44,8 +46,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
                         (float x, float y)   = MathHelper.CubicBezier(this.P0, this.P1, this.P2, this.P3, t);
                         (float x1, float y1) = MathHelper.CubicBezier(this.P0, this.P1, this.P2, this.P3, nextT);
 
-                        batch.SpriteBatch.DrawLine(x, y, x1, y1, args.Color, 0);
-                        batch.SpriteBatch.DrawLine(x, y, x1, y1, args.Color, 0);
+                        batch.SpriteBatch.DrawLine(x, y, x1, y1, args.Color, this.Thickness, 0);
+                        batch.SpriteBatch.DrawLine(x, y, x1, y1, args.Color, this.Thickness, 0);
 
                         break;
                     }
@@ -53,8 +55,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
                         (float x, float y)   = MathHelper.QuadraticBezier(this.P0, this.P1, this.P2, t);
                         (float x1, float y1) = MathHelper.QuadraticBezier(this.P0, this.P1, this.P2, nextT);
 
-                        batch.SpriteBatch.DrawLine(x, y, x1, y1, args.Color, 0);
-                        batch.SpriteBatch.DrawLine(x, y, x1, y1, args.Color, 0);
+                        batch.SpriteBatch.DrawLine(x, y, x1, y1, args.Color, this.Thickness, 0);
+                        batch.SpriteBatch.DrawLine(x, y, x1, y1, args.Color, this.Thickness, 0);
 
                         break;
                     }
