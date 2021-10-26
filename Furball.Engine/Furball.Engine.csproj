@@ -14,6 +14,9 @@
         <AssemblyVersion>1.0.1</AssemblyVersion>
         <FileVersion>1.0.1</FileVersion>
         <Version>1.0.1</Version>
+        <PackageVersion>1.0.2</PackageVersion>
+        <PackageReleaseNotes>+ Added PathTweens which allow Moving of Drawables in a Bezier Curve,
++ Added BezierCurveDrawable which allows for drawing of Bezier Curves</PackageReleaseNotes>
     </PropertyGroup>
     <PropertyGroup>
         <ApplicationManifest>app.manifest</ApplicationManifest>
