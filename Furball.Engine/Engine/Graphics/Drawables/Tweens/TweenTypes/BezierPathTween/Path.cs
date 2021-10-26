@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 
 namespace Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes.BezierPathTween {
-    internal record PathRange(double begin, double end);
+    internal record PathRange(double Begin, double End);
 
     public class Path {
         public readonly PathSegment[] PathSegments;
