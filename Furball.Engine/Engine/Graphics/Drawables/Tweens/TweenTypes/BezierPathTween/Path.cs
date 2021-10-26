@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Numerics;
+using Vector2=Microsoft.Xna.Framework.Vector2;
 
 namespace Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes.BezierPathTween {
     internal record PathRange(double begin, double end);
@@ -50,6 +52,11 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes.BezierPathT
             }
 
             return null;
+        }
+
+        public Vector2 GetCurrent(double progress) {
+            PathSegment segment = this.SegmentFromProgress(progress);
+            return segment.GetPosition(progress, this._path.Length);
         }
     }
 }
