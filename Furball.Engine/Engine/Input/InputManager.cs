@@ -151,7 +151,7 @@ namespace Furball.Engine.Engine.Input {
         /// </summary>
         private List<InputMethod> registeredInputMethods = new();
 
-        public IReadOnlyList<InputMethod> RegisteredInputMethods => new List<InputMethod>(this.registeredInputMethods);
+        public IReadOnlyList<InputMethod> RegisteredInputMethods => this.registeredInputMethods.AsReadOnly();
 
         /// <summary>
         /// Called when a key is pressed
