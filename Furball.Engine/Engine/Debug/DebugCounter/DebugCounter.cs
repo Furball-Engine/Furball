@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Globalization;
 using Furball.Engine.Engine.Debug.DebugCounter.Items;
 using Furball.Engine.Engine.Graphics;
 using Furball.Engine.Engine.Graphics.Drawables;
@@ -8,19 +6,29 @@ using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Microsoft.Xna.Framework;
 
 namespace Furball.Engine.Engine.Debug.DebugCounter {
+    /// <summary>
+    /// Debug Counter which is displayed on the bottom left corner
+    /// </summary>
     public class DebugCounter : ManagedDrawable {
         private TextDrawable _textDrawable = new(new Vector2(0, 700), FurballGame.DEFAULT_FONT, "a", 24);
 
         private Vector2 _size;
         public override Vector2 Size => this._size * this.Scale;
-
+        /// <summary>
+        /// Items which will be displayed on the Counter
+        /// </summary>
         public List<DebugCounterItem> Items = new() {
             new FrameRate(),
             new UpdateRate(),
             new DrawableManagerStats(),
             new GameTimeSourceTime(),
             new BoundByDrawUpdate(),
-            new ContentCacheItems()
+            new ContentCacheItems(),
+#if DESKTOP
+            //If Android ever gets implemented, add new item called MousePoints and have it display all current cursors
+            new MousePosition(),
+#endif
+            new KeyboardInputs(),
         };
 
         public DebugCounter() {
@@ -53,6 +61,5 @@ namespace Furball.Engine.Engine.Debug.DebugCounter {
             this._size              = this._textDrawable.Size;
             this.Position           = new Vector2(0, 720 - this._textDrawable.Size.Y);
         }
-
     }
 }

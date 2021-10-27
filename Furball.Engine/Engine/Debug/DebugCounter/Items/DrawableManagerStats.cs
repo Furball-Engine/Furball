@@ -2,6 +2,10 @@ using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Microsoft.Xna.Framework;
 
 namespace Furball.Engine.Engine.Debug.DebugCounter.Items {
+    /// <summary>
+    /// Displays some basic DrawableManager stats, like the amount of UnmanagedDrawables total compares to ManagedDrawables total
+    /// aswell as how many DrawableManager instances exist
+    /// </summary>
     public class DrawableManagerStats : DebugCounterItem {
         private int    _lastUpdatedManagedDrawables;
         private int    _lastUpdatedUnmanagedDrawables;

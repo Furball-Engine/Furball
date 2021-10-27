@@ -22,6 +22,12 @@
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <ApplicationIcon>Icon.ico</ApplicationIcon>
     </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <DefineConstants>TRACECOREAPP;DESKTOP</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <DefineConstants>TRACECOREAPP;DESKTOP</DefineConstants>
+    </PropertyGroup>
     <ItemGroup>
         <None Remove="Icon.ico" />
         <None Remove="Icon.bmp" />

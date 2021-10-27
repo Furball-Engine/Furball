@@ -1,8 +1,10 @@
 using System;
-using System.Globalization;
 using Microsoft.Xna.Framework;
 
 namespace Furball.Engine.Engine.Debug.DebugCounter.Items {
+    /// <summary>
+    /// Basic Frame Rate counter, updates every second
+    /// </summary>
     public class FrameRate : DebugCounterItem {
         private int    _lastUpdatedFramerate;
         private int    _frames;
