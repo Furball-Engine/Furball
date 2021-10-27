@@ -189,6 +189,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
         }
 
         public void Add(BaseDrawable    drawable) => this._drawables.Add(drawable);
+        public void Add(List<BaseDrawable> drawables) => this._drawables.AddRange(drawables);
+        public void Add(params BaseDrawable[] drawables) => this._drawables.AddRange(drawables);
         public void Remove(BaseDrawable drawable) => this._drawables.Remove(drawable);
 
         public override void Dispose(bool disposing) {
