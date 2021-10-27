@@ -11,19 +11,23 @@ namespace Furball.Game.Screens {
 
         public override void Initialize() {
             base.Initialize();
-            
+
             TexturedDrawable background = new TexturedDrawable(FurballGame.WhitePixel, Vector2.Zero) {
                 ColorOverride = Color.BlueViolet,
                 Scale = new Vector2(1280, 720),
                 Depth = 1f
             };
-            
+
             this.Manager.Add(background);
 
             Vector2 p1 = new Vector2(160,                  -250 + 1280 / 2);
             Vector2 p2 = new Vector2(160 + ((1280/4) * 1), -250 + (1280/2) - (1280/4));
             Vector2 p3 = new Vector2(160 + ((1280/4) * 2), -250 + (1280/2) + (1280/4));
             Vector2 p4 = new Vector2(160 + ((1280/4) * 3), -250 + 1280 / 2);
+
+            List<Vector2> points = new() {
+                p1, p2, p3, p4
+            };
 
             List<BaseDrawable> anchors = new List<BaseDrawable>();
 
@@ -37,9 +41,13 @@ namespace Furball.Game.Screens {
                 p1          = point.ToVector2();
                 a1.Position = point.ToVector2();
 
+                points = new() {
+                    p1, p2, p3, p4
+                };
+
                 this.Manager.Remove(this.pathVisualization);
-                this.pathVisualization = new CurveDrawable(p1, p2, p3, p4) {
-                    Quality = 50, Thickness = 5f, Type = CurveType.CatmullRom
+                this.pathVisualization = new CurveDrawable(points, CurveType.PeppyCatmullRom) {
+                    Quality = 20, Thickness = 5f,
                 };
                 this.Manager.Add(this.pathVisualization);
             };
@@ -56,9 +64,13 @@ namespace Furball.Game.Screens {
             a2.OnDrag += delegate(object? sender, Point point) {
                 p2          = point.ToVector2();
                 a2.Position = point.ToVector2();
+                points = new() {
+                    p1, p2, p3, p4
+                };
+
                 this.Manager.Remove(this.pathVisualization);
-                this.pathVisualization = new CurveDrawable(p1, p2, p3, p4) {
-                    Quality = 50, Thickness = 5f, Type = CurveType.CatmullRom
+                this.pathVisualization = new CurveDrawable(points, CurveType.PeppyCatmullRom) {
+                    Quality = 20, Thickness = 5f,
                 };
                 this.Manager.Add(this.pathVisualization);
             };
@@ -75,11 +87,14 @@ namespace Furball.Game.Screens {
             a3.OnDrag += delegate(object? sender, Point point) {
                 p3          = point.ToVector2();
                 a3.Position = point.ToVector2();
-                this.Manager.Remove(this.pathVisualization);
-                this.pathVisualization = new CurveDrawable(p1, p2, p3, p4) {
-                    Quality = 50, Thickness = 5f, Type = CurveType.CatmullRom
+                points = new() {
+                    p1, p2, p3, p4
                 };
-                this.Manager.Add(this.pathVisualization);;
+                this.Manager.Remove(this.pathVisualization);
+                this.pathVisualization = new CurveDrawable(points, CurveType.PeppyCatmullRom) {
+                    Quality = 20, Thickness = 5f,
+                };
+                this.Manager.Add(this.pathVisualization);
             };
 
             anchors.Add(a3);
@@ -95,19 +110,21 @@ namespace Furball.Game.Screens {
             a4.OnDrag += delegate(object? sender, Point point) {
                 p4          = point.ToVector2();
                 a4.Position = point.ToVector2();
+
+                points = new() {
+                    p1, p2, p3, p4
+                };
                 this.Manager.Remove(this.pathVisualization);
-                this.pathVisualization = new CurveDrawable(p1, p2, p3, p4) {
-                    Quality = 50, Thickness = 5f, Type = CurveType.CatmullRom
+                this.pathVisualization = new CurveDrawable(points, CurveType.PeppyCatmullRom) {
+                    Quality = 20, Thickness = 5f,
                 };
                 this.Manager.Add(this.pathVisualization);
             };
 
             anchors.Add(a4);
 
-            pathVisualization = new CurveDrawable(p1, p2, p3, p4) {
-                Thickness = 5f,
-                Quality = 50,
-                Type = CurveType.CatmullRom
+            this.pathVisualization = new CurveDrawable(points, CurveType.PeppyCatmullRom) {
+                Quality = 20, Thickness = 5f,
             };
 
             TexturedDrawable testDrawable = new TexturedDrawable(FurballGame.WhitePixel, p1) {
