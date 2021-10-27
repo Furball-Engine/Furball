@@ -86,7 +86,14 @@ namespace Furball.Engine {
 
         private Screen _startScreen;
         public FurballGame(Screen startScreen) {
-            this._graphics             = new GraphicsDeviceManager(this);
+            this._graphics = new GraphicsDeviceManager(this) {
+                GraphicsProfile     = GraphicsProfile.HiDef,
+                PreferMultiSampling = true
+            };
+
+            this._graphics.PreparingDeviceSettings += (_, e) => e.GraphicsDeviceInformation.PresentationParameters.MultiSampleCount = 4;
+            this._graphics.ApplyChanges();
+            
             this.Content.RootDirectory = "Content";
             this.IsMouseVisible        = true;
 
@@ -305,6 +312,18 @@ namespace Furball.Engine {
 
             this._graphics.SynchronizeWithVerticalRetrace = false;
             this.IsFixedTimeStep                          = false;
+
+            this._graphics.GraphicsDevice.RasterizerState = new RasterizerState {
+                CullMode             = CullMode.None,
+                MultiSampleAntiAlias = true
+            };
+            this._graphics.GraphicsDevice.BlendState = new BlendState {
+                AlphaSourceBlend      = Blend.SourceAlpha,
+                AlphaDestinationBlend = Blend.InverseSourceColor,
+                ColorSourceBlend      = Blend.SourceAlpha,
+                ColorDestinationBlend = Blend.InverseSourceAlpha
+            };
+            
             this._graphics.ApplyChanges();
         }
 
