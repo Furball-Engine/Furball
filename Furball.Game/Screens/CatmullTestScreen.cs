@@ -6,7 +6,7 @@ using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes.BezierPathTween
 using Microsoft.Xna.Framework;
 
 namespace Furball.Game.Screens {
-    public class BasicTestScreen : Screen {
+    public class CatmullTestScreen : Screen {
         private CurveDrawable pathVisualization;
 
         public override void Initialize() {

@@ -4,7 +4,7 @@ using Furball.Game.Screens;
 
 namespace Furball.Game {
     public class FurballTestGame : FurballGame {
-        public FurballTestGame() : base(new BasicTestScreen()) {
+        public FurballTestGame() : base(new ScreenSelector()) {
             this.Window.AllowUserResizing = true;
         }
 
