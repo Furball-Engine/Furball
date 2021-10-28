@@ -55,6 +55,9 @@ namespace Furball.Engine.Engine.Debug.DebugCounter {
                     finalText += "\n";
 
                 finalText += current.GetAsString(time) + "; ";
+
+                if (current.ForceNewLine)
+                    finalText += "\n";
             }
 
             this._textDrawable.Text = finalText;

@@ -2,6 +2,7 @@ using Microsoft.Xna.Framework;
 
 namespace Furball.Engine.Engine.Debug.DebugCounter.Items {
     public class KeyboardInputs : DebugCounterItem {
+        public override bool ForceNewLine { get; } = true;
 
         public override string GetAsString(GameTime time) {
             string endString = "keyboard: {";
