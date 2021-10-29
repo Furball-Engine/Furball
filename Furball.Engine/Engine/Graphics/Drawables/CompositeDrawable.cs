@@ -19,7 +19,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
                     if (managedDrawable.Rectangle.Bottom > bottomRight.Y) bottomRight.Y = managedDrawable.Rectangle.Bottom;
                 }
 
-                return bottomRight - topLeft;
+                return (bottomRight - topLeft) * this.Scale;
             }
         }
 
