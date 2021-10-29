@@ -201,7 +201,7 @@ namespace Furball.Engine {
 
         public void SetTargetFps(int fps, double unfocusedScale = -1) {
             if (fps != -1) {
-                this.TargetElapsedTime = TimeSpan.FromMilliseconds(1000.0 / (double) fps);
+                this.TargetElapsedTime = TimeSpan.FromMilliseconds(1000 / (double)fps);
                 this.IsFixedTimeStep   = true;
             } else {
                 this.TargetElapsedTime = TimeSpan.FromTicks(1);
@@ -209,8 +209,8 @@ namespace Furball.Engine {
             }
 
             if (unfocusedScale != -1) {
-                double newFps = fps * unfocusedScale;
-                double milliseconds = 1000.0 / (double) newFps;
+                double newFps       = fps   * unfocusedScale;
+                double milliseconds = 1000d / newFps;
 
                 this.InactiveSleepTime = TimeSpan.FromMilliseconds(milliseconds);
             }
