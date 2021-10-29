@@ -30,10 +30,10 @@ namespace Furball.Engine.Engine.Helpers {
 
             if (typeof(Delegate).IsAssignableFrom(typeToReflect)) return null;
 
-            object? cloneObject = CloneMethod.Invoke(originalObject, null);
+            object cloneObject = CloneMethod.Invoke(originalObject, null);
 
             if (typeToReflect.IsArray) {
-                Type? arrayType = typeToReflect.GetElementType();
+                Type arrayType = typeToReflect.GetElementType();
 
                 if (IsPrimitive(arrayType) == false) {
                     Array clonedArray = (Array)cloneObject;
@@ -65,8 +65,8 @@ namespace Furball.Engine.Engine.Helpers {
                 if (filter != null && filter(fieldInfo) == false) continue;
                 if (IsPrimitive(fieldInfo.FieldType)) continue;
 
-                object? originalFieldValue = fieldInfo.GetValue(originalObject);
-                object  clonedFieldValue   = InternalCopy(originalFieldValue, visited);
+                object originalFieldValue = fieldInfo.GetValue(originalObject);
+                object clonedFieldValue   = InternalCopy(originalFieldValue, visited);
 
                 fieldInfo.SetValue(cloneObject, clonedFieldValue);
             }

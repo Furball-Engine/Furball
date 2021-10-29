@@ -14,7 +14,7 @@
         <AssemblyVersion>1.0.2</AssemblyVersion>
         <FileVersion>1.0.2</FileVersion>
         <Version>1.0.2</Version>
-        <PackageVersion>1.0.2</PackageVersion>
+        <PackageVersion>1.0.3-develop</PackageVersion>
         <PackageReleaseNotes>+ Added PathTweens which allow Moving of Drawables in a Bezier Curve,
 + Added BezierCurveDrawable which allows for drawing of Bezier Curves</PackageReleaseNotes>
     </PropertyGroup>
@@ -24,6 +24,7 @@
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
       <DefineConstants>TRACECOREAPP;DESKTOP</DefineConstants>
+        <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
       <DefineConstants>TRACECOREAPP;DESKTOP</DefineConstants>
@@ -45,14 +46,14 @@
         <TrimmerRootAssembly Include="Microsoft.Xna.Framework.Content.ContentTypeReader" Visible="false" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="FontStashSharp.MonoGame" Version="1.0.4" />
-        <PackageReference Include="JacePxd" Version="0.9.0" />
+        <PackageReference Include="FontStashSharp.MonoGame" Version="1.0.4"/>
+        <PackageReference Include="Jace" Version="1.0.0"/>
         <PackageReference Include="Kettu" Version="1.1.0"/>
-        <PackageReference Include="ManagedBass" Version="3.1.0" />
-        <PackageReference Include="ManagedBass.Fx" Version="3.1.0" />
-        <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.2062-develop" />
-        <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.2062-develop" />
-        <PackageReference Include="TextCopy" Version="4.3.1" />
-        <PackageReference Include="Xssp.MonoGame.Primitives2D.DesktopGL" Version="2.0.0" />
+        <PackageReference Include="ManagedBass" Version="3.1.0"/>
+        <PackageReference Include="ManagedBass.Fx" Version="3.1.0"/>
+        <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.2062-develop"/>
+        <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.2062-develop"/>
+        <PackageReference Include="TextCopy" Version="4.3.1"/>
+        <PackageReference Include="Xssp.MonoGame.Primitives2D.DesktopGL" Version="2.0.0"/>
     </ItemGroup>
 </Project>

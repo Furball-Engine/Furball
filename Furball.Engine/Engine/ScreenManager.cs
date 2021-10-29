@@ -1,3 +1,4 @@
+#nullable enable
 using System.Threading;
 using Furball.Engine.Engine.Graphics;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
@@ -23,7 +24,7 @@ namespace Furball.Engine.Engine {
         /// <param name="time"></param>
         /// <param name="batch"></param>
         /// <param name="args"></param>
-        internal static void DrawTransition(GameTime time, DrawableBatch batch, DrawableManagerArgs args = null) {
+        internal static void DrawTransition(GameTime time, DrawableBatch batch, DrawableManagerArgs args = null!) {
             Transition?.Draw(time, batch, args);
         }
         /// <summary>
