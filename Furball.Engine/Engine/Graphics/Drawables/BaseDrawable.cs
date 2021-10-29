@@ -26,7 +26,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
     public abstract class BaseDrawable {
         private Vector2 _position = Vector2.Zero;
 
-        public List<string> Tags = null;
+        public List<string> Tags = new();
 
         public bool ContainsTag(string tag) => this.Tags.Contains(tag);
 
