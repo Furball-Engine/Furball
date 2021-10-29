@@ -8,6 +8,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Primitives {
     /// </summary>
     public class LinePrimitiveDrawable : ManagedDrawable {
         public float Length;
+        public float Thickness = 1f;
         public float Angle;
         /// <summary>
         /// Creates a Line
@@ -22,7 +23,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Primitives {
         }
         
         public override void Draw(GameTime time, DrawableBatch batch, DrawableManagerArgs args) {
-            batch.SpriteBatch.DrawLine(args.Position * FurballGame.VerticalRatio, this.Length * FurballGame.VerticalRatio, this.Angle, args.Color, 0f);
+            batch.SpriteBatch.DrawLine(args.Position * FurballGame.VerticalRatio, this.Length * FurballGame.VerticalRatio, this.Angle, args.Color, this.Thickness, 0f);
         }
     }
 }
