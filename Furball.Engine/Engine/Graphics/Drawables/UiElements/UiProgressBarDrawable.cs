@@ -1,7 +1,7 @@
 using FontStashSharp;
+using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Microsoft.Xna.Framework;
 using Xssp.MonoGame.Primitives2D;
-using Furball.Engine.Engine.Graphics.Drawables.Managers;
 
 namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
     /// <summary>
@@ -51,8 +51,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
             batch.SpriteBatch.FillRectangle(
                 args.Position * FurballGame.VerticalRatio, 
                 new Vector2(this._progressWidth, this.BarSize.Y) * FurballGame.VerticalRatio,
-                args.Color, 
-                this.Depth
+                args.Color,
+                0f
             );
             batch.SpriteBatch.DrawRectangle(
                 args.Position * FurballGame.VerticalRatio, 

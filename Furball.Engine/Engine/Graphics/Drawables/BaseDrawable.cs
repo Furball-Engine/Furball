@@ -100,7 +100,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// <summary>
         /// The draw depth of the Drawable
         /// </summary>
-        public float Depth = 0f;
+        public double Depth = 0f;
+        public double DrawablesLastKnownDepth = 0f;
         /// <summary>
         /// List of Tweens
         /// </summary>
