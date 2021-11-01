@@ -268,7 +268,7 @@ namespace Furball.Engine {
         }
 
         protected override void BeginRun() {
-            DevConsole.Run(":nt_begin_run", false, true);
+            //DevConsole.Run(":nt_begin_run", false, true);
             ScreenManager.ChangeScreen(this._startScreen);
         }
 
