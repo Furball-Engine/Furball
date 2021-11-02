@@ -10,6 +10,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Furball.Engine.Engine.Graphics;
 using Furball.Engine.Engine.Helpers;
+using Furball.Engine.Engine.Input;
 using Volpe;
 using Volpe.Evaluation;
 using Volpe.Exceptions;
@@ -42,7 +43,70 @@ namespace Furball.Engine.Engine.DevConsole {
 
                             return Value.DefaultVoid;
                         }
-                    )
+                    ),
+                    
+                    new("cl_get_game_time", 0, (_, _) => 
+                            new Value.Number(FurballGame.GameTimeSource.GetCurrentTime())),
+                    
+                    new("cl_set_target_fps", 1, (context, values) => {
+                        if (values[0] is not Value.Number(var n))
+                            throw new InvalidValueTypeException(typeof(Value.Number), values[0].GetType(), context.Expression.PositionInText);
+
+                        int ni = (int) n;
+                        
+                        FurballGame.Instance.SetTargetFps(ni);
+
+                        _outputQueue.Enqueue($"Set Target FPS to {ni}");
+                        
+                        return Value.DefaultVoid;
+                    }),
+
+                    new("cl_set_screen_resolution", 2, (context, values) => {
+                        if (values[0] is not Value.Number(var width))
+                            throw new InvalidValueTypeException(typeof(Value.Number), values[0].GetType(), context.Expression.PositionInText);
+
+                        if (values[1] is not Value.Number(var height))
+                            throw new InvalidValueTypeException(typeof(Value.Number), values[1].GetType(), context.Expression.PositionInText);
+
+                        int widthi = (int) width;
+                        int heighti = (int) height;
+                        
+                        FurballGame.Instance.ChangeScreenSize(widthi, heighti);
+
+                        _outputQueue.Enqueue($"Resolution has been set to {widthi}x{heighti}");
+                        
+                        return Value.DefaultVoid;
+                    }),
+                    
+                    new("quit", 0,
+                        (_, _) => {
+                            FurballGame.Instance.Exit();
+
+                            _outputQueue.Enqueue("Exiting game.");
+                            
+                            return Value.DefaultVoid;
+                        }),
+                    
+                    new ("cmr_clear_cache", 0, (_, _) => {
+                        Graphics.ContentManager.ClearCache();
+                        
+                        return Value.DefaultVoid;
+                    }),
+                    
+                    new("im_input_methods", 0,
+                        (_, _) => {
+                            StringBuilder result = new StringBuilder();
+
+                            for (int i = 0; i != FurballGame.InputManager.RegisteredInputMethods.Count; i++) {
+                                InputMethod currentMethod = FurballGame.InputManager.RegisteredInputMethods[i];
+
+                                string typeName = currentMethod.GetType().Name;
+
+                                result.Append($"[{i}] {typeName}\n");
+                            }
+                            
+                            return new Value.String(result.ToString());
+                        })
                 }.Concat(DefaultBuiltins.Math).Concat(DefaultBuiltins.Core).ToArray());
         }
         
