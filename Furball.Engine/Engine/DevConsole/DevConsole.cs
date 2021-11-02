@@ -35,15 +35,15 @@ namespace Furball.Engine.Engine.DevConsole {
             if (!Directory.Exists(LogPath)) Directory.CreateDirectory(LogPath);
             
             _scope = new Scope(
-            new (string name, int parameterCount, Func<Evaluator.Context, Value[], Value> del)[] {
-                new("print", 1,
-                    (_, values) => {
-                        _outputQueue.Enqueue(values[0].Representation);
+                new (string name, int parameterCount, Func<EvaluatorContext, Value[], Value> del)[] {
+                    new("print", 1,
+                        (_, values) => {
+                            _outputQueue.Enqueue(values[0].Representation);
 
-                        return Value.DefaultVoid;
-                    }
-                )
-            });
+                            return Value.DefaultVoid;
+                        }
+                    )
+                }.Concat(DefaultBuiltins.Math).Concat(DefaultBuiltins.Core).ToArray());
         }
         
         //Because the fields are required to be static this is the only way that i can think of for devs to add their own ConVarStores like `ConVars`
@@ -93,10 +93,12 @@ namespace Furball.Engine.Engine.DevConsole {
         
         public static ConsoleResult Run(string input, bool userRun = true, bool disableLog = false) {
             lock (_outputQueue) {
-                Evaluator evaluator = new Evaluator();
-
                 try {
-                    evaluator.EvaluateAll(new Parser(new Lexer(input).ToImmutableArray()), _scope);
+                    Parser parser = new Parser(new Lexer(input).GetTokenEnumerator().ToImmutableArray());
+
+                    foreach (Expression expression in parser.GetExpressionEnumerator()) {
+                        new EvaluatorContext(expression, _scope).Evaluate();
+                    }
                 }
                 catch (VolpeException exception) {
                     return new ConsoleResult(ExecutionResult.Error, exception.Message);
