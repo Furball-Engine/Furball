@@ -67,12 +67,16 @@ namespace Furball.Engine.Engine.Graphics {
             throw new FileNotFoundException();
         }
 
-        public static FontSystem LoadSystemFont(string familyName) {
+        public static FontSystem LoadSystemFont(string familyName, FontSystemSettings settings = null) {
             SystemFonts.TryGet(familyName, out FontFamily font);
 
             font.TryGetPaths(out IEnumerable<string> paths);
 
-            FontSystem system = new();
+            FontSystem system;
+            if (settings != null)
+                system = new(settings);
+            else
+                system = new();
 
             foreach (string path in paths)
                 system.AddFont(File.OpenRead(path));
