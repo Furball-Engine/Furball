@@ -7,6 +7,7 @@ using Furball.Engine.Engine.Helpers;
 using Furball.Engine.Engine.Helpers.Logger;
 using Kettu;
 using Microsoft.Xna.Framework.Graphics;
+using SixLabors.Fonts;
 
 namespace Furball.Engine.Engine.Graphics {
     public static class ContentManager {
@@ -64,6 +65,19 @@ namespace Furball.Engine.Engine.Graphics {
             }
 
             throw new FileNotFoundException();
+        }
+
+        public static FontSystem LoadSystemFont(string familyName) {
+            SystemFonts.TryGet(familyName, out FontFamily font);
+
+            font.TryGetPaths(out IEnumerable<string> paths);
+
+            FontSystem system = new();
+
+            foreach (string path in paths)
+                system.AddFont(File.OpenRead(path));
+
+            return system;
         }
 
         public static Texture2D LoadTextureFromFile(string filename, ContentSource source = ContentSource.Game, bool bypassCache = false) 

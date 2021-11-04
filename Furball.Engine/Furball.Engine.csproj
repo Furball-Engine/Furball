@@ -43,7 +43,7 @@
         </MonoGameContentReference>
     </ItemGroup>
     <ItemGroup>
-        <TrimmerRootAssembly Include="Microsoft.Xna.Framework.Content.ContentTypeReader" Visible="false" />
+        <TrimmerRootAssembly Include="Microsoft.Xna.Framework.Content.ContentTypeReader" Visible="false"/>
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="FontStashSharp.MonoGame" Version="1.0.4"/>
@@ -53,7 +53,11 @@
         <PackageReference Include="ManagedBass.Fx" Version="3.1.0"/>
         <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.2062-develop"/>
         <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.2062-develop"/>
+        <PackageReference Include="System.Drawing.Common" Version="5.0.2"/>
         <PackageReference Include="TextCopy" Version="4.3.1"/>
         <PackageReference Include="Xssp.MonoGame.Primitives2D.DesktopGL" Version="2.0.0"/>
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Fonts\src\SixLabors.Fonts\SixLabors.Fonts.csproj"/>
     </ItemGroup>
 </Project>
