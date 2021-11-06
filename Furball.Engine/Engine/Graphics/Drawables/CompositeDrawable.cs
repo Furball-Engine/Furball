@@ -46,7 +46,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
             }
         }
 
-        public override void Update(GameTime time) {
+        public override void Update(double time) {
             foreach (ManagedDrawable drawable in this.Drawables) {
                 drawable.Update(time);
                 drawable.UpdateTweens();
@@ -59,7 +59,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
             base.Dispose(disposing);
         }
 
-        public override void Draw(GameTime time, DrawableBatch batch, DrawableManagerArgs args) {
+        public override void Draw(double time, DrawableBatch batch, DrawableManagerArgs args) {
             foreach (ManagedDrawable drawable in this.Drawables) {
                 if (!drawable.Visible) continue;
                 

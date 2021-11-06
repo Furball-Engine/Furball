@@ -61,7 +61,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
             };
         }
 
-        public override void Update(GameTime time) {
+        public override void Update(double time) {
             this.TextDrawable.Text = string.Format(this._formatString, this.Progress * 100);
 
             this._progressWidth = this.BarSize.X * this.Progress;
@@ -69,7 +69,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
             base.Update(time);
         }
 
-        public override void Draw(GameTime time, DrawableBatch batch, DrawableManagerArgs args) {
+        public override void Draw(double time, DrawableBatch batch, DrawableManagerArgs args) {
             batch.SpriteBatch.FillRectangle(
                 args.Position * FurballGame.VerticalRatio, 
                 new Vector2(this._progressWidth, this.BarSize.Y) * FurballGame.VerticalRatio,

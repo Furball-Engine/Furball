@@ -38,7 +38,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Primitives {
 
         public RectanglePrimitiveDrawable() { }
         
-        public override void Draw(GameTime time, DrawableBatch batch, DrawableManagerArgs args) {
+        public override void Draw(double time, DrawableBatch batch, DrawableManagerArgs args) {
             if (this.Filled) 
                 batch.SpriteBatch.FillRectangle(
                     args.Position * FurballGame.VerticalRatio, 

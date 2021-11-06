@@ -31,7 +31,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Primitives {
             this.Angle    = angle;
         }
         
-        public override void Draw(GameTime time, DrawableBatch batch, DrawableManagerArgs args) {
+        public override void Draw(double time, DrawableBatch batch, DrawableManagerArgs args) {
             batch.SpriteBatch.DrawLine(args.Position * FurballGame.VerticalRatio, this.Length * FurballGame.VerticalRatio, this.Angle, args.Color, this.Thickness, 0f);
         }
     }

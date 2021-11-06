@@ -130,7 +130,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
             base.Dispose(disposing);
         }
 
-        public override void Draw(GameTime time, DrawableBatch batch, DrawableManagerArgs args) {
+        public override void Draw(double time, DrawableBatch batch, DrawableManagerArgs args) {
             batch.SpriteBatch.DrawRectangle(
                 args.Position * FurballGame.VerticalRatio, 
                 this.Size * FurballGame.VerticalRatio, 

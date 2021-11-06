@@ -35,7 +35,7 @@ namespace Furball.Engine.Engine.Debug.DebugCounter {
             this.Position = new Vector2(0, 720 - this._textDrawable.Size.Y);
         }
 
-        public override void Draw(GameTime time, DrawableBatch batch, DrawableManagerArgs args) {
+        public override void Draw(double time, DrawableBatch batch, DrawableManagerArgs args) {
             for (int i = 0; i != this.Items.Count; i++) {
                 this.Items[i].Draw(time);
             }
@@ -43,7 +43,7 @@ namespace Furball.Engine.Engine.Debug.DebugCounter {
             this._textDrawable.Draw(time, batch, args);
         }
 
-        public override void Update(GameTime time) {
+        public override void Update(double time) {
             string finalText = "";
 
             for (int i = 0; i != this.Items.Count; i++) {

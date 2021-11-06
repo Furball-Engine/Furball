@@ -62,7 +62,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
             this.Type = CurveType.Cubic;
         }
 
-        public override void Draw(GameTime time, DrawableBatch batch, DrawableManagerArgs args) {
+        public override void Draw(double time, DrawableBatch batch, DrawableManagerArgs args) {
             for (int i = 0; i < this.Quality; i++) {
                 float t     = (float)i       / this.Quality;
                 float nextT = (float)(i + 1) / this.Quality;

@@ -12,7 +12,7 @@ namespace Furball.Engine.Engine.Debug.DebugCounter.Items {
         private int    _lastUpdatedInstanceCount;
         private double _deltaTime;
 
-        public override void Update(GameTime time) {
+        public override void Update(double time) {
             this._deltaTime += time.ElapsedGameTime.TotalSeconds;
 
             if (this._deltaTime >= 1.0) {

@@ -26,14 +26,14 @@ namespace Furball.Engine.Engine {
         /// <param name="time"></param>
         /// <param name="drawableBatch"></param>
         /// <param name="args"></param>
-        public override void Draw(GameTime time, DrawableBatch drawableBatch, DrawableManagerArgs args = null) {
+        public override void Draw(double time, DrawableBatch drawableBatch, DrawableManagerArgs args = null) {
             this.Manager.Draw(time, drawableBatch, args);
         }
         /// <summary>
         /// Updates the DrawableManager of the Transition
         /// </summary>
         /// <param name="time"></param>
-        public override void Update(GameTime time) {
+        public override void Update(double time) {
             this.Manager.Update(time);
         }
     }

@@ -16,22 +16,23 @@ namespace Furball.Engine.Engine {
             base.Initialize();
         }
         
-        public override void Draw(GameTime gameTime) {
+        public override void Draw(double gameTime) {
             this.Manager.Draw(gameTime, FurballGame.DrawableBatch);
 
             base.Draw(gameTime);
         }
 
-        public override void Update(GameTime gameTime) {
+        public override void Update(double gameTime) {
             this.Manager.Update(gameTime);
 
             base.Update(gameTime);
         }
 
-        protected override void Dispose(bool disposing) {
-            this.Manager.Dispose(disposing);
+        public override void Dispose() {
+            //TODO: remove disposing prolly
+            this.Manager.Dispose(true);
             
-            base.Dispose(disposing);
+            base.Dispose();
         }
     }
 }
