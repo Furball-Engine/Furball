@@ -8,17 +8,39 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
     /// Creates a simple Progress Bar
     /// </summary>
     public class UiProgressBarDrawable : ManagedDrawable {
+        /// <summary>
+        ///     The format string for the progress bar
+        /// </summary>
         private string _formatString = "{0:0}%";
 
+        /// <summary>
+        ///     The internal TextDrawable used to draw the text
+        /// </summary>
         public TextDrawable TextDrawable;
 
+        /// <summary>
+        ///     The progress to completion
+        /// </summary>
         public  float   Progress;
+        /// <summary>
+        ///     The colour of the outline
+        /// </summary>
         public  Color   OutlineColor;
+        /// <summary>
+        ///     The size of the progress bar
+        /// </summary>
         public  Vector2 BarSize;
+        /// <summary>
+        ///     The width of the progress part itself
+        /// </summary>
         private float   _progressWidth;
+        /// <summary>
+        ///     The thickness of the outline
+        /// </summary>
         public  float   OutlineThickness = 1f;
 
         public override Vector2 Size => this.BarSize * this.Scale;
+        
         /// <summary>
         /// Creates a Progress Bar
         /// </summary>

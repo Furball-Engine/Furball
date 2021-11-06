@@ -28,8 +28,9 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
 
         public List<string> Tags = new();
 
-        public bool ContainsTag(string tag) => this.Tags.Contains(tag);
-
+        /// <summary>
+        ///     The tooltip to display when hovering over the drawable
+        /// </summary>
         public string ToolTip = string.Empty;
         
         /// <summary>
@@ -48,6 +49,11 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
 
         public Rectangle Rectangle => new((this.Position - this.LastCalculatedOrigin).ToPoint(), this.Size.ToPoint());
 
+        /// <summary>
+        ///     Checks whether a point is inside of the drawable
+        /// </summary>
+        /// <param name="point">The point to check</param>
+        /// <returns>Whether the point is inside the drawable</returns>
         public bool Contains(Point point) {
             if (this.Circular)
                 return Vector2.Distance(point.ToVector2(), this._position - this.LastCalculatedOrigin) < this.CircleRadius;

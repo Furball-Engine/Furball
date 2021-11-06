@@ -5,19 +5,43 @@ using Xssp.MonoGame.Primitives2D;
 
 namespace Furball.Engine.Engine.Graphics.Drawables {
     public class CurveDrawable : ManagedDrawable {
+        /// <summary>
+        ///     The type of curve
+        /// </summary>
         public CurveType Type;
 
+        /// <summary>
+        ///     p0, the first point, or starting position TODO: could this be merged with this.Position?
+        /// </summary>
         public Bindable<Vector2> P0;
+        /// <summary>
+        ///     p1, the second point
+        /// </summary>
         public Bindable<Vector2> P1;
+        /// <summary>
+        ///     p2, the third point (last point on Quadratic bezier curve)
+        /// </summary>
         public Bindable<Vector2> P2;
+        /// <summary>
+        ///     p3, the last point on Cubic and Catmull-Rom curves
+        /// </summary>
         public Bindable<Vector2> P3;
 
+        /// <summary>
+        ///     How many line segments the drawable uses to approximate the curve
+        /// </summary>
         public int Quality = 20;
 
+        /// <summary>
+        ///     The thickness of the line
+        /// </summary>
         public float Thickness = 2f;
 
         public override Vector2 Size => new(100);
 
+        /// <summary>
+        ///     The constructor for a Quadratic Bezier curve
+        /// </summary>
         public CurveDrawable(Vector2 p0, Vector2 p1, Vector2 p2) {
             this.P0 = new Bindable<Vector2>(p0);
             this.P1 = new Bindable<Vector2>(p1);
@@ -26,6 +50,9 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
             this.Type = CurveType.Quadratic;
         }
 
+        /// <summary>
+        ///     The constructor for a Cubic Bezier curve
+        /// </summary>
         public CurveDrawable(Vector2 p0, Vector2 p1, Vector2 p2, Vector2 p3) {
             this.P0 = new Bindable<Vector2>(p0);
             this.P1 = new Bindable<Vector2>(p1);

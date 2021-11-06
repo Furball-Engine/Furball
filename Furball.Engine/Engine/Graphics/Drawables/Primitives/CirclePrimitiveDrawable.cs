@@ -7,6 +7,9 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Primitives {
     /// Simple Circle Drawable
     /// </summary>
     public class CirclePrimitiveDrawable : ManagedDrawable {
+        /// <summary>
+        ///     The detail of the circle
+        /// </summary>
         public int Detail;
         /// <summary>
         /// Creates a Circle

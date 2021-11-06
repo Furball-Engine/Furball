@@ -23,6 +23,10 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
             this.CoverHovers = false;
         }
 
+        /// <summary>
+        ///     Sets the tooltip to the specified text
+        /// </summary>
+        /// <param name="text"></param>
         public void SetTooltip(string text) {
             this._textDrawable.Text       = text;
             this._backgroundRect.RectSize = this._textDrawable.Size;

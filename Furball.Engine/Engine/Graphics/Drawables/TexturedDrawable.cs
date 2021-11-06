@@ -12,6 +12,9 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// The Texture Being drawn
         /// </summary>
         private Texture2D _texture;
+        /// <summary>
+        ///     The texture being drawn
+        /// </summary>
         public Texture2D Texture => this._texture;
         /// <summary>
         /// Crop Rectangle, this basically tells which part of the Texture to Render

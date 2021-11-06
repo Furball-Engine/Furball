@@ -1,7 +1,7 @@
 using System;
 using FontStashSharp;
-using Furball.Engine.Engine.Graphics.Drawables.Tweens;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
+using Furball.Engine.Engine.Graphics.Drawables.Tweens;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes;
 using Microsoft.Xna.Framework;
 using Xssp.MonoGame.Primitives2D;
@@ -11,22 +11,52 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
     /// Creates a Simple Button Object
     /// </summary>
     public class UiButtonDrawable : ManagedDrawable {
+        /// <summary>
+        ///     The text to display on the button
+        /// </summary>
         private string _text;
+        /// <summary>
+        ///     The text to display on the button
+        /// </summary>
         public string Text => this._text;
+        /// <summary>
+        ///     The internal TextDrawable used to display the text
+        /// </summary>
         public TextDrawable TextDrawable;
 
+        /// <summary>
+        ///     The margin between the text and the button's edge
+        /// </summary>
         private float _margin;
+        /// <summary>
+        ///     The margin between the text and the button's edge
+        /// </summary>
         public float Margin => this._margin;
 
+        /// <summary>
+        ///     The outline color of the button
+        /// </summary>
         public Color OutlineColor;
+        /// <summary>
+        ///     The fill color of the button
+        /// </summary>
         public Color ButtonColor;
 
+        /// <summary>
+        ///     The color of the text
+        /// </summary>
         public Color TextColor {
             get => this.TextDrawable.ColorOverride;
             set => this.TextDrawable.ColorOverride = value;
         }
+        /// <summary>
+        ///     The thickness of the outline
+        /// </summary>
         public float OutlineThickness = 2f;
 
+        /// <summary>
+        ///     The size of the button, Vector2.Zero means autosize it
+        /// </summary>
         public Vector2 ButtonSize = new();
 
         public override Vector2 Size {

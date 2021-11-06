@@ -4,6 +4,9 @@ using Microsoft.Xna.Framework;
 
 namespace Furball.Engine.Engine.Graphics.Drawables {
     public class CompositeDrawable : ManagedDrawable {
+        /// <summary>
+        ///     The list of drawables contained in the CompositeDrawable
+        /// </summary>
         public List<ManagedDrawable> Drawables = new();
 
         public override Vector2 Size {
@@ -11,7 +14,9 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
                 Vector2 topLeft     = new(0, 0);
                 Vector2 bottomRight = new(0, 0);
 
-                foreach (ManagedDrawable managedDrawable in this.Drawables) {
+                for (int i = 0; i < this.Drawables.Count; i++) {
+                    ManagedDrawable managedDrawable = this.Drawables[i];
+                    
                     if (managedDrawable.Rectangle.X < topLeft.X) topLeft.X = managedDrawable.Rectangle.X;
                     if (managedDrawable.Rectangle.Y < topLeft.Y) topLeft.Y = managedDrawable.Rectangle.Y;
 
@@ -25,8 +30,11 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
 
         public CompositeDrawable() => this.OnClick += this.OnDrawableClick;
 
+        /// <summary>
+        ///     When the drawable is clicked, this is called to allow for things inside of the drawable to be clicked
+        /// </summary>
         private void OnDrawableClick(object sender, Point e) {
-            Point adjustedPoint = e - this.Position.ToPoint() + this.LastCalculatedOrigin.ToPoint();
+            Point adjustedPoint = ((e.ToVector2() - this.Position + this.LastCalculatedOrigin) * this.Scale).ToPoint();
 
             for (int i = 0; i < this.Drawables.Count; i++) {
                 ManagedDrawable drawable = this.Drawables[i];

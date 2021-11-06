@@ -25,7 +25,14 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// </summary>
         public override Vector2 Size => this.Font.MeasureString(this.Text) * this.Scale;
 
+        /// <summary>
+        ///     The color type of the text, Solid means a single color, Repeating means the pattern in Colors repeats, and Stretch
+        ///     means the colours stretch to fit
+        /// </summary>
         public TextColorType ColorType = TextColorType.Solid;
+        /// <summary>
+        ///     An array of colours for the text drawable to use depending on the TextColorType
+        /// </summary>
         public Color[] Colors = {
             Color.Cyan, Color.Pink, Color.White, Color.Pink, Color.Cyan
         };
@@ -85,8 +92,17 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
     }
 
     public enum TextColorType {
+        /// <summary>
+        ///     A single color for the whole text
+        /// </summary>
         Solid,
+        /// <summary>
+        ///     A few colors repeated constantly
+        /// </summary>
         Repeating,
+        /// <summary>
+        ///     A few colors stretched to fit the text
+        /// </summary>
         Stretch
     }
 }

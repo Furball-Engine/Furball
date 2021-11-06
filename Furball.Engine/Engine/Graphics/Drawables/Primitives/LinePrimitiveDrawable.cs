@@ -7,8 +7,17 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Primitives {
     /// Simple Line Drawable
     /// </summary>
     public class LinePrimitiveDrawable : ManagedDrawable {
+        /// <summary>
+        ///     The length of the line in pixels
+        /// </summary>
         public float Length;
+        /// <summary>
+        ///     The thickness of the line
+        /// </summary>
         public float Thickness = 1f;
+        /// <summary>
+        ///     The angle of the line in radians
+        /// </summary>
         public float Angle;
         /// <summary>
         /// Creates a Line

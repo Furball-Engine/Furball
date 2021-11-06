@@ -12,12 +12,29 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
     /// Creates a Basic Textbox
     /// </summary>
     public class UiTextBoxDrawable : TextDrawable {
+        /// <summary>
+        ///     The width of the text box
+        /// </summary>
         public float TextBoxWidth;
+        /// <summary>
+        ///     Whether the text box was selected
+        /// </summary>
         public bool  Selected;
+        public bool ClearOnCommit = false;
 
+        /// <summary>
+        ///     Called when a letter is typed in the text box
+        /// </summary>
         public event EventHandler<char> OnLetterTyped;
-        public event EventHandler<char> OnLetterRemoved; 
+        /// <summary>
+        ///     Called when a letter is removed from the text box
+        /// </summary>
+        public event EventHandler<char> OnLetterRemoved;
+        /// <summary>
+        ///     Called when the user "commits" the text in the text box, aka when they press enter
+        /// </summary>
         public event EventHandler<string> OnCommit; 
+        
 
         public override Vector2 Size => new Vector2(this.TextBoxWidth, this.Font.MeasureString("|").Y) * this.Scale;
         /// <summary>
@@ -86,10 +103,14 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
                     this.OnCommit?.Invoke(this, this.Text);
                     this.Selected = false;
                     wasSpecial    = true;
+
+                    if (this.ClearOnCommit)
+                        this.Text = string.Empty;
                     break;
                 }
             }
 
+            //If it was a special character or the character ia control character, dont concat the character to the typed string
             if (wasSpecial || char.IsControl(e.Character)) return;
 
             this.Text += e.Character;
