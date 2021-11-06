@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
+using System.Numerics;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes.BezierPathTween;
+using Furball.Engine.Engine.Helpers;
 using Furball.Engine.Engine.Timing;
-
+using Furball.Vixie.Graphics;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Furball.Engine.Engine.Graphics.Drawables {
@@ -47,7 +50,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
             }
         }
 
-        public Rectangle Rectangle => new((this.Position - this.LastCalculatedOrigin).ToPoint(), this.Size.ToPoint());
+        public Rectangle Rectangle => new((this.Position - this.LastCalculatedOrigin).ToPoint(), this.Size.ToSize());
 
         /// <summary>
         ///     Checks whether a point is inside of the drawable
@@ -94,7 +97,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// <summary>
         /// Basic SpriteEffect, was provided by SpriteBatch so might aswell put it here
         /// </summary>
-        public SpriteEffects SpriteEffect = SpriteEffects.None;
+        public TextureFlip SpriteEffect = TextureFlip.None;
         /// <summary>
         /// What time does the Drawable go by? Used for Tweens
         /// </summary>

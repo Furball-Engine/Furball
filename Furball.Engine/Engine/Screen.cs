@@ -1,10 +1,11 @@
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
+using Furball.Vixie;
 
 
 namespace Furball.Engine.Engine {
-    public class Screen : DrawableGameComponent {
+    public class Screen : GameComponent {
         protected DrawableManager Manager;
-        public Screen() : base(FurballGame.Instance) {}
+        public Screen() {}
 
         /// <summary>
         /// You MUST run base.Initialize before adding things to your manager!!!!

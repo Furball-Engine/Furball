@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
+using System.Numerics;
 using Furball.Engine.Engine.DevConsole;
 using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
@@ -8,6 +10,7 @@ using Furball.Engine.Engine.Graphics.Drawables.Tweens;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes;
 
 using Microsoft.Xna.Framework.Input;
+using Silk.NET.GLFW;
 
 namespace Furball.Engine.Engine.Input {
     public enum MouseButton {

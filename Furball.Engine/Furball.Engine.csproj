@@ -58,4 +58,7 @@
         <HintPath>..\Furball.SharedLibraries\SixLabors.Fonts.dll</HintPath>
       </Reference>
     </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\Furball.Vixie\Furball.Vixie\Furball.Vixie.csproj" />
+    </ItemGroup>
 </Project>

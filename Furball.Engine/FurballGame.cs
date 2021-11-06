@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Reflection;
 using FontStashSharp;
 using Furball.Engine.Engine;
@@ -22,15 +25,15 @@ using Furball.Engine.Engine.Localization;
 using Furball.Engine.Engine.Platform;
 using Furball.Engine.Engine.Timing;
 using Furball.Engine.Engine.Transitions;
+using Furball.Vixie;
+using Furball.Vixie.Graphics;
 using Kettu;
-
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
+using Silk.NET.GLFW;
+using Silk.NET.Windowing;
 
 namespace Furball.Engine {
     public class FurballGame : Game {
-        private GraphicsDeviceManager _graphics;
-        private IGameComponent        _running;
+        private GameComponent        _running;
 
         public static Random Random = new();
 
@@ -50,27 +53,29 @@ namespace Furball.Engine {
         public const int DEFAULT_WINDOW_HEIGHT = 720;
 
         public static string AssemblyPath       = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? throw new Exception("shits fucked man");
-        public static string LocalizationFolder => $"{Instance.Content.RootDirectory}/Localization";
+        public static string LocalizationFolder => $"{AssemblyPath}/Localization";
 
-        public static int WindowHeight => Instance.GraphicsDevice.Viewport.Height;
-        public static int WindowWidth => Instance.GraphicsDevice.Viewport.Width;
+        public static int WindowHeight => (int) Instance.WindowManager.WindowSize.X;
+        public static int WindowWidth => (int) Instance.WindowManager.WindowSize.Y;
 
         public static float HorizontalRatio => (float)WindowWidth / DEFAULT_WINDOW_WIDTH;
         public static float VerticalRatio => (float)WindowHeight / DEFAULT_WINDOW_HEIGHT;
-        public static Rectangle DisplayRect => new(0, 0, (int)Math.Ceiling(Instance.GraphicsDevice.Viewport.Width / VerticalRatio), (int)Math.Ceiling(Instance.GraphicsDevice.Viewport.Height / VerticalRatio));
-        public static Rectangle DisplayRectActual => new(0, 0, Instance.GraphicsDevice.Viewport.Width, Instance.GraphicsDevice.Viewport.Height);
+        public static Rectangle DisplayRect => new(0, 0, (int)Math.Ceiling(WindowWidth / VerticalRatio), (int)Math.Ceiling(WindowHeight / VerticalRatio));
+        public static Rectangle DisplayRectActual => new(0, 0, WindowWidth, WindowHeight);
 
         public static  ConsoleDrawable ConsoleDrawable;
         private static TextDrawable    _ConsoleAutoComplete;
         public static  TooltipDrawable TooltipDrawable;
         
         public static byte[] DefaultFontData;
+
         public static readonly FontSystem DEFAULT_FONT = new(new FontSystemSettings {
             FontResolutionFactor = 2f,
             KernelWidth          = 2,
             KernelHeight         = 2,
             Effect               = FontSystemEffect.None
         });
+
         public static readonly FontSystem DEFAULT_FONT_STROKED = new(new FontSystemSettings {
             FontResolutionFactor = 2f,
             KernelWidth          = 2,
@@ -79,23 +84,20 @@ namespace Furball.Engine {
             EffectAmount         = 2
         });
 
-        public static Texture2D WhitePixel;
+        public static Texture WhitePixel;
 
         public event EventHandler<Screen> BeforeScreenChange; 
         public event EventHandler<Screen> AfterScreenChange;
 
         private Screen _startScreen;
-        public FurballGame(Screen startScreen) {
-            this._graphics = new GraphicsDeviceManager(this) {
-                GraphicsProfile     = GraphicsProfile.HiDef,
-                PreferMultiSampling = true
-            };
-
-            this._graphics.PreparingDeviceSettings += (_, e) => e.GraphicsDeviceInformation.PresentationParameters.MultiSampleCount = 4;
-            this._graphics.ApplyChanges();
-            
-            this.Content.RootDirectory = "Content";
-            this.IsMouseVisible        = true;
+        public FurballGame(Screen startScreen, WindowOptions options) : base(options)  {
+            //this._graphics = new GraphicsDeviceManager(this) {
+            //    GraphicsProfile     = GraphicsProfile.HiDef,
+            //    PreferMultiSampling = true
+            //};
+//
+            //this._graphics.PreparingDeviceSettings += (_, e) => e.GraphicsDeviceInformation.PresentationParameters.MultiSampleCount = 4;
+            //this._graphics.ApplyChanges();
 
             GameTimeSource    = new GameTimeSource();
             Instance          = this;
@@ -132,7 +134,7 @@ namespace Furball.Engine {
                 };
             }
 
-            AudioEngine.Initialize(this.Window.Handle);
+            AudioEngine.Initialize(this.WindowManager.GetWindowHandle());
 
             DrawableManager             = new DrawableManager();
             DebugOverlayDrawableManager = new DrawableManager();
@@ -180,39 +182,41 @@ namespace Furball.Engine {
 
             DebugOverlayDrawableManager.Add(_ConsoleAutoComplete);
 
-            WhitePixel = new Texture2D(this.GraphicsDevice, 1, 1);
-            Color[] white = { Color.White };
-            WhitePixel.SetData(white);
+            WhitePixel = new Texture();
 
             LocalizationManager.ReadTranslations();
 
             TooltipDrawable = new();
             DrawableManager.Add(TooltipDrawable);
 
+            ScreenManager.ChangeScreen(this._startScreen);
+
             base.Initialize();
         }
-
-        protected override void OnExiting(object sender, EventArgs args) {
+        protected override void OnClosing() {
             DevConsole.Run(":nt_on_exiting", false, true);
             DevConsole.WriteLog();
 
-            base.OnExiting(sender, args);
+            GameTimeScheduler.Dispose(Time);
+
+            base.OnClosing();
         }
 
         public void SetTargetFps(int fps, double unfocusedScale = -1) {
-            if (fps != -1) {
-                this.TargetElapsedTime = TimeSpan.FromMilliseconds(1000 / (double)fps);
-                this.IsFixedTimeStep   = true;
-            } else {
-                this.TargetElapsedTime = TimeSpan.FromTicks(1);
-                this.IsFixedTimeStep   = false;
-            }
+            //TODO(Eevee)@Vixie: FPS Changing stuff
+            //if (fps != -1) {
+            //    this.TargetElapsedTime = TimeSpan.FromMilliseconds(1000 / (double)fps);
+            //    this.IsFixedTimeStep   = true;
+            //} else {
+            //    this.TargetElapsedTime = TimeSpan.FromTicks(1);
+            //    this.IsFixedTimeStep   = false;
+            //}
 
             if (unfocusedScale != -1) {
                 double newFps       = fps   * unfocusedScale;
                 double milliseconds = 1000d / newFps;
 
-                this.InactiveSleepTime = TimeSpan.FromMilliseconds(milliseconds);
+                //this.InactiveSleepTime = TimeSpan.FromMilliseconds(milliseconds);
             }
         }
 
@@ -254,22 +258,11 @@ namespace Furball.Engine {
             }
         }
 
-        protected override void EndRun() {
-            GameTimeScheduler.Dispose(Time);
-
-            base.EndRun();
-        }
-
         /// <summary>
         /// Use this function to initialize the default strings for all your localizations
         /// </summary>
         public virtual void InitializeLocalizations() {
             
-        }
-
-        protected override void BeginRun() {
-            DevConsole.Run(":nt_begin_run", false, true);
-            ScreenManager.ChangeScreen(this._startScreen);
         }
 
         public void ChangeScreen(Screen screen) {
@@ -289,7 +282,8 @@ namespace Furball.Engine {
         }
 
         protected override void LoadContent() {
-            DrawableBatch = new DrawableBatch(new SpriteBatch(this.GraphicsDevice));
+            //TODO: figure out what to do wit this
+            //DrawableBatch = new DrawableBatch(new SpriteBatch(this.GraphicsDevice));
 
             this.ChangeScreenSize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
 
@@ -305,26 +299,27 @@ namespace Furball.Engine {
         }
 
         public void ChangeScreenSize(int width, int height, bool fullscreen = false) {
-            this._graphics.PreferredBackBufferWidth  = width;
-            this._graphics.PreferredBackBufferHeight = height;
-
-            this._graphics.IsFullScreen = fullscreen;
-
-            this._graphics.SynchronizeWithVerticalRetrace = false;
-            this.IsFixedTimeStep                          = false;
-
-            this._graphics.GraphicsDevice.RasterizerState = new RasterizerState {
-                CullMode             = CullMode.None,
-                MultiSampleAntiAlias = true
-            };
-            this._graphics.GraphicsDevice.BlendState = new BlendState {
-                AlphaSourceBlend      = Blend.SourceAlpha,
-                AlphaDestinationBlend = Blend.InverseSourceColor,
-                ColorSourceBlend      = Blend.SourceAlpha,
-                ColorDestinationBlend = Blend.InverseSourceAlpha
-            };
-            
-            this._graphics.ApplyChanges();
+            //TODO@Vixie: see if this is changable easly
+            //this._graphics.PreferredBackBufferWidth  = width;
+            //this._graphics.PreferredBackBufferHeight = height;
+//
+            //this._graphics.IsFullScreen = fullscreen;
+//
+            //this._graphics.SynchronizeWithVerticalRetrace = false;
+            //this.IsFixedTimeStep                          = false;
+//
+            //this._graphics.GraphicsDevice.RasterizerState = new RasterizerState {
+            //    CullMode             = CullMode.None,
+            //    MultiSampleAntiAlias = true
+            //};
+            //this._graphics.GraphicsDevice.BlendState = new BlendState {
+            //    AlphaSourceBlend      = Blend.SourceAlpha,
+            //    AlphaDestinationBlend = Blend.InverseSourceColor,
+            //    ColorSourceBlend      = Blend.SourceAlpha,
+            //    ColorDestinationBlend = Blend.InverseSourceAlpha
+            //};
+            //
+            //this._graphics.ApplyChanges();
         }
 
         private Stopwatch _updateWatch    = new ();
