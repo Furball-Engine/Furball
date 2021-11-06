@@ -6,7 +6,6 @@ using FontStashSharp;
 using Furball.Engine.Engine.Helpers;
 using Furball.Engine.Engine.Helpers.Logger;
 using Kettu;
-using Microsoft.Xna.Framework.Graphics;
 using SixLabors.Fonts;
 
 namespace Furball.Engine.Engine.Graphics {

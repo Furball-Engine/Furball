@@ -1,4 +1,3 @@
-using Microsoft.Xna.Framework.Input;
 using MouseStateXna=Microsoft.Xna.Framework.Input.MouseState;
 
 namespace Furball.Engine.Engine.Input.InputMethods {

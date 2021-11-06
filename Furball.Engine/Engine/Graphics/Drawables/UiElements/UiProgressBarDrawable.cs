@@ -1,8 +1,6 @@
 using FontStashSharp;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
 
-using Xssp.MonoGame.Primitives2D;
-
 namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
     /// <summary>
     /// Creates a simple Progress Bar

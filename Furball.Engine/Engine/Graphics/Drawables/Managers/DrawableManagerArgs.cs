@@ -1,6 +1,4 @@
 
-using Microsoft.Xna.Framework.Graphics;
-
 namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
     public class DrawableManagerArgs {
         public Vector2       Position;

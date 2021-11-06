@@ -2,8 +2,6 @@ using System;
 using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Graphics.Drawables.UiElements;
 
-using Microsoft.Xna.Framework.Input;
-
 namespace Furball.Engine.Engine.DevConsole {
     public class ConsoleDrawable : UiTextBoxDrawable {
         public event EventHandler<ConsoleResult> OnCommandFinished;

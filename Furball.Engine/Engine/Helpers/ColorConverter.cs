@@ -1,11 +1,10 @@
 using System.Drawing;
-using Color=Microsoft.Xna.Framework.Color;
 
 namespace Furball.Engine.Engine.Helpers {
     public static class ColorConverter {
         public static void FromHexString(this Color color, string input) {
             System.Drawing.Color drawingColor = ColorTranslator.FromHtml(input);
-
+            //TODO(Eevee)@Vixie: own color class that isnt fucking dumb
             color.R = drawingColor.R;
             color.G = drawingColor.G;
             color.B = drawingColor.B;

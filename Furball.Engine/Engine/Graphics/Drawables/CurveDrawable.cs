@@ -1,7 +1,6 @@
+using System.Numerics;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Furball.Engine.Engine.Helpers;
-
-using Xssp.MonoGame.Primitives2D;
 
 namespace Furball.Engine.Engine.Graphics.Drawables {
     public class CurveDrawable : ManagedDrawable {
@@ -69,44 +68,44 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
 
                 switch (this.Type) {
                     case CurveType.Cubic: {
-                        (float x, float y)   = BezierHelper.CubicBezier(this.P0, this.P1, this.P2, this.P3, t);
-                        (float x1, float y1) = BezierHelper.CubicBezier(this.P0, this.P1, this.P2, this.P3, nextT);
+                        Vector2 p0 = BezierHelper.CubicBezier(this.P0, this.P1, this.P2, this.P3, t);
+                        Vector2 p1 = BezierHelper.CubicBezier(this.P0,   this.P1, this.P2, this.P3, nextT);
 
-                        x  *= FurballGame.VerticalRatio;
-                        y  *= FurballGame.VerticalRatio;
-                        x1 *= FurballGame.VerticalRatio;
-                        y1 *= FurballGame.VerticalRatio;
+                        p0.X *= FurballGame.VerticalRatio;
+                        p0.Y *= FurballGame.VerticalRatio;
+                        p1.X *= FurballGame.VerticalRatio;
+                        p1.Y *= FurballGame.VerticalRatio;
 
-                        batch.SpriteBatch.DrawLine(x, y, x1, y1, args.Color, this.Thickness * FurballGame.VerticalRatio, 0);
-                        batch.SpriteBatch.DrawLine(x, y, x1, y1, args.Color, this.Thickness * FurballGame.VerticalRatio, 0);
+                        batch.SpriteBatch.DrawLine(p0.X, p0.Y, p1.X, p1.Y, args.Color, this.Thickness * FurballGame.VerticalRatio, 0);
+                        batch.SpriteBatch.DrawLine(p0.X, p0.Y, p1.X, p1.Y, args.Color, this.Thickness * FurballGame.VerticalRatio, 0);
 
                         break;
                     }
                     case CurveType.Quadratic: {
-                        (float x, float y)   = BezierHelper.QuadraticBezier(this.P0, this.P1, this.P2, t);
-                        (float x1, float y1) = BezierHelper.QuadraticBezier(this.P0, this.P1, this.P2, nextT);
+                        Vector2 p0 = BezierHelper.QuadraticBezier(this.P0, this.P1, this.P2, t);
+                        Vector2 p1 = BezierHelper.QuadraticBezier(this.P0, this.P1, this.P2, nextT);
 
-                        x  *= FurballGame.VerticalRatio;
-                        y  *= FurballGame.VerticalRatio;
-                        x1 *= FurballGame.VerticalRatio;
-                        y1 *= FurballGame.VerticalRatio;
+                        p0.X *= FurballGame.VerticalRatio;
+                        p0.Y *= FurballGame.VerticalRatio;
+                        p1.X *= FurballGame.VerticalRatio;
+                        p1.Y *= FurballGame.VerticalRatio;
 
-                        batch.SpriteBatch.DrawLine(x, y, x1, y1, args.Color, this.Thickness * FurballGame.VerticalRatio, 0);
-                        batch.SpriteBatch.DrawLine(x, y, x1, y1, args.Color, this.Thickness * FurballGame.VerticalRatio, 0);
+                        batch.SpriteBatch.DrawLine(p0.X, p0.Y, p1.X, p1.Y, args.Color, this.Thickness * FurballGame.VerticalRatio, 0);
+                        batch.SpriteBatch.DrawLine(p0.X, p0.Y, p1.X, p1.Y, args.Color, this.Thickness * FurballGame.VerticalRatio, 0);
                         
                         break;
                     }
                     case CurveType.CatmullRom: {
-                        (float x, float y)   = Vector2.CatmullRom(this.P0, this.P1, this.P2, this.P3, t);
-                        (float x1, float y1) = Vector2.CatmullRom(this.P0, this.P1, this.P2, this.P3, nextT);
-
-                        x  *= FurballGame.VerticalRatio;
-                        y  *= FurballGame.VerticalRatio;
-                        x1 *= FurballGame.VerticalRatio;
-                        y1 *= FurballGame.VerticalRatio;
-
-                        batch.SpriteBatch.DrawLine(x, y, x1, y1, args.Color, this.Thickness * FurballGame.VerticalRatio, 0);
-                        batch.SpriteBatch.DrawLine(x, y, x1, y1, args.Color, this.Thickness * FurballGame.VerticalRatio, 0);
+                        //(float x, float y)   = Vector2.CatmullRom(this.P0, this.P1, this.P2, this.P3, t);
+                        //(float x1, float y1) = Vector2.CatmullRom(this.P0, this.P1, this.P2, this.P3, nextT);
+//
+                        //x  *= FurballGame.VerticalRatio;
+                        //y  *= FurballGame.VerticalRatio;
+                        //x1 *= FurballGame.VerticalRatio;
+                        //y1 *= FurballGame.VerticalRatio;
+//
+                        //batch.SpriteBatch.DrawLine(x, y, x1, y1, args.Color, this.Thickness * FurballGame.VerticalRatio, 0);
+                        //batch.SpriteBatch.DrawLine(x, y, x1, y1, args.Color, this.Thickness * FurballGame.VerticalRatio, 0);
 
                         break;
                     }

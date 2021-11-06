@@ -9,7 +9,6 @@ using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes.BezierPathTween
 using Furball.Engine.Engine.Helpers;
 using Furball.Engine.Engine.Timing;
 using Furball.Vixie.Graphics;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace Furball.Engine.Engine.Graphics.Drawables {
     public enum OriginType {

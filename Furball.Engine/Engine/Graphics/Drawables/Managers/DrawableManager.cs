@@ -5,7 +5,6 @@ using System.Linq;
 using System.Numerics;
 using Furball.Engine.Engine.Helpers;
 using Furball.Vixie.Graphics;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
     public class DrawableManager : UnmanagedDrawable {

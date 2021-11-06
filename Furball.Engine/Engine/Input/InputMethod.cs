@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Microsoft.Xna.Framework.Input;
 
 namespace Furball.Engine.Engine.Input {
     public abstract class InputMethod {

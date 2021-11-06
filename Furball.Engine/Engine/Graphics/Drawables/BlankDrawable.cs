@@ -1,5 +1,7 @@
 
 
+using System.Numerics;
+
 namespace Furball.Engine.Engine.Graphics.Drawables {
     /// <summary>
     /// Literally fucking nothing, used as a placeholder

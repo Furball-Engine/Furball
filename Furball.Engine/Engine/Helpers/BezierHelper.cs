@@ -1,5 +1,7 @@
 
 
+using System.Numerics;
+
 namespace Furball.Engine.Engine.Helpers {
     public enum BezierCurveType {
         Quadratic,

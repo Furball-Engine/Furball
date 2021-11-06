@@ -1,7 +1,5 @@
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
 
-using Xssp.MonoGame.Primitives2D;
-
 namespace Furball.Engine.Engine.Graphics.Drawables.Primitives {
     /// <summary>
     /// Simple rectangle Drawable

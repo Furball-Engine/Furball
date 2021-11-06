@@ -1,8 +1,6 @@
 using System.Linq;
 using System.Collections.Generic;
 
-using Microsoft.Xna.Framework.Input;
-
 namespace Furball.Engine.Engine.Input.InputMethods {
     public class MonogameKeyboardInputMethod : InputMethod {
         private List<Keys> tempList = new();

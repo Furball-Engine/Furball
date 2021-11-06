@@ -1,5 +1,3 @@
-using Microsoft.Xna.Framework.Graphics;
-
 namespace Furball.Engine.Engine.Graphics {
     /// <summary>
     /// A Basic Abstraction for Sprite and Shape batch
