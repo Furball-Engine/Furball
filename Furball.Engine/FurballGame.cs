@@ -190,6 +190,21 @@ namespace Furball.Engine {
 
             ScreenManager.ChangeScreen(this._startScreen);
 
+            //TODO: figure out what to do wit this
+            //DrawableBatch = new DrawableBatch(new SpriteBatch(this.GraphicsDevice));
+
+            this.ChangeScreenSize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
+
+            DebugCounter = new DebugCounter {
+                Clickable   = false,
+                CoverClicks = false
+            };
+            DebugOverlayDrawableManager.Add(DebugCounter);
+
+            DevConsole.Initialize();
+
+            ScreenManager.SetTransition(new FadeTransition());
+
             base.Initialize();
         }
         protected override void OnClosing() {
@@ -279,24 +294,6 @@ namespace Furball.Engine {
             
             this.AfterScreenChange?.Invoke(this, screen);
         }
-
-        protected override void LoadContent() {
-            //TODO: figure out what to do wit this
-            //DrawableBatch = new DrawableBatch(new SpriteBatch(this.GraphicsDevice));
-
-            this.ChangeScreenSize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
-
-            DebugCounter = new DebugCounter {
-                Clickable   = false,
-                CoverClicks = false
-            };
-            DebugOverlayDrawableManager.Add(DebugCounter);
-
-            DevConsole.Initialize();
-
-            ScreenManager.SetTransition(new FadeTransition());
-        }
-
         public void ChangeScreenSize(int width, int height, bool fullscreen = false) {
             //TODO@Vixie: see if this is changable easly
             //this._graphics.PreferredBackBufferWidth  = width;
@@ -324,7 +321,7 @@ namespace Furball.Engine {
         private Stopwatch _updateWatch    = new ();
         public double    LastUpdateTime { get; private set; } = 0.0;
 
-        protected override void Update(GameTime gameTime) {
+        protected override void Update(double gameTime) {
             if (RuntimeInfo.IsDebug()) {
                 this._updateWatch.Reset();
                 this._updateWatch.Start();
@@ -338,7 +335,7 @@ namespace Furball.Engine {
                 DebugOverlayDrawableManager.Update(gameTime);
 
             if (RuntimeInfo.LoggerEnabled())
-                Logger.XnaUpdate(gameTime.ElapsedGameTime.TotalSeconds);
+                Logger.XnaUpdate(gameTime);
 
             ScreenManager.UpdateTransition(gameTime);
 
@@ -355,13 +352,14 @@ namespace Furball.Engine {
         private Stopwatch _drawWatch = new ();
         public double    LastDrawTime { get; private set; } = 0.0;
 
-        protected override void Draw(GameTime gameTime) {
+        protected override void Draw(double gameTime) {
             if (RuntimeInfo.IsDebug()) {
                 this._drawWatch.Reset();
                 this._drawWatch.Start();
             }
 
-            this.GraphicsDevice.Clear(Color.Black);
+            this.GraphicsDevice.GlClearColor(Color.Black);
+            this.GraphicsDevice.GlClear();
 
             base.Draw(gameTime);
 

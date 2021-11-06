@@ -10,8 +10,8 @@ namespace Furball.Engine.Engine.Debug.DebugCounter.Items {
         private int    _frames;
         private double _deltaTime;
 
-        public override void Draw(GameTime time) {
-            this._deltaTime += time.ElapsedGameTime.TotalSeconds;
+        public override void Draw(double time) {
+            this._deltaTime += time;
             this._frames++;
 
             if (this._deltaTime >= 1.0) {
@@ -23,6 +23,6 @@ namespace Furball.Engine.Engine.Debug.DebugCounter.Items {
             base.Draw(time);
         }
 
-        public override string GetAsString(GameTime time) => $"{this._lastUpdatedFramerate}fps ({Math.Round(1000.0 / this._lastUpdatedFramerate, 2)}ms)";
+        public override string GetAsString(double time) => $"{this._lastUpdatedFramerate}fps ({Math.Round(1000.0 / this._lastUpdatedFramerate, 2)}ms)";
     }
 }

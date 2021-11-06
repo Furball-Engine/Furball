@@ -11,7 +11,7 @@ namespace Furball.Engine.Engine.Debug.DebugCounter.Items {
         private double _deltaTime;
 
         public override void Update(double time) {
-            this._deltaTime += time.ElapsedGameTime.TotalSeconds;
+            this._deltaTime += time;
             this._updates++;
 
             if (this._deltaTime >= 1.0) {
@@ -23,6 +23,6 @@ namespace Furball.Engine.Engine.Debug.DebugCounter.Items {
             base.Draw(time);
         }
 
-        public override string GetAsString(GameTime time) => $"{this._lastUpdatedUpdateRate}ups ({Math.Round(1000.0 / this._lastUpdatedUpdateRate, 2)}ms)";
+        public override string GetAsString(double time) => $"{this._lastUpdatedUpdateRate}ups ({Math.Round(1000.0 / this._lastUpdatedUpdateRate, 2)}ms)";
     }
 }

@@ -8,7 +8,9 @@ using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes;
+using Furball.Engine.Engine.Helpers;
 using Silk.NET.GLFW;
+using Silk.NET.Input.Extensions;
 
 namespace Furball.Engine.Engine.Input {
     public enum MouseButton {
@@ -165,19 +167,19 @@ namespace Furball.Engine.Engine.Input {
         /// <summary>
         /// Called when a mouse button is pressed
         /// </summary>
-        public event EventHandler<((MouseButton mouseButton, Point position) args, string cursorName)> OnMouseDown;
+        public event EventHandler<((MouseButton mouseButton, Vector2 position) args, string cursorName)> OnMouseDown;
         /// <summary>
         /// Called when a mouse button is released
         /// </summary>
-        public event EventHandler<((MouseButton mouseButton, Point position) args, string cursorName)> OnMouseUp;
+        public event EventHandler<((MouseButton mouseButton, Vector2 position) args, string cursorName)> OnMouseUp;
         /// <summary>
         /// Called when a cursor moves
         /// </summary>
-        public event EventHandler<(Point mousePosition, string cursorName)> OnMouseMove;
+        public event EventHandler<(Vector2 position, string cursorName)> OnMouseMove;
         /// <summary>
         /// Called when a cursor moves
         /// </summary>
-        public event EventHandler<((Point lastPosition, Point newPosition), string cursorName)> OnMouseDrag;
+        public event EventHandler<((Vector2 lastPosition, Vector2 newPosition), string cursorName)> OnMouseDrag;
         /// <summary>
         /// Called when the cursor scrolls
         /// </summary>
@@ -237,7 +239,6 @@ namespace Furball.Engine.Engine.Input {
                             this.OnMouseDrag?.Invoke(this, ((oldState.Position, newState.Position), newState.Name));
                     }
 
-
                     //Handling The Left Mouse Button by comparing to the last Input Frame
                     if (oldState.LeftButton != newState.LeftButton)
                         if (oldState.LeftButton == ButtonState.Released)
@@ -252,7 +253,6 @@ namespace Furball.Engine.Engine.Input {
                             this.OnMouseDown?.Invoke(this, ((MouseButton.RightButton, newState.Position), newState.Name));
                         else
                             this.OnMouseUp?.Invoke(this, ((MouseButton.RightButton, newState.Position), newState.Name));
-
 
                     //Handling the Middle Mouse Button by comparing to the last Input Frame
                     if (oldState.MiddleButton != newState.MiddleButton)

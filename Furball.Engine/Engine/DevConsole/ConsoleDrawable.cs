@@ -1,6 +1,10 @@
 using System;
+using System.Numerics;
 using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Graphics.Drawables.UiElements;
+using Furball.Vixie.Input;
+using Silk.NET.GLFW;
+using Silk.NET.Input;
 
 namespace Furball.Engine.Engine.DevConsole {
     public class ConsoleDrawable : UiTextBoxDrawable {
@@ -10,12 +14,12 @@ namespace Furball.Engine.Engine.DevConsole {
             this.OriginType = OriginType.Center;
             this.Visible    = false;
 
-            this.OnCommit                      += this.OnTextCommit;
-            FurballGame.InputManager.OnKeyDown += this.OnKeyDown;
+            this.OnCommit                  += this.OnTextCommit;
+            Keyboard.GetKeyboard().KeyDown += this.OnKeyDown;
         }
 
-        private void OnKeyDown(object sender, Keys e) {
-            if (e == Keys.OemTilde) {
+        private void OnKeyDown(IKeyboard keyboard, Key e, int what) {
+            if (e == Key.GraveAccent) {
                 this.Visible  = !this.Visible;
                 this.Selected = !this.Selected;
 
@@ -33,8 +37,8 @@ namespace Furball.Engine.Engine.DevConsole {
         }
 
         public override void Dispose(bool disposing) {
-            this.OnCommit                      -= this.OnTextCommit;
-            FurballGame.InputManager.OnKeyDown -= this.OnKeyDown;
+            this.OnCommit                  -= this.OnTextCommit;
+            Keyboard.GetKeyboard().KeyDown -= this.OnKeyDown;
 
             base.Dispose(disposing);
         }

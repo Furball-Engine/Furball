@@ -7,7 +7,7 @@ namespace Furball.Engine.Engine.DevConsole.ConFuncs.Standard {
         public Quit() : base("quit") {}
 
         public override ConsoleResult Run(string[] consoleInput) {
-            FurballGame.Instance.Exit();
+            FurballGame.Instance.WindowManager.
 
             return new ConsoleResult(ExecutionResult.Success, "Exiting game.");
         }
