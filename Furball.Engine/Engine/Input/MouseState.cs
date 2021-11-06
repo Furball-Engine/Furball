@@ -1,4 +1,4 @@
-using Microsoft.Xna.Framework;
+
 using Microsoft.Xna.Framework.Input;
 
 namespace Furball.Engine.Engine.Input {

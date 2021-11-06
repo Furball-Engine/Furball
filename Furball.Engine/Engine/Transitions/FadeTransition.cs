@@ -1,7 +1,7 @@
 using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes;
-using Microsoft.Xna.Framework;
+
 
 namespace Furball.Engine.Engine.Transitions {
     /// <summary>

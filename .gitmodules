@@ -1,0 +1,3 @@
+[submodule "Furball.Vixie"]
+	path = Furball.Vixie
+	url = https://github.com/Furball-Engine/Furball.Vixie

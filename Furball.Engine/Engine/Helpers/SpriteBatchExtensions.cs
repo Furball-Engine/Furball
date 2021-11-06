@@ -1,5 +1,5 @@
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
-using Microsoft.Xna.Framework;
+
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Furball.Engine.Engine.Helpers {

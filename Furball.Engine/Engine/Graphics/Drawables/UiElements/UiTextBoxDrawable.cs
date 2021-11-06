@@ -2,7 +2,7 @@ using System;
 using FontStashSharp;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Furball.Engine.Engine.Input;
-using Microsoft.Xna.Framework;
+
 using Microsoft.Xna.Framework.Input;
 using TextCopy;
 using Xssp.MonoGame.Primitives2D;
