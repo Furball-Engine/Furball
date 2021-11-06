@@ -1,8 +1,11 @@
 using System;
+using System.Drawing;
+using System.Numerics;
 using FontStashSharp;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
-using Furball.Engine.Engine.Input;
+using Silk.NET.GLFW;
 using TextCopy;
+using MouseButton=Furball.Engine.Engine.Input.MouseButton;
 
 namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
     /// <summary>
@@ -43,10 +46,10 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         /// <param name="size">Size of the text</param>
         /// <param name="width">Width/Length of the Textbox</param>
         public UiTextBoxDrawable(Vector2 position, FontSystem font, string text, int size, float width, bool isInContainerDrawable = false) : base(
-        Vector2.Zero,
-        font,
-        text,
-        size
+            Vector2.Zero,
+            font,
+            text,
+            size
         ) {
             this.Position     = position;
             this.TextBoxWidth = width;
@@ -54,17 +57,18 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         }
 
         private void RegisterHandlers(bool isInContainerDrawable) {
-            FurballGame.Instance.Window.TextInput += this.OnTextInput;
-            if (!isInContainerDrawable)
-                FurballGame.InputManager.OnMouseDown += this.OnMouseDown;
-            FurballGame.InputManager.OnKeyDown += this.OnKeyDown;
+            //TODO: do this
+            //FurballGame.Instance.Window.TextInput += this.OnTextInput;
+            //if (!isInContainerDrawable)
+            //    FurballGame.InputManager.OnMouseDown += this.OnMouseDown;
+            //FurballGame.InputManager.OnKeyDown += this.OnKeyDown;
         }
 
         private void OnKeyDown(object sender, Keys e) {
             if (!this.Selected && !this.Visible) return;
             
             switch(e) {
-                case Keys.V when FurballGame.InputManager.HeldKeys.Contains(Keys.LeftControl): {
+                case Keys.V when FurballGame.InputManager.HeldKeys.Contains(Keys.ControlLeft): {
                     string clipboard = ClipboardService.GetText();
 
                     this.Text += clipboard;
@@ -81,45 +85,46 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
                 this.Selected = false;
         }
 
-        private void OnTextInput(object sender, TextInputEventArgs e) {
-            if (!this.Selected) return;
-            
-            bool wasSpecial = false;
+        //TODO: do this
+        //private void OnTextInput(object sender, TextInputEventArgs e) {
+        //    if (!this.Selected) return;
+        //
+        //    bool wasSpecial = false;
+//
+        //    switch (e.Key) {
+        //        case Keys.Back: {
+        //            if (this.Text.Length != 0) {
+        //                char lastLetter = this.Text[^1];
+        //                this.Text = this.Text[..^1];
+        //                this.OnLetterRemoved?.Invoke(this, lastLetter);
+        //            }
+        //            wasSpecial = true;
+        //            break;
+        //        }
+        //        case Keys.Enter: {
+        //            this.OnCommit?.Invoke(this, this.Text);
+        //            this.Selected = false;
+        //            wasSpecial    = true;
+//
+        //            if (this.ClearOnCommit)
+        //                this.Text = string.Empty;
+        //            break;
+        //        }
+        //    }
+//
+        //    //If it was a special character or the character ia control character, dont concat the character to the typed string
+        //    if (wasSpecial || char.IsControl(e.Character)) return;
+//
+        //    this.Text += e.Character;
+        //    this.OnLetterTyped?.Invoke(this, e.Character);
+        //}
 
-            switch (e.Key) {
-                case Keys.Back: {
-                    if (this.Text.Length != 0) {
-                        char lastLetter = this.Text[^1];
-                        this.Text = this.Text[..^1];
-                        this.OnLetterRemoved?.Invoke(this, lastLetter);
-                    }
-                    wasSpecial = true;
-                    break;
-                }
-                case Keys.Enter: {
-                    this.OnCommit?.Invoke(this, this.Text);
-                    this.Selected = false;
-                    wasSpecial    = true;
-
-                    if (this.ClearOnCommit)
-                        this.Text = string.Empty;
-                    break;
-                }
-            }
-
-            //If it was a special character or the character ia control character, dont concat the character to the typed string
-            if (wasSpecial || char.IsControl(e.Character)) return;
-
-            this.Text += e.Character;
-            this.OnLetterTyped?.Invoke(this, e.Character);
-        }
-
-        private void UnregisterHandlers() {
-            FurballGame.Instance.Window.TextInput -= this.OnTextInput;
-        }
+        //private void UnregisterHandlers() {
+        //    FurballGame.Instance.Window.TextInput -= this.OnTextInput;
+        //}
 
         public override void Dispose(bool disposing) {
-            this.UnregisterHandlers();
+            //this.UnregisterHandlers();
 
             this.OnLetterTyped = null;
             this.OnLetterRemoved = null;

@@ -1,4 +1,6 @@
 using System;
+using System.Drawing;
+using System.Numerics;
 using FontStashSharp;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens;
@@ -60,9 +62,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         public override Vector2 Size {
             get {
                 if(this.ButtonSize == Vector2.Zero) {
-                    (float textDrawableSizeX, float textDrawableSizeY) = this.TextDrawable.Size;
-
-                    return new Vector2(textDrawableSizeX + this._margin * 2f, textDrawableSizeY + this._margin * 2f) * this.Scale;
+                    return new Vector2(this.TextDrawable.Size.X + this._margin * 2f, this.TextDrawable.Size.Y + this._margin * 2f) * this.Scale;
                 } 
                 
                 return this.ButtonSize * this.Scale;
@@ -130,7 +130,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
                 tempArgs.Position.X += this._margin;
                 tempArgs.Position.Y += this._margin;
             } else {
-                (float textX, float textY) = this.TextDrawable.Size;
+                float textX = this.TextDrawable.Size.X;
+                float textY = this.TextDrawable.Size.Y;
 
                 switch (this.TextDrawable.OriginType) {
                     case OriginType.Center: {

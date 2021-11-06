@@ -1,3 +1,5 @@
+using System.Drawing;
+using System.Numerics;
 using FontStashSharp;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
 

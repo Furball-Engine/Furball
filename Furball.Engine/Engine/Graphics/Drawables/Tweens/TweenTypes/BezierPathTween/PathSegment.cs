@@ -1,3 +1,4 @@
+using System.Numerics;
 using Furball.Engine.Engine.Helpers;
 
 
@@ -41,14 +42,14 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes.BezierPathT
 
             switch (this.CurveType) {
                 case BezierCurveType.Cubic: {
-                    (float x, float y)   = BezierHelper.CubicBezier(this.Point1, this.Point2, this.Point3, this.Point4, localProgress);
+                    Vector2 bezier = BezierHelper.CubicBezier(this.Point1, this.Point2, this.Point3, this.Point4, localProgress);
 
-                    return new Vector2(x, y);
+                    return new Vector2(bezier.X, bezier.Y);
                 }
                 case BezierCurveType.Quadratic: {
-                    (float x, float y) = BezierHelper.QuadraticBezier(this.Point1, this.Point2, this.Point3, localProgress);
+                    Vector2 bezier = BezierHelper.QuadraticBezier(this.Point1, this.Point2, this.Point3, localProgress);
 
-                    return new Vector2(x, y);
+                    return new Vector2(bezier.X, bezier.Y);
                 }
             }
 

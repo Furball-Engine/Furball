@@ -1,3 +1,4 @@
+using System.Numerics;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
 
 namespace Furball.Engine.Engine.Graphics.Drawables.Primitives {
