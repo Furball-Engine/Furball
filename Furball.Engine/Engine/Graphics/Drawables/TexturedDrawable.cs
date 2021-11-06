@@ -55,8 +55,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         public override void Draw(double time, DrawableBatch batch, DrawableManagerArgs args) {
             args.Position *= FurballGame.VerticalRatio;
             args.Scale    *= FurballGame.VerticalRatio;
-            
-            batch.SpriteBatch.Draw(this._texture, args, this._cropping);
+
+            batch.Renderer.Draw(this._texture, args.Position, null, args.Scale, args.Rotation, args.Color, this._cropping);
         }
 
         /// <summary>

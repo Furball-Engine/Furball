@@ -133,7 +133,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         }
 
         public override void Draw(double time, DrawableBatch batch, DrawableManagerArgs args) {
-            batch.SpriteBatch.DrawRectangle(
+            batch.Renderer.DrawRectangle(
                 args.Position * FurballGame.VerticalRatio, 
                 this.Size * FurballGame.VerticalRatio, 
                 this.Selected ? Color.LightGray : Color.DarkGray, 

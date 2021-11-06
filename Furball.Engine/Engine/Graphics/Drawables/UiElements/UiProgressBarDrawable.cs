@@ -70,13 +70,13 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         }
 
         public override void Draw(double time, DrawableBatch batch, DrawableManagerArgs args) {
-            batch.SpriteBatch.FillRectangle(
+            batch.Renderer.FillRectangle(
                 args.Position * FurballGame.VerticalRatio, 
                 new Vector2(this._progressWidth, this.BarSize.Y) * FurballGame.VerticalRatio,
                 args.Color,
                 0f
             );
-            batch.SpriteBatch.DrawRectangle(
+            batch.Renderer.DrawRectangle(
                 args.Position * FurballGame.VerticalRatio, 
                 this.BarSize * FurballGame.VerticalRatio, 
                 this.OutlineColor, 
