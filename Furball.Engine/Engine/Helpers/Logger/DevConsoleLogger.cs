@@ -6,5 +6,7 @@ namespace Furball.Engine.Engine.Helpers.Logger {
         public override void Send(LoggerLine line) {
             DevConsole.DevConsole.ConsoleLog.Add((string.Empty, new ConsoleResult(ExecutionResult.Log, line.LineData)));
         }
+
+        public override bool AllowMultiple => false;
     }
 }
