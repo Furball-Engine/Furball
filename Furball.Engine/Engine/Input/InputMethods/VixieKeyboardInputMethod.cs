@@ -1,17 +1,18 @@
+using System.Linq;
 using Furball.Vixie.Input;
 using Silk.NET.Input.Extensions;
 
 namespace Furball.Engine.Engine.Input.InputMethods {
     public class VixieKeyboardInputMethod : InputMethod {
-        public KeyboardState KeyboardState { get; private set; }
+        private KeyboardState KeyboardState;
         public override void Update() {
-            KeyboardState = Keyboard.GetState();
+            this.HeldKeys = this.KeyboardState.GetPressedKeys().ToArray().ToList();
         }
         public override void Dispose() {
 
         }
         public override void Initialize() {
-
+            this.KeyboardState = Keyboard.GetState();
         }
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Silk.NET.GLFW;
+using Silk.NET.Input;
 using Silk.NET.Input.Extensions;
 
 namespace Furball.Engine.Engine.Input {
@@ -11,7 +12,7 @@ namespace Furball.Engine.Engine.Input {
         /// <summary>
         /// The keyboard keys that are currently held
         /// </summary>
-        public List<Keys> HeldKeys = new();
+        public List<Key> HeldKeys = new();
 
         /// <summary>
         /// Used if the InputMethod needs to constantly poll a source

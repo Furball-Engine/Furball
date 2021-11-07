@@ -5,6 +5,7 @@ using FontStashSharp;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Furball.Vixie.Graphics;
 using Silk.NET.GLFW;
+using Silk.NET.Input;
 using TextCopy;
 using MouseButton=Furball.Engine.Engine.Input.MouseButton;
 
@@ -69,7 +70,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
             if (!this.Selected && !this.Visible) return;
             
             switch(e) {
-                case Keys.V when FurballGame.InputManager.HeldKeys.Contains(Keys.ControlLeft): {
+                case Keys.V when FurballGame.InputManager.HeldKeys.Contains(Key.ControlLeft): {
                     string clipboard = ClipboardService.GetText();
 
                     this.Text += clipboard;
