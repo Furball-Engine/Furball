@@ -34,6 +34,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                 this._totalDrawables     = this._totalDrawables.OrderByDescending(o => o.Depth).ToList();
                 this._managedDrawables   = this._managedDrawables.OrderByDescending(o => o.Depth).ToList();
                 this._unmanagedDrawables = this._unmanagedDrawables.OrderByDescending(o => o.Depth).ToList();
+
+                this._sortDrawables = false;
             }
             
             drawableBatch.Begin();
