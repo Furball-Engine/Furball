@@ -11,5 +11,8 @@ namespace Furball.Engine.Engine.Helpers {
             objects.Sort();
             return objects;
         }
+
+        public static List<FieldInfo> GetAllFieldsWithAttribute(Type classToCheckType, Type attributeType)
+            => classToCheckType.GetFields().Where(p => p.GetCustomAttributes(attributeType, true).Any()).ToList();
     }
 }
