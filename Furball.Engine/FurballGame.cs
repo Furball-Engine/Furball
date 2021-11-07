@@ -26,6 +26,7 @@ using Furball.Engine.Engine.Timing;
 using Furball.Engine.Engine.Transitions;
 using Furball.Vixie;
 using Furball.Vixie.Graphics;
+using Furball.Vixie.Graphics.Renderers.OpenGL;
 using Kettu;
 using Silk.NET.GLFW;
 using Silk.NET.Windowing;
@@ -156,6 +157,7 @@ namespace Furball.Engine {
                 consoleResult.Tweens.Add(new FloatTween(TweenType.Fade, consoleResult.ColorOverride.A / 255f, 1f, Time,        Time + 100));
                 consoleResult.Tweens.Add(new FloatTween(TweenType.Fade, 1f,                                   0f, Time + 4100, Time + 5100));
 
+
                 consoleResult.Text = result.Message;
 
                 consoleResult.ColorOverride = result.Result switch {
@@ -192,7 +194,7 @@ namespace Furball.Engine {
             ScreenManager.ChangeScreen(this._startScreen);
 
             //TODO: figure out what to do wit this
-            //DrawableBatch = new DrawableBatch(new SpriteBatch(this.GraphicsDevice));
+            DrawableBatch = new DrawableBatch(new BatchedRenderer());
 
             this.ChangeScreenSize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
 
