@@ -72,6 +72,11 @@ namespace Furball.Engine.Engine.Input {
                             FurballGame.TooltipDrawable.Visible = true;
 
                             tooltipSet = true;
+
+                            FurballGame.TooltipDrawable.OriginType =
+                                FurballGame.TooltipDrawable.Position.X + FurballGame.TooltipDrawable.Size.X > FurballGame.DEFAULT_WINDOW_WIDTH ? OriginType.TopRight
+                                    : OriginType.TopLeft;
+
                         } else {
                             FurballGame.TooltipDrawable.Visible = false;
                         }
