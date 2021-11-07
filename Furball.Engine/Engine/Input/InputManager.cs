@@ -41,7 +41,7 @@ namespace Furball.Engine.Engine.Input {
             this.OnMouseMove += DrawableOnMouseMove;
         }
 
-        private static void DrawableOnMouseMove(object sender, (Point mousePosition, string cursorName) e) {
+        private static void DrawableOnMouseMove(object sender, (Vector2 position, string cursorName) e) {
             List<ManagedDrawable> drawables = new();
             DrawableManager.DrawableManagers.Where(x => x.Visible).ToList().ForEach(
             x => drawables.AddRange(x.Drawables.Where(y => y is ManagedDrawable && y.Hoverable).Cast<ManagedDrawable>())
@@ -53,7 +53,7 @@ namespace Furball.Engine.Engine.Input {
             for (int i = 0; i < drawables.Count; i++) {
                 ManagedDrawable drawable = drawables[i];
 
-                if (drawable.Contains(e.mousePosition)) {
+                if (drawable.Contains(e.position.ToPoint())) {
                     if (!drawable.IsHovered && drawable.Hoverable) {
                         drawable.Hover(true);
 
@@ -67,7 +67,7 @@ namespace Furball.Engine.Engine.Input {
                             new VectorTween(
                             TweenType.Movement,
                             FurballGame.TooltipDrawable.Position,
-                            e.mousePosition.ToVector2() + new Vector2(10f),
+                            e.position + new Vector2(10f),
                             FurballGame.Time,
                             FurballGame.Time + 1
                             )
@@ -85,7 +85,7 @@ namespace Furball.Engine.Engine.Input {
             }
         }
 
-        private static void DrawableOnMouseDrag(object sender, ((Point lastPosition, Point newPosition), string cursorName) e) {
+        private static void DrawableOnMouseDrag(object sender, ((Vector2 lastPosition, Vector2 newPosition), string cursorName) e) {
             List<ManagedDrawable> drawables = new();
             DrawableManager.DrawableManagers.Where(x => x.Visible).ToList()
                            .ForEach(x => drawables.AddRange(x.Drawables.Where(y => y is ManagedDrawable).Cast<ManagedDrawable>()));
@@ -94,14 +94,14 @@ namespace Furball.Engine.Engine.Input {
                 ManagedDrawable drawable = drawables[i];
 
                 if (drawable.IsClicked && !drawable.IsDragging)
-                    drawable.DragState(true, e.Item1.newPosition);
+                    drawable.DragState(true, e.Item1.newPosition.ToPoint());
 
                 if (drawable.IsDragging)
-                    drawable.Drag(e.Item1.newPosition);
+                    drawable.Drag(e.Item1.newPosition.ToPoint());
             }
         }
 
-        private static void DrawableOnMouseUp(object _, ((MouseButton mouseButton, Point position) args, string cursorName) e) {
+        private static void DrawableOnMouseUp(object _, ((MouseButton mouseButton, Vector2 position) args, string cursorName) e) {
             List<ManagedDrawable> drawables = new();
             DrawableManager.DrawableManagers.Where(x => x.Visible).ToList()
                            .ForEach(x => drawables.AddRange(x.Drawables.Where(y => y is ManagedDrawable).Cast<ManagedDrawable>()));
@@ -110,13 +110,13 @@ namespace Furball.Engine.Engine.Input {
                 ManagedDrawable drawable = drawables[i];
 
                 if (drawable.IsClicked)
-                    drawable.Click(false, e.args.position);
+                    drawable.Click(false, e.args.position.ToPoint());
                 if (drawable.IsDragging)
-                    drawable.DragState(false, e.args.position);
+                    drawable.DragState(false, e.args.position.ToPoint());
             }
         }
 
-        private static void DrawableOnMouseDown(object _, ((MouseButton mouseButton, Point position) args, string cursorName) e) {
+        private static void DrawableOnMouseDown(object _, ((MouseButton mouseButton, Vector2 position) args, string cursorName) e) {
             List<ManagedDrawable> drawables = new();
             DrawableManager.DrawableManagers.Where(x => x.Visible).ToList().ForEach(
             x => drawables.AddRange(x.Drawables.Where(y => y is ManagedDrawable && y.Clickable && y.Visible).Cast<ManagedDrawable>())
@@ -127,8 +127,8 @@ namespace Furball.Engine.Engine.Input {
             for (int i = 0; i < drawables.Count; i++) {
                 ManagedDrawable drawable = drawables[i];
 
-                if (drawable.Contains(e.args.position)) {
-                    drawable.Click(true, e.args.position);
+                if (drawable.Contains(e.args.position.ToPoint())) {
+                    drawable.Click(true, e.args.position.ToPoint());
 
                     if (drawable.CoverClicks) break;
                 }
@@ -231,40 +231,40 @@ namespace Furball.Engine.Engine.Input {
                     MouseState newState = filteredStates[i];
 
                     //Handling Mouse Movement by comparing to the last Input Frame
-                    if (oldState.Position != newState.Position) {
-                        this.OnMouseMove?.Invoke(this, (newState.Position, newState.Name));
-
-                        //We only are going to handle drags with M1
-                        if (oldState.LeftButton == ButtonState.Pressed && newState.LeftButton == ButtonState.Pressed)
-                            this.OnMouseDrag?.Invoke(this, ((oldState.Position, newState.Position), newState.Name));
-                    }
-
-                    //Handling The Left Mouse Button by comparing to the last Input Frame
-                    if (oldState.LeftButton != newState.LeftButton)
-                        if (oldState.LeftButton == ButtonState.Released)
-                            this.OnMouseDown?.Invoke(this, ((MouseButton.LeftButton, newState.Position), newState.Name));
-                        else
-                            this.OnMouseUp?.Invoke(this, ((MouseButton.LeftButton, newState.Position), newState.Name));
-
-
-                    //Handling The Right Mouse Button by comparing to the last Input Frame
-                    if (oldState.RightButton != newState.RightButton)
-                        if (oldState.RightButton == ButtonState.Released)
-                            this.OnMouseDown?.Invoke(this, ((MouseButton.RightButton, newState.Position), newState.Name));
-                        else
-                            this.OnMouseUp?.Invoke(this, ((MouseButton.RightButton, newState.Position), newState.Name));
-
-                    //Handling the Middle Mouse Button by comparing to the last Input Frame
-                    if (oldState.MiddleButton != newState.MiddleButton)
-                        if (oldState.MiddleButton == ButtonState.Released)
-                            this.OnMouseDown?.Invoke(this, ((MouseButton.MiddleButton, newState.Position), newState.Name));
-                        else
-                            this.OnMouseUp?.Invoke(this, ((MouseButton.MiddleButton, newState.Position), newState.Name));
-
-
-                    //Handling Scrolling by comparing to the last Input Frame
-                    if (oldState.ScrollWheelValue != newState.ScrollWheelValue)
-                        this.OnMouseScroll?.Invoke(this, (newState.ScrollWheelValue - oldState.ScrollWheelValue, newState.Name));
+                    // if (oldState.Position != newState.Position) {
+                    //     this.OnMouseMove?.Invoke(this, (newState.Position, newState.Name));
+                    //
+                    //     //We only are going to handle drags with M1
+                    //     if (oldState.LeftButton == ButtonState.Pressed && newState.LeftButton == ButtonState.Pressed)
+                    //         this.OnMouseDrag?.Invoke(this, ((oldState.Position, newState.Position), newState.Name));
+                    // }
+                    //
+                    // //Handling The Left Mouse Button by comparing to the last Input Frame
+                    // if (oldState.LeftButton != newState.LeftButton)
+                    //     if (oldState.LeftButton == ButtonState.Released)
+                    //         this.OnMouseDown?.Invoke(this, ((MouseButton.LeftButton, newState.Position), newState.Name));
+                    //     else
+                    //         this.OnMouseUp?.Invoke(this, ((MouseButton.LeftButton, newState.Position), newState.Name));
+                    //
+                    //
+                    // //Handling The Right Mouse Button by comparing to the last Input Frame
+                    // if (oldState.RightButton != newState.RightButton)
+                    //     if (oldState.RightButton == ButtonState.Released)
+                    //         this.OnMouseDown?.Invoke(this, ((MouseButton.RightButton, newState.Position), newState.Name));
+                    //     else
+                    //         this.OnMouseUp?.Invoke(this, ((MouseButton.RightButton, newState.Position), newState.Name));
+                    //
+                    // //Handling the Middle Mouse Button by comparing to the last Input Frame
+                    // if (oldState.MiddleButton != newState.MiddleButton)
+                    //     if (oldState.MiddleButton == ButtonState.Released)
+                    //         this.OnMouseDown?.Invoke(this, ((MouseButton.MiddleButton, newState.Position), newState.Name));
+                    //     else
+                    //         this.OnMouseUp?.Invoke(this, ((MouseButton.MiddleButton, newState.Position), newState.Name));
+                    //
+                    //
+                    // //Handling Scrolling by comparing to the last Input Frame
+                    // if (oldState.ScrollWheelValue != newState.ScrollWheelValue)
+                    //     this.OnMouseScroll?.Invoke(this, (newState.ScrollWheelValue - oldState.ScrollWheelValue, newState.Name));
                 }
             }
 
