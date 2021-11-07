@@ -37,6 +37,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                 this._totalDrawables     = this._totalDrawables.OrderByDescending(o => o.Depth).ToList();
                 this._managedDrawables   = this._managedDrawables.OrderByDescending(o => o.Depth).ToList();
                 this._unmanagedDrawables = this._unmanagedDrawables.OrderByDescending(o => o.Depth).ToList();
+
+                this._sortDrawables = false;
             }
             
             drawableBatch.Begin();
@@ -222,9 +224,11 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
 
             switch (drawable) {
                 case ManagedDrawable managedDrawable:
+                    managedDrawable.Dispose(true);
                     this._managedDrawables.Remove(managedDrawable);
                     break;
                 case UnmanagedDrawable unmanagedDrawable:
+                    unmanagedDrawable.Dispose(true);
                     this._unmanagedDrawables.Remove(unmanagedDrawable);
                     break;
             }
