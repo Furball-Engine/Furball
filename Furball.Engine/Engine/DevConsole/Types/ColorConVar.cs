@@ -1,6 +1,7 @@
 using System;
-using System.Drawing;
+
 using Furball.Engine.Engine.Helpers;
+using Furball.Vixie.Graphics;
 
 
 namespace Furball.Engine.Engine.DevConsole.Types {

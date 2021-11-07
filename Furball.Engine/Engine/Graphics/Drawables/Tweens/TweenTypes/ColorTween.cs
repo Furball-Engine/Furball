@@ -1,5 +1,5 @@
 using System;
-using System.Drawing;
+using Furball.Vixie.Graphics;
 
 
 namespace Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes {
@@ -49,12 +49,11 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes {
             if (this.Terminated)
                 return this._endColor;
 
-            //TODO(Eevee)@Vixie: fuck System.Drawing.Color
             return new Color(
-            (int)this.CalculateCurrent(this._startColor.R, this._endColor.R),
-            (int)this.CalculateCurrent(this._startColor.G, this._endColor.G),
-            (int)this.CalculateCurrent(this._startColor.B, this._endColor.B),
-            (int)this.CalculateCurrent(this._startColor.A, this._endColor.A)
+                (int)this.CalculateCurrent(this._startColor.R, this._endColor.R),
+                (int)this.CalculateCurrent(this._startColor.G, this._endColor.G),
+                (int)this.CalculateCurrent(this._startColor.B, this._endColor.B),
+                (int)this.CalculateCurrent(this._startColor.A, this._endColor.A)
             );
         }
     }

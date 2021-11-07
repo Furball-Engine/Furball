@@ -7,7 +7,8 @@ namespace Furball.Engine.Engine.DevConsole.ConFuncs.Standard {
         public Quit() : base("quit") {}
 
         public override ConsoleResult Run(string[] consoleInput) {
-            FurballGame.Instance.WindowManager.
+            //TODO(Eevee)@Vixie: some sort of quit method
+            //FurballGame.Instance.WindowManager.
 
             return new ConsoleResult(ExecutionResult.Success, "Exiting game.");
         }

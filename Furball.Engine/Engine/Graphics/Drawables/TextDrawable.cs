@@ -1,10 +1,11 @@
-using System.Drawing;
+
 using System.Linq;
 using System.Numerics;
 using FontStashSharp;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Furball.Engine.Engine.Helpers;
 using Furball.Engine.Engine.Helpers.Logger;
+using Furball.Vixie.Graphics;
 using Kettu;
 
 
@@ -66,7 +67,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
 
             switch (this.ColorType) {
                 case TextColorType.Solid: {
-                    batch.Renderer.DrawString(this.Font, this.Text, args.Position, args.Color, args.Scale, args.Rotation, Vector2.Zero);
+                    //TODO(Eevee): figure out a clean way to manage this
+                    //batch.Renderer.DrawString(this.Font, this.Text, args.Position, args.Color, args.Scale, args.Rotation, Vector2.Zero);
                     break;
                 }
                 case TextColorType.Repeating: {
@@ -74,19 +76,21 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
                     while (colors.Length < this.Text.Length)
                         colors = colors.Concat(colors).ToArray();
 
-                    batch.Renderer.DrawString(this.Font, this.Text, args.Position, colors, args.Scale, args.Rotation, Vector2.Zero);
+                    //TODO(Eevee): figure out a clean way to manage this
+                    //batch.Renderer.DrawString(this.Font, this.Text, args.Position, colors, args.Scale, args.Rotation, Vector2.Zero);
                     break;
                 }
                 case TextColorType.Stretch: {
-                    batch.Renderer.DrawString(
-                    this.Font,
-                    this.Text,
-                    args.Position,
-                    ArrayHelper.FitElementsInANewArray(this.Colors, this.Text.Length),
-                    args.Scale,
-                    args.Rotation,
-                    Vector2.Zero
-                    );
+                    //TODO(Eevee): figure out a clean way to manage this
+                    //batch.Renderer.DrawString(
+                    //    this.Font,
+                    //    this.Text,
+                    //    args.Position,
+                    //    ArrayHelper.FitElementsInANewArray(this.Colors, this.Text.Length),
+                    //    args.Scale,
+                    //    args.Rotation,
+                    //    Vector2.Zero
+                    //    );
                     break;
                 }
             }

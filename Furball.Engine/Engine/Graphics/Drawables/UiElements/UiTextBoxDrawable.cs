@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Numerics;
 using FontStashSharp;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
+using Furball.Vixie.Graphics;
 using Silk.NET.GLFW;
 using TextCopy;
 using MouseButton=Furball.Engine.Engine.Input.MouseButton;
@@ -133,12 +134,13 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         }
 
         public override void Draw(double time, DrawableBatch batch, DrawableManagerArgs args) {
-            batch.Renderer.DrawRectangle(
-                args.Position * FurballGame.VerticalRatio, 
-                this.Size * FurballGame.VerticalRatio, 
-                this.Selected ? Color.LightGray : Color.DarkGray, 
-                0f
-            );
+            //TODO
+            //batch.Renderer.DrawRectangle(
+            //    args.Position * FurballGame.VerticalRatio,
+            //    this.Size * FurballGame.VerticalRatio,
+            //    this.Selected ? Color.LightGray : Color.DarkGray,
+            //    0f
+            //);
             
             base.Draw(time, batch, args);
         }

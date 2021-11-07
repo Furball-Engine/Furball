@@ -38,21 +38,22 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Primitives {
         public RectanglePrimitiveDrawable() { }
         
         public override void Draw(double time, DrawableBatch batch, DrawableManagerArgs args) {
-            if (this.Filled) 
-                batch.Renderer.FillRectangle(
-                    args.Position * FurballGame.VerticalRatio, 
-                    this.Size * FurballGame.VerticalRatio, 
-                    args.Color, 
-                    0f
-                );
-
-            batch.Renderer.DrawRectangle(
-            args.Position * FurballGame.VerticalRatio,
-            this.Size     * FurballGame.VerticalRatio,
-            args.Color,
-            this.Thickness * FurballGame.VerticalRatio,
-            0f
-            );
+            //TODO: make something to replace drawrectangle, fillrectangle can just be a simple quad
+            //if (this.Filled)
+            //    batch.Renderer.FillRectangle(
+            //        args.Position * FurballGame.VerticalRatio,
+            //        this.Size * FurballGame.VerticalRatio,
+            //        args.Color,
+            //        0f
+            //    );
+//
+            //batch.Renderer.DrawRectangle(
+            //args.Position * FurballGame.VerticalRatio,
+            //this.Size     * FurballGame.VerticalRatio,
+            //args.Color,
+            //this.Thickness * FurballGame.VerticalRatio,
+            //0f
+            //);
         }
     }
 }

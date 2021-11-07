@@ -75,9 +75,9 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
                         p0.Y *= FurballGame.VerticalRatio;
                         p1.X *= FurballGame.VerticalRatio;
                         p1.Y *= FurballGame.VerticalRatio;
-
-                        batch.Renderer.DrawLine(p0.X, p0.Y, p1.X, p1.Y, args.Color, this.Thickness * FurballGame.VerticalRatio, 0);
-                        batch.Renderer.DrawLine(p0.X, p0.Y, p1.X, p1.Y, args.Color, this.Thickness * FurballGame.VerticalRatio, 0);
+                        //TODO(Eevee): DrawableBatch renderer switching and stuff
+                        //batch.Renderer.DrawLine(p0.X, p0.Y, p1.X, p1.Y, args.Color, this.Thickness * FurballGame.VerticalRatio, 0);
+                        //batch.Renderer.DrawLine(p0.X, p0.Y, p1.X, p1.Y, args.Color, this.Thickness * FurballGame.VerticalRatio, 0);
 
                         break;
                     }
@@ -89,9 +89,9 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
                         p0.Y *= FurballGame.VerticalRatio;
                         p1.X *= FurballGame.VerticalRatio;
                         p1.Y *= FurballGame.VerticalRatio;
-
-                        batch.Renderer.DrawLine(p0.X, p0.Y, p1.X, p1.Y, args.Color, this.Thickness * FurballGame.VerticalRatio, 0);
-                        batch.Renderer.DrawLine(p0.X, p0.Y, p1.X, p1.Y, args.Color, this.Thickness * FurballGame.VerticalRatio, 0);
+                        //TODO(Eevee): DrawableBatch renderer switching and stuff
+                        //batch.Renderer.DrawLine(p0.X, p0.Y, p1.X, p1.Y, args.Color, this.Thickness * FurballGame.VerticalRatio, 0);
+                        //batch.Renderer.DrawLine(p0.X, p0.Y, p1.X, p1.Y, args.Color, this.Thickness * FurballGame.VerticalRatio, 0);
                         
                         break;
                     }
@@ -103,7 +103,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
                         //y  *= FurballGame.VerticalRatio;
                         //x1 *= FurballGame.VerticalRatio;
                         //y1 *= FurballGame.VerticalRatio;
-//
+//                      //TODO(Eevee): DrawableBatch renderer switching and stuff
                         //batch.SpriteBatch.DrawLine(x, y, x1, y1, args.Color, this.Thickness * FurballGame.VerticalRatio, 0);
                         //batch.SpriteBatch.DrawLine(x, y, x1, y1, args.Color, this.Thickness * FurballGame.VerticalRatio, 0);
 

@@ -1,4 +1,7 @@
+
+
 using System.Drawing;
+using Color=Furball.Vixie.Graphics.Color;
 
 namespace Furball.Engine.Engine.Helpers {
     public static class ColorConverter {

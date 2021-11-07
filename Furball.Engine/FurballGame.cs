@@ -29,6 +29,7 @@ using Furball.Vixie.Graphics;
 using Kettu;
 using Silk.NET.GLFW;
 using Silk.NET.Windowing;
+using Color=Furball.Vixie.Graphics.Color;
 
 namespace Furball.Engine {
     public class FurballGame : Game {
@@ -124,8 +125,8 @@ namespace Furball.Engine {
             _stopwatch.Start();
 
             InputManager = new InputManager();
-            InputManager.RegisterInputMethod(new MonogameMouseInputMethod());
-            InputManager.RegisterInputMethod(new MonogameKeyboardInputMethod());
+            InputManager.RegisterInputMethod(new VixieMouseInputMethod());
+            InputManager.RegisterInputMethod(new VixieKeyboardInputMethod());
 
             if (ConVars.DebugOverlay.Value == 1) {
                 InputManager.OnKeyDown += delegate(object _, Keys keys) {

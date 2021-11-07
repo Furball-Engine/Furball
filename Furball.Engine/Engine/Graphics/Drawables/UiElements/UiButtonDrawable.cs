@@ -5,6 +5,7 @@ using FontStashSharp;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes;
+using Color=Furball.Vixie.Graphics.Color;
 
 namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
     /// <summary>
@@ -121,8 +122,9 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         }
 
         public override void Draw(double time, DrawableBatch batch, DrawableManagerArgs args) {
-            batch.Renderer.FillRectangle(args.Position * FurballGame.VerticalRatio, this.Size * FurballGame.VerticalRatio, args.Color, 0f);
-            batch.Renderer.DrawRectangle(args.Position * FurballGame.VerticalRatio, this.Size * FurballGame.VerticalRatio, this.OutlineColor, this.OutlineThickness * FurballGame.VerticalRatio, 0f);
+            //TODO: recreate some sort of thing for this
+            //batch.Renderer.FillRectangle(args.Position * FurballGame.VerticalRatio, this.Size * FurballGame.VerticalRatio, args.Color, 0f);
+            //batch.Renderer.DrawRectangle(args.Position * FurballGame.VerticalRatio, this.Size * FurballGame.VerticalRatio, this.OutlineColor, this.OutlineThickness * FurballGame.VerticalRatio, 0f);
             
             // FIXME: this is a bit of a hack, it should definitely be done differently
             DrawableManagerArgs tempArgs = args;
