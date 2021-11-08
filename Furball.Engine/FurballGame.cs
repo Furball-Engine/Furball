@@ -29,6 +29,7 @@ using Furball.Vixie.Graphics;
 using Furball.Vixie.Graphics.Renderers.OpenGL;
 using Kettu;
 using Silk.NET.GLFW;
+using Silk.NET.Input;
 using Silk.NET.Windowing;
 using Color=Furball.Vixie.Graphics.Color;
 
@@ -130,8 +131,8 @@ namespace Furball.Engine {
             InputManager.RegisterInputMethod(new VixieKeyboardInputMethod());
 
             if (ConVars.DebugOverlay.Value == 1) {
-                InputManager.OnKeyDown += delegate(object _, Keys keys) {
-                    if (keys == Keys.F11) DrawDebugOverlay = !DrawDebugOverlay;
+                InputManager.OnKeyDown += delegate(object _, Key keys) {
+                    if (keys == Key.F11) DrawDebugOverlay = !DrawDebugOverlay;
                 };
             }
 

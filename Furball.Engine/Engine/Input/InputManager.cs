@@ -9,7 +9,7 @@ using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes;
 using Furball.Engine.Engine.Helpers;
-using Silk.NET.GLFW;
+using Silk.NET.Input;
 using Silk.NET.Input.Extensions;
 
 namespace Furball.Engine.Engine.Input {
@@ -143,9 +143,9 @@ namespace Furball.Engine.Engine.Input {
         /// <summary>
         /// The currently held Keyboard keys
         /// </summary>
-        public List<Keys> HeldKeys {
+        public List<Key> HeldKeys {
             get {
-                List<Keys> temp = new();
+                List<Key> temp = new();
 
                 for (int i = 0; i < this.registeredInputMethods.Count; i++)
                     temp.AddRange(this.registeredInputMethods[i].HeldKeys);
@@ -164,11 +164,11 @@ namespace Furball.Engine.Engine.Input {
         /// <summary>
         /// Called when a key is pressed
         /// </summary>
-        public event EventHandler<Keys> OnKeyDown;
+        public event EventHandler<Key> OnKeyDown;
         /// <summary>
         /// Called when a key is released
         /// </summary>
-        public event EventHandler<Keys> OnKeyUp;
+        public event EventHandler<Key> OnKeyUp;
         /// <summary>
         /// Called when a mouse button is pressed
         /// </summary>
@@ -190,15 +190,15 @@ namespace Furball.Engine.Engine.Input {
         /// </summary>
         public event EventHandler<(int scrollAmount, string cursorName)> OnMouseScroll;
 
-        private List<Keys> _diffKeysPressed  = new();
-        private List<Keys> _diffKeysReleased = new();
+        private List<Key> _diffKeysPressed  = new();
+        private List<Key> _diffKeysReleased = new();
 
         /// <summary>
         /// Updates all registered InputMethods and calls the necessary events
         /// </summary>
         public void Update() {
             List<MouseState> oldCursorStates = this.CursorStates.ToList();
-            List<Keys>       oldKeys         = this.HeldKeys.ToList();
+            List<Key>        oldKeys         = this.HeldKeys.ToList();
 
             for (int i = 0; i < this.registeredInputMethods.Count; i++) {
                 InputMethod method = this.registeredInputMethods[i];
