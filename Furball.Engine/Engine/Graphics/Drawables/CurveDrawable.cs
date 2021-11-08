@@ -75,7 +75,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
                         p0.Y *= FurballGame.VerticalRatio;
                         p1.X *= FurballGame.VerticalRatio;
                         p1.Y *= FurballGame.VerticalRatio;
-                        //TODO(Eevee): DrawableBatch renderer switching and stuff
+
                         batch.DrawLine(p0.X, p0.Y, p1.X, p1.Y, this.Thickness * FurballGame.VerticalRatio, args.Color);
                         batch.DrawLine(p0.X, p0.Y, p1.X, p1.Y, this.Thickness * FurballGame.VerticalRatio, args.Color);
 
@@ -89,7 +89,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
                         p0.Y *= FurballGame.VerticalRatio;
                         p1.X *= FurballGame.VerticalRatio;
                         p1.Y *= FurballGame.VerticalRatio;
-                        //TODO(Eevee): DrawableBatch renderer switching and stuff
+
                         batch.DrawLine(p0.X, p0.Y, p1.X, p1.Y, this.Thickness * FurballGame.VerticalRatio, args.Color);
                         batch.DrawLine(p0.X, p0.Y, p1.X, p1.Y, this.Thickness * FurballGame.VerticalRatio, args.Color);
 
@@ -103,7 +103,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
                         //y  *= FurballGame.VerticalRatio;
                         //x1 *= FurballGame.VerticalRatio;
                         //y1 *= FurballGame.VerticalRatio;
-//                      //TODO(Eevee): DrawableBatch renderer switching and stuff
+//                      //TODO(Eevee): Reimplement catmull-rom
                         //batch.DrawLine(p0.X, p0.Y, p1.X, p1.Ythis.Thickness * FurballGame.VerticalRatio, args.Color);
                         //batch.DrawLine(p0.X, p0.Y, p1.X, p1.Ythis.Thickness * FurballGame.VerticalRatio, args.Color);
 

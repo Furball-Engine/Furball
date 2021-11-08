@@ -36,8 +36,12 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// <summary>
         ///     An array of colours for the text drawable to use depending on the TextColorType
         /// </summary>
-        public Color[] Colors = {
-            Color.Cyan, Color.Pink, Color.White, Color.Pink, Color.Cyan
+        public System.Drawing.Color[] Colors = {
+            System.Drawing.Color.Cyan,
+            System.Drawing.Color.Pink,
+            System.Drawing.Color.White,
+            System.Drawing.Color.Pink,
+            System.Drawing.Color.Cyan
         };
         
         /// <summary>
@@ -67,30 +71,26 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
 
             switch (this.ColorType) {
                 case TextColorType.Solid: {
-                    //TODO(Eevee): figure out a clean way to manage this
-                    //batch.Renderer.DrawString(this.Font, this.Text, args.Position, args.Color, args.Scale, args.Rotation, Vector2.Zero);
+                    batch.DrawString(this.Font, this.Text, args.Position, args.Color, args.Rotation, args.Scale);
                     break;
                 }
                 case TextColorType.Repeating: {
-                    Color[] colors = this.Colors;
+                    System.Drawing.Color[] colors = this.Colors;
                     while (colors.Length < this.Text.Length)
                         colors = colors.Concat(colors).ToArray();
 
-                    //TODO(Eevee): figure out a clean way to manage this
-                    //batch.Renderer.DrawString(this.Font, this.Text, args.Position, colors, args.Scale, args.Rotation, Vector2.Zero);
+                    batch.DrawString(this.Font, this.Text, args.Position, colors, args.Rotation, args.Scale);
                     break;
                 }
                 case TextColorType.Stretch: {
-                    //TODO(Eevee): figure out a clean way to manage this
-                    //batch.Renderer.DrawString(
-                    //    this.Font,
-                    //    this.Text,
-                    //    args.Position,
-                    //    ArrayHelper.FitElementsInANewArray(this.Colors, this.Text.Length),
-                    //    args.Scale,
-                    //    args.Rotation,
-                    //    Vector2.Zero
-                    //    );
+                    batch.DrawString(
+                        this.Font,
+                        this.Text,
+                        args.Position,
+                        ArrayHelper.FitElementsInANewArray(this.Colors, this.Text.Length),
+                        args.Rotation,
+                        args.Scale
+                    );
                     break;
                 }
             }

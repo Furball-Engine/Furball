@@ -92,7 +92,7 @@ namespace Furball.Engine {
         public event EventHandler<Screen> AfterScreenChange;
 
         private Screen _startScreen;
-        public FurballGame(Screen startScreen, WindowOptions options) : base(options)  {
+        public FurballGame(Screen startScreen, WindowOptions options) : base()  {
             //this._graphics = new GraphicsDeviceManager(this) {
             //    GraphicsProfile     = GraphicsProfile.HiDef,
             //    PreferMultiSampling = true
@@ -194,7 +194,7 @@ namespace Furball.Engine {
 
             ScreenManager.ChangeScreen(this._startScreen);
 
-            DrawableBatch = new DrawableBatch(new BatchedRenderer(), new BatchedLineRenderer());
+            DrawableBatch = new DrawableBatch(RendererType.Batched);
 
             this.ChangeScreenSize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
 
