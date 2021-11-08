@@ -29,7 +29,7 @@ namespace Furball.Engine.Engine {
         }
 
         public override void Dispose() {
-            //TODO: remove disposing prolly
+            //TODO: redo how everything is disposed
             this.Manager.Dispose(true);
             
             base.Dispose();

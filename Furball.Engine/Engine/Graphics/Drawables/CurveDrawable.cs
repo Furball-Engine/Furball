@@ -76,8 +76,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
                         p1.X *= FurballGame.VerticalRatio;
                         p1.Y *= FurballGame.VerticalRatio;
                         //TODO(Eevee): DrawableBatch renderer switching and stuff
-                        //batch.Renderer.DrawLine(p0.X, p0.Y, p1.X, p1.Y, args.Color, this.Thickness * FurballGame.VerticalRatio, 0);
-                        //batch.Renderer.DrawLine(p0.X, p0.Y, p1.X, p1.Y, args.Color, this.Thickness * FurballGame.VerticalRatio, 0);
+                        batch.DrawLine(p0.X, p0.Y, p1.X, p1.Y, this.Thickness * FurballGame.VerticalRatio, args.Color);
+                        batch.DrawLine(p0.X, p0.Y, p1.X, p1.Y, this.Thickness * FurballGame.VerticalRatio, args.Color);
 
                         break;
                     }
@@ -90,9 +90,9 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
                         p1.X *= FurballGame.VerticalRatio;
                         p1.Y *= FurballGame.VerticalRatio;
                         //TODO(Eevee): DrawableBatch renderer switching and stuff
-                        //batch.Renderer.DrawLine(p0.X, p0.Y, p1.X, p1.Y, args.Color, this.Thickness * FurballGame.VerticalRatio, 0);
-                        //batch.Renderer.DrawLine(p0.X, p0.Y, p1.X, p1.Y, args.Color, this.Thickness * FurballGame.VerticalRatio, 0);
-                        
+                        batch.DrawLine(p0.X, p0.Y, p1.X, p1.Y, this.Thickness * FurballGame.VerticalRatio, args.Color);
+                        batch.DrawLine(p0.X, p0.Y, p1.X, p1.Y, this.Thickness * FurballGame.VerticalRatio, args.Color);
+
                         break;
                     }
                     case CurveType.CatmullRom: {
@@ -104,8 +104,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
                         //x1 *= FurballGame.VerticalRatio;
                         //y1 *= FurballGame.VerticalRatio;
 //                      //TODO(Eevee): DrawableBatch renderer switching and stuff
-                        //batch.SpriteBatch.DrawLine(x, y, x1, y1, args.Color, this.Thickness * FurballGame.VerticalRatio, 0);
-                        //batch.SpriteBatch.DrawLine(x, y, x1, y1, args.Color, this.Thickness * FurballGame.VerticalRatio, 0);
+                        //batch.DrawLine(p0.X, p0.Y, p1.X, p1.Ythis.Thickness * FurballGame.VerticalRatio, args.Color);
+                        //batch.DrawLine(p0.X, p0.Y, p1.X, p1.Ythis.Thickness * FurballGame.VerticalRatio, args.Color);
 
                         break;
                     }

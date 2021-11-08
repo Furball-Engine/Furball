@@ -57,7 +57,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
             args.Position *= FurballGame.VerticalRatio;
             args.Scale    *= FurballGame.VerticalRatio;
 
-            batch.Renderer.Draw(this._texture, args.Position, null, args.Scale, args.Rotation, args.Color, this._cropping);
+            batch.Draw(this._texture, args.Position, null, args.Scale, args.Rotation, args.Color, this._cropping);
         }
 
         /// <summary>

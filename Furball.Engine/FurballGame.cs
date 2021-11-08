@@ -56,8 +56,8 @@ namespace Furball.Engine {
         public static string AssemblyPath       = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? throw new Exception("shits fucked man");
         public static string LocalizationFolder => $"{AssemblyPath}/Localization";
 
-        public static int WindowHeight => (int) Instance.WindowManager.WindowSize.X;
-        public static int WindowWidth => (int) Instance.WindowManager.WindowSize.Y;
+        public static int WindowWidth => (int) Instance.WindowManager.WindowSize.X;
+        public static int WindowHeight => (int) Instance.WindowManager.WindowSize.Y;
 
         public static float HorizontalRatio => (float)WindowWidth / DEFAULT_WINDOW_WIDTH;
         public static float VerticalRatio => (float)WindowHeight / DEFAULT_WINDOW_HEIGHT;
@@ -193,8 +193,7 @@ namespace Furball.Engine {
 
             ScreenManager.ChangeScreen(this._startScreen);
 
-            //TODO: figure out what to do wit this
-            DrawableBatch = new DrawableBatch(new BatchedRenderer());
+            DrawableBatch = new DrawableBatch(new BatchedRenderer(), new BatchedLineRenderer());
 
             this.ChangeScreenSize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
 

@@ -19,7 +19,6 @@ namespace Furball.Engine.Engine.DevConsole.ConFuncs.Standard {
             string hookAction = consoleInput[2];
 
             switch (hookType) {
-                //TODO: add function hooks
                 case "+variable": {
                         ConVar variable = DevConsole.RegisteredConVars.GetValueOrDefault(hookTarget, null);
                         ConFunc action = DevConsole.RegisteredFunctions.GetValueOrDefault(hookAction, null);

@@ -31,8 +31,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Primitives {
         }
         
         public override void Draw(double time, DrawableBatch batch, DrawableManagerArgs args) {
-            //TODO(Eevee): DrawableBatch renderer switching and stuff
-            //batch.Renderer.DrawLine(args.Position * FurballGame.VerticalRatio, this.Length * FurballGame.VerticalRatio, this.Angle, args.Color, this.Thickness, 0f);
+            //TODO: redo this entire class to use p0 p1
+            //batch.DrawLine(args.Position * FurballGame.VerticalRatio, this.Length * FurballGame.VerticalRatio, this.Angle, args.Color, this.Thickness, 0f);
         }
     }
 }
