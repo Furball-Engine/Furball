@@ -29,6 +29,9 @@ namespace Furball.Engine.Engine.Graphics {
             if(this._textureRenderer.IsBegun)
                 this._textureRenderer.End();
 
+            if(this._lineRenderer.IsBegun)
+                this._lineRenderer.End();
+
             this._begun = false;
         }
 

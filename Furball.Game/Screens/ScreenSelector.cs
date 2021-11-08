@@ -18,19 +18,18 @@ namespace Furball.Game.Screens {
                 ("Catmull Testing", new CatmullTestScreen()),
             };
 
-            //TexturedDrawable background = new TexturedDrawable(FurballGame.WhitePixel, Vector2.Zero) {
-            //    ColorOverride = Color.BlueViolet,
-            //    Scale         = new Vector2(1280, 720),
-            //    Depth         = 1f
-            //};
+            TexturedDrawable background = new TexturedDrawable(FurballGame.WhitePixel, Vector2.Zero) {
+                ColorOverride = Color.BlueViolet,
+                Scale         = new Vector2(1280, 720),
+                Depth         = 1f
+            };
 
-            //this.Manager.Add(background);
+            this.Manager.Add(background);
+            TextDrawable topText = new TextDrawable(new Vector2(1280f / 2f, 40), FurballGame.DEFAULT_FONT, "Choose Screen", 48) {
+                OriginType = OriginType.Center
+            };
 
-            //TextDrawable topText = new TextDrawable(new Vector2(1280f / 2f, 40), FurballGame.DEFAULT_FONT, "Choose Screen", 48) {
-            //    OriginType = OriginType.Center
-            //};
-//
-            //this.Manager.Add(topText);
+            this.Manager.Add(topText);
 
             int currentY = 90;
             int currentX = 55;

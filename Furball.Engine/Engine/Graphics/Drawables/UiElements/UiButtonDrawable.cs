@@ -53,7 +53,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         /// <summary>
         ///     The thickness of the outline
         /// </summary>
-        public float OutlineThickness = 2f;
+        public float OutlineThickness = .5f;
 
         /// <summary>
         ///     The size of the button, Vector2.Zero means autosize it
