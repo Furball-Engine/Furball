@@ -22,7 +22,9 @@ namespace Furball.Engine.Engine.DevConsole.Types {
             try {
                 switch (split.Length) {
                     case 1:
-                        this.Value.FromHexString(consoleInput);
+                        Color color = ColorConverter.FromHexString(consoleInput);
+
+                        this.Value = color;
                         break;
                     case 3: {
                         Color tempColor = new() {
