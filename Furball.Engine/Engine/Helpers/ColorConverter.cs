@@ -5,7 +5,7 @@ using Color=Furball.Vixie.Graphics.Color;
 
 namespace Furball.Engine.Engine.Helpers {
     public static class ColorConverter {
-        public static void FromHexString(this Color color, string input) {
+        public static void FromHexString(ref this Color color, string input) {
             System.Drawing.Color drawingColor = ColorTranslator.FromHtml(input);
 
             color.R = drawingColor.R;
