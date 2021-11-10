@@ -26,8 +26,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
 
             this._textDrawable.Position = new(fontHeight + 5f, -7.5f);
 
-            this.Drawables.Add(this._textDrawable);
-            this.Drawables.Add(this._rectangleDrawable);
+            this._drawables.Add(this._textDrawable);
+            this._drawables.Add(this._rectangleDrawable);
 
             this.Selected.OnChange += this.OnSelectChange;
 

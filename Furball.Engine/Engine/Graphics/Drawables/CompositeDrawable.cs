@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Microsoft.Xna.Framework;
 
@@ -7,15 +8,16 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// <summary>
         ///     The list of drawables contained in the CompositeDrawable
         /// </summary>
-        public List<ManagedDrawable> Drawables = new();
+        protected List<ManagedDrawable> _drawables = new();
+        public ReadOnlyCollection<ManagedDrawable> Drawables => this._drawables.AsReadOnly();
 
         public override Vector2 Size {
             get {
                 Vector2 topLeft     = new(0, 0);
                 Vector2 bottomRight = new(0, 0);
 
-                for (int i = 0; i < this.Drawables.Count; i++) {
-                    ManagedDrawable managedDrawable = this.Drawables[i];
+                for (int i = 0; i < this._drawables.Count; i++) {
+                    ManagedDrawable managedDrawable = this._drawables[i];
                     
                     if (managedDrawable.Rectangle.X < topLeft.X) topLeft.X = managedDrawable.Rectangle.X;
                     if (managedDrawable.Rectangle.Y < topLeft.Y) topLeft.Y = managedDrawable.Rectangle.Y;
@@ -36,8 +38,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         private void OnDrawableClick(object sender, Point e) {
             Point adjustedPoint = ((e.ToVector2() - this.Position + this.LastCalculatedOrigin) * this.Scale).ToPoint();
 
-            for (int i = 0; i < this.Drawables.Count; i++) {
-                ManagedDrawable drawable = this.Drawables[i];
+            for (int i = 0; i < this._drawables.Count; i++) {
+                ManagedDrawable drawable = this._drawables[i];
 
                 if (drawable.Contains(adjustedPoint)) {
                     drawable.Click(true,  adjustedPoint);
@@ -47,7 +49,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         }
 
         public override void Update(GameTime time) {
-            foreach (ManagedDrawable drawable in this.Drawables) {
+            foreach (ManagedDrawable drawable in this._drawables) {
                 drawable.Update(time);
                 drawable.UpdateTweens();
             }
@@ -60,7 +62,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         }
 
         public override void Draw(GameTime time, DrawableBatch batch, DrawableManagerArgs args) {
-            foreach (ManagedDrawable drawable in this.Drawables) {
+            foreach (ManagedDrawable drawable in this._drawables) {
                 if (!drawable.Visible) continue;
                 
                 DrawableManagerArgs drawableArgs = new() {
