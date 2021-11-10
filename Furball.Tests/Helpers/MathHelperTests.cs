@@ -1,5 +1,5 @@
 using System;
-using Microsoft.Xna.Framework;
+using System.Numerics;
 using Xunit;
 using MathHelper=Furball.Engine.Engine.Helpers.MathHelper;
 
