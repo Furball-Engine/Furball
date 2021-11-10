@@ -8,7 +8,7 @@ using Silk.NET.GLFW;
 using Silk.NET.Input;
 using TextCopy;
 using Color=Furball.Vixie.Graphics.Color;
-using MouseButton=Furball.Engine.Engine.Input.MouseButton;
+using MouseButton=Silk.NET.Input.MouseButton;
 
 namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
     /// <summary>
