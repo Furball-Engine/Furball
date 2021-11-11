@@ -190,11 +190,15 @@ namespace Furball.Engine {
             DrawableManager.Add(TooltipDrawable);
 
             base.Initialize();
+
+            GtkHelper.Initialize();
         }
 
         protected override void OnExiting(object sender, EventArgs args) {
             DevConsole.Run(":nt_on_exiting", false, true);
             DevConsole.WriteLog();
+
+            GtkHelper.Dispose();
 
             base.OnExiting(sender, args);
         }

@@ -47,6 +47,7 @@
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="FontStashSharp.MonoGame" Version="1.0.4" />
+        <PackageReference Include="GtkSharp" Version="3.24.24.34"/>
         <PackageReference Include="Jace" Version="1.0.0" />
         <PackageReference Include="Kettu" Version="1.2.1"/>
         <PackageReference Include="ManagedBass" Version="3.1.0" />
