@@ -7,8 +7,6 @@ namespace Furball.Engine.Engine.Helpers {
     public static class GtkHelper {
         private static Window _Window;
 
-        private static bool _StopThread = false;
-
         public static void Initialize() {
             Application.Init();
 
