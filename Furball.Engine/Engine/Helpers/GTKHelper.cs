@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using Gtk;
 
@@ -25,15 +26,17 @@ namespace Furball.Engine.Engine.Helpers {
             Application.Quit();
         }
 
-        public static void MessageDialogAsync(string title, string contents, MessageType messageType, ButtonsType type) {
+        public static void MessageDialogAsync(string title, string contents, MessageType messageType, ButtonsType type, EventHandler<ResponseType> callback = null) {
             new Thread(
             () => {
                 MessageDialog dialog = new(_Window, DialogFlags.DestroyWithParent, messageType, type, contents);
                 dialog.Title = title;
 
-                dialog.Run();
+                ResponseType result = (ResponseType)dialog.Run();
 
                 dialog.Destroy();
+
+                callback?.Invoke(null, result);
             }
             ).Start();
         }
