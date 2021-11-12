@@ -19,6 +19,7 @@ namespace Furball.Engine.Engine.Graphics {
         private readonly ITextureRenderer _textureRenderer;
         private readonly ILineRenderer    _lineRenderer;
         private readonly ITextRenderer    _textRenderer;
+        public readonly  RendererType     RendererType;
 
         private bool _begun;
         public bool Begun => _begun;
@@ -29,6 +30,8 @@ namespace Furball.Engine.Engine.Graphics {
         }
 
         public DrawableBatch(RendererType type) {
+            this.RendererType = type;
+
             switch (type) {
                 default:
                 case RendererType.Batched:
