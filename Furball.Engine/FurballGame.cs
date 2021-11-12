@@ -30,7 +30,10 @@ using Microsoft.Xna.Framework.Input;
 namespace Furball.Engine {
     public class FurballGame : Game {
         private GraphicsDeviceManager _graphics;
-        private IGameComponent        _running;
+        public Screen RunningScreen {
+            get;
+            private set;
+        }
 
         public static Random Random = new();
 
@@ -278,16 +281,16 @@ namespace Furball.Engine {
 
         public void ChangeScreen(Screen screen) {
             this.BeforeScreenChange?.Invoke(this, screen);
-            
-            if (this._running != null) {
-                this.Components.Remove(this._running);
 
-                ((GameComponent)this._running).Dispose();
-                this._running = null;
+            if (this.RunningScreen != null) {
+                this.Components.Remove(this.RunningScreen);
+
+                this.RunningScreen.Dispose();
+                this.RunningScreen = null;
             }
 
             this.Components.Add(screen);
-            this._running = screen;
+            this.RunningScreen = screen;
             
             this.AfterScreenChange?.Invoke(this, screen);
         }
