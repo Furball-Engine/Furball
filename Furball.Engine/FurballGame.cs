@@ -61,8 +61,8 @@ namespace Furball.Engine {
         public static int WindowHeight => (int) Instance.WindowManager.WindowSize.Y;
 
         public static float HorizontalRatio => (float)WindowWidth / DEFAULT_WINDOW_WIDTH;
-        //public static float VerticalRatio => (float)WindowHeight / DEFAULT_WINDOW_HEIGHT;
-        public static float VerticalRatio => 1;
+        public static float VerticalRatio => (float)WindowHeight / DEFAULT_WINDOW_HEIGHT;
+        //public static float VerticalRatio => 1;
         public static Rectangle DisplayRect => new(0, 0, (int)Math.Ceiling(WindowWidth / VerticalRatio), (int)Math.Ceiling(WindowHeight / VerticalRatio));
         public static Rectangle DisplayRectActual => new(0, 0, WindowWidth, WindowHeight);
 
