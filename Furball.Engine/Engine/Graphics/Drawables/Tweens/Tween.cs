@@ -20,6 +20,9 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Tweens {
         /// </summary>
         public int EndTime;
 
+        public int LastKnownStartTime = 0;
+        public int LastKnownEndTime   = 0;
+
         /// <summary>
         /// How long is the Tween?
         /// </summary>

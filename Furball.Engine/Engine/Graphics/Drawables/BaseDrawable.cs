@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes.BezierPathTween;
@@ -267,18 +266,30 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
             this.Tweens.Clear();
         }
 
+        private bool _sortTweenScheduled = false;
+
         /// <summary>
         ///     Updates the pDrawables Tweens
         /// </summary>
         public void UpdateTweens() {
             this.Tweens.RemoveAll(tween => tween.Terminated && !tween.KeepAlive);
 
-            List<Tween> sortedTweens = this.Tweens.OrderBy(tween => tween.StartTime).ToList();
+            if (this._sortTweenScheduled) {
+                this.Tweens.Sort((x, y) => x.StartTime - y.StartTime);
+                this._sortTweenScheduled = false;
+            }
 
-            for (int i = 0; i != sortedTweens.Count; i++) {
-                Tween currentTween = sortedTweens[i];
+            int currentTime = this.TimeSource.GetCurrentTime();
+            for (int i = 0; i != this.Tweens.Count; i++) {
+                Tween currentTween = this.Tweens[i];
 
-                currentTween.Update(this.TimeSource.GetCurrentTime());
+                if (currentTween.LastKnownStartTime != currentTween.StartTime || currentTween.LastKnownEndTime != currentTween.EndTime)
+                    this._sortTweenScheduled = true;
+
+                currentTween.LastKnownStartTime = currentTween.StartTime;
+                currentTween.LastKnownEndTime   = currentTween.EndTime;
+
+                currentTween.Update(currentTime);
 
                 if (!currentTween.Initiated)
                     continue;
