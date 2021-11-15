@@ -4,6 +4,7 @@ using System.IO;
 using Furball.Engine.Engine.Helpers.Logger;
 using Furball.Engine.Engine.Localization.Exceptions;
 using Furball.Engine.Engine.Localization.Languages;
+using JetBrains.Annotations;
 using Kettu;
 
 namespace Furball.Engine.Engine.Localization {
@@ -40,6 +41,7 @@ namespace Furball.Engine.Engine.Localization {
             return languages;
         }
 
+        [CanBeNull]
         public static Language GetLanguageFromCode(ISO639_2Code code) {
             if (Languages.TryGetValue(code, out Type type)) {
                 return (Language)Activator.CreateInstance(type);

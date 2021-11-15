@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Furball.Engine.Engine.Helpers.ArrayExtensions;
+using JetBrains.Annotations;
 
 namespace Furball.Engine.Engine.Helpers {
     public static class ObjectExtensions {
@@ -18,7 +19,9 @@ namespace Furball.Engine.Engine.Helpers {
         /// </summary>
         /// <param name="originalObject">The original object</param>
         /// <returns>The cloned object</returns>
+        [CanBeNull]
         public static object Copy(this object originalObject) => InternalCopy(originalObject, new Dictionary<object, object>(new ReferenceEqualityComparer()));
+        [CanBeNull]
         private static object InternalCopy(object originalObject, IDictionary<object, object> visited) {
             if (originalObject == null) return null;
 
