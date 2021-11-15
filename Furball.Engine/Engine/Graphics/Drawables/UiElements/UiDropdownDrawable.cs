@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using FontStashSharp;
+using Furball.Engine.Engine.Helpers;
 using Microsoft.Xna.Framework;
 
 namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
@@ -11,7 +12,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
 
         public bool Selected = false;
 
-        public string SelectedItem;
+        public Bindable<string> SelectedItem;
 
         public UiDropdownDrawable(Vector2 position, List<string> items, Vector2 buttonSize, FontSystem font, int fontSize) {
             this.Position   = position;
@@ -20,7 +21,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
             this.Font       = font;
             this.FontSize   = fontSize;
 
-            this.SelectedItem = items[0];
+            this.SelectedItem = new(items[0]);
 
             this.Update();
         }
@@ -46,7 +47,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
                     element = new(new(0, y), item, this.Font, this.FontSize, Color.Blue, Color.White, Color.Black, this.ButtonSize);
 
                     element.OnClick += delegate {
-                        this.SelectedItem = item;
+                        this.SelectedItem.Value = item;
 
                         this.Selected = false;
 
