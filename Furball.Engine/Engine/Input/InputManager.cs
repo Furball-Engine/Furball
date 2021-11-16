@@ -201,6 +201,8 @@ namespace Furball.Engine.Engine.Input {
 
             #region OnKeyUp/Down
 
+            //TODO: fix keyboard input not working for whatever reason
+
             this._diffKeysPressed  = this.HeldKeys.Except(oldKeys).ToList();
             this._diffKeysReleased = oldKeys.Except(this.HeldKeys).ToList();
 
