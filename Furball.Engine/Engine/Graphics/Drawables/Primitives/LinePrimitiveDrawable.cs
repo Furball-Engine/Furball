@@ -1,4 +1,3 @@
-using System;
 using System.Numerics;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Furball.Vixie.Graphics;

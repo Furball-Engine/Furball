@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Silk.NET.GLFW;
 using Silk.NET.Input;
 using Silk.NET.Input.Extensions;
 

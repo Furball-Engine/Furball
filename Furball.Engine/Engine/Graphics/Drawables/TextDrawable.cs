@@ -5,7 +5,6 @@ using FontStashSharp;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Furball.Engine.Engine.Helpers;
 using Furball.Engine.Engine.Helpers.Logger;
-using Furball.Vixie.Graphics;
 using Kettu;
 
 

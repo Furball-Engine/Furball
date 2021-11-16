@@ -3,7 +3,6 @@ using System.Numerics;
 using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Graphics.Drawables.UiElements;
 using Furball.Vixie.Input;
-using Silk.NET.GLFW;
 using Silk.NET.Input;
 
 namespace Furball.Engine.Engine.DevConsole {
