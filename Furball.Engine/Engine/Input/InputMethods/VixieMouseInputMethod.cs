@@ -3,7 +3,6 @@ using Silk.NET.Input.Extensions;
 
 namespace Furball.Engine.Engine.Input.InputMethods {
     public class VixieMouseInputMethod : InputMethod {
-        public MouseState CurrentState { get; private set; }
         public override void Update() {
             this.CursorPositions[0] = Mouse.GetState();
         }

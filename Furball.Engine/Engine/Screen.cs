@@ -17,20 +17,20 @@ namespace Furball.Engine.Engine {
         }
         
         public override void Draw(double gameTime) {
-            this.Manager.Draw(gameTime, FurballGame.DrawableBatch);
+            this.Manager?.Draw(gameTime, FurballGame.DrawableBatch);
 
             base.Draw(gameTime);
         }
 
         public override void Update(double gameTime) {
-            this.Manager.Update(gameTime);
+            this.Manager?.Update(gameTime);
 
             base.Update(gameTime);
         }
 
         public override void Dispose() {
             //TODO: redo how everything is disposed
-            this.Manager.Dispose(true);
+            this.Manager?.Dispose(true);
             
             base.Dispose();
         }
