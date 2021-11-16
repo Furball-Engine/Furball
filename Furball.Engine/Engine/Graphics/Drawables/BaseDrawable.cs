@@ -235,7 +235,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
             this.OnHoverLost = null;
         }
 
-        public virtual void Dispose(bool disposing) {
+        public virtual void Dispose() {
             this.Tweens.Clear();
         }
         

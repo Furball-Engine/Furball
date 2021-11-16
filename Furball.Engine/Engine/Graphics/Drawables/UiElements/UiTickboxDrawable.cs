@@ -44,11 +44,11 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
             this._rectangleDrawable.Filled = e;
         }
 
-        public override void Dispose(bool disposing) {
+        public override void Dispose() {
             this.Selected.OnChange -= this.OnSelectChange;
             this.OnClick           -= this.OnDrawableClick;
 
-            base.Dispose(disposing);
+            base.Dispose();
         }
     }
 }

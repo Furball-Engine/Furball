@@ -36,11 +36,11 @@ namespace Furball.Engine.Engine.DevConsole {
             this.Selected = false;
         }
 
-        public override void Dispose(bool disposing) {
+        public override void Dispose() {
             this.OnCommit                  -= this.OnTextCommit;
             Keyboard.GetKeyboard().KeyDown -= this.OnKeyDown;
 
-            base.Dispose(disposing);
+            base.Dispose();
         }
     }
 }

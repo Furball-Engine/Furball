@@ -224,26 +224,26 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
 
             switch (drawable) {
                 case ManagedDrawable managedDrawable:
-                    managedDrawable.Dispose(true);
+                    managedDrawable.Dispose();
                     this._managedDrawables.Remove(managedDrawable);
                     break;
                 case UnmanagedDrawable unmanagedDrawable:
-                    unmanagedDrawable.Dispose(true);
+                    unmanagedDrawable.Dispose();
                     this._unmanagedDrawables.Remove(unmanagedDrawable);
                     break;
             }
         }
 
-        public override void Dispose(bool disposing) {
+        public override void Dispose() {
             foreach (BaseDrawable drawable in this._totalDrawables)
-                drawable.Dispose(disposing);
+                drawable.Dispose();
 
             lock (StatLock) {
                 Instances--;
                 DrawableManagers.Remove(this);
             }
 
-            base.Dispose(disposing);
+            base.Dispose();
         }
     }
 }

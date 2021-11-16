@@ -1,3 +1,4 @@
+using System;
 using System.Drawing;
 using System.Numerics;
 using FontStashSharp;
@@ -15,7 +16,7 @@ namespace Furball.Engine.Engine.Graphics {
     /// <summary>
     /// A Basic Abstraction for Vixie's different types of renderers
     /// </summary>
-    public class DrawableBatch {
+    public class DrawableBatch : IDisposable {
         private readonly ITextureRenderer _textureRenderer;
         private readonly ILineRenderer    _lineRenderer;
         private readonly ITextRenderer    _textRenderer;
@@ -69,7 +70,7 @@ namespace Furball.Engine.Engine.Graphics {
         ) {
             if (this._lineRenderer.IsBegun)
                 this._lineRenderer.End();
-            if(this._textureRenderer != this._textRenderer && this._textRenderer.IsBegun)
+            if (this._textureRenderer != this._textRenderer && this._textRenderer.IsBegun)
                 this._textRenderer.End();
 
             if (!this._textureRenderer.IsBegun)
@@ -109,10 +110,10 @@ namespace Furball.Engine.Engine.Graphics {
         }
 
         public void DrawString(DynamicSpriteFont font, string text, Vector2 position, Color color, float rotation = 0f, Vector2? scale = null) {
-            if(this._lineRenderer.IsBegun)
+            if (this._lineRenderer.IsBegun)
                 this._lineRenderer.End();
             if (this._textRenderer == this._textureRenderer) {
-                if(!this._textRenderer.IsBegun)
+                if (!this._textRenderer.IsBegun)
                     this._textRenderer.Begin();
             } else this._textureRenderer.End();
 
@@ -120,10 +121,10 @@ namespace Furball.Engine.Engine.Graphics {
         }
 
         public void DrawString(DynamicSpriteFont font, string text, Vector2 position, System.Drawing.Color color, float rotation = 0f, Vector2? scale = null) {
-            if(this._lineRenderer.IsBegun)
+            if (this._lineRenderer.IsBegun)
                 this._lineRenderer.End();
             if (this._textRenderer == this._textureRenderer) {
-                if(!this._textRenderer.IsBegun)
+                if (!this._textRenderer.IsBegun)
                     this._textRenderer.Begin();
             } else this._textureRenderer.End();
 
@@ -131,14 +132,23 @@ namespace Furball.Engine.Engine.Graphics {
         }
 
         public void DrawString(DynamicSpriteFont font, string text, Vector2 position, System.Drawing.Color[] colors, float rotation = 0f, Vector2? scale = null) {
-            if(this._lineRenderer.IsBegun)
+            if (this._lineRenderer.IsBegun)
                 this._lineRenderer.End();
             if (this._textRenderer == this._textureRenderer) {
-                if(!this._textRenderer.IsBegun)
+                if (!this._textRenderer.IsBegun)
                     this._textRenderer.Begin();
             } else this._textureRenderer.End();
 
             this._textRenderer.DrawString(font, text, position, colors, rotation, scale);
         }
-}
+
+
+        public void Dispose() {
+            this._lineRenderer.Dispose();
+            this._textureRenderer.Dispose();
+
+            if(this._textRenderer != this._textureRenderer)
+                this._textRenderer.Dispose();
+        }
+    }
 }

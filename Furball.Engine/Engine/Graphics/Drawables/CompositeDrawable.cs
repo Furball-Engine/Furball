@@ -56,10 +56,10 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
             }
         }
 
-        public override void Dispose(bool disposing) {
+        public override void Dispose() {
             this.OnClick -= this.OnDrawableClick;
 
-            base.Dispose(disposing);
+            base.Dispose();
         }
 
         public override void Draw(double time, DrawableBatch batch, DrawableManagerArgs args) {

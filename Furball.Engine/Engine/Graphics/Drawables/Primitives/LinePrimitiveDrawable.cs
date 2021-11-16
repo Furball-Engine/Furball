@@ -1,38 +1,27 @@
+using System;
 using System.Numerics;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
+using Furball.Vixie.Graphics;
 
 namespace Furball.Engine.Engine.Graphics.Drawables.Primitives {
     /// <summary>
     /// Simple Line Drawable
     /// </summary>
     public class LinePrimitiveDrawable : ManagedDrawable {
-        /// <summary>
-        ///     The length of the line in pixels
-        /// </summary>
-        public float Length;
-        /// <summary>
-        ///     The thickness of the line
-        /// </summary>
-        public float Thickness = 1f;
-        /// <summary>
-        ///     The angle of the line in radians
-        /// </summary>
-        public float Angle;
-        /// <summary>
-        /// Creates a Line
-        /// </summary>
-        /// <param name="position">Where to Draw</param>
-        /// <param name="length">The length of the line</param>
-        /// <param name="angle">The angle of the line in radians</param>
-        public LinePrimitiveDrawable(Vector2 position, float length, float angle) {
-            this.Position = position;
-            this.Length   = length;
-            this.Angle    = angle;
+        public Vector2 EndPosition;
+        public float   Thickness;
+        public bool    RelativePosition;
+
+        public LinePrimitiveDrawable(Vector2 start, Vector2 end, Color color, float thickness = 1f, bool relative = true) {
+            this.Position         = start;
+            this.EndPosition      = end;
+            this.ColorOverride    = color;
+            this.Thickness        = thickness;
+            this.RelativePosition = relative;
         }
         
         public override void Draw(double time, DrawableBatch batch, DrawableManagerArgs args) {
-            //TODO: redo this entire class to use p0 p1
-            //batch.DrawLine(args.Position * FurballGame.VerticalRatio, this.Length * FurballGame.VerticalRatio, this.Angle, args.Color, this.Thickness, 0f);
+            batch.DrawLine(this.Position, this.RelativePosition ? this.Position + this.EndPosition: this.EndPosition, this.Thickness, this.ColorOverride);
         }
     }
 }

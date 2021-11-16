@@ -126,13 +126,13 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         //    FurballGame.Instance.Window.TextInput -= this.OnTextInput;
         //}
 
-        public override void Dispose(bool disposing) {
+        public override void Dispose() {
             //this.UnregisterHandlers();
 
             this.OnLetterTyped = null;
             this.OnLetterRemoved = null;
             
-            base.Dispose(disposing);
+            base.Dispose();
         }
 
         public override void Draw(double time, DrawableBatch batch, DrawableManagerArgs args) {
