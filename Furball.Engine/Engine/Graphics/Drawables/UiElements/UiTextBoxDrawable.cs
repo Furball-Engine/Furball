@@ -59,7 +59,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         }
 
         private void RegisterHandlers(bool isInContainerDrawable) {
-            //TODO: do this
+            //TODO: TextInput
             //FurballGame.Instance.Window.TextInput += this.OnTextInput;
             //if (!isInContainerDrawable)
             //    FurballGame.InputManager.OnMouseDown += this.OnMouseDown;
@@ -87,7 +87,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
                 this.Selected = false;
         }
 
-        //TODO: do this
+        //TODO: OnTextInput
         //private void OnTextInput(object sender, TextInputEventArgs e) {
         //    if (!this.Selected) return;
         //

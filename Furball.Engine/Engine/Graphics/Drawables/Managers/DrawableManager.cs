@@ -59,8 +59,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                 Vector2 origin = CalculateNewOriginPosition(currentDrawable);
                 currentDrawable.LastCalculatedOrigin = origin;
                 
-                //TODO:
-                //Potentially give ScaledPosition and ScaledScale
+                //TODO: Potentially give ScaledPosition and ScaledScale
                 //Which would just be:
                 /*
                     args.Position *= FurballGame.VerticalRatio;
