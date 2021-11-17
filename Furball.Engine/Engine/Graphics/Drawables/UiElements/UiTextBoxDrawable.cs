@@ -3,7 +3,6 @@ using System.Drawing;
 using System.Numerics;
 using FontStashSharp;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
-using Silk.NET.GLFW;
 using Silk.NET.Input;
 using TextCopy;
 using Color=Furball.Vixie.Graphics.Color;
@@ -66,11 +65,11 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
             //FurballGame.InputManager.OnKeyDown += this.OnKeyDown;
         }
 
-        private void OnKeyDown(object sender, Keys e) {
+        private void OnKeyDown(object sender, Key e) {
             if (!this.Selected || !this.Visible) return;
             
             switch(e) {
-                case Keys.V when FurballGame.InputManager.HeldKeys.Contains(Key.ControlLeft): {
+                case Key.V when FurballGame.InputManager.HeldKeys.Contains(Key.ControlLeft): {
                     string clipboard = ClipboardService.GetText();
 
                     this.Text += clipboard;

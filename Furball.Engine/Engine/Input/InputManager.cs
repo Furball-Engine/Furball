@@ -20,9 +20,10 @@ namespace Furball.Engine.Engine.Input {
             get {
                 List<MouseState> temp = new();
 
-                for (int i = 0; i < this.registeredInputMethods.Count; i++)
-                    temp.AddRange(this.registeredInputMethods[i].CursorPositions);
-
+                foreach (InputMethod method in this.registeredInputMethods) {
+                    temp.AddRange(method.MouseStates);
+                }
+                
                 return temp;
             }
         }
@@ -140,9 +141,34 @@ namespace Furball.Engine.Engine.Input {
             get {
                 List<Key> temp = new();
 
-                for (int i = 0; i < this.registeredInputMethods.Count; i++)
-                    temp.AddRange(this.registeredInputMethods[i].HeldKeys);
+                foreach (InputMethod method in this.registeredInputMethods) {
+                    temp.AddRange(method.HeldKeys);
+                }
 
+                return temp;
+            }
+        }
+
+        public List<IKeyboard> Keyboards {
+            get {
+                List<IKeyboard> temp = new();
+
+                foreach (InputMethod method in this.registeredInputMethods) {
+                    temp.AddRange(method.Keyboards);
+                }
+                
+                return temp;
+            }
+        }
+
+        public List<IMouse> Mice {
+            get {
+                List<IMouse> temp = new();
+
+                foreach (InputMethod method in this.registeredInputMethods) {
+                    temp.AddRange(method.Mice);
+                }
+                
                 return temp;
             }
         }
@@ -182,6 +208,7 @@ namespace Furball.Engine.Engine.Input {
         /// Called when the cursor scrolls
         /// </summary>
         public event EventHandler<((int scrollWheelId, float scrollAmount) scroll, string cursorName)> OnMouseScroll;
+        public event EventHandler<(IKeyboard keyboard, char character)> OnCharInput;
 
         private List<Key> _diffKeysPressed  = new();
         private List<Key> _diffKeysReleased = new();
@@ -190,8 +217,8 @@ namespace Furball.Engine.Engine.Input {
         /// Updates all registered InputMethods and calls the necessary events
         /// </summary>
         public void Update() {
-            List<MouseState> oldCursorStates = this.CursorStates.ToList();
-            List<Key>        oldKeys         = this.HeldKeys.ToList();
+            List<MouseState> oldCursorStates = this.CursorStates;
+            List<Key>        oldKeys         = this.HeldKeys;
 
             for (int i = 0; i < this.registeredInputMethods.Count; i++) {
                 InputMethod method = this.registeredInputMethods[i];
@@ -284,6 +311,13 @@ namespace Furball.Engine.Engine.Input {
         public void RegisterInputMethod(InputMethod method) {
             this.registeredInputMethods.Add(method);
             method.Initialize();
+            
+            //Register to the keyboards OnCharInput
+            foreach (IKeyboard keyboard in method.Keyboards) {
+                keyboard.KeyChar += delegate(IKeyboard keyboard, char c) {
+                    this.OnCharInput?.Invoke(this, (keyboard, c));
+                };
+            }
         }
         /// <summary>
         /// Removes an input method and calls its Dispose method
