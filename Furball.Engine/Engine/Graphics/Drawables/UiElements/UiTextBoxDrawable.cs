@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Numerics;
 using FontStashSharp;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
+using Furball.Engine.Engine.Helpers;
 using Silk.NET.Input;
 using TextCopy;
 using Color=Furball.Vixie.Graphics.Color;
@@ -59,10 +60,11 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
 
         private void RegisterHandlers(bool isInContainerDrawable) {
             //TODO: TextInput
-            //FurballGame.Instance.Window.TextInput += this.OnTextInput;
-            //if (!isInContainerDrawable)
-            //    FurballGame.InputManager.OnMouseDown += this.OnMouseDown;
-            //FurballGame.InputManager.OnKeyDown += this.OnKeyDown;
+            FurballGame.InputManager.OnCharInput += this.OnTextInput;
+            if (!isInContainerDrawable)
+                FurballGame.InputManager.OnMouseDown += this.OnMouseDown;
+            
+            FurballGame.InputManager.OnKeyDown += this.OnKeyDown;
         }
 
         private void OnKeyDown(object sender, Key e) {
@@ -76,56 +78,48 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
                     this.OnLetterTyped?.Invoke(this, 'v');
                     break;
                 }
+                case Key.Backspace: {
+                    if (this.Text.Length != 0) {
+                        char lastLetter = this.Text[^1];
+                        this.Text = this.Text[..^1];
+                        this.OnLetterRemoved?.Invoke(this, lastLetter);
+                    }
+                    break;
+                }
+                case Key.Enter: {
+                    this.OnCommit?.Invoke(this, this.Text);
+                    this.Selected = false;
+
+                    if (this.ClearOnCommit)
+                        this.Text = string.Empty;
+                    break;
+                }
             }
         }
 
-        public void OnMouseDown(object sender, ((MouseButton heldButton, Point position) args, string name) e) {
-            if (this.Rectangle.Contains(e.args.position) && this.Visible && this.Clickable)
+        public void OnMouseDown(object sender, ((MouseButton mouseButton, Vector2 position) args, string cursorName) e) {
+            if (this.Rectangle.Contains(e.args.position.ToPoint()) && this.Visible && this.Clickable)
                 this.Selected = true;
             else
                 this.Selected = false;
         }
 
-        //TODO: OnTextInput
-        //private void OnTextInput(object sender, TextInputEventArgs e) {
-        //    if (!this.Selected) return;
-        //
-        //    bool wasSpecial = false;
-//
-        //    switch (e.Key) {
-        //        case Keys.Back: {
-        //            if (this.Text.Length != 0) {
-        //                char lastLetter = this.Text[^1];
-        //                this.Text = this.Text[..^1];
-        //                this.OnLetterRemoved?.Invoke(this, lastLetter);
-        //            }
-        //            wasSpecial = true;
-        //            break;
-        //        }
-        //        case Keys.Enter: {
-        //            this.OnCommit?.Invoke(this, this.Text);
-        //            this.Selected = false;
-        //            wasSpecial    = true;
-//
-        //            if (this.ClearOnCommit)
-        //                this.Text = string.Empty;
-        //            break;
-        //        }
-        //    }
-//
-        //    //If it was a special character or the character ia control character, dont concat the character to the typed string
-        //    if (wasSpecial || char.IsControl(e.Character)) return;
-//
-        //    this.Text += e.Character;
-        //    this.OnLetterTyped?.Invoke(this, e.Character);
-        //}
+        private void OnTextInput(object sender, (IKeyboard keyboard, char @char)e) {
+            if (!this.Selected) return;
 
-        //private void UnregisterHandlers() {
-        //    FurballGame.Instance.Window.TextInput -= this.OnTextInput;
-        //}
+            //If it was a control character, dont concat the character to the typed string
+            if (char.IsControl(e.@char)) return;
+
+            this.Text += e.@char;
+            this.OnLetterTyped?.Invoke(this, e.@char);
+        }
+
+        private void UnregisterHandlers() {
+            FurballGame.InputManager.OnCharInput -= this.OnTextInput;
+        }
 
         public override void Dispose() {
-            //this.UnregisterHandlers();
+            this.UnregisterHandlers();
 
             this.OnLetterTyped = null;
             this.OnLetterRemoved = null;
