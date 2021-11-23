@@ -297,7 +297,10 @@ namespace Furball.Engine {
             this.AfterScreenChange?.Invoke(this, screen);
         }
         public void ChangeScreenSize(int width, int height, bool fullscreen = false) {
-            //TODO@Vixie: see if this is changable easly
+            WindowManager.SetWindowSize(width, height);
+            this.EngineWindowResize(new(width, height));
+            this.EngineFrameBufferResize(new(width, height));
+
             //this._graphics.PreferredBackBufferWidth  = width;
             //this._graphics.PreferredBackBufferHeight = height;
 //
