@@ -49,6 +49,8 @@ namespace Furball.Game.Screens {
 
                 screenButton.OnClick += delegate {
                     ScreenManager.ChangeScreen(screen);
+                    
+                    // FurballGame.Instance.ChangeScreenSize(1600, 900);
                 };
 
                 this.Manager.Add(screenButton);

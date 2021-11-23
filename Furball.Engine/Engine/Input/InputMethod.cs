@@ -8,7 +8,7 @@ namespace Furball.Engine.Engine.Input {
         /// The registered mice
         /// </summary>
         public List<IMouse> Mice = new();
-        public List<MouseState> MouseStates = new();
+        public List<FurballMouseState> MouseStates = new();
         /// <summary>
         /// The registered keyboards
         /// </summary>

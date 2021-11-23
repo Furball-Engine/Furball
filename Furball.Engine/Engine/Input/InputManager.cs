@@ -16,9 +16,9 @@ namespace Furball.Engine.Engine.Input {
         /// <summary>
         /// The positions of all cursors and their states
         /// </summary>
-        public List<MouseState> CursorStates {
+        public List<FurballMouseState> CursorStates {
             get {
-                List<MouseState> temp = new();
+                List<FurballMouseState> temp = new();
 
                 foreach (InputMethod method in this.registeredInputMethods) {
                     temp.AddRange(method.MouseStates);
@@ -217,8 +217,8 @@ namespace Furball.Engine.Engine.Input {
         /// Updates all registered InputMethods and calls the necessary events
         /// </summary>
         public void Update() {
-            List<MouseState> oldCursorStates = this.CursorStates;
-            List<Key>        oldKeys         = this.HeldKeys;
+            List<FurballMouseState> oldCursorStates = this.CursorStates;
+            List<Key>               oldKeys         = this.HeldKeys;
 
             for (int i = 0; i < this.registeredInputMethods.Count; i++) {
                 InputMethod method = this.registeredInputMethods[i];
@@ -244,10 +244,10 @@ namespace Furball.Engine.Engine.Input {
             #region OnMouseUp/Down/Move/Scroll
 
             for (int i = 0; i < oldCursorStates.Count; i++) {
-                MouseState        oldState             = oldCursorStates[i];
-                Span<ScrollWheel> oldStateScrollWheels = oldState.GetScrollWheels();
+                FurballMouseState        oldState             = oldCursorStates[i];
+                Span<ScrollWheel> oldStateScrollWheels = oldState.ScrollWheels;
 
-                List<MouseState> filteredStates = new();
+                List<FurballMouseState> filteredStates = new();
 
                 int cursorStateSize = this.CursorStates.Count;
                 //Filtering States of the same name
@@ -256,7 +256,7 @@ namespace Furball.Engine.Engine.Input {
                         filteredStates.Add(this.CursorStates[k]);
 
                 for (int j = 0; j < filteredStates.Count; j++) {
-                    MouseState newState = filteredStates[i];
+                    FurballMouseState newState = filteredStates[i];
 
                     // Handling Mouse Movement by comparing to the last Input Frame
                      if (oldState.Position != newState.Position) {
@@ -289,10 +289,8 @@ namespace Furball.Engine.Engine.Input {
                          else
                              this.OnMouseUp?.Invoke(this, ((MouseButton.Middle, newState.Position), newState.Name));
 
-                     Span<ScrollWheel> newStateScrollWheels = newState.GetScrollWheels();
-
-                     for (int i2 = 0; i2 < newStateScrollWheels.Length; i2++) {
-                         ScrollWheel newWheel = newStateScrollWheels[i2];
+                     for (int i2 = 0; i2 < newState.ScrollWheels.Length; i2++) {
+                         ScrollWheel newWheel = newState.ScrollWheels[i2];
                          ScrollWheel oldWheel = oldStateScrollWheels[i2];
                          //Handling Scrolling by comparing to the last Input Frame
                          if (Math.Abs(oldWheel.Y - newWheel.Y) > 0.01f)
