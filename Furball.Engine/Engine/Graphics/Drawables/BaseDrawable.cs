@@ -446,19 +446,11 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
             );
         }
 
-        public void MoveTo(Vector2 dest) {
-            this.MoveTo(dest, 0);
-        }
-
-        public void MoveToRelative(Vector2 move) {
-            this.MoveTo(this.Position + move, 0);
-        }
-
-        public void MoveToRelative(Vector2 move, int duration, Easing easing = Easing.None) {
+        public void MoveToRelative(Vector2 move, int duration = 0, Easing easing = Easing.None) {
             this.MoveTo(this.Position + move, duration, easing);
         }
 
-        public void MoveTo(Vector2 dest, int duration, Easing easing = Easing.None) {
+        public void MoveTo(Vector2 dest, int duration = 0, Easing easing = Easing.None) {
             if (this.Position == dest)
                 return;
 
