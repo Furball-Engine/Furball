@@ -30,23 +30,23 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
             }
         }
 
-        public CompositeDrawable() => this.OnClick += this.OnDrawableClick;
+        // public CompositeDrawable() => this.OnClick += this.OnDrawableClick;
 
         /// <summary>
         ///     When the drawable is clicked, this is called to allow for things inside of the drawable to be clicked
         /// </summary>
-        private void OnDrawableClick(object sender, Point e) {
-            Point adjustedPoint = ((e.ToVector2() - this.Position + this.LastCalculatedOrigin) * this.Scale).ToPoint();
-
-            for (int i = 0; i < this._drawables.Count; i++) {
-                ManagedDrawable drawable = this._drawables[i];
-
-                if (drawable.Contains(adjustedPoint)) {
-                    drawable.Click(true,  adjustedPoint);
-                    drawable.Click(false, adjustedPoint);
-                }
-            }
-        }
+        // private void OnDrawableClick(object sender, Point e) {
+        //     Point adjustedPoint = ((e.ToVector2() - this.Position + this.LastCalculatedOrigin) * this.Scale).ToPoint();
+        //
+        //     for (int i = 0; i < this._drawables.Count; i++) {
+        //         ManagedDrawable drawable = this._drawables[i];
+        //
+        //         if (drawable.Contains(adjustedPoint)) {
+        //             drawable.Click(true,  adjustedPoint);
+        //             drawable.Click(false, adjustedPoint);
+        //         }
+        //     }
+        // }
 
         public override void Update(GameTime time) {
             foreach (ManagedDrawable drawable in this._drawables) {
@@ -56,7 +56,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         }
 
         public override void Dispose(bool disposing) {
-            this.OnClick -= this.OnDrawableClick;
+            // this.OnClick -= this.OnDrawableClick;
 
             base.Dispose(disposing);
         }
@@ -69,12 +69,14 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
 
                 drawable.LastCalculatedOrigin = drawable.CalculateOrigin();
 
+                drawable.RealPosition = args.Position + (drawable.Position - drawable.LastCalculatedOrigin) * args.Scale;
+                
                 DrawableManagerArgs drawableArgs = new() {
                     Color    = drawable.ColorOverride,
                     Effects  = args.Effects,
-                    Position = args.Position + (drawable.Position - drawable.LastCalculatedOrigin) * args.Scale,
+                    Position = drawable.RealPosition,
                     Rotation = args.Rotation,
-                    Scale    = args.Scale * drawable.Scale
+                    Scale    = drawable.RealScale = args.Scale * drawable.Scale
                 };
 
                 drawable.Draw(time, batch, drawableArgs);

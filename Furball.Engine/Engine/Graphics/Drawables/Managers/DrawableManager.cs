@@ -65,13 +65,15 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                 //Since literally every single drawable does this, might aswell make it easier,
                 //also given that drawablemanagers will have to scale on their own width and height instead of screen width and height,
                 //itll def make developing easier
+
+                currentDrawable.RealPosition = currentDrawable.Position - currentDrawable.LastCalculatedOrigin;
                 
                 DrawableManagerArgs args = new() {
                     Color    = currentDrawable.ColorOverride,
                     Effects  = currentDrawable.SpriteEffect,
-                    Position = currentDrawable.Position - currentDrawable.LastCalculatedOrigin,
+                    Position = currentDrawable.RealPosition,
                     Rotation = currentDrawable.Rotation,
-                    Scale    = currentDrawable.Scale
+                    Scale    = currentDrawable.RealScale = currentDrawable.Scale
                 };
 
                 Rectangle rect = new(

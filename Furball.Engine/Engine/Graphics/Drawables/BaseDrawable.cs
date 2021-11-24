@@ -24,6 +24,15 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
     ///     Base Class for Managed and Unmanaged Drawable
     /// </summary>
     public abstract class BaseDrawable {
+        /// <summary>
+        ///     This is the real position of a drawable, ignoring whether it is inside of a CompositeDrawable or not
+        /// </summary>
+        public Vector2 RealPosition;
+        /// <summary>
+        ///     This is the real scale of a drawable, ignoring whether it is inside of a CompositeDrawable or not
+        /// </summary>
+        public Vector2 RealScale;
+        
         private Vector2 _position = Vector2.Zero;
         /// <summary>
         ///     Radius of the Circle (Used for Click detection and other hitboxes)
@@ -125,7 +134,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
             }
         }
 
-        public Rectangle Rectangle => new((this.Position - this.LastCalculatedOrigin).ToPoint(), this.Size.ToPoint());
+        public Rectangle Rectangle     => new(this.Position.ToPoint(), this.Size.ToPoint());
+        public Rectangle RealRectangle => new(this.RealPosition.ToPoint(), this.Size.ToPoint());
         /// <summary>
         ///     Unprocessed Size of the Drawable in Pixels
         ///     <remarks>
@@ -167,9 +177,15 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// <returns>Whether the point is inside the drawable</returns>
         public bool Contains(Point point) {
             if (this.Circular)
-                return Vector2.Distance(point.ToVector2(), this._position - this.LastCalculatedOrigin) < this.CircleRadius;
+                return Vector2.Distance(point.ToVector2(), this.Position) < this.CircleRadius;
 
             return this.Rectangle.Contains(point);
+        }
+        public bool RealContains(Point point) {
+            if (this.Circular)
+                return Vector2.Distance(point.ToVector2(), this.RealPosition) < this.CircleRadius;
+
+            return this.RealRectangle.Contains(point);
         }
         public event EventHandler<Vector2> OnMove;
         public void Hover(bool value) {

@@ -38,6 +38,25 @@ namespace Furball.Engine.Engine.Input {
             this.OnMouseMove += DrawableOnMouseMove;
         }
 
+        /// <summary>
+        ///     Recurses composite drawables and adds their drawables to the list
+        /// </summary>
+        /// <param name="drawablesToAddTo">A pre sorted list of drawables</param>
+        public static void RecurseCompositeDrawables(ref List<ManagedDrawable> drawablesToAddTo, CompositeDrawable compositeDrawableToIterate, int indexToAddAt) {
+            for (int i = 0; i < compositeDrawableToIterate.Drawables.Count; i++) {
+                ManagedDrawable drawable = compositeDrawableToIterate.Drawables[i];
+
+                if (drawable is CompositeDrawable compositeDrawable) {
+                    drawablesToAddTo.Insert(indexToAddAt, compositeDrawable);
+                    indexToAddAt++;
+                    RecurseCompositeDrawables(ref drawablesToAddTo, compositeDrawable, indexToAddAt);
+                } else {
+                    drawablesToAddTo.Insert(indexToAddAt, drawable);
+                    indexToAddAt++;
+                }
+            }
+        }
+
         private static void DrawableOnMouseMove(object sender, (Point mousePosition, string cursorName) e) {
             List<ManagedDrawable> drawables = new();
             DrawableManager.DrawableManagers.Where(x => x.Visible).ToList().ForEach(
@@ -46,11 +65,19 @@ namespace Furball.Engine.Engine.Input {
 
             drawables = drawables.OrderBy(o => o.Depth).ToList();
 
+            List<ManagedDrawable> drawablesTempIterate = new(drawables);
+
+            for (int i = 0; i < drawablesTempIterate.Count; i++) {
+                ManagedDrawable drawable = drawablesTempIterate[i];
+                if (drawable is CompositeDrawable compositeDrawable)
+                    RecurseCompositeDrawables(ref drawables, compositeDrawable, i);
+            }
+
             bool tooltipSet = false;
             for (int i = 0; i < drawables.Count; i++) {
                 ManagedDrawable drawable = drawables[i];
 
-                if (drawable.Contains(e.mousePosition)) {
+                if (drawable.RealContains(e.mousePosition)) {
                     if (!drawable.IsHovered && drawable.Hoverable) {
                         drawable.Hover(true);
 
@@ -92,6 +119,14 @@ namespace Furball.Engine.Engine.Input {
             DrawableManager.DrawableManagers.Where(x => x.Visible).ToList()
                            .ForEach(x => drawables.AddRange(x.Drawables.Where(y => y is ManagedDrawable).Cast<ManagedDrawable>()));
 
+            List<ManagedDrawable> drawablesTempIterate = new(drawables);
+
+            for (int i = 0; i < drawablesTempIterate.Count; i++) {
+                ManagedDrawable drawable = drawablesTempIterate[i];
+                if (drawable is CompositeDrawable compositeDrawable)
+                    RecurseCompositeDrawables(ref drawables, compositeDrawable, i);
+            }
+
             for (int i = 0; i < drawables.Count; i++) {
                 ManagedDrawable drawable = drawables[i];
 
@@ -107,6 +142,14 @@ namespace Furball.Engine.Engine.Input {
             List<ManagedDrawable> drawables = new();
             DrawableManager.DrawableManagers.Where(x => x.Visible).ToList()
                            .ForEach(x => drawables.AddRange(x.Drawables.Where(y => y is ManagedDrawable).Cast<ManagedDrawable>()));
+
+            List<ManagedDrawable> drawablesTempIterate = new(drawables);
+
+            for (int i = 0; i < drawablesTempIterate.Count; i++) {
+                ManagedDrawable drawable = drawablesTempIterate[i];
+                if (drawable is CompositeDrawable compositeDrawable)
+                    RecurseCompositeDrawables(ref drawables, compositeDrawable, i);
+            }
 
             for (int i = 0; i < drawables.Count; i++) {
                 ManagedDrawable drawable = drawables[i];
@@ -126,10 +169,18 @@ namespace Furball.Engine.Engine.Input {
 
             drawables = drawables.OrderBy(o => o.Depth).ToList();
 
+            List<ManagedDrawable> drawablesTempIterate = new(drawables);
+
+            for (int i = 0; i < drawablesTempIterate.Count; i++) {
+                ManagedDrawable drawable = drawablesTempIterate[i];
+                if (drawable is CompositeDrawable compositeDrawable)
+                    RecurseCompositeDrawables(ref drawables, compositeDrawable, i);
+            }
+
             for (int i = 0; i < drawables.Count; i++) {
                 ManagedDrawable drawable = drawables[i];
 
-                if (drawable.Contains(e.args.position)) {
+                if (drawable.RealContains(e.args.position)) {
                     drawable.Click(true, e.args.position);
 
                     if (drawable.CoverClicks) break;

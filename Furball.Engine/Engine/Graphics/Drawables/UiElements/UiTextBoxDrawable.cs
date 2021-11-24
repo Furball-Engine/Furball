@@ -58,7 +58,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         /// <param name="text">Initial Text</param>
         /// <param name="size">Size of the text</param>
         /// <param name="width">Width/Length of the Textbox</param>
-        public UiTextBoxDrawable(Vector2 position, FontSystem font, string text, int size, float width, bool isInContainerDrawable = false) : base(
+        public UiTextBoxDrawable(Vector2 position, FontSystem font, string text, int size, float width) : base(
         Vector2.Zero,
         font,
         text,
@@ -66,14 +66,13 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         ) {
             this.Position     = position;
             this.TextBoxWidth = width;
-            this.RegisterHandlers(isInContainerDrawable);
+            this.RegisterHandlers();
         }
 
-        private void RegisterHandlers(bool isInContainerDrawable) {
+        private void RegisterHandlers() {
             FurballGame.Instance.Window.TextInput += this.OnTextInput;
-            if (!isInContainerDrawable)
-                FurballGame.InputManager.OnMouseDown += this.OnMouseDown;
-            FurballGame.InputManager.OnKeyDown += this.OnKeyDown;
+            FurballGame.InputManager.OnMouseDown  += this.OnMouseDown;
+            FurballGame.InputManager.OnKeyDown    += this.OnKeyDown;
         }
 
         private void OnKeyDown(object sender, Keys e) {
@@ -91,7 +90,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         }
 
         public void OnMouseDown(object sender, ((MouseButton heldButton, Point position) args, string name) e) {
-            if (this.Rectangle.Contains(e.args.position) && this.Visible && this.Clickable)
+            if (this.RealRectangle.Contains(e.args.position) && this.Visible && this.Clickable)
                 this.Selected = true;
             else
                 this.Selected = false;
