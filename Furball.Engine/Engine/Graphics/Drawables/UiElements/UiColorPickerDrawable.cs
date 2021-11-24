@@ -15,7 +15,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
 
             this._colorText = new(new(0), font, this.Color.Value.ToHexString(), size);
             this._colorDisplay = new(FurballGame.WhitePixel, new(this._colorText.Size.X + 10, 0)) {
-                Scale = new(this._colorText.Size.Y)
+                Scale         = new(this._colorText.Size.Y),
+                ColorOverride = this.Color
             };
 
             this.OnClick += this.OnColorDisplayClick;
