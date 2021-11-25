@@ -164,7 +164,7 @@ namespace Furball.Engine.Engine.Input {
         private static void DrawableOnMouseDown(object _, ((MouseButton mouseButton, Point position) args, string cursorName) e) {
             List<ManagedDrawable> drawables = new();
             DrawableManager.DrawableManagers.Where(x => x.Visible).ToList().ForEach(
-            x => drawables.AddRange(x.Drawables.Where(y => y is ManagedDrawable && y.Clickable && y.Visible).Cast<ManagedDrawable>())
+            x => drawables.AddRange(x.Drawables.Where(y => y is ManagedDrawable && (y.Clickable || y is CompositeDrawable) && y.Visible).Cast<ManagedDrawable>())
             );
 
             drawables = drawables.OrderBy(o => o.Depth).ToList();
@@ -180,7 +180,7 @@ namespace Furball.Engine.Engine.Input {
             for (int i = 0; i < drawables.Count; i++) {
                 ManagedDrawable drawable = drawables[i];
 
-                if (drawable.RealContains(e.args.position)) {
+                if (drawable.Clickable && drawable.RealContains(e.args.position)) {
                     drawable.Click(true, e.args.position);
 
                     if (drawable.CoverClicks) break;

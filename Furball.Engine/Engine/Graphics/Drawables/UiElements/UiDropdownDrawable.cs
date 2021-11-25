@@ -21,6 +21,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
             this.Font       = font;
             this.FontSize   = fontSize;
 
+            this.Clickable = false;
+
             this.SelectedItem = new(items[0]);
 
             this.Update();
