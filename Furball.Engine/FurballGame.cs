@@ -219,7 +219,7 @@ namespace Furball.Engine {
         }
 
         public void SetTargetFps(int fps, double unfocusedScale = -1) {
-            //TODO(Eevee)@Vixie: FPS Changing stuff
+            WindowManager.SetTargetFramerate(fps);
             //if (fps != -1) {
             //    this.TargetElapsedTime = TimeSpan.FromMilliseconds(1000 / (double)fps);
             //    this.IsFixedTimeStep   = true;
@@ -232,6 +232,7 @@ namespace Furball.Engine {
                 double newFps       = fps   * unfocusedScale;
                 double milliseconds = 1000d / newFps;
 
+                //TODO post release: emulate this using OnWindowStateChange or smth
                 //this.InactiveSleepTime = TimeSpan.FromMilliseconds(milliseconds);
             }
         }
@@ -298,8 +299,6 @@ namespace Furball.Engine {
         }
         public void ChangeScreenSize(int width, int height, bool fullscreen = false) {
             WindowManager.SetWindowSize(width, height);
-            this.EngineWindowResize(new(width, height));
-            this.EngineFrameBufferResize(new(width, height));
 
             //this._graphics.PreferredBackBufferWidth  = width;
             //this._graphics.PreferredBackBufferHeight = height;

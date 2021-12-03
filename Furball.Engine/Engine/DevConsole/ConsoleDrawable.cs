@@ -18,7 +18,7 @@ namespace Furball.Engine.Engine.DevConsole {
         }
 
         private void OnKeyDown(IKeyboard keyboard, Key e, int what) {
-            if (e == Key.GraveAccent) {
+            if (e == Key.F12) {
                 this.Visible  = !this.Visible;
                 this.Selected = !this.Selected;
 

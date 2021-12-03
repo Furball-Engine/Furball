@@ -59,7 +59,6 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         }
 
         private void RegisterHandlers(bool isInContainerDrawable) {
-            //TODO: TextInput
             FurballGame.InputManager.OnCharInput += this.OnTextInput;
             if (!isInContainerDrawable)
                 FurballGame.InputManager.OnMouseDown += this.OnMouseDown;
@@ -131,7 +130,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
             batch.DrawRectangle(
                 args.Position * FurballGame.VerticalRatio,
                 this.Size * FurballGame.VerticalRatio,
-                0f,
+                0.0055f,
                 this.Selected ? Color.LightGray : Color.DarkGray
              );
             
