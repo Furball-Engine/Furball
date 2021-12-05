@@ -42,19 +42,25 @@ namespace Furball.Engine.Engine.Input {
         ///     Recurses composite drawables and adds their drawables to the list
         /// </summary>
         /// <param name="drawablesToAddTo">A pre sorted list of drawables</param>
-        public static void RecurseCompositeDrawables(ref List<ManagedDrawable> drawablesToAddTo, CompositeDrawable compositeDrawableToIterate, int indexToAddAt) {
+        public static int RecurseCompositeDrawables(ref List<ManagedDrawable> drawablesToAddTo, CompositeDrawable compositeDrawableToIterate, int indexToAddAt) {
+            int added = 0;
+
             for (int i = 0; i < compositeDrawableToIterate.Drawables.Count; i++) {
                 ManagedDrawable drawable = compositeDrawableToIterate.Drawables[i];
 
                 if (drawable is CompositeDrawable compositeDrawable) {
                     drawablesToAddTo.Insert(indexToAddAt, compositeDrawable);
                     indexToAddAt++;
-                    RecurseCompositeDrawables(ref drawablesToAddTo, compositeDrawable, indexToAddAt);
+                    added++;
+                    added += RecurseCompositeDrawables(ref drawablesToAddTo, compositeDrawable, indexToAddAt);
                 } else {
                     drawablesToAddTo.Insert(indexToAddAt, drawable);
                     indexToAddAt++;
+                    added++;
                 }
             }
+
+            return added;
         }
 
         private static void DrawableOnMouseMove(object sender, (Point mousePosition, string cursorName) e) {
@@ -67,10 +73,14 @@ namespace Furball.Engine.Engine.Input {
 
             List<ManagedDrawable> drawablesTempIterate = new(drawables);
 
+            int fakei = 0;
+            
             for (int i = 0; i < drawablesTempIterate.Count; i++) {
                 ManagedDrawable drawable = drawablesTempIterate[i];
                 if (drawable is CompositeDrawable compositeDrawable)
-                    RecurseCompositeDrawables(ref drawables, compositeDrawable, i);
+                    fakei += RecurseCompositeDrawables(ref drawables, compositeDrawable, fakei);
+
+                fakei++;
             }
 
             bool tooltipSet = false;
@@ -121,10 +131,14 @@ namespace Furball.Engine.Engine.Input {
 
             List<ManagedDrawable> drawablesTempIterate = new(drawables);
 
+            int fakei = 0;
+            
             for (int i = 0; i < drawablesTempIterate.Count; i++) {
                 ManagedDrawable drawable = drawablesTempIterate[i];
                 if (drawable is CompositeDrawable compositeDrawable)
-                    RecurseCompositeDrawables(ref drawables, compositeDrawable, i);
+                    fakei += RecurseCompositeDrawables(ref drawables, compositeDrawable, fakei);
+
+                fakei++;
             }
 
             for (int i = 0; i < drawables.Count; i++) {
@@ -145,10 +159,14 @@ namespace Furball.Engine.Engine.Input {
 
             List<ManagedDrawable> drawablesTempIterate = new(drawables);
 
+            int fakei = 0;
+            
             for (int i = 0; i < drawablesTempIterate.Count; i++) {
                 ManagedDrawable drawable = drawablesTempIterate[i];
                 if (drawable is CompositeDrawable compositeDrawable)
-                    RecurseCompositeDrawables(ref drawables, compositeDrawable, i);
+                    fakei += RecurseCompositeDrawables(ref drawables, compositeDrawable, fakei);
+
+                fakei++;
             }
 
             for (int i = 0; i < drawables.Count; i++) {
@@ -171,10 +189,14 @@ namespace Furball.Engine.Engine.Input {
 
             List<ManagedDrawable> drawablesTempIterate = new(drawables);
 
+            int fakei = 0;
+            
             for (int i = 0; i < drawablesTempIterate.Count; i++) {
                 ManagedDrawable drawable = drawablesTempIterate[i];
                 if (drawable is CompositeDrawable compositeDrawable)
-                    RecurseCompositeDrawables(ref drawables, compositeDrawable, i);
+                    fakei += RecurseCompositeDrawables(ref drawables, compositeDrawable, fakei);
+
+                fakei++;
             }
 
             for (int i = 0; i < drawables.Count; i++) {
