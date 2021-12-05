@@ -58,9 +58,9 @@ namespace Furball.Engine {
         public static int WindowHeight => Instance.GraphicsDevice.Viewport.Height;
         public static int WindowWidth => Instance.GraphicsDevice.Viewport.Width;
 
-        public static float HorizontalRatio => (float)WindowWidth / DEFAULT_WINDOW_WIDTH;
-        public static float VerticalRatio => (float)WindowHeight / DEFAULT_WINDOW_HEIGHT;
-        public static Rectangle DisplayRect => new(0, 0, (int)Math.Ceiling(Instance.GraphicsDevice.Viewport.Width / VerticalRatio), (int)Math.Ceiling(Instance.GraphicsDevice.Viewport.Height / VerticalRatio));
+        public static float     HorizontalRatio   => (float)WindowWidth  / DEFAULT_WINDOW_WIDTH;
+        public static float     VerticalRatio     => (float)WindowHeight / DEFAULT_WINDOW_HEIGHT;
+        public static Rectangle DisplayRect       => new(0, 0, DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
         public static Rectangle DisplayRectActual => new(0, 0, Instance.GraphicsDevice.Viewport.Width, Instance.GraphicsDevice.Viewport.Height);
 
         public static  ConsoleDrawable ConsoleDrawable;
