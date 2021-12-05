@@ -45,6 +45,10 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
 
             for (int i = 0; i < tempCount; i++) {
                 ManagedDrawable currentDrawable = this._managedDrawables[i];
+
+                currentDrawable.LastCalculatedOrigin = currentDrawable.CalculateOrigin();
+                currentDrawable.RealPosition         = currentDrawable.Position - currentDrawable.LastCalculatedOrigin;
+
                 if (!currentDrawable.Visible) continue;
 
                 if (Math.Abs(currentDrawable.DrawablesLastKnownDepth - currentDrawable.Depth) > 0.01d) {
@@ -52,8 +56,6 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
 
                     currentDrawable.DrawablesLastKnownDepth = currentDrawable.Depth;
                 }
-
-                currentDrawable.LastCalculatedOrigin = currentDrawable.CalculateOrigin();
                 
                 //TODO:
                 //Potentially give ScaledPosition and ScaledScale
@@ -66,7 +68,6 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                 //also given that drawablemanagers will have to scale on their own width and height instead of screen width and height,
                 //itll def make developing easier
 
-                currentDrawable.RealPosition = currentDrawable.Position - currentDrawable.LastCalculatedOrigin;
                 
                 DrawableManagerArgs args = new() {
                     Color    = currentDrawable.ColorOverride,

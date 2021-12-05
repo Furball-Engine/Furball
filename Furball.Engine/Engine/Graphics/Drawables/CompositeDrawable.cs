@@ -65,12 +65,11 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
             for (int i = 0; i < this._drawables.Count; i++) {
                 ManagedDrawable drawable = this._drawables[i];
                 
+                drawable.LastCalculatedOrigin = drawable.CalculateOrigin();
+                drawable.RealPosition = args.Position + (drawable.Position - drawable.LastCalculatedOrigin) * args.Scale;
+
                 if (!drawable.Visible) continue;
 
-                drawable.LastCalculatedOrigin = drawable.CalculateOrigin();
-
-                drawable.RealPosition = args.Position + (drawable.Position - drawable.LastCalculatedOrigin) * args.Scale;
-                
                 DrawableManagerArgs drawableArgs = new() {
                     Color    = drawable.ColorOverride,
                     Effects  = args.Effects,
