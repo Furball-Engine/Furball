@@ -19,16 +19,22 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
             this.Position       = position;
             this.Selected.Value = initialState;
 
-            this._textDrawable = new(new(30, 0), FurballGame.DEFAULT_FONT, text, size);
+            this._textDrawable = new(new(30, 0), FurballGame.DEFAULT_FONT, text, size) {
+                Clickable   = false,
+                CoverClicks = false
+            };
 
             float fontHeight = this._textDrawable.Font.MeasureString("A").Y;
 
-            this._rectangleDrawable = new(Vector2.Zero, new(fontHeight - 5f), 1f, initialState);
+            this._rectangleDrawable = new(Vector2.Zero, new(fontHeight - 5f), 1f, initialState) {
+                Clickable   = false,
+                CoverClicks = false
+            };
 
             this._textDrawable.Position = new(fontHeight + 5f, -7.5f);
 
-            this.Drawables.Add(this._textDrawable);
-            this.Drawables.Add(this._rectangleDrawable);
+            this._drawables.Add(this._textDrawable);
+            this._drawables.Add(this._rectangleDrawable);
 
             this.Selected.OnChange += this.OnSelectChange;
 

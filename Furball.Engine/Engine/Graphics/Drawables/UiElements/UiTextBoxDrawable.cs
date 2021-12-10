@@ -18,10 +18,19 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         ///     The width of the text box
         /// </summary>
         public float TextBoxWidth;
+        private bool _selected;
         /// <summary>
         ///     Whether the text box was selected
         /// </summary>
-        public bool  Selected;
+        public bool Selected {
+            get => this._selected;
+            set {
+                if (value == this._selected) return;
+
+                this._selected = value;
+                this.OnFocusChange?.Invoke(this, value);
+            }
+        }
         public bool ClearOnCommit = false;
 
         /// <summary>
@@ -35,7 +44,11 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         /// <summary>
         ///     Called when the user "commits" the text in the text box, aka when they press enter
         /// </summary>
-        public event EventHandler<string> OnCommit; 
+        public event EventHandler<string> OnCommit;
+        /// <summary>
+        ///     Called when focus changes on the textbox
+        /// </summary>
+        public event EventHandler<bool> OnFocusChange;
         
 
         public override Vector2 Size => new Vector2(this.TextBoxWidth, this.Font.MeasureString("|").Y) * this.Scale;
@@ -55,7 +68,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         ) {
             this.Position     = position;
             this.TextBoxWidth = width;
-            this.RegisterHandlers(isInContainerDrawable);
+            this.RegisterHandlers();
         }
 
         private void RegisterHandlers(bool isInContainerDrawable) {

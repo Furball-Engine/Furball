@@ -48,6 +48,10 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
 
             for (int i = 0; i < tempCount; i++) {
                 ManagedDrawable currentDrawable = this._managedDrawables[i];
+
+                currentDrawable.LastCalculatedOrigin = currentDrawable.CalculateOrigin();
+                currentDrawable.RealPosition         = currentDrawable.Position - currentDrawable.LastCalculatedOrigin;
+
                 if (!currentDrawable.Visible) continue;
 
                 if (Math.Abs(currentDrawable.DrawablesLastKnownDepth - currentDrawable.Depth) > 0.01d) {
@@ -68,13 +72,14 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                 //Since literally every single drawable does this, might aswell make it easier,
                 //also given that drawablemanagers will have to scale on their own width and height instead of screen width and height,
                 //itll def make developing easier
+
                 
                 DrawableManagerArgs args = new() {
-                    Color      = currentDrawable.ColorOverride,
-                    Effects    = currentDrawable.SpriteEffect,
-                    Position   = currentDrawable.Position - origin,
-                    Rotation   = currentDrawable.Rotation,
-                    Scale      = currentDrawable.Scale
+                    Color    = currentDrawable.ColorOverride,
+                    Effects  = currentDrawable.SpriteEffect,
+                    Position = currentDrawable.RealPosition,
+                    Rotation = currentDrawable.Rotation,
+                    Scale    = currentDrawable.RealScale = currentDrawable.Scale
                 };
 
                 Rectangle rect = new(
@@ -100,16 +105,15 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
 
                     currentDrawable.DrawablesLastKnownDepth = currentDrawable.Depth;
                 }
-                
-                Vector2 origin = CalculateNewOriginPosition(currentDrawable);
-                currentDrawable.LastCalculatedOrigin = origin;
+
+                currentDrawable.LastCalculatedOrigin = currentDrawable.CalculateOrigin();
 
                 DrawableManagerArgs args = new() {
-                    Color      = currentDrawable.ColorOverride,
-                    Effects    = currentDrawable.SpriteEffect,
-                    Position   = currentDrawable.Position - origin,
-                    Rotation   = currentDrawable.Rotation,
-                    Scale      = currentDrawable.Scale
+                    Color    = currentDrawable.ColorOverride,
+                    Effects  = currentDrawable.SpriteEffect,
+                    Position = currentDrawable.Position - currentDrawable.LastCalculatedOrigin,
+                    Rotation = currentDrawable.Rotation,
+                    Scale    = currentDrawable.Scale
                 };
 
                 currentDrawable.Draw(time, drawableBatch, args);
@@ -132,7 +136,6 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
 
             return this._target2D;
         }
-
         private static Vector2 CalculateNewOriginPosition(BaseDrawable drawable) {
             return drawable.OriginType switch {
                 OriginType.TopLeft      => Vector2.Zero,

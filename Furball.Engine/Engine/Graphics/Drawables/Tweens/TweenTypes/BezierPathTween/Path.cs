@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Numerics;
+using JetBrains.Annotations;
 
 
 namespace Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes.BezierPathTween {
@@ -41,6 +42,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes.BezierPathT
             this._segmentLength = segmentLength;
         }
 
+        [CanBeNull]
         public PathSegment SegmentFromProgress(double progress) {
             if (progress > 1.0 || progress < 0.0)
                 throw new InvalidOperationException("SegmentFromProgress requires `progress` to be between 0 and 1..");

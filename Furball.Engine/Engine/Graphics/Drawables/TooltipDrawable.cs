@@ -16,8 +16,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
                 ColorOverride = Color.White
             };
 
-            this.Drawables.Add(this._backgroundRect);
-            this.Drawables.Add(this._textDrawable);
+            this._drawables.Add(this._backgroundRect);
+            this._drawables.Add(this._textDrawable);
 
             this.Clickable   = false;
             this.CoverClicks = false;

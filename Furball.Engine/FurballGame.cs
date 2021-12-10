@@ -64,6 +64,7 @@ namespace Furball.Engine {
         public static Rectangle DisplayRect => new(0, 0, (int)Math.Ceiling(WindowWidth / VerticalRatio), (int)Math.Ceiling(WindowHeight / VerticalRatio));
         public static Rectangle DisplayRectActual => new(0, 0, WindowWidth, WindowHeight);
 
+
         public static  ConsoleDrawable ConsoleDrawable;
         private static TextDrawable    _ConsoleAutoComplete;
         public static  TooltipDrawable TooltipDrawable;
@@ -208,6 +209,8 @@ namespace Furball.Engine {
             ScreenManager.SetTransition(new FadeTransition());
 
             base.Initialize();
+
+            GtkHelper.Initialize();
         }
         protected override void OnClosing() {
             DevConsole.Run(":nt_on_exiting", false, true);
@@ -284,16 +287,16 @@ namespace Furball.Engine {
 
         public void ChangeScreen(Screen screen) {
             this.BeforeScreenChange?.Invoke(this, screen);
-            
-            if (this._running != null) {
-                this.Components.Remove(this._running);
 
-                ((GameComponent)this._running).Dispose();
-                this._running = null;
+            if (this.RunningScreen != null) {
+                this.Components.Remove(this.RunningScreen);
+
+                this.RunningScreen.Dispose();
+                this.RunningScreen = null;
             }
 
             this.Components.Add(screen);
-            this._running = screen;
+            this.RunningScreen = screen;
             
             this.AfterScreenChange?.Invoke(this, screen);
         }
