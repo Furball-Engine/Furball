@@ -19,6 +19,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         /// </summary>
         public float TextBoxWidth;
         private bool _selected;
+        private bool _isInContainerDrawable;
         /// <summary>
         ///     Whether the text box was selected
         /// </summary>
@@ -68,7 +69,10 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         ) {
             this.Position     = position;
             this.TextBoxWidth = width;
-            this.RegisterHandlers();
+
+            this._isInContainerDrawable = isInContainerDrawable;
+
+            this.RegisterHandlers(this._isInContainerDrawable);
         }
 
         private void RegisterHandlers(bool isInContainerDrawable) {

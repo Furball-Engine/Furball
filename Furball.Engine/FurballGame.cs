@@ -33,7 +33,8 @@ using Color=Furball.Vixie.Graphics.Color;
 
 namespace Furball.Engine {
     public class FurballGame : Game {
-        private GameComponent        _running;
+        private GameComponent _running;
+        public  GameComponent RunningScreen;
 
         public static Random Random = new();
 

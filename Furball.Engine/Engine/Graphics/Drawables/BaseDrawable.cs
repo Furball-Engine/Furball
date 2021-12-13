@@ -138,8 +138,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
             }
         }
 
-        public Rectangle Rectangle     => new(this.Position.ToPoint(), this.Size.ToPoint());
-        public Rectangle RealRectangle => new(this.RealPosition.ToPoint(), this.Size.ToPoint());
+        public Rectangle Rectangle     => new(this.Position.ToPoint(), this.Size.ToSize());
+        public Rectangle RealRectangle => new(this.RealPosition.ToPoint(), this.Size.ToSize());
         /// <summary>
         ///     Unprocessed Size of the Drawable in Pixels
         ///     <remarks>
@@ -265,6 +265,21 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
             this.OnHover     = null;
             this.OnMove      = null;
             this.OnHoverLost = null;
+        }
+
+        public virtual Vector2 CalculateOrigin() {
+            return this.OriginType switch {
+                OriginType.TopLeft      => Vector2.Zero,
+                OriginType.TopRight     => new Vector2(this.Size.X,     0),
+                OriginType.BottomLeft   => new Vector2(0,               this.Size.Y),
+                OriginType.BottomRight  => new Vector2(this.Size.X,     this.Size.Y),
+                OriginType.Center       => new Vector2(this.Size.X / 2, this.Size.Y / 2),
+                OriginType.TopCenter    => new Vector2(this.Size.X / 2, 0),
+                OriginType.BottomCenter => new Vector2(this.Size.X / 2, this.Size.Y),
+                OriginType.LeftCenter   => new Vector2(0,               this.Size.Y / 2),
+                OriginType.RightCenter  => new Vector2(this.Size.X,     this.Size.Y / 2),
+                _                       => throw new ArgumentOutOfRangeException(nameof (this.OriginType), "That OriginType is unsupported.")
+            };
         }
 
         public virtual void Dispose() {

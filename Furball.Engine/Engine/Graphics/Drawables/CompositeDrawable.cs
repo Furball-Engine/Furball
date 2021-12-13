@@ -59,7 +59,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         }
 
         public override void Dispose() {
-            this.OnClick -= this.OnDrawableClick;
+            //this.OnClick -= this.OnDrawableClick;
 
             base.Dispose();
         }
