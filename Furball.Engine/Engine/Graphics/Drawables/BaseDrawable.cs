@@ -41,18 +41,6 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// <summary>
         ///     Radius of the Circle (Used for Click detection and other hitboxes)
         /// </summary>
-        public Vector2 Position {
-            get => this._position;
-            set {
-                if (value == this._position)
-                    return;
-                this.OnMove?.Invoke(this, value);
-                this._position = value;
-            }
-        }
-
-        public Rectangle Rectangle => new((this.Position - this.LastCalculatedOrigin).ToPoint(), this.Size.ToSize());
-
         public float CircleRadius = 0f;
         /// <summary>
         ///     Is the Drawable Circular? (Used for Click detection and other hitboxes)

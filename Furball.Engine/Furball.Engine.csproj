@@ -48,15 +48,18 @@
     <ItemGroup>
 
 
+        <PackageReference Include="Jace" Version="1.0.0" />
+
+
         <PackageReference Include="Kettu" Version="1.2.1" />
         <PackageReference Include="ManagedBass" Version="3.1.0" />
         <PackageReference Include="ManagedBass.Fx" Version="3.1.0" />
         <PackageReference Include="System.Drawing.Common" Version="5.0.2" />
         <PackageReference Include="TextCopy" Version="4.3.1" />
-        <PackageReference Include="GtkSharp" Version="3.24.24.34"/>
-        <PackageReference Include="GtkSharp.Dependencies" Version="1.1.0"/>
-        <PackageReference Include="GtkSharp.Win32" Version="3.1.2"/>
-        <PackageReference Include="JetBrains.Annotations" Version="2021.3.0"/>
+        <PackageReference Include="GtkSharp" Version="3.24.24.34" />
+        <PackageReference Include="GtkSharp.Dependencies" Version="1.1.0" />
+        <PackageReference Include="GtkSharp.Win32" Version="3.1.2" />
+        <PackageReference Include="JetBrains.Annotations" Version="2021.3.0" />
     </ItemGroup>
     <ItemGroup>
       <Reference Include="SixLabors.Fonts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d998eea7b14cab13">

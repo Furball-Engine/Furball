@@ -1,6 +1,8 @@
+using System.Drawing;
+using System.Numerics;
 using FontStashSharp;
 using Furball.Engine.Engine.Helpers;
-using Microsoft.Xna.Framework;
+using Color=Furball.Vixie.Graphics.Color;
 
 namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
     public class UiColorPickerDrawable : CompositeDrawable {
