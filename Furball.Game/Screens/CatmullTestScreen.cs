@@ -48,6 +48,10 @@ namespace Furball.Game.Screens {
                 this.Manager.Add(this.pathVisualization);
             };
 
+            a1.OnClick += delegate {
+                a1.Scale = new Vector2(100, 100);
+            };
+
             anchors.Add(a1);
 
 
@@ -91,7 +95,7 @@ namespace Furball.Game.Screens {
 
 
             var a4 = new TexturedDrawable(FurballGame.WhitePixel, p4) {
-                Scale      = new Vector2(16, 16),
+                Scale      = new Vector2(128, 128),
                 OriginType = OriginType.Center,
                 Clickable  = true,
             };
