@@ -47,7 +47,6 @@ namespace Furball.Engine {
 
         public static DrawableManager DrawableManager;
         public static DrawableManager DebugOverlayDrawableManager;
-        public static bool            DrawDebugOverlay = true;
 
         public const int DEFAULT_WINDOW_WIDTH  = 1280;
         public const int DEFAULT_WINDOW_HEIGHT = 720;
@@ -131,7 +130,8 @@ namespace Furball.Engine {
 
             if (ConVars.DebugOverlay.Value == 1) {
                 InputManager.OnKeyDown += delegate(object _, Keys keys) {
-                    if (keys == Keys.F11) DrawDebugOverlay = !DrawDebugOverlay;
+                    if (keys == Keys.F11)
+                        ConVars.DebugOverlay.BindableValue.Value = ConVars.DebugOverlay.BindableValue.Value == 0 ? 1 : 0;
                 };
             }
 
