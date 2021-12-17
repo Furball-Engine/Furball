@@ -46,6 +46,8 @@
         <TrimmerRootAssembly Include="Microsoft.Xna.Framework.Content.ContentTypeReader" Visible="false" />
     </ItemGroup>
     <ItemGroup>
+        <PackageReference Include="Eto.Forms" Version="2.6.0"/>
+        <PackageReference Include="Eto.Platform.Gtk" Version="2.6.0"/>
         <PackageReference Include="FontStashSharp.MonoGame" Version="1.0.4"/>
         <PackageReference Include="GtkSharp" Version="3.24.24.34"/>
         <PackageReference Include="GtkSharp.Dependencies" Version="1.1.0"/>

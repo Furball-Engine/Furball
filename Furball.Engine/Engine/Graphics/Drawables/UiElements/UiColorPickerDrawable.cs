@@ -35,7 +35,12 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         }
 
         private void OnColorDisplayClick(object sender, Point e) {
-            this.Color.Value = GtkHelper.ColorChooserDialog("Color Picker");
+            EtoHelper.OpenColorPicker(
+            (o, color) => {
+                this.Color.Value = color;
+            },
+            this.Color.Value
+            );
         }
     }
 }

@@ -194,14 +194,14 @@ namespace Furball.Engine {
 
             base.Initialize();
 
-            GtkHelper.Initialize();
+            EtoHelper.Initialize();
         }
 
         protected override void OnExiting(object sender, EventArgs args) {
             DevConsole.Run(":nt_on_exiting", false, true);
             DevConsole.WriteLog();
 
-            GtkHelper.Dispose();
+            EtoHelper.Dispose();
 
             base.OnExiting(sender, args);
         }
