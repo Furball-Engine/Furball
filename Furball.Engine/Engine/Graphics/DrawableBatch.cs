@@ -15,7 +15,7 @@ namespace Furball.Engine.Engine.Graphics {
         }
 
         public void Begin() {
-            this.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
+            this.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, null, null, FurballGame.Instance.GraphicsDevice.RasterizerState);
             this._begun = true;
         }
 

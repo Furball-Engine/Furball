@@ -322,7 +322,8 @@ namespace Furball.Engine {
 
             this._graphics.GraphicsDevice.RasterizerState = new RasterizerState {
                 CullMode             = CullMode.None,
-                MultiSampleAntiAlias = true
+                MultiSampleAntiAlias = true,
+                ScissorTestEnable    = true
             };
             this._graphics.GraphicsDevice.BlendState = new BlendState {
                 AlphaSourceBlend      = Blend.SourceAlpha,
