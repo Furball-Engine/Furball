@@ -108,7 +108,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
 
                     if (this.DeselectOnCommit)
                         this.Selected = false;
-                    wasSpecial    = true;
+                    //wasSpecial    = true;
 
                     if (this.ClearOnCommit)
                         this.Text = string.Empty;

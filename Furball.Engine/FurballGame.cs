@@ -131,8 +131,8 @@ namespace Furball.Engine {
             InputManager.RegisterInputMethod(new VixieKeyboardInputMethod());
 
             if (ConVars.DebugOverlay.Value == 1) {
-                InputManager.OnKeyDown += delegate(object _, Keys keys) {
-                    if (keys == Keys.F11)
+                InputManager.OnKeyDown += delegate(object _, Key keys) {
+                    if (keys == Key.F11)
                         ConVars.DebugOverlay.BindableValue.Value = ConVars.DebugOverlay.BindableValue.Value == 0 ? 1 : 0;
                 };
             }
