@@ -9,6 +9,7 @@ using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes.BezierPathTween
 using Furball.Engine.Engine.Helpers;
 using Furball.Engine.Engine.Timing;
 using Furball.Vixie.Graphics;
+using JetBrains.Annotations;
 using Color=Furball.Vixie.Graphics.Color;
 
 namespace Furball.Engine.Engine.Graphics.Drawables {
@@ -41,7 +42,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// <summary>
         ///     Radius of the Circle (Used for Click detection and other hitboxes)
         /// </summary>
-        public float CircleRadius = 0f;
+        [CanBeNull]
+        public Bindable<float> CircleRadius = new(0f);
         /// <summary>
         ///     Is the Drawable Circular? (Used for Click detection and other hitboxes)
         /// </summary>
