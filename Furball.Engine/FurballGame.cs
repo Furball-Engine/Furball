@@ -48,7 +48,6 @@ namespace Furball.Engine {
 
         public static DrawableManager DrawableManager;
         public static DrawableManager DebugOverlayDrawableManager;
-        public static bool            DrawDebugOverlay = true;
 
         public const int DEFAULT_WINDOW_WIDTH  = 1280;
         public const int DEFAULT_WINDOW_HEIGHT = 720;
@@ -132,8 +131,9 @@ namespace Furball.Engine {
             InputManager.RegisterInputMethod(new VixieKeyboardInputMethod());
 
             if (ConVars.DebugOverlay.Value == 1) {
-                InputManager.OnKeyDown += delegate(object _, Key keys) {
-                    if (keys == Key.F11) DrawDebugOverlay = !DrawDebugOverlay;
+                InputManager.OnKeyDown += delegate(object _, Keys keys) {
+                    if (keys == Keys.F11)
+                        ConVars.DebugOverlay.BindableValue.Value = ConVars.DebugOverlay.BindableValue.Value == 0 ? 1 : 0;
                 };
             }
 
@@ -211,13 +211,14 @@ namespace Furball.Engine {
 
             base.Initialize();
 
-            GtkHelper.Initialize();
+            EtoHelper.Initialize();
         }
         protected override void OnClosing() {
             DevConsole.Run(":nt_on_exiting", false, true);
             DevConsole.WriteLog();
 
             GameTimeScheduler.Dispose(Time);
+            EtoHelper.Dispose();
 
             base.OnClosing();
         }
@@ -324,6 +325,7 @@ namespace Furball.Engine {
             //};
             //
             //this._graphics.ApplyChanges();
+
         }
 
         private Stopwatch _updateWatch    = new ();

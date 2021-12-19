@@ -36,8 +36,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         ///     This is the real scale of a drawable, ignoring whether it is inside of a CompositeDrawable or not
         /// </summary>
         public Vector2 RealScale;
-        
-        private Vector2 _position = Vector2.Zero;
+
+        // private Vector2 _position = Vector2.Zero;
         /// <summary>
         ///     Radius of the Circle (Used for Click detection and other hitboxes)
         /// </summary>
@@ -128,15 +128,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         ///         properly visible on all resolutions
         ///     </remarks>
         /// </summary>
-        public Vector2 Position {
-            get => this._position;
-            set {
-                if (value == this._position)
-                    return;
-                this.OnMove?.Invoke(this, value);
-                this._position = value;
-            }
-        }
+        public Vector2 Position = Vector2.Zero;
 
         public Rectangle Rectangle     => new(this.Position.ToPoint(), this.Size.ToSize());
         public Rectangle RealRectangle => new(this.RealPosition.ToPoint(), this.Size.ToSize());
@@ -191,7 +183,6 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
 
             return this.RealRectangle.Contains(point);
         }
-        public event EventHandler<Vector2> OnMove;
         public void Hover(bool value) {
             if (value == this.IsHovered) return;
 
@@ -263,7 +254,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
             this.OnDragEnd   = null;
             this.OnDragBegin = null;
             this.OnHover     = null;
-            this.OnMove      = null;
+            // this.OnMove      = null;
             this.OnHoverLost = null;
         }
 

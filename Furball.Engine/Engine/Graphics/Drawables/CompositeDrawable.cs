@@ -74,7 +74,12 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
                 if (!drawable.Visible) continue;
 
                 DrawableManagerArgs drawableArgs = new() {
-                    Color    = drawable.ColorOverride,
+                    Color = new(
+                    (byte)(this.ColorOverride.R / 255f * drawable.ColorOverride.R),
+                    (byte)(this.ColorOverride.G / 255f * drawable.ColorOverride.G),
+                    (byte)(this.ColorOverride.B / 255f * drawable.ColorOverride.B),
+                    (byte)(this.ColorOverride.A / 255f * drawable.ColorOverride.A)
+                    ),
                     Effects  = args.Effects,
                     Position = drawable.RealPosition,
                     Rotation = args.Rotation,

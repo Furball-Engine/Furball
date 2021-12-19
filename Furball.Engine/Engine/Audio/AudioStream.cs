@@ -202,7 +202,7 @@ namespace Furball.Engine.Engine.Audio {
         }
 
         public void SeekTo(double milliseconds) {
-            if (milliseconds < 0 || milliseconds > this.Length) return;
+            if (milliseconds < 0 || milliseconds >= this.Length) return;
             
             bool success = Bass.ChannelSetPosition(this._audioHandle, Bass.ChannelSeconds2Bytes(this._audioHandle, milliseconds / 1000d));
 

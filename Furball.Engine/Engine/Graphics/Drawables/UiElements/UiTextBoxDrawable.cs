@@ -32,7 +32,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
                 this.OnFocusChange?.Invoke(this, value);
             }
         }
-        public bool ClearOnCommit = false;
+        public bool ClearOnCommit    = false;
+        public bool DeselectOnCommit = true;
 
         /// <summary>
         ///     Called when a letter is typed in the text box
@@ -104,7 +105,10 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
                 }
                 case Key.Enter: {
                     this.OnCommit?.Invoke(this, this.Text);
-                    this.Selected = false;
+
+                    if (this.DeselectOnCommit)
+                        this.Selected = false;
+                    wasSpecial    = true;
 
                     if (this.ClearOnCommit)
                         this.Text = string.Empty;
