@@ -85,7 +85,7 @@ namespace Furball.Engine.Engine.Input {
             for (int i = 0; i < drawables.Count; i++) {
                 ManagedDrawable drawable = drawables[i];
 
-                if (drawable.Contains(e.position.ToPoint())) {
+                if (drawable.RealContains(e.position.ToPoint())) {
 
                     if (!drawable.IsHovered && drawable.Hoverable) {
                         drawable.Hover(true);
@@ -201,7 +201,7 @@ namespace Furball.Engine.Engine.Input {
             for (int i = 0; i < drawables.Count; i++) {
                 ManagedDrawable drawable = drawables[i];
 
-                if (drawable.Contains(e.args.position.ToPoint())) {
+                if (drawable.RealContains(e.args.position.ToPoint())) {
                     drawable.Click(true, e.args.position.ToPoint());
 
                     if (drawable.CoverClicks) break;
