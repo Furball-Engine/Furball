@@ -1,7 +1,6 @@
 using System.Numerics;
 using Furball.Engine.Engine.Helpers;
 
-
 namespace Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes.BezierPathTween {
     public class PathSegment {
         public BezierCurveType CurveType;

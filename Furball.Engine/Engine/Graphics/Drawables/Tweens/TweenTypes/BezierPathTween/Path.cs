@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Numerics;
 using JetBrains.Annotations;
 
-
 namespace Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes.BezierPathTween {
     internal record PathRange(double Begin, double End);
 

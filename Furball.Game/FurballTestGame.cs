@@ -5,7 +5,7 @@ using Silk.NET.Windowing;
 
 namespace Furball.Game {
     public class FurballTestGame : FurballGame {
-        public FurballTestGame() : base(new ScreenSelector(), WindowOptions.Default) {
+        public FurballTestGame() : base(new ScreenSelector()) {
             //this.Window.AllowUserResizing = true;
         }
 

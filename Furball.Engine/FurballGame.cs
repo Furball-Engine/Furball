@@ -92,7 +92,7 @@ namespace Furball.Engine {
         public event EventHandler<Screen> AfterScreenChange;
 
         private Screen _startScreen;
-        public FurballGame(Screen startScreen, WindowOptions options) : base()  {
+        public FurballGame(Screen startScreen) : base()  {
             //this._graphics = new GraphicsDeviceManager(this) {
             //    GraphicsProfile     = GraphicsProfile.HiDef,
             //    PreferMultiSampling = true

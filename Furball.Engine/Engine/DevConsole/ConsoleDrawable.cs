@@ -2,7 +2,9 @@ using System;
 using System.Numerics;
 using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Graphics.Drawables.UiElements;
+using Furball.Engine.Engine.Input;
 using Furball.Vixie.Input;
+using JetBrains.Annotations;
 using Silk.NET.Input;
 
 namespace Furball.Engine.Engine.DevConsole {
@@ -13,11 +15,11 @@ namespace Furball.Engine.Engine.DevConsole {
             this.OriginType = OriginType.Center;
             this.Visible    = false;
 
-            this.OnCommit                  += this.OnTextCommit;
-            Keyboard.GetKeyboard().KeyDown += this.OnKeyDown;
+            this.OnCommit                      += this.OnTextCommit;
+            FurballGame.InputManager.OnKeyDown += this.OnKeyDown;
         }
 
-        private void OnKeyDown(IKeyboard keyboard, Key e, int what) {
+        private void OnKeyDown(object? sender, Key e) {
             if (e == Key.F12) {
                 this.Visible  = !this.Visible;
                 this.Selected = !this.Selected;
@@ -36,8 +38,8 @@ namespace Furball.Engine.Engine.DevConsole {
         }
 
         public override void Dispose() {
-            this.OnCommit                  -= this.OnTextCommit;
-            Keyboard.GetKeyboard().KeyDown -= this.OnKeyDown;
+            this.OnCommit                      -= this.OnTextCommit;
+            FurballGame.InputManager.OnKeyDown += this.OnKeyDown;
 
             base.Dispose();
         }

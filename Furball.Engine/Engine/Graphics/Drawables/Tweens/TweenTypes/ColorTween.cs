@@ -1,7 +1,6 @@
 using System;
 using Furball.Vixie.Graphics;
 
-
 namespace Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes {
     /// <summary>
     /// Tweens a Color between a Start Value and an End Value over a Certain amount of Time

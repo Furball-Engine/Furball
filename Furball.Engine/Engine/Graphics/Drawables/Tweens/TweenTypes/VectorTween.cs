@@ -1,7 +1,6 @@
 using System;
 using System.Numerics;
 
-
 namespace Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes {
     /// <summary>
     /// Tweens a Vector2 between a Start Value and an End Value over a Certain amount of Time

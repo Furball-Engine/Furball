@@ -1,5 +1,3 @@
-
-
 using System.Numerics;
 
 namespace Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes.BezierPathTween {

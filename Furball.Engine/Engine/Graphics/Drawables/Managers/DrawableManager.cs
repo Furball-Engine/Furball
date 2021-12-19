@@ -59,8 +59,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
 
                     currentDrawable.DrawablesLastKnownDepth = currentDrawable.Depth;
                 }
-                
-                Vector2 origin = CalculateNewOriginPosition(currentDrawable);
+                Vector2 origin = currentDrawable.CalculateOrigin();
                 currentDrawable.LastCalculatedOrigin = origin;
                 
                 //TODO: Potentially give ScaledPosition and ScaledScale
@@ -135,20 +134,6 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
             this._target2D.Unbind();
 
             return this._target2D;
-        }
-        private static Vector2 CalculateNewOriginPosition(BaseDrawable drawable) {
-            return drawable.OriginType switch {
-                OriginType.TopLeft      => Vector2.Zero,
-                OriginType.TopRight     => new Vector2(drawable.Size.X,     0),
-                OriginType.BottomLeft   => new Vector2(0,                   drawable.Size.Y),
-                OriginType.BottomRight  => new Vector2(drawable.Size.X,     drawable.Size.Y),
-                OriginType.Center       => new Vector2(drawable.Size.X / 2, drawable.Size.Y / 2),
-                OriginType.TopCenter    => new Vector2(drawable.Size.X / 2, 0),
-                OriginType.BottomCenter => new Vector2(drawable.Size.X / 2, drawable.Size.Y),
-                OriginType.LeftCenter   => new Vector2(0, drawable.Size.Y / 2),
-                OriginType.RightCenter  => new Vector2(drawable.Size.X, drawable.Size.Y / 2),
-                _                       => throw new ArgumentOutOfRangeException(nameof (drawable.OriginType), "That OriginType is unsupported.")
-            };
         }
 
         public override void Update(double time) {
