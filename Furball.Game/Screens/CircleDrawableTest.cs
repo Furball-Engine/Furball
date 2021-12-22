@@ -1,5 +1,4 @@
 using Furball.Engine.Engine.Graphics.Drawables.Primitives;
-using Gdk;
 using Color=Furball.Vixie.Graphics.Color;
 using Screen=Furball.Engine.Engine.Screen;
 
