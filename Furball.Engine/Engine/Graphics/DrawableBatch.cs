@@ -94,15 +94,21 @@ namespace Furball.Engine.Engine.Graphics {
         }
 
         public void DrawRectangle(Vector2 position, Vector2 size, float thickness, Color color) {
-            Vector2 p0 = position;
-            Vector2 p1 = new Vector2(position.X + size.X, position.Y);
-            Vector2 p2 = new Vector2(position.X + size.X, position.Y + size.Y);
-            Vector2 p3 = new Vector2(position.X,          position.Y + size.Y);
+            Vector2 p0 = position; //TL
+            Vector2 p1 = new Vector2(position.X + size.X, position.Y); //TR
+            Vector2 p2 = new Vector2(position.X + size.X, position.Y + size.Y); //BR
+            Vector2 p3 = new Vector2(position.X,          position.Y + size.Y); //BL
 
             this.DrawLine(p0, p1, thickness, color);
             this.DrawLine(p1, p2, thickness, color);
             this.DrawLine(p2, p3, thickness, color);
             this.DrawLine(p3, p0, thickness, color);
+
+            //drawn with lines to not break batch
+            this.DrawLine(new Vector2(p0.X - thickness / 2, p0.Y), new Vector2(p0.X + thickness / 2, p0.Y), thickness, color);
+            this.DrawLine(new Vector2(p1.X - thickness / 2, p1.Y), new Vector2(p1.X + thickness / 2, p1.Y), thickness, color);
+            this.DrawLine(new Vector2(p2.X - thickness / 2, p2.Y), new Vector2(p2.X + thickness / 2, p2.Y), thickness, color);
+            this.DrawLine(new Vector2(p3.X - thickness / 2, p3.Y), new Vector2(p3.X + thickness / 2, p3.Y), thickness, color);
         }
 
         public void FillRectangle(Vector2 position, Vector2 size, Color color, float rotation = 0f) {

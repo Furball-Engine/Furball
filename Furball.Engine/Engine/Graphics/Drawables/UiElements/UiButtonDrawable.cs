@@ -53,7 +53,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         /// <summary>
         ///     The thickness of the outline
         /// </summary>
-        public float OutlineThickness = .25f;
+        public float OutlineThickness = 5f;
 
         /// <summary>
         ///     The size of the button, Vector2.Zero means autosize it
@@ -124,7 +124,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         public override void Draw(double time, DrawableBatch batch, DrawableManagerArgs args) {
             batch.FillRectangle(args.Position * FurballGame.VerticalRatio, this.Size * FurballGame.VerticalRatio, args.Color, 0f);
             batch.DrawRectangle(args.Position * FurballGame.VerticalRatio, this.Size * FurballGame.VerticalRatio, this.OutlineThickness * FurballGame.VerticalRatio, this.OutlineColor);
-            
+
             // FIXME: this is a bit of a hack, it should definitely be done differently
             DrawableManagerArgs tempArgs = args;
             if(this.ButtonSize == Vector2.Zero) {
