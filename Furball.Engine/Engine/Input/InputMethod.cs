@@ -1,16 +1,19 @@
 using System.Collections.Generic;
-using Microsoft.Xna.Framework.Input;
+using Silk.NET.Input;
+using Silk.NET.Input.Extensions;
 
 namespace Furball.Engine.Engine.Input {
     public abstract class InputMethod {
         /// <summary>
-        /// The position and states of all cursors
+        /// The registered mice
         /// </summary>
-        public List<MouseState> CursorPositions = new();
+        public List<IMouse> Mice = new();
+        public List<FurballMouseState> MouseStates = new();
         /// <summary>
-        /// The keyboard keys that are currently held
+        /// The registered keyboards
         /// </summary>
-        public List<Keys> HeldKeys = new();
+        public List<IKeyboard> Keyboards = new();
+        public List<Key> HeldKeys = new();
 
         /// <summary>
         /// Used if the InputMethod needs to constantly poll a source

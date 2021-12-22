@@ -1,6 +1,8 @@
 using System;
+
 using Furball.Engine.Engine.Helpers;
-using Microsoft.Xna.Framework;
+using Furball.Vixie.Graphics;
+
 
 namespace Furball.Engine.Engine.DevConsole.Types {
     public class ColorConVar : ConVar {
@@ -22,7 +24,7 @@ namespace Furball.Engine.Engine.DevConsole.Types {
             try {
                 switch (split.Length) {
                     case 1:
-                        Color color = ColorConverter.FromHexString(consoleInput);
+                        Color color = ConversionHelpers.ColorFromHexString(consoleInput);
 
                         this.Value = color;
                         break;

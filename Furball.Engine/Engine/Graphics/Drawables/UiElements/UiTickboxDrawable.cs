@@ -1,6 +1,7 @@
+using System.Drawing;
+using System.Numerics;
 using Furball.Engine.Engine.Graphics.Drawables.Primitives;
 using Furball.Engine.Engine.Helpers;
-using Microsoft.Xna.Framework;
 
 namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
     public class UiTickboxDrawable : CompositeDrawable {
@@ -49,11 +50,11 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
             this._rectangleDrawable.Filled = e;
         }
 
-        public override void Dispose(bool disposing) {
+        public override void Dispose() {
             this.Selected.OnChange -= this.OnSelectChange;
             this.OnClick           -= this.OnDrawableClick;
 
-            base.Dispose(disposing);
+            base.Dispose();
         }
     }
 }

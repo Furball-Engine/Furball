@@ -1,10 +1,12 @@
+
 using System.Linq;
+using System.Numerics;
 using FontStashSharp;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Furball.Engine.Engine.Helpers;
 using Furball.Engine.Engine.Helpers.Logger;
 using Kettu;
-using Microsoft.Xna.Framework;
+
 
 namespace Furball.Engine.Engine.Graphics.Drawables {
     /// <summary>
@@ -33,8 +35,12 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// <summary>
         ///     An array of colours for the text drawable to use depending on the TextColorType
         /// </summary>
-        public Color[] Colors = {
-            Color.Cyan, Color.Pink, Color.White, Color.Pink, Color.Cyan
+        public System.Drawing.Color[] Colors = {
+            System.Drawing.Color.Cyan,
+            System.Drawing.Color.Pink,
+            System.Drawing.Color.White,
+            System.Drawing.Color.Pink,
+            System.Drawing.Color.Cyan
         };
         
         /// <summary>
@@ -58,32 +64,31 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
             this.Text = text;
         }
 
-        public override void Draw(GameTime time, DrawableBatch batch, DrawableManagerArgs args) {
+        public override void Draw(double time, DrawableBatch batch, DrawableManagerArgs args) {
             args.Position *= FurballGame.VerticalRatio;
             args.Scale    *= FurballGame.VerticalRatio;
 
             switch (this.ColorType) {
                 case TextColorType.Solid: {
-                    batch.SpriteBatch.DrawString(this.Font, this.Text, args.Position, args.Color, args.Scale, args.Rotation, Vector2.Zero);
+                    batch.DrawString(this.Font, this.Text, args.Position, args.Color, args.Rotation, args.Scale);
                     break;
                 }
                 case TextColorType.Repeating: {
-                    Color[] colors = this.Colors;
+                    System.Drawing.Color[] colors = this.Colors;
                     while (colors.Length < this.Text.Length)
                         colors = colors.Concat(colors).ToArray();
 
-                    batch.SpriteBatch.DrawString(this.Font, this.Text, args.Position, colors, args.Scale, args.Rotation, Vector2.Zero);
+                    batch.DrawString(this.Font, this.Text, args.Position, colors, args.Rotation, args.Scale);
                     break;
                 }
                 case TextColorType.Stretch: {
-                    batch.SpriteBatch.DrawString(
-                    this.Font,
-                    this.Text,
-                    args.Position,
-                    ArrayHelper.FitElementsInANewArray(this.Colors, this.Text.Length),
-                    args.Scale,
-                    args.Rotation,
-                    Vector2.Zero
+                    batch.DrawString(
+                        this.Font,
+                        this.Text,
+                        args.Position,
+                        ArrayHelper.FitElementsInANewArray(this.Colors, this.Text.Length),
+                        args.Rotation,
+                        args.Scale
                     );
                     break;
                 }

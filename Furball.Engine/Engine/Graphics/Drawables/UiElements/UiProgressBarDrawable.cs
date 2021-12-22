@@ -1,7 +1,7 @@
+using System.Numerics;
 using FontStashSharp;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
-using Microsoft.Xna.Framework;
-using Xssp.MonoGame.Primitives2D;
+using Furball.Vixie.Graphics;
 
 namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
     /// <summary>
@@ -61,7 +61,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
             };
         }
 
-        public override void Update(GameTime time) {
+        public override void Update(double time) {
             this.TextDrawable.Text = string.Format(this._formatString, this.Progress * 100);
 
             this._progressWidth = this.BarSize.X * this.Progress;
@@ -69,19 +69,18 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
             base.Update(time);
         }
 
-        public override void Draw(GameTime time, DrawableBatch batch, DrawableManagerArgs args) {
-            batch.SpriteBatch.FillRectangle(
-                args.Position * FurballGame.VerticalRatio, 
+        public override void Draw(double time, DrawableBatch batch, DrawableManagerArgs args) {
+            batch.FillRectangle(
+                args.Position * FurballGame.VerticalRatio,
                 new Vector2(this._progressWidth, this.BarSize.Y) * FurballGame.VerticalRatio,
-                args.Color,
-                0f
+                args.Color
             );
-            batch.SpriteBatch.DrawRectangle(
-                args.Position * FurballGame.VerticalRatio, 
-                this.BarSize * FurballGame.VerticalRatio, 
-                this.OutlineColor, 
-                this.OutlineThickness * FurballGame.VerticalRatio, 
-                0f
+
+            batch.DrawRectangle(
+                args.Position * FurballGame.VerticalRatio,
+                this.BarSize * FurballGame.VerticalRatio,
+                this.OutlineThickness * FurballGame.VerticalRatio,
+                this.OutlineColor
             );
             
             // FIXME: this is a bit of a hack, it should definitely be done differently

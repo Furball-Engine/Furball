@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+using System.Numerics;
+using Furball.Engine.Engine.Helpers;
+using Furball.Vixie.Graphics;
+using Color=Furball.Vixie.Graphics.Color;
 
 namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
     public class DrawableManager : UnmanagedDrawable {
@@ -29,7 +32,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
 
         private bool _sortDrawables = false;
         
-        public override void Draw(GameTime time, DrawableBatch drawableBatch, DrawableManagerArgs _ = null) {
+        public override void Draw(double time, DrawableBatch drawableBatch, DrawableManagerArgs _ = null) {
             if (this._sortDrawables) {
                 this._totalDrawables     = this._totalDrawables.OrderByDescending(o => o.Depth).ToList();
                 this._managedDrawables   = this._managedDrawables.OrderByDescending(o => o.Depth).ToList();
@@ -56,9 +59,10 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
 
                     currentDrawable.DrawablesLastKnownDepth = currentDrawable.Depth;
                 }
+                Vector2 origin = currentDrawable.CalculateOrigin();
+                currentDrawable.LastCalculatedOrigin = origin;
                 
-                //TODO:
-                //Potentially give ScaledPosition and ScaledScale
+                //TODO: Potentially give ScaledPosition and ScaledScale
                 //Which would just be:
                 /*
                     args.Position *= FurballGame.VerticalRatio;
@@ -78,11 +82,11 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                 };
 
                 Rectangle rect = new(
-                (args.Position - currentDrawable.LastCalculatedOrigin).ToPoint(),
-                new Point((int)Math.Ceiling(currentDrawable.Size.X * args.Scale.X), (int)Math.Ceiling(currentDrawable.Size.Y * args.Scale.Y))
+                    (args.Position - origin).ToPoint(),
+                    new Size((int)Math.Ceiling(currentDrawable.Size.X * args.Scale.X), (int)Math.Ceiling(currentDrawable.Size.Y * args.Scale.Y))
                 );
 
-                if(rect.Intersects(FurballGame.DisplayRect))
+                if(rect.IntersectsWith(FurballGame.DisplayRect))
                     currentDrawable.Draw(time, drawableBatch, args);
             }
 
@@ -115,22 +119,24 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
             }
         }
 
-        private RenderTarget2D _target2D;
-        public RenderTarget2D DrawRenderTarget2D(GameTime time, DrawableBatch batch, DrawableManagerArgs _ = null) {
-            if(this._target2D?.Width != FurballGame.WindowWidth || this._target2D?.Height != FurballGame.WindowHeight)
-                this._target2D = new RenderTarget2D(FurballGame.Instance.GraphicsDevice, FurballGame.WindowWidth, FurballGame.WindowHeight);
+        private TextureRenderTarget _target2D;
+        public TextureRenderTarget DrawRenderTarget2D(double time, DrawableBatch batch, DrawableManagerArgs _ = null) {
+            if(this._target2D?.TargetWidth != FurballGame.WindowWidth || this._target2D?.TargetHeight != FurballGame.WindowHeight)
+                this._target2D = new TextureRenderTarget((uint) FurballGame.WindowWidth, (uint) FurballGame.WindowHeight);
             
-            FurballGame.Instance.GraphicsDevice.SetRenderTarget(this._target2D);
+            this._target2D.Bind();
 
-            FurballGame.Instance.GraphicsDevice.Clear(Color.Transparent);
+            FurballGame.Instance.GraphicsDevice.GlClearColor(Color.Transparent);
+            FurballGame.Instance.GraphicsDevice.GlClear();
+
             this.Draw(time, batch, _);
 
-            FurballGame.Instance.GraphicsDevice.SetRenderTarget(null);
+            this._target2D.Unbind();
 
             return this._target2D;
         }
 
-        public override void Update(GameTime time) {
+        public override void Update(double time) {
             int tempCount = this._managedDrawables.Count;
             for (int i = 0; i < tempCount; i++) {
                 ManagedDrawable currentDrawable = this._managedDrawables[i];
@@ -205,26 +211,26 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
 
             switch (drawable) {
                 case ManagedDrawable managedDrawable:
-                    managedDrawable.Dispose(true);
+                    managedDrawable.Dispose();
                     this._managedDrawables.Remove(managedDrawable);
                     break;
                 case UnmanagedDrawable unmanagedDrawable:
-                    unmanagedDrawable.Dispose(true);
+                    unmanagedDrawable.Dispose();
                     this._unmanagedDrawables.Remove(unmanagedDrawable);
                     break;
             }
         }
 
-        public override void Dispose(bool disposing) {
+        public override void Dispose() {
             foreach (BaseDrawable drawable in this._totalDrawables)
-                drawable.Dispose(disposing);
+                drawable.Dispose();
 
             lock (StatLock) {
                 Instances--;
                 DrawableManagers.Remove(this);
             }
 
-            base.Dispose(disposing);
+            base.Dispose();
         }
     }
 }

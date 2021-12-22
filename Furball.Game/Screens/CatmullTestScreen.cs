@@ -1,9 +1,13 @@
 using System.Collections.Generic;
+using System.Drawing;
+using System.Numerics;
 using Furball.Engine;
 using Furball.Engine.Engine;
 using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes.BezierPathTween;
-using Microsoft.Xna.Framework;
+using Furball.Engine.Engine.Helpers;
+using Color=Furball.Vixie.Graphics.Color;
+
 
 namespace Furball.Game.Screens {
     public class CatmullTestScreen : Screen {
@@ -42,6 +46,10 @@ namespace Furball.Game.Screens {
                     Quality = 50, Thickness = 5f, Type = CurveType.CatmullRom
                 };
                 this.Manager.Add(this.pathVisualization);
+            };
+
+            a1.OnClick += delegate {
+                a1.Scale = new Vector2(100, 100);
             };
 
             anchors.Add(a1);
@@ -87,7 +95,7 @@ namespace Furball.Game.Screens {
 
 
             var a4 = new TexturedDrawable(FurballGame.WhitePixel, p4) {
-                Scale      = new Vector2(16, 16),
+                Scale      = new Vector2(128, 128),
                 OriginType = OriginType.Center,
                 Clickable  = true,
             };

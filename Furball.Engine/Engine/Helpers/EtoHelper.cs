@@ -2,7 +2,7 @@ using System;
 using System.Threading;
 using Eto;
 using Eto.Forms;
-using Microsoft.Xna.Framework;
+using Furball.Vixie.Graphics;
 
 namespace Furball.Engine.Engine.Helpers {
     public static class EtoHelper {

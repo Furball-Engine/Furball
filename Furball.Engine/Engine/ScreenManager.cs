@@ -2,7 +2,7 @@
 using System.Threading;
 using Furball.Engine.Engine.Graphics;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
-using Microsoft.Xna.Framework;
+
 
 namespace Furball.Engine.Engine {
     public class ScreenManager {
@@ -24,14 +24,14 @@ namespace Furball.Engine.Engine {
         /// <param name="time"></param>
         /// <param name="batch"></param>
         /// <param name="args"></param>
-        internal static void DrawTransition(GameTime time, DrawableBatch batch, DrawableManagerArgs args = null!) {
+        internal static void DrawTransition(double time, DrawableBatch batch, DrawableManagerArgs args = null!) {
             Transition?.Draw(time, batch, args);
         }
         /// <summary>
         /// Calls the Transition Update Method
         /// </summary>
         /// <param name="time"></param>
-        internal static void UpdateTransition(GameTime time) {
+        internal static void UpdateTransition(double time) {
             Transition?.Update(time);
         }
         /// <summary>
