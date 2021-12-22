@@ -304,28 +304,6 @@ namespace Furball.Engine {
         }
         public void ChangeScreenSize(int width, int height, bool fullscreen = false) {
             WindowManager.SetWindowSize(width, height);
-
-            //this._graphics.PreferredBackBufferWidth  = width;
-            //this._graphics.PreferredBackBufferHeight = height;
-//
-            //this._graphics.IsFullScreen = fullscreen;
-//
-            //this._graphics.SynchronizeWithVerticalRetrace = false;
-            //this.IsFixedTimeStep                          = false;
-//
-            //this._graphics.GraphicsDevice.RasterizerState = new RasterizerState {
-            //    CullMode             = CullMode.None,
-            //    MultiSampleAntiAlias = true
-            //};
-            //this._graphics.GraphicsDevice.BlendState = new BlendState {
-            //    AlphaSourceBlend      = Blend.SourceAlpha,
-            //    AlphaDestinationBlend = Blend.InverseSourceColor,
-            //    ColorSourceBlend      = Blend.SourceAlpha,
-            //    ColorDestinationBlend = Blend.InverseSourceAlpha
-            //};
-            //
-            //this._graphics.ApplyChanges();
-
         }
 
         private Stopwatch _updateWatch    = new ();
