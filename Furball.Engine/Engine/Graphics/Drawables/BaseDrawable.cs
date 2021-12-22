@@ -42,7 +42,6 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// <summary>
         ///     Radius of the Circle (Used for Click detection and other hitboxes)
         /// </summary>
-        [CanBeNull]
         public Bindable<float> CircleRadius = new(0f);
         /// <summary>
         ///     Is the Drawable Circular? (Used for Click detection and other hitboxes)
