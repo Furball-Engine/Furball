@@ -1,5 +1,7 @@
+
 using Furball.Engine.Engine.Graphics.Drawables.Primitives;
-using Microsoft.Xna.Framework;
+using Furball.Vixie.Graphics;
+
 
 namespace Furball.Engine.Engine.Graphics.Drawables {
     public class TooltipDrawable : CompositeDrawable {

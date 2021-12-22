@@ -1,11 +1,16 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using System.Numerics;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes.BezierPathTween;
+using Furball.Engine.Engine.Helpers;
 using Furball.Engine.Engine.Timing;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+using Furball.Vixie.Graphics;
+using JetBrains.Annotations;
+using Color=Furball.Vixie.Graphics.Color;
 
 namespace Furball.Engine.Engine.Graphics.Drawables {
     public enum OriginType {
@@ -37,7 +42,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// <summary>
         ///     Radius of the Circle (Used for Click detection and other hitboxes)
         /// </summary>
-        public float CircleRadius = 0f;
+        public Bindable<float> CircleRadius = new(0f);
         /// <summary>
         ///     Is the Drawable Circular? (Used for Click detection and other hitboxes)
         /// </summary>
@@ -96,7 +101,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// <summary>
         ///     Basic SpriteEffect, was provided by SpriteBatch so might aswell put it here
         /// </summary>
-        public SpriteEffects SpriteEffect = SpriteEffects.None;
+        public TextureFlip SpriteEffect = TextureFlip.None;
 
         public List<string> Tags = new();
         /// <summary>
@@ -126,8 +131,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// </summary>
         public Vector2 Position = Vector2.Zero;
 
-        public Rectangle Rectangle     => new(this.Position.ToPoint(), this.Size.ToPoint());
-        public Rectangle RealRectangle => new(this.RealPosition.ToPoint(), this.Size.ToPoint());
+        public Rectangle Rectangle     => new(this.Position.ToPoint(), this.Size.ToSize());
+        public Rectangle RealRectangle => new(this.RealPosition.ToPoint(), this.Size.ToSize());
         /// <summary>
         ///     Unprocessed Size of the Drawable in Pixels
         ///     <remarks>
@@ -269,7 +274,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
             };
         }
 
-        public virtual void Dispose(bool disposing) {
+        public virtual void Dispose() {
             this.Tweens.Clear();
         }
 

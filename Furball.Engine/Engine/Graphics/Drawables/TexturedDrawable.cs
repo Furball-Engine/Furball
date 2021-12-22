@@ -1,7 +1,8 @@
+
+using System.Drawing;
+using System.Numerics;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
-using Furball.Engine.Engine.Helpers;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+using Furball.Vixie.Graphics;
 
 namespace Furball.Engine.Engine.Graphics.Drawables {
     /// <summary>
@@ -11,11 +12,11 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// <summary>
         /// The Texture Being drawn
         /// </summary>
-        private Texture2D _texture;
+        private Texture _texture;
         /// <summary>
         ///     The texture being drawn
         /// </summary>
-        public Texture2D Texture => this._texture;
+        public Texture Texture => this._texture;
         /// <summary>
         /// Crop Rectangle, this basically tells which part of the Texture to Render
         /// Leave null to draw the entire Texture
@@ -25,14 +26,14 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// Unprocessed Size of the Drawable in Pixels
         /// <remarks>This variable does not get changed as the DrawableManager translates the Drawable to be Scaled to be properly visible on all resolutions</remarks>
         /// </summary>
-        public override Vector2 Size => this._cropping == null ? new Vector2(this._texture.Width, this._texture.Height) * this.Scale : new Vector2(this._cropping.Value.Width, this._cropping.Value.Height) * this.Scale;
+        public override Vector2 Size => this._cropping == null ? this._texture.Size * this.Scale : new Vector2(this._cropping.Value.Width, this._cropping.Value.Height) * this.Scale;
 
         /// <summary>
         /// TexturedDrawable Constructor
         /// </summary>
         /// <param name="texture">Texture to Draw</param>
         /// <param name="position">Where to Draw</param>
-        public TexturedDrawable(Texture2D texture, Vector2 position) {
+        public TexturedDrawable(Texture texture, Vector2 position) {
             this.Position = position;
 
             this._texture = texture;
@@ -44,7 +45,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// <param name="position">Where to Draw</param>
         /// <param name="cropping">What Part to Draw</param>
         /// <param name="rotation">Rotation in Radians</param>
-        public TexturedDrawable(Texture2D texture, Vector2 position, Rectangle cropping, float rotation = 0f) {
+        public TexturedDrawable(Texture texture, Vector2 position, Rectangle cropping, float rotation = 0f) {
             this.Position = position;
             this.Rotation = rotation;
 
@@ -52,11 +53,11 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
             this._texture = texture;
         }
 
-        public override void Draw(GameTime time, DrawableBatch batch, DrawableManagerArgs args) {
+        public override void Draw(double time, DrawableBatch batch, DrawableManagerArgs args) {
             args.Position *= FurballGame.VerticalRatio;
             args.Scale    *= FurballGame.VerticalRatio;
-            
-            batch.SpriteBatch.Draw(this._texture, args, this._cropping);
+
+            batch.Draw(this._texture, args.Position, null, args.Scale, args.Rotation, args.Color, this._cropping);
         }
 
         /// <summary>
@@ -64,6 +65,6 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// </summary>
         /// <param name="crop">New Cropping</param>
         public void ChangeCropping(Rectangle? crop) => this._cropping = crop;
-        public void SetTexture(Texture2D texture) => this._texture = texture;
+        public void SetTexture(Texture texture) => this._texture = texture;
     }
 }

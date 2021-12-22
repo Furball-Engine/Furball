@@ -1,5 +1,5 @@
 using Furball.Engine.Engine.Helpers;
-using Microsoft.Xna.Framework;
+using Furball.Vixie.Graphics;
 using Xunit;
 
 namespace Furball.Tests.Helpers {
@@ -15,22 +15,22 @@ namespace Furball.Tests.Helpers {
 
         [Fact]
         public void FromHexString() {
-            Assert.True(ColorConverter.FromHexString(this._hex1) == this._color1, $"{this._hex1} does not equal {this._color1}");
-            Assert.True(ColorConverter.FromHexString(this._hex2) == this._color2, $"{this._hex2} does not equal {this._color2}");
-            Assert.True(ColorConverter.FromHexString(this._hex3) == this._color3, $"{this._hex3} does not equal {this._color3}");
+            Assert.True(ConversionHelpers.ColorFromHexString(this._hex1) == this._color1, $"{this._hex1} does not equal {this._color1}");
+            Assert.True(ConversionHelpers.ColorFromHexString(this._hex2) == this._color2, $"{this._hex2} does not equal {this._color2}");
+            Assert.True(ConversionHelpers.ColorFromHexString(this._hex3) == this._color3, $"{this._hex3} does not equal {this._color3}");
         }
 
         [Fact]
         public void FromHexStringExtension() {
             Color color = new(0, 0, 0, 0);
 
-            color.FromHexString(this._hex1);
+            color.ColorFromHexString(this._hex1);
             Assert.True(color == this._color1, $"{this._hex1} does not equal {this._color1}");
 
-            color.FromHexString(this._hex2);
+            color.ColorFromHexString(this._hex2);
             Assert.True(color == this._color2, $"{this._hex2} does not equal {this._color2}");
 
-            color.FromHexString(this._hex3);
+            color.ColorFromHexString(this._hex3);
             Assert.True(color == this._color3, $"{this._hex3} does not equal {this._color3}");
         }
 

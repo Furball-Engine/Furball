@@ -1,7 +1,10 @@
 using System.Collections.Generic;
+using System.Drawing;
+using System.Numerics;
 using System.Collections.ObjectModel;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
-using Microsoft.Xna.Framework;
+using Furball.Engine.Engine.Helpers;
+
 
 namespace Furball.Engine.Engine.Graphics.Drawables {
     public class CompositeDrawable : ManagedDrawable {
@@ -48,22 +51,22 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         //     }
         // }
 
-        public override void Update(GameTime time) {
-            foreach (ManagedDrawable drawable in this._drawables) {
+        public override void Update(double time) {
+            foreach (ManagedDrawable drawable in this.Drawables) {
                 drawable.Update(time);
                 drawable.UpdateTweens();
             }
         }
 
-        public override void Dispose(bool disposing) {
-            // this.OnClick -= this.OnDrawableClick;
+        public override void Dispose() {
+            //this.OnClick -= this.OnDrawableClick;
 
-            base.Dispose(disposing);
+            base.Dispose();
         }
 
-        public override void Draw(GameTime time, DrawableBatch batch, DrawableManagerArgs args) {
-            for (int i = 0; i < this._drawables.Count; i++) {
-                ManagedDrawable drawable = this._drawables[i];
+        public override void Draw(double time, DrawableBatch batch, DrawableManagerArgs args) {
+            foreach (ManagedDrawable drawable in this.Drawables) {
+                if (!drawable.Visible) continue;
                 
                 drawable.LastCalculatedOrigin = drawable.CalculateOrigin();
                 drawable.RealPosition = args.Position + (drawable.Position - drawable.LastCalculatedOrigin) * args.Scale;

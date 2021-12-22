@@ -1,5 +1,5 @@
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
-using Microsoft.Xna.Framework;
+
 
 namespace Furball.Engine.Engine.Debug.DebugCounter.Items {
     /// <summary>
@@ -12,8 +12,8 @@ namespace Furball.Engine.Engine.Debug.DebugCounter.Items {
         private int    _lastUpdatedInstanceCount;
         private double _deltaTime;
 
-        public override void Update(GameTime time) {
-            this._deltaTime += time.ElapsedGameTime.TotalSeconds;
+        public override void Update(double time) {
+            this._deltaTime += time;
 
             if (this._deltaTime >= 1.0) {
                 this._lastUpdatedManagedDrawables   = 0;
@@ -36,6 +36,6 @@ namespace Furball.Engine.Engine.Debug.DebugCounter.Items {
             base.Update(time);
         }
 
-        public override string GetAsString(GameTime time) => $"dmi: {this._lastUpdatedInstanceCount}; ud/md: {this._lastUpdatedUnmanagedDrawables}/{this._lastUpdatedManagedDrawables}";
+        public override string GetAsString(double time) => $"dmi: {this._lastUpdatedInstanceCount}; ud/md: {this._lastUpdatedUnmanagedDrawables}/{this._lastUpdatedManagedDrawables}";
     }
 }

@@ -1,5 +1,5 @@
 using System;
-using Microsoft.Xna.Framework;
+using Furball.Vixie.Graphics;
 
 namespace Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes {
     /// <summary>
@@ -49,10 +49,10 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes {
                 return this._endColor;
 
             return new Color(
-            (int)this.CalculateCurrent(this._startColor.R, this._endColor.R),
-            (int)this.CalculateCurrent(this._startColor.G, this._endColor.G),
-            (int)this.CalculateCurrent(this._startColor.B, this._endColor.B),
-            (int)this.CalculateCurrent(this._startColor.A, this._endColor.A)
+                (int)this.CalculateCurrent(this._startColor.R, this._endColor.R),
+                (int)this.CalculateCurrent(this._startColor.G, this._endColor.G),
+                (int)this.CalculateCurrent(this._startColor.B, this._endColor.B),
+                (int)this.CalculateCurrent(this._startColor.A, this._endColor.A)
             );
         }
     }

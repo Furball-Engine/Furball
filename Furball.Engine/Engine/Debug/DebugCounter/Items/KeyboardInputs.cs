@@ -1,10 +1,10 @@
-using Microsoft.Xna.Framework;
+
 
 namespace Furball.Engine.Engine.Debug.DebugCounter.Items {
     public class KeyboardInputs : DebugCounterItem {
         public override bool ForceNewLine { get; } = true;
 
-        public override string GetAsString(GameTime time) {
+        public override string GetAsString(double time) {
             string endString = "keyboard: {";
 
             for (int i = 0; i != FurballGame.InputManager.HeldKeys.Count; i++) {

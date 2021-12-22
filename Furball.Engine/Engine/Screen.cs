@@ -1,10 +1,11 @@
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
-using Microsoft.Xna.Framework;
+using Furball.Vixie;
+
 
 namespace Furball.Engine.Engine {
-    public class Screen : DrawableGameComponent {
+    public class Screen : GameComponent {
         protected DrawableManager Manager;
-        public Screen() : base(FurballGame.Instance) {}
+        public Screen() {}
 
         /// <summary>
         /// You MUST run base.Initialize before adding things to your manager!!!!
@@ -15,22 +16,22 @@ namespace Furball.Engine.Engine {
             base.Initialize();
         }
         
-        public override void Draw(GameTime gameTime) {
-            this.Manager.Draw(gameTime, FurballGame.DrawableBatch);
+        public override void Draw(double gameTime) {
+            this.Manager?.Draw(gameTime, FurballGame.DrawableBatch);
 
             base.Draw(gameTime);
         }
 
-        public override void Update(GameTime gameTime) {
-            this.Manager.Update(gameTime);
+        public override void Update(double gameTime) {
+            this.Manager?.Update(gameTime);
 
             base.Update(gameTime);
         }
 
-        protected override void Dispose(bool disposing) {
-            this.Manager.Dispose(disposing);
+        public override void Dispose() {
+            this.Manager?.Dispose();
             
-            base.Dispose(disposing);
+            base.Dispose();
         }
     }
 }

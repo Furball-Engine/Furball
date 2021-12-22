@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Reflection;
 using FontStashSharp;
 using Furball.Engine.Engine;
@@ -21,20 +23,19 @@ using Furball.Engine.Engine.Localization;
 using Furball.Engine.Engine.Platform;
 using Furball.Engine.Engine.Timing;
 using Furball.Engine.Engine.Transitions;
+using Furball.Vixie;
+using Furball.Vixie.Graphics;
 using Kettu;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using sowelipisona;
 using sowelipisona.ManagedBass;
+using Silk.NET.Input;
+using Silk.NET.Windowing;
+using Color=Furball.Vixie.Graphics.Color;
 
 namespace Furball.Engine {
     public class FurballGame : Game {
-        private GraphicsDeviceManager _graphics;
-        public Screen RunningScreen {
-            get;
-            private set;
-        }
+        private GameComponent _running;
+        public  GameComponent RunningScreen;
 
         public static Random Random = new();
 
@@ -54,27 +55,31 @@ namespace Furball.Engine {
         public const int DEFAULT_WINDOW_HEIGHT = 720;
 
         public static string AssemblyPath       = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? throw new Exception("shits fucked man");
-        public static string LocalizationFolder => $"{Instance.Content.RootDirectory}/Localization";
+        public static string LocalizationFolder => $"{AssemblyPath}/Localization";
 
-        public static int WindowHeight => Instance.GraphicsDevice.Viewport.Height;
-        public static int WindowWidth => Instance.GraphicsDevice.Viewport.Width;
+        public static int WindowWidth => (int) Instance.WindowManager.WindowSize.X;
+        public static int WindowHeight => (int) Instance.WindowManager.WindowSize.Y;
 
-        public static float     HorizontalRatio   => (float)WindowWidth  / DEFAULT_WINDOW_WIDTH;
-        public static float     VerticalRatio     => (float)WindowHeight / DEFAULT_WINDOW_HEIGHT;
-        public static Rectangle DisplayRect       => new(0, 0, DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
-        public static Rectangle DisplayRectActual => new(0, 0, Instance.GraphicsDevice.Viewport.Width, Instance.GraphicsDevice.Viewport.Height);
+        public static float HorizontalRatio => (float)WindowWidth / DEFAULT_WINDOW_WIDTH;
+        public static float VerticalRatio => (float)WindowHeight / DEFAULT_WINDOW_HEIGHT;
+        //public static float VerticalRatio => 1;
+        public static Rectangle DisplayRect => new(0, 0, (int)Math.Ceiling(WindowWidth / VerticalRatio), (int)Math.Ceiling(WindowHeight / VerticalRatio));
+        public static Rectangle DisplayRectActual => new(0, 0, WindowWidth, WindowHeight);
+
 
         public static  ConsoleDrawable ConsoleDrawable;
         private static TextDrawable    _ConsoleAutoComplete;
         public static  TooltipDrawable TooltipDrawable;
 
         public static byte[] DefaultFontData;
+
         public static readonly FontSystem DEFAULT_FONT = new(new FontSystemSettings {
             FontResolutionFactor = 2f,
             KernelWidth          = 2,
             KernelHeight         = 2,
             Effect               = FontSystemEffect.None
         });
+
         public static readonly FontSystem DEFAULT_FONT_STROKED = new(new FontSystemSettings {
             FontResolutionFactor = 2f,
             KernelWidth          = 2,
@@ -83,23 +88,20 @@ namespace Furball.Engine {
             EffectAmount         = 2
         });
 
-        public static Texture2D WhitePixel;
+        public static Texture WhitePixel;
 
         public event EventHandler<Screen> BeforeScreenChange; 
         public event EventHandler<Screen> AfterScreenChange;
 
         private Screen _startScreen;
-        public FurballGame(Screen startScreen) {
-            this._graphics = new GraphicsDeviceManager(this) {
-                GraphicsProfile     = GraphicsProfile.HiDef,
-                PreferMultiSampling = true
-            };
-
-            this._graphics.PreparingDeviceSettings += (_, e) => e.GraphicsDeviceInformation.PresentationParameters.MultiSampleCount = 4;
-            this._graphics.ApplyChanges();
-            
-            this.Content.RootDirectory = "Content";
-            this.IsMouseVisible        = true;
+        public FurballGame(Screen startScreen) : base()  {
+            //this._graphics = new GraphicsDeviceManager(this) {
+            //    GraphicsProfile     = GraphicsProfile.HiDef,
+            //    PreferMultiSampling = true
+            //};
+//
+            //this._graphics.PreparingDeviceSettings += (_, e) => e.GraphicsDeviceInformation.PresentationParameters.MultiSampleCount = 4;
+            //this._graphics.ApplyChanges();
 
             GameTimeSource    = new GameTimeSource();
             Instance          = this;
@@ -127,19 +129,19 @@ namespace Furball.Engine {
             _stopwatch.Start();
 
             InputManager = new InputManager();
-            InputManager.RegisterInputMethod(new MonogameMouseInputMethod());
-            InputManager.RegisterInputMethod(new MonogameKeyboardInputMethod());
+            InputManager.RegisterInputMethod(new VixieMouseInputMethod());
+            InputManager.RegisterInputMethod(new VixieKeyboardInputMethod());
 
             if (ConVars.DebugOverlay.Value == 1) {
-                InputManager.OnKeyDown += delegate(object _, Keys keys) {
-                    if (keys == Keys.F11)
+                InputManager.OnKeyDown += delegate(object _, Key keys) {
+                    if (keys == Key.F11)
                         ConVars.DebugOverlay.BindableValue.Value = ConVars.DebugOverlay.BindableValue.Value == 0 ? 1 : 0;
                 };
             }
 
             //TODO: Add logic to decide on what audio backend to use, and maybe write some code to help change backend on the fly
             AudioEngine = new ManagedBassAudioEngine();
-            AudioEngine.Initialize(this.Window.Handle);
+            AudioEngine.Initialize(this.WindowManager.GetWindowHandle());
 
             DrawableManager             = new DrawableManager();
             DebugOverlayDrawableManager = new DrawableManager();
@@ -160,6 +162,7 @@ namespace Furball.Engine {
                 consoleResult.Tweens.Clear();
                 consoleResult.Tweens.Add(new FloatTween(TweenType.Fade, consoleResult.ColorOverride.A / 255f, 1f, Time,        Time + 100));
                 consoleResult.Tweens.Add(new FloatTween(TweenType.Fade, 1f,                                   0f, Time + 4100, Time + 5100));
+
 
                 consoleResult.Text = result.Message;
 
@@ -187,43 +190,57 @@ namespace Furball.Engine {
 
             DebugOverlayDrawableManager.Add(_ConsoleAutoComplete);
 
-            WhitePixel = new Texture2D(this.GraphicsDevice, 1, 1);
-            Color[] white = { Color.White };
-            WhitePixel.SetData(white);
+            WhitePixel = new Texture();
 
             LocalizationManager.ReadTranslations();
 
             TooltipDrawable = new();
             DrawableManager.Add(TooltipDrawable);
 
+            ScreenManager.ChangeScreen(this._startScreen);
+
+            DrawableBatch = new DrawableBatch(RendererType.Batched);
+
+            this.ChangeScreenSize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
+
+            DebugCounter = new DebugCounter {
+                Clickable   = false,
+                CoverClicks = false
+            };
+            DebugOverlayDrawableManager.Add(DebugCounter);
+
+            DevConsole.Initialize();
+
+            ScreenManager.SetTransition(new FadeTransition());
+
             base.Initialize();
 
             EtoHelper.Initialize();
         }
-
-        protected override void OnExiting(object sender, EventArgs args) {
+        protected override void OnClosing() {
             DevConsole.Run(":nt_on_exiting", false, true);
             DevConsole.WriteLog();
 
+            GameTimeScheduler.Dispose(Time);
             EtoHelper.Dispose();
 
-            base.OnExiting(sender, args);
+            base.OnClosing();
         }
 
         public void SetTargetFps(int fps, double unfocusedScale = -1) {
             if (fps != -1) {
-                this.TargetElapsedTime = TimeSpan.FromMilliseconds(1000 / (double)fps);
-                this.IsFixedTimeStep   = true;
+                WindowManager.SetTargetFramerate(fps);
             } else {
-                this.TargetElapsedTime = TimeSpan.FromTicks(1);
-                this.IsFixedTimeStep   = false;
+                //Setting to 0 makes it unlimited
+                WindowManager.SetTargetFramerate(0);
             }
 
             if (unfocusedScale != -1) {
                 double newFps       = fps   * unfocusedScale;
                 double milliseconds = 1000d / newFps;
 
-                this.InactiveSleepTime = TimeSpan.FromMilliseconds(milliseconds);
+                //TODO post release: emulate this using OnWindowStateChange or smth
+                //this.InactiveSleepTime = TimeSpan.FromMilliseconds(milliseconds);
             }
         }
 
@@ -265,22 +282,11 @@ namespace Furball.Engine {
             }
         }
 
-        protected override void EndRun() {
-            GameTimeScheduler.Dispose(Time);
-
-            base.EndRun();
-        }
-
         /// <summary>
         /// Use this function to initialize the default strings for all your localizations
         /// </summary>
         public virtual void InitializeLocalizations() {
             
-        }
-
-        protected override void BeginRun() {
-            DevConsole.Run(":nt_begin_run", false, true);
-            ScreenManager.ChangeScreen(this._startScreen);
         }
 
         public void ChangeScreen(Screen screen) {
@@ -298,51 +304,14 @@ namespace Furball.Engine {
             
             this.AfterScreenChange?.Invoke(this, screen);
         }
-
-        protected override void LoadContent() {
-            DrawableBatch = new DrawableBatch(new SpriteBatch(this.GraphicsDevice));
-
-            this.ChangeScreenSize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
-
-            DebugCounter = new DebugCounter {
-                Clickable   = false,
-                CoverClicks = false
-            };
-            DebugOverlayDrawableManager.Add(DebugCounter);
-
-            DevConsole.Initialize();
-
-            ScreenManager.SetTransition(new FadeTransition());
-        }
-
         public void ChangeScreenSize(int width, int height, bool fullscreen = false) {
-            this._graphics.PreferredBackBufferWidth  = width;
-            this._graphics.PreferredBackBufferHeight = height;
-
-            this._graphics.IsFullScreen = fullscreen;
-
-            this._graphics.SynchronizeWithVerticalRetrace = false;
-            this.IsFixedTimeStep                          = false;
-
-            this._graphics.GraphicsDevice.RasterizerState = new RasterizerState {
-                CullMode             = CullMode.None,
-                MultiSampleAntiAlias = true,
-                ScissorTestEnable    = true
-            };
-            this._graphics.GraphicsDevice.BlendState = new BlendState {
-                AlphaSourceBlend      = Blend.SourceAlpha,
-                AlphaDestinationBlend = Blend.InverseSourceColor,
-                ColorSourceBlend      = Blend.SourceAlpha,
-                ColorDestinationBlend = Blend.InverseSourceAlpha
-            };
-            
-            this._graphics.ApplyChanges();
+            WindowManager.SetWindowSize(width, height);
         }
 
         private Stopwatch _updateWatch    = new ();
         public double    LastUpdateTime { get; private set; } = 0.0;
 
-        protected override void Update(GameTime gameTime) {
+        protected override void Update(double gameTime) {
             if (RuntimeInfo.IsDebug()) {
                 this._updateWatch.Reset();
                 this._updateWatch.Start();
@@ -356,7 +325,7 @@ namespace Furball.Engine {
                 DebugOverlayDrawableManager.Update(gameTime);
 
             if (RuntimeInfo.LoggerEnabled())
-                Logger.XnaUpdate(gameTime.ElapsedGameTime.TotalSeconds);
+                Logger.XnaUpdate(gameTime);
 
             ScreenManager.UpdateTransition(gameTime);
 
@@ -373,13 +342,14 @@ namespace Furball.Engine {
         private Stopwatch _drawWatch = new ();
         public double    LastDrawTime { get; private set; } = 0.0;
 
-        protected override void Draw(GameTime gameTime) {
+        protected override void Draw(double gameTime) {
             if (RuntimeInfo.IsDebug()) {
                 this._drawWatch.Reset();
                 this._drawWatch.Start();
             }
 
-            this.GraphicsDevice.Clear(Color.Black);
+            this.GraphicsDevice.GlClearColor(Color.Black);
+            this.GraphicsDevice.GlClear();
 
             base.Draw(gameTime);
 

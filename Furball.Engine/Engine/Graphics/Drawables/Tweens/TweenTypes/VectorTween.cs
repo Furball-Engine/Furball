@@ -1,5 +1,5 @@
 using System;
-using Microsoft.Xna.Framework;
+using System.Numerics;
 
 namespace Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes {
     /// <summary>

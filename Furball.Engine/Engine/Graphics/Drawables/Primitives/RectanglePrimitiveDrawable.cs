@@ -1,6 +1,5 @@
+using System.Numerics;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
-using Microsoft.Xna.Framework;
-using Xssp.MonoGame.Primitives2D;
 
 namespace Furball.Engine.Engine.Graphics.Drawables.Primitives {
     /// <summary>
@@ -38,21 +37,19 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Primitives {
 
         public RectanglePrimitiveDrawable() { }
         
-        public override void Draw(GameTime time, DrawableBatch batch, DrawableManagerArgs args) {
-            if (this.Filled) 
-                batch.SpriteBatch.FillRectangle(
-                    args.Position * FurballGame.VerticalRatio, 
-                    this.Size * FurballGame.VerticalRatio, 
-                    args.Color, 
-                    0f
+        public override void Draw(double time, DrawableBatch batch, DrawableManagerArgs args) {
+            if (this.Filled)
+                batch.FillRectangle(
+                    args.Position * FurballGame.VerticalRatio,
+                    this.Size * FurballGame.VerticalRatio,
+                    args.Color
                 );
 
-            batch.SpriteBatch.DrawRectangle(
-            args.Position * FurballGame.VerticalRatio,
-            this.Size     * FurballGame.VerticalRatio,
-            args.Color,
-            this.Thickness * FurballGame.VerticalRatio,
-            0f
+            batch.DrawRectangle(
+                args.Position * FurballGame.VerticalRatio,
+                this.Size     * FurballGame.VerticalRatio,
+                this.Thickness * FurballGame.VerticalRatio,
+                args.Color
             );
         }
     }

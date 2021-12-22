@@ -1,8 +1,11 @@
 using System;
+using System.Numerics;
 using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Graphics.Drawables.UiElements;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
+using Furball.Engine.Engine.Input;
+using Furball.Vixie.Input;
+using JetBrains.Annotations;
+using Silk.NET.Input;
 
 namespace Furball.Engine.Engine.DevConsole {
     public class ConsoleDrawable : UiTextBoxDrawable {
@@ -16,8 +19,8 @@ namespace Furball.Engine.Engine.DevConsole {
             FurballGame.InputManager.OnKeyDown += this.OnKeyDown;
         }
 
-        private void OnKeyDown(object sender, Keys e) {
-            if (e == Keys.OemTilde) {
+        private void OnKeyDown(object? sender, Key e) {
+            if (e == Key.F12) {
                 this.Visible  = !this.Visible;
                 this.Selected = !this.Selected;
 
@@ -34,11 +37,11 @@ namespace Furball.Engine.Engine.DevConsole {
             this.Selected = false;
         }
 
-        public override void Dispose(bool disposing) {
+        public override void Dispose() {
             this.OnCommit                      -= this.OnTextCommit;
             FurballGame.InputManager.OnKeyDown -= this.OnKeyDown;
 
-            base.Dispose(disposing);
+            base.Dispose();
         }
     }
 }

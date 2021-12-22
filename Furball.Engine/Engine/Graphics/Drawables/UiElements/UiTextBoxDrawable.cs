@@ -1,11 +1,13 @@
 using System;
+using System.Drawing;
+using System.Numerics;
 using FontStashSharp;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
-using Furball.Engine.Engine.Input;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
+using Furball.Engine.Engine.Helpers;
+using Silk.NET.Input;
 using TextCopy;
-using Xssp.MonoGame.Primitives2D;
+using Color=Furball.Vixie.Graphics.Color;
+using MouseButton=Silk.NET.Input.MouseButton;
 
 namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
     /// <summary>
@@ -17,6 +19,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         /// </summary>
         public float TextBoxWidth;
         private bool _selected;
+        private bool _isInContainerDrawable;
         /// <summary>
         ///     Whether the text box was selected
         /// </summary>
@@ -59,98 +62,98 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         /// <param name="text">Initial Text</param>
         /// <param name="size">Size of the text</param>
         /// <param name="width">Width/Length of the Textbox</param>
-        public UiTextBoxDrawable(Vector2 position, FontSystem font, string text, int size, float width) : base(
-        Vector2.Zero,
-        font,
-        text,
-        size
+        public UiTextBoxDrawable(Vector2 position, FontSystem font, string text, int size, float width, bool isInContainerDrawable = false) : base(
+            Vector2.Zero,
+            font,
+            text,
+            size
         ) {
             this.Position     = position;
             this.TextBoxWidth = width;
-            this.RegisterHandlers();
+
+            this._isInContainerDrawable = isInContainerDrawable;
+
+            this.RegisterHandlers(this._isInContainerDrawable);
         }
 
-        private void RegisterHandlers() {
-            FurballGame.Instance.Window.TextInput += this.OnTextInput;
-            FurballGame.InputManager.OnMouseDown  += this.OnMouseDown;
-            FurballGame.InputManager.OnKeyDown    += this.OnKeyDown;
+        private void RegisterHandlers(bool isInContainerDrawable) {
+            FurballGame.InputManager.OnCharInput += this.OnTextInput;
+            if (!isInContainerDrawable)
+                FurballGame.InputManager.OnMouseDown += this.OnMouseDown;
+            
+            FurballGame.InputManager.OnKeyDown += this.OnKeyDown;
         }
 
-        private void OnKeyDown(object sender, Keys e) {
+        private void OnKeyDown(object sender, Key e) {
             if (!this.Selected || !this.Visible) return;
             
             switch(e) {
-                case Keys.V when FurballGame.InputManager.HeldKeys.Contains(Keys.LeftControl): {
+                case Key.V when FurballGame.InputManager.HeldKeys.Contains(Key.ControlLeft): {
                     string clipboard = ClipboardService.GetText();
 
                     this.Text += clipboard;
                     this.OnLetterTyped?.Invoke(this, 'v');
                     break;
                 }
-            }
-        }
-
-        public void OnMouseDown(object sender, ((MouseButton heldButton, Point position) args, string name) e) {
-            if (this.RealRectangle.Contains(e.args.position) && this.Visible && this.Clickable)
-                this.Selected = true;
-            else
-                this.Selected = false;
-        }
-
-        private void OnTextInput(object sender, TextInputEventArgs e) {
-            if (!this.Selected) return;
-            
-            bool wasSpecial = false;
-
-            switch (e.Key) {
-                case Keys.Back: {
+                case Key.Backspace: {
                     if (this.Text.Length != 0) {
                         char lastLetter = this.Text[^1];
                         this.Text = this.Text[..^1];
                         this.OnLetterRemoved?.Invoke(this, lastLetter);
                     }
-                    wasSpecial = true;
                     break;
                 }
-                case Keys.Enter: {
+                case Key.Enter: {
                     this.OnCommit?.Invoke(this, this.Text);
+
                     if (this.DeselectOnCommit)
                         this.Selected = false;
-                    wasSpecial    = true;
+                    //wasSpecial    = true;
 
                     if (this.ClearOnCommit)
                         this.Text = string.Empty;
                     break;
                 }
             }
+        }
 
-            //If it was a special character or the character ia control character, dont concat the character to the typed string
-            if (wasSpecial || char.IsControl(e.Character)) return;
+        public void OnMouseDown(object sender, ((MouseButton mouseButton, Vector2 position) args, string cursorName) e) {
+            if (this.Rectangle.Contains(e.args.position.ToPoint()) && this.Visible && this.Clickable)
+                this.Selected = true;
+            else
+                this.Selected = false;
+        }
 
-            this.Text += e.Character;
-            this.OnLetterTyped?.Invoke(this, e.Character);
+        private void OnTextInput(object sender, (IKeyboard keyboard, char @char)e) {
+            if (!this.Selected) return;
+
+            //If it was a control character, dont concat the character to the typed string
+            if (char.IsControl(e.@char)) return;
+
+            this.Text += e.@char;
+            this.OnLetterTyped?.Invoke(this, e.@char);
         }
 
         private void UnregisterHandlers() {
-            FurballGame.Instance.Window.TextInput -= this.OnTextInput;
+            FurballGame.InputManager.OnCharInput -= this.OnTextInput;
         }
 
-        public override void Dispose(bool disposing) {
+        public override void Dispose() {
             this.UnregisterHandlers();
 
             this.OnLetterTyped = null;
             this.OnLetterRemoved = null;
             
-            base.Dispose(disposing);
+            base.Dispose();
         }
 
-        public override void Draw(GameTime time, DrawableBatch batch, DrawableManagerArgs args) {
-            batch.SpriteBatch.DrawRectangle(
-                args.Position * FurballGame.VerticalRatio, 
-                this.Size * FurballGame.VerticalRatio, 
-                this.Selected ? Color.LightGray : Color.DarkGray, 
-                0f
-            );
+        public override void Draw(double time, DrawableBatch batch, DrawableManagerArgs args) {
+            batch.DrawRectangle(
+                args.Position * FurballGame.VerticalRatio,
+                this.Size * FurballGame.VerticalRatio,
+                0.0055f,
+                this.Selected ? Color.LightGray : Color.DarkGray
+             );
             
             base.Draw(time, batch, args);
         }
