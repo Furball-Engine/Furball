@@ -225,13 +225,12 @@ namespace Furball.Engine {
 
         public void SetTargetFps(int fps, double unfocusedScale = -1) {
             WindowManager.SetTargetFramerate(fps);
-            //if (fps != -1) {
-            //    this.TargetElapsedTime = TimeSpan.FromMilliseconds(1000 / (double)fps);
-            //    this.IsFixedTimeStep   = true;
-            //} else {
-            //    this.TargetElapsedTime = TimeSpan.FromTicks(1);
-            //    this.IsFixedTimeStep   = false;
-            //}
+            if (fps != -1) {
+                WindowManager.SetTargetFramerate(fps);
+            } else {
+                //Setting to 0 makes it unlimited
+                WindowManager.SetTargetFramerate(0);
+            }
 
             if (unfocusedScale != -1) {
                 double newFps       = fps   * unfocusedScale;
