@@ -9,7 +9,11 @@ namespace Furball.Engine.Engine.Helpers {
         private static Thread      _Thread;
         private static Application App;
 
+        private static bool InitCalled = false;
+
         public static void Initialize() {
+            InitCalled = true;
+
             Eto.Platform.Initialize(Platforms.Gtk);
 
             _Thread = new(
@@ -23,11 +27,15 @@ namespace Furball.Engine.Engine.Helpers {
         }
 
         public static void Dispose() {
-            App.Invoke(() => App.Quit());
+            while (InitCalled && App == null) {
+                Thread.Sleep(150);
+            }
+
+            App?.Invoke(() => App?.Quit());
         }
 
         public static void OpenColorPicker(EventHandler<Color> callback, Color existingColor, string title = "Color Picker", bool allowAlpha = true) {
-            App.Invoke(
+            App?.Invoke(
             () => {
                 ColorPickerForm form = new(title, allowAlpha);
 
