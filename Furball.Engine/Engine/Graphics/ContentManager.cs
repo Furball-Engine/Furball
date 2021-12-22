@@ -61,7 +61,7 @@ namespace Furball.Engine.Engine.Graphics {
             string path;
             if(source != ContentSource.External) {
                 if ((int)source >= (int)ContentSource.User) {
-                    path = Path.Combine(executablePath, "/UserContent/", filename);
+                    path = Path.Combine(executablePath, "UserContent/", filename);
                     if (File.Exists(path))
                         data = File.ReadAllBytes(path);
                 }
@@ -71,7 +71,7 @@ namespace Furball.Engine.Engine.Graphics {
                         data = File.ReadAllBytes(path);
                 }
                 if ((int)source >= (int)ContentSource.Engine && data.Length == 0) {
-                    path = Path.Combine(executablePath, "/EngineContent/", filename);
+                    path = Path.Combine(executablePath, "EngineContent/", filename);
                     if (File.Exists(path))
                         data = File.ReadAllBytes(path);
                 }

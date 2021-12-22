@@ -61,11 +61,15 @@
         <PackageReference Include="Eto.Platform.Gtk" Version="2.6.0"/>
     </ItemGroup>
     <ItemGroup>
-      <Reference Include="SixLabors.Fonts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d998eea7b14cab13">
-        <HintPath>..\Furball.SharedLibraries\SixLabors.Fonts.dll</HintPath>
-      </Reference>
+        <Reference Include="SixLabors.Fonts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d998eea7b14cab13">
+            <HintPath>..\Furball.SharedLibraries\SixLabors.Fonts.dll</HintPath>
+        </Reference>
     </ItemGroup>
     <ItemGroup>
-      <ProjectReference Include="..\Furball.Vixie\Furball.Vixie\Furball.Vixie.csproj" />
+        <ProjectReference Include="..\Furball.Vixie\Furball.Vixie\Furball.Vixie.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Update="EngineContent/*.ttf" CopyToOutputDirectory="Always"/>
     </ItemGroup>
 </Project>
