@@ -224,7 +224,6 @@ namespace Furball.Engine {
         }
 
         public void SetTargetFps(int fps, double unfocusedScale = -1) {
-            WindowManager.SetTargetFramerate(fps);
             if (fps != -1) {
                 WindowManager.SetTargetFramerate(fps);
             } else {
