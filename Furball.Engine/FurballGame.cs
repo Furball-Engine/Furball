@@ -6,7 +6,6 @@ using System.Linq;
 using System.Reflection;
 using FontStashSharp;
 using Furball.Engine.Engine;
-using Furball.Engine.Engine.Audio;
 using Furball.Engine.Engine.Debug.DebugCounter;
 using Furball.Engine.Engine.DevConsole;
 using Furball.Engine.Engine.Graphics;
@@ -26,6 +25,8 @@ using Kettu;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using sowelipisona;
+using sowelipisona.ManagedBass;
 
 namespace Furball.Engine {
     public class FurballGame : Game {
@@ -42,7 +43,8 @@ namespace Furball.Engine {
         public static InputManager  InputManager;
         public static ITimeSource   GameTimeSource;
         public static Scheduler     GameTimeScheduler;
-
+        public static AudioEngine   AudioEngine;
+        
         public static DebugCounter DebugCounter;
 
         public static DrawableManager DrawableManager;
@@ -65,7 +67,7 @@ namespace Furball.Engine {
         public static  ConsoleDrawable ConsoleDrawable;
         private static TextDrawable    _ConsoleAutoComplete;
         public static  TooltipDrawable TooltipDrawable;
-        
+
         public static byte[] DefaultFontData;
         public static readonly FontSystem DEFAULT_FONT = new(new FontSystemSettings {
             FontResolutionFactor = 2f,
@@ -135,6 +137,8 @@ namespace Furball.Engine {
                 };
             }
 
+            //TODO: Add logic to decide on what audio backend to use, and maybe write some code to help change backend on the fly
+            AudioEngine = new ManagedBassAudioEngine();
             AudioEngine.Initialize(this.Window.Handle);
 
             DrawableManager             = new DrawableManager();
