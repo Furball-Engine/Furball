@@ -11,8 +11,9 @@ using SixLabors.Fonts;
 
 namespace Furball.Engine.Engine.Graphics {
     public static class ContentManager {
-        private static readonly Dictionary<string, byte[]>                         CONTENT_CACHE = new();
+        private static readonly Dictionary<string, byte[]>                       CONTENT_CACHE = new();
         public static readonly  Dictionary<(FontSystem, int), DynamicSpriteFont> FSS_CACHE     = new();
+        public static           string                                           ContentPath   = "Content";
         
         public static int CacheSizeLimit = 40000000;//4 MB
 
@@ -65,7 +66,7 @@ namespace Furball.Engine.Engine.Graphics {
                         data = File.ReadAllBytes(path);
                 }
                 if ((int)source >= (int)ContentSource.Game && data.Length == 0) {
-                    path = Path.Combine(executablePath, filename);
+                    path = Path.Combine(ContentPath, filename);
                     if (File.Exists(path))
                         data = File.ReadAllBytes(path);
                 }
