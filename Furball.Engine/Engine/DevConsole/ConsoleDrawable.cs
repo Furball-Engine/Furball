@@ -39,7 +39,7 @@ namespace Furball.Engine.Engine.DevConsole {
 
         public override void Dispose() {
             this.OnCommit                      -= this.OnTextCommit;
-            FurballGame.InputManager.OnKeyDown += this.OnKeyDown;
+            FurballGame.InputManager.OnKeyDown -= this.OnKeyDown;
 
             base.Dispose();
         }
