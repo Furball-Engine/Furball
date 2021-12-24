@@ -18,6 +18,7 @@ namespace Furball.Game.Screens {
                 ("Catmull Testing", new CatmullTestScreen()),
                 ("UI TextBox Testing", new TextBoxTest()),
                 ("Circle Test", new CircleDrawableTest()),
+                ("Scrolling Stutter Test", new ScrollingTest()),
             };
 
             TexturedDrawable background = new TexturedDrawable(FurballGame.WhitePixel, Vector2.Zero) {
