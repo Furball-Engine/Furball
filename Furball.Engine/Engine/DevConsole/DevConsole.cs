@@ -36,7 +36,7 @@ namespace Furball.Engine.Engine.DevConsole {
             if (!Directory.Exists(LogPath)) Directory.CreateDirectory(LogPath);
             
             _scope = new Scope(
-                new (string name, int parameterCount, Func<EvaluatorContext, Value[], Value> del)[] {
+                new BuiltinFunction[] {
                     new("print", 1,
                         (_, values) => {
                             _outputQueue.Enqueue(values[0].Representation);
