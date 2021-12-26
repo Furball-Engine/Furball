@@ -124,9 +124,11 @@ namespace Furball.Engine.Engine.DevConsole {
         }
 
         private static void RefreshCache() {
+            _devConsoleCache.Clear();
+            
             for (int i = 0; i != DevConsole.ConsoleLog.Count; i++) {
                 var current = DevConsole.ConsoleLog[i];
-
+            
                 if (current.input != "") {
                     _devConsoleCache.Add(new ConsoleResult(ExecutionResult.Message, $"] {current.input}"));
                     _devConsoleCache.Add(current.Item2);
