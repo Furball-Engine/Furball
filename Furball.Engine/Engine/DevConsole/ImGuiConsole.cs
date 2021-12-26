@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
 using Furball.Engine.Engine.Graphics.Drawables;
+using Furball.Vixie.Graphics;
 using ImGuiNET;
 using Silk.NET.Input;
 
@@ -81,13 +82,13 @@ namespace Furball.Engine.Engine.DevConsole {
                             case ExecutionResult.Success:
                             case ExecutionResult.Log:
                             case ExecutionResult.Message:
-                                ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(255, 255, 255, 255));
+                                ImGui.PushStyleColor(ImGuiCol.Text, Color.White.ToVector4F());
                                 break;
                             case ExecutionResult.Warning:
-                                ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(255, 255, 0, 255));
+                                ImGui.PushStyleColor(ImGuiCol.Text, Color.Yellow.ToVector4F());
                                 break;
                             case ExecutionResult.Error:
-                                ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(255, 0, 0, 255));
+                                ImGui.PushStyleColor(ImGuiCol.Text, Color.Red.ToVector4F());
                                 break;
                         }
 
