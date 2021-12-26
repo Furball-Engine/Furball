@@ -22,13 +22,14 @@ namespace Furball.Engine.Engine.DevConsole {
 
             var style = ImGui.GetStyle();
 
-            _consoleInputCoverDrawable             = new BlankDrawable();
-            _consoleInputCoverDrawable.CoverClicks = true;
-            _consoleInputCoverDrawable.Clickable   = true;
-            _consoleInputCoverDrawable.Visible     = true;
-            _consoleInputCoverDrawable.CoverHovers = true;
-            _consoleInputCoverDrawable.Hoverable   = true;
-            _consoleInputCoverDrawable.Depth       = 0;
+            _consoleInputCoverDrawable = new BlankDrawable {
+                CoverClicks = true,
+                Clickable   = true,
+                Visible     = true,
+                CoverHovers = true,
+                Hoverable   = true,
+                Depth       = 0
+            };
 
             FurballGame.DrawableManager.Add(_consoleInputCoverDrawable);
 
@@ -51,16 +52,6 @@ namespace Furball.Engine.Engine.DevConsole {
 
         public static unsafe void Draw() {
             if (Visible) {
-                //var style = ImGui.GetStyle();
-                //style.Colors[(int) ImGuiCol.WindowBg]         = new Vector4((40.0f / 255.0f), (5.0f / 255.0f),  (50.0f / 255.0f), 0.8f);
-                //style.Colors[(int) ImGuiCol.FrameBg]          = new Vector4((50.0f / 255.0f), (10.0f / 255.0f), (90.0f / 255.0f), 0.8f);
-                //style.Colors[(int) ImGuiCol.ChildBg]          = new Vector4((50.0f / 255.0f), (10.0f / 255.0f), (90.0f / 255.0f), 0.8f);
-                //style.Colors[(int) ImGuiCol.TitleBgActive]    = new Vector4((70.0f / 255.0f), (10.0f / 255.0f), (90.0f / 255.0f), 0.8f);
-                //style.Colors[(int) ImGuiCol.TitleBgCollapsed] = new Vector4((70.0f / 255.0f), (10.0f / 255.0f), (90.0f / 255.0f), 0.8f);
-                //style.WindowPadding                           = new Vector2(8, 8);
-                //style.ItemSpacing                             = new Vector2(8,  8);
-                //style.FramePadding                            = new Vector2(8,  4);
-
                 ImGui.SetNextWindowSize(new Vector2(520, 600), ImGuiCond.FirstUseEver);
                 ImGui.Begin("Console", ref Visible, ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoCollapse);
 
@@ -78,8 +69,8 @@ namespace Furball.Engine.Engine.DevConsole {
                     ConsoleResult current = _consoleLog[i];
 
                     switch (current.Result) {
-                        case ExecutionResult.Log:
                         case ExecutionResult.Success:
+                        case ExecutionResult.Log:
                         case ExecutionResult.Message:
                             ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(255, 255, 255, 255));
                             break;
@@ -90,6 +81,8 @@ namespace Furball.Engine.Engine.DevConsole {
                             ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(255, 0, 0, 255));
                             break;
                     }
+
+                    ImGui.SetScrollY(ImGui.GetScrollMaxY());
 
                     ImGui.TextWrapped(current.Message);
                     ImGui.PopStyleColor();
@@ -111,14 +104,13 @@ namespace Furball.Engine.Engine.DevConsole {
                     _consoleLog.Add(consoleResult);
 
                     _consoleBuffer = new byte[4096];
+
                     ImGui.SetKeyboardFocusHere(-1);
                 }
 
                 ImGui.PopItemWidth();
                 ImGui.SetItemDefaultFocus();
                 ImGui.End();
-
-
             }
         }
 
@@ -132,8 +124,7 @@ namespace Furball.Engine.Engine.DevConsole {
         }
 
         public static void ScrollToBottom() {
-            if(ImGui.GetScrollY() >= ImGui.GetScrollMaxY())
-                ImGui.SetScrollHereY(1.0f);
+
         }
     }
 }
