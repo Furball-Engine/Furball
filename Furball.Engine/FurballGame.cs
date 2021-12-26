@@ -7,6 +7,7 @@ using System.Threading;
 using FontStashSharp;
 using Furball.Engine.Engine;
 using Furball.Engine.Engine.Debug.DebugCounter;
+using Furball.Engine.Engine.Debug.DrawableDebugger;
 using Furball.Engine.Engine.DevConsole;
 using Furball.Engine.Engine.Graphics;
 using Furball.Engine.Engine.Graphics.Drawables;
@@ -136,8 +137,8 @@ namespace Furball.Engine {
             AudioEngine = new ManagedBassAudioEngine();
             AudioEngine.Initialize(this.WindowManager.GetWindowHandle());
 
-            DrawableManager             = new DrawableManager();
-            DebugOverlayDrawableManager = new DrawableManager();
+            DrawableManager             = new DrawableManager() { Name = "FurballGame DrawableManager" };
+            DebugOverlayDrawableManager = new DrawableManager() { Name = "FurballGame Debug Overlay DrawableManager" };
 
             WhitePixel = new Texture();
 
@@ -160,6 +161,7 @@ namespace Furball.Engine {
 
             DevConsole.Initialize();
             ImGuiConsole.Initialize();
+            DrawableDebugger.Initialize();
 
             ScreenManager.SetTransition(new FadeTransition());
 
@@ -224,8 +226,6 @@ namespace Furball.Engine {
         public double    LastUpdateTime { get; private set; } = 0.0;
 
         protected override void Update(double gameTime) {
-
-
             if (RuntimeInfo.IsDebug()) {
                 this._updateWatch.Reset();
                 this._updateWatch.Start();
@@ -236,6 +236,9 @@ namespace Furball.Engine {
             base.Update(gameTime);
 
             ImGuiConsole.Draw();
+
+            if(RuntimeInfo.IsDebug())
+                DrawableDebugger.Draw();
 
             DrawableManager.Update(gameTime);
 

@@ -14,6 +14,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
         private List<ManagedDrawable>   _managedDrawables   = new();
         private List<UnmanagedDrawable> _unmanagedDrawables = new();
 
+        public string Name = "Drawable Manager";
+
         public IReadOnlyList<BaseDrawable> Drawables => this._totalDrawables.AsReadOnly();
 
         public int CountManaged { get; private set; }

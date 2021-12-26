@@ -11,7 +11,9 @@ namespace Furball.Engine.Engine {
         /// You MUST run base.Initialize before adding things to your manager!!!!
         /// </summary>
         public override void Initialize() {
-            this.Manager = new DrawableManager();
+            this.Manager = new DrawableManager() {
+                Name = this.GetType().Name + "'s DrawableManager"
+            };
             
             base.Initialize();
         }

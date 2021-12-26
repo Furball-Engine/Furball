@@ -125,6 +125,7 @@ namespace Furball.Engine.Engine.DevConsole {
                 ImGui.PushItemWidth(-1);
 
                 if (ImGui.InputText("", _consoleBuffer, (uint) _consoleBuffer.Length, textFlags, OnTextEdit)) {
+                    ImGui.InputText()
                     string result = Encoding.UTF8.GetString(_consoleBuffer).Trim();
                     DevConsole.Run(result);
 

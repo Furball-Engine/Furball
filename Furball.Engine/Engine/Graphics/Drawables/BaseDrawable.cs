@@ -8,6 +8,7 @@ using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes.BezierPathTween
 using Furball.Engine.Engine.Helpers;
 using Furball.Engine.Engine.Timing;
 using Furball.Vixie.Graphics;
+using ImGuiNET;
 using Color=Furball.Vixie.Graphics.Color;
 
 namespace Furball.Engine.Engine.Graphics.Drawables {
@@ -119,6 +120,10 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         ///     Whether the drawable is visible or not
         /// </summary>
         public bool Visible = true;
+        /// <summary>
+        /// Optional Name, useful when using the Drawable Debugger
+        /// </summary>
+        public string Name = " ";
 
         /// <summary>
         ///     Unprocessed Position where the Drawable is expected to be drawn
@@ -505,6 +510,72 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
             this.Tweens.Add(
             new VectorTween(TweenType.Scale, this.Scale, this.Scale + increase, this.TimeSource.GetCurrentTime(), this.TimeSource.GetCurrentTime() + duration, easing)
             );
+        }
+
+        #endregion
+
+        #region Drawable Debugger
+
+        protected void DrawVariable<T>(string name, string type, T value) {
+            ImGui.Text(name);
+            ImGui.SameLine();
+            ImGui.PushStyleColor(ImGuiCol.Text, Color.GreenYellow.ToVector4F());
+            ImGui.Text(type);
+            ImGui.PopStyleColor();
+            ImGui.SameLine();
+            ImGui.Text(value.ToString());
+        }
+
+        public virtual void DrawableDebuggerDraw() {
+            this.DrawVariable("Position",      "[Vector2]",   this.Position);
+            this.DrawVariable("Scale",         "[Vector2]",   this.Scale);
+            this.DrawVariable("Size",          "[Vector2]",   this.Size);
+            this.DrawVariable("Rectangle",     "[Rectangle]", this.Scale);
+            this.DrawVariable("RealPosition",  "[Vector2]",   this.RealPosition);
+            this.DrawVariable("RealScale",     "[Vector2]",   this.RealScale);
+            this.DrawVariable("RealRectangle", "[Rectangle]", this.RealScale);
+
+            ImGui.TextUnformatted("-----------------------------------------------");
+
+            this.DrawVariable("ColorOverride", "[Color]", this.ColorOverride);
+            this.DrawVariable("Circular",      "[bool]",  this.Circular);
+
+            if (this.Circular)
+                this.DrawVariable("CircleRadius", "[float]", this.CircleRadius);
+
+            this.DrawVariable("Rotation",     "[float]",       this.Rotation);
+            this.DrawVariable("OriginType",   "[OriginType]",  this.OriginType);
+            this.DrawVariable("Visible",      "[bool]",        this.Visible);
+            this.DrawVariable("Depth",        "[double]",      this.Depth);
+            this.DrawVariable("SpriteEffect", "[TextureFlip]", this.SpriteEffect);
+
+            ImGui.TextUnformatted("-----------------------------------------------");
+
+            this.DrawVariable("Clickable",    "[bool]", this.Clickable);
+            this.DrawVariable("Hoverable",    "[bool]", this.Hoverable);
+            this.DrawVariable("CoversClicks", "[bool]", this.CoverClicks);
+            this.DrawVariable("CoversHovers", "[bool]", this.CoverHovers);
+
+            ImGui.TextUnformatted("-----------------------------------------------");
+
+            if (this.Tags.Count != 0) {
+                if (ImGui.TreeNode("Tags")) {
+                    ImGui.Text("Drawable Tags seperated by ';': ");
+                    ImGui.TextUnformatted(string.Join(';', this.Tags));
+
+                    ImGui.TreePop();
+                }
+            }
+
+            this.DrawVariable("ToolTip",      "[string]",      this.ToolTip);
+            this.DrawVariable("TimeSource",   "[ITimeSource]", this.TimeSource.GetType().Name);
+            this.DrawVariable("DrawableTime", "[int]",         this.DrawableTime);
+
+            if (ImGui.TreeNode("Tweens")) {
+
+
+                ImGui.TreePop();
+            }
         }
 
         #endregion
