@@ -147,9 +147,6 @@ namespace Furball.Engine.Engine.Input {
                     drawable.Hover(false);
                 }
             }
-
-            _knownHovers.ForEach(x => Console.Write(x.Position));
-            Console.Write("\n");
         }
 
         private static void DrawableOnMouseDrag(object sender, ((Vector2 lastPosition, Vector2 newPosition), string cursorName) e) {
