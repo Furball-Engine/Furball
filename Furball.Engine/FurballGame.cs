@@ -166,14 +166,6 @@ namespace Furball.Engine {
             base.Initialize();
 
             EtoHelper.Initialize();
-
-            new Thread(
-            () => {
-                while (true) {
-                    Thread.Sleep(500);
-                    DevConsole.AddMessage("jsdhfdsf");
-                }
-            }).Start();
         }
         protected override void OnClosing() {
             DevConsole.Run(":nt_on_exiting", false, true);
