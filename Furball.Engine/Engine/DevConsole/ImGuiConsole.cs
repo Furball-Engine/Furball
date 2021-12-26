@@ -54,8 +54,8 @@ namespace Furball.Engine.Engine.DevConsole {
                 ImGui.SetNextWindowSize(new Vector2(520, 600), ImGuiCond.FirstUseEver);
                 ImGui.Begin("Console", ref Visible, ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoCollapse);
 
-                _consoleInputCoverDrawable.Position     = ImGui.GetWindowPos();
-                _consoleInputCoverDrawable.OverrideSize = ImGui.GetWindowSize();
+                _consoleInputCoverDrawable.Position     = ImGui.GetWindowPos() / FurballGame.VerticalRatio;
+                _consoleInputCoverDrawable.OverrideSize = ImGui.GetWindowSize() / FurballGame.VerticalRatio;
 
                 float heightReserved = ImGui.GetStyle().ItemSpacing.Y + ImGui.GetFrameHeightWithSpacing();
 
