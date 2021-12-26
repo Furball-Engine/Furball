@@ -7,16 +7,22 @@ using Silk.NET.Input;
 
 namespace Furball.Engine.Engine.DevConsole {
     public static class ImGuiConsole {
-        private static byte[]              _consoleBuffer = new byte[4096];
+        private static byte[]              _consoleBuffer   = new byte[4096];
+        private static List<ConsoleResult> _devConsoleCache = new();
 
         private static BlankDrawable _consoleInputCoverDrawable;
-
-        public static bool Visible = false;
+        public static  bool          Visible = false;
 
         public static unsafe void Initialize() {
+            RefreshCache();
+
             FurballGame.InputManager.OnKeyDown += (_, key) => {
                 if (key == Key.F12 && !Visible)
                     Visible = true;
+            };
+
+            DevConsole.ConsoleLog.CollectionChanged += (sender, args) => {
+                RefreshCache();
             };
 
             var style = ImGui.GetStyle();
@@ -62,14 +68,8 @@ namespace Furball.Engine.Engine.DevConsole {
                 ImGui.BeginChild("ScrollingRegion", new Vector2(0,           -heightReserved), true, ImGuiWindowFlags.HorizontalScrollbar);
                 ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(4, 1));
 
-                for (int i = 0; i != DevConsole.ConsoleLog.Count; i++) {
-                    (string input, ConsoleResult result) =  DevConsole.ConsoleLog[i];
-
-                    if (input != "") {
-                        ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(255, 255, 255, 255));
-                        ImGui.TextWrapped($"] {input}");
-                        ImGui.PopStyleColor();
-                    }
+                for (int i = 0; i != _devConsoleCache.Count; i++) {
+                    ConsoleResult result = _devConsoleCache[i];
 
                     switch (result.Result) {
                         case ExecutionResult.Success:
@@ -123,8 +123,17 @@ namespace Furball.Engine.Engine.DevConsole {
             return 0;
         }
 
-        public static void ScrollToBottom() {
+        private static void RefreshCache() {
+            for (int i = 0; i != DevConsole.ConsoleLog.Count; i++) {
+                var current = DevConsole.ConsoleLog[i];
 
+                if (current.input != "") {
+                    _devConsoleCache.Add(new ConsoleResult(ExecutionResult.Message, $"] {current.input}"));
+                    _devConsoleCache.Add(current.Item2);
+                } else {
+                    _devConsoleCache.Add(current.Item2);
+                }
+            }
         }
     }
 }

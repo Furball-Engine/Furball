@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -17,7 +18,7 @@ namespace Furball.Engine.Engine.DevConsole {
         public static readonly Dictionary<string, ConVar>  RegisteredConVars   = new();
         public static readonly Dictionary<string, ConFunc> RegisteredFunctions = new();
 
-        public static readonly List<(string input, ConsoleResult)> ConsoleLog = new();
+        public static readonly ObservableCollection<(string input, ConsoleResult)> ConsoleLog = new();
 
         public static string ScriptPath = "scripts";
         public static string LogPath = "logs";
@@ -316,7 +317,10 @@ namespace Furball.Engine.Engine.DevConsole {
 
                 if (postExecResults.Count != 0) {
                     AddMessage("Post Execution Warnings/Messages:");
-                    ConsoleLog.AddRange(postExecResults);
+
+                    for (int i = 0; i != postExecResults.Count; i++) {
+                        ConsoleLog.Add(postExecResults[i]);
+                    }
                 }
             }
 
