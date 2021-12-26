@@ -7,7 +7,6 @@ using Silk.NET.Input;
 
 namespace Furball.Engine.Engine.DevConsole {
     public static class ImGuiConsole {
-        private static List<ConsoleResult> _consoleLog    = new();
         private static byte[]              _consoleBuffer = new byte[4096];
 
         private static BlankDrawable _consoleInputCoverDrawable;
@@ -65,10 +64,16 @@ namespace Furball.Engine.Engine.DevConsole {
                 ImGui.BeginChild("ScrollingRegion", new Vector2(0,           -heightReserved), true, ImGuiWindowFlags.HorizontalScrollbar);
                 ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(4, 1));
 
-                for (int i = 0; i != _consoleLog.Count; i++) {
-                    ConsoleResult current = _consoleLog[i];
+                for (int i = 0; i != DevConsole.ConsoleLog.Count; i++) {
+                    (string input, ConsoleResult result) =  DevConsole.ConsoleLog[i];
 
-                    switch (current.Result) {
+                    if (input != "") {
+                        ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(255, 255, 255, 255));
+                        ImGui.TextWrapped($"] {input}");
+                        ImGui.PopStyleColor();
+                    }
+
+                    switch (result.Result) {
                         case ExecutionResult.Success:
                         case ExecutionResult.Log:
                         case ExecutionResult.Message:
@@ -84,7 +89,7 @@ namespace Furball.Engine.Engine.DevConsole {
 
                     ImGui.SetScrollY(ImGui.GetScrollMaxY());
 
-                    ImGui.TextWrapped(current.Message);
+                    ImGui.TextWrapped(result.Message);
                     ImGui.PopStyleColor();
                 }
 
@@ -98,10 +103,10 @@ namespace Furball.Engine.Engine.DevConsole {
 
                 if (ImGui.InputText("", _consoleBuffer, (uint) _consoleBuffer.Length, textFlags, OnTextEdit)) {
                     string result = Encoding.UTF8.GetString(_consoleBuffer).Trim();
-                    _consoleLog.Add(new ConsoleResult(ExecutionResult.Message, $"] {result}"));
+                    //_consoleLog.Add(new ConsoleResult(ExecutionResult.Message, $"] {result}"));
 
                     var consoleResult = DevConsole.Run(result);
-                    _consoleLog.Add(consoleResult);
+                    //_consoleLog.Add(consoleResult);
 
                     _consoleBuffer = new byte[4096];
 
