@@ -305,8 +305,6 @@ namespace Furball.Engine {
                 this._updateWatch.Stop();
                 this.LastUpdateTime = this._updateWatch.Elapsed.TotalMilliseconds;
             }
-
-
         }
 
         private Stopwatch _drawWatch = new ();
@@ -328,6 +326,8 @@ namespace Furball.Engine {
             
             DrawableManager.Draw(gameTime, DrawableBatch);
 
+            base.Draw(gameTime);
+
             if (RuntimeInfo.IsDebug()) {
                 this._drawWatch.Stop();
                 this.LastDrawTime = this._drawWatch.Elapsed.TotalMilliseconds;
@@ -335,10 +335,6 @@ namespace Furball.Engine {
 
             if (ConVars.DebugOverlay.Value == 1)
                 DebugOverlayDrawableManager.Draw(gameTime, DrawableBatch);
-
-            base.Draw(gameTime);
-
-
         }
 
         #region Timing

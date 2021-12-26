@@ -34,13 +34,13 @@ namespace Furball.Engine.Engine.DevConsole {
                     case ExecutionResult.Log:
                     case ExecutionResult.Success:
                     case ExecutionResult.Message:
-                        ImGui.PushStyleColor(ImGuiCol.Text, Color.White.ToVector4());
+                        ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(255, 255, 255, 255));
                         break;
                     case ExecutionResult.Warning:
-                        ImGui.PushStyleColor(ImGuiCol.Text, Color.Yellow.ToVector4());
+                        ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(255, 255, 0, 255));
                         break;
                     case ExecutionResult.Error:
-                        ImGui.PushStyleColor(ImGuiCol.Text, Color.Red.ToVector4());
+                        ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(255, 0, 0, 255));
                         break;
                 }
 
@@ -60,6 +60,10 @@ namespace Furball.Engine.Engine.DevConsole {
                 string result = Encoding.UTF8.GetString(_consoleBuffer).Trim();
 
                 _consoleLog.Add(new ConsoleResult(ExecutionResult.Message, $"] {result}"));
+
+                var consoleResult = DevConsole.Run(result);
+
+                _consoleLog.Add(consoleResult);
 
                 _consoleBuffer = new byte[4096];
 
