@@ -57,8 +57,6 @@ namespace Furball.Engine.Engine.DevConsole {
                 _consoleInputCoverDrawable.Position     = ImGui.GetWindowPos();
                 _consoleInputCoverDrawable.OverrideSize = ImGui.GetWindowSize();
 
-                ImGui.Text($"{_consoleInputCoverDrawable.Position.ToString()}; {_consoleInputCoverDrawable.Size.ToString()}");
-
                 float heightReserved = ImGui.GetStyle().ItemSpacing.Y + ImGui.GetFrameHeightWithSpacing();
 
                 ImGui.BeginChild("ScrollingRegion", new Vector2(0,           -heightReserved), true, ImGuiWindowFlags.HorizontalScrollbar);
@@ -103,10 +101,7 @@ namespace Furball.Engine.Engine.DevConsole {
 
                 if (ImGui.InputText("", _consoleBuffer, (uint) _consoleBuffer.Length, textFlags, OnTextEdit)) {
                     string result = Encoding.UTF8.GetString(_consoleBuffer).Trim();
-                    //_consoleLog.Add(new ConsoleResult(ExecutionResult.Message, $"] {result}"));
-
-                    var consoleResult = DevConsole.Run(result);
-                    //_consoleLog.Add(consoleResult);
+                    DevConsole.Run(result);
 
                     _consoleBuffer = new byte[4096];
 
