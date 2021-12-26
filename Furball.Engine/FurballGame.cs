@@ -26,10 +26,9 @@ using Furball.Engine.Engine.Transitions;
 using Furball.Vixie;
 using Furball.Vixie.Graphics;
 using Kettu;
+using Silk.NET.Input;
 using sowelipisona;
 using sowelipisona.ManagedBass;
-using Silk.NET.Input;
-using Silk.NET.Windowing;
 using Color=Furball.Vixie.Graphics.Color;
 
 namespace Furball.Engine {
@@ -117,8 +116,7 @@ namespace Furball.Engine {
             this.InitializeLocalizations();
             
             Logger.Log(
-                $@"Starting Furball {(Environment.Is64BitProcess ? "64-bit" : "32-bit")}"+
-                $@"on {Environment.OSVersion.VersionString} {(Environment.Is64BitOperatingSystem ? "64-bit" : "32-bit")}",
+            $@"Starting Furball {(Environment.Is64BitProcess ? "64-bit" : "32-bit")} on {Environment.OSVersion.VersionString} {(Environment.Is64BitOperatingSystem ? "64-bit" : "32-bit")}",
                 LoggerLevelEngineInfo.Instance
             );
 
