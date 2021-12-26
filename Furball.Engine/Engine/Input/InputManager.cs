@@ -59,6 +59,7 @@ namespace Furball.Engine.Engine.Input {
             return added;
         }
 
+        private static readonly List<ManagedDrawable> _knownHovers = new();
         private static void DrawableOnMouseMove(object sender, (Vector2 position, string cursorName) e) {
 
             List<ManagedDrawable> drawables = new();
@@ -86,15 +87,32 @@ namespace Furball.Engine.Engine.Input {
                 ManagedDrawable drawable = drawables[i];
 
                 if (drawable.RealContains(e.position.ToPoint())) {
-                    if (drawable.IsHovered && drawable.CoverHovers)
+                    if (drawable.IsHovered && drawable.CoverHovers) {
+                        for (int i2 = 0; i2 < _knownHovers.Count; i2++) {
+                            ManagedDrawable managedDrawable = _knownHovers[i2];
+                            if (managedDrawable != drawable)
+                                managedDrawable.Hover(false);
+                        }
+                        _knownHovers.RemoveAll(x => x != drawable);
                         doHover = false;
-
+                    }
+                    
                     if (!drawable.IsHovered && drawable.Hoverable) {
-                        if (doHover)
+                        if (doHover) {
+                            _knownHovers.Remove(drawable);
+                            _knownHovers.Add(drawable);
                             drawable.Hover(true);
+                        }
 
-                        if (drawable.CoverHovers)
+                        if (drawable.CoverHovers) {
+                            for (int i2 = 0; i2 < _knownHovers.Count; i2++) {
+                                ManagedDrawable managedDrawable = _knownHovers[i2];
+                                if (managedDrawable != drawable)
+                                    managedDrawable.Hover(false);
+                            }
+                            _knownHovers.RemoveAll(x => x != drawable);
                             doHover = false;
+                        }
                     } else if (drawable.Hoverable && !tooltipSet && doHover) {
                         if (drawable.ToolTip != string.Empty && ConVars.ToolTips.Value == 1) {
                             FurballGame.TooltipDrawable.SetTooltip(drawable.ToolTip);
@@ -121,6 +139,7 @@ namespace Furball.Engine.Engine.Input {
                         }
                     }
                 } else {
+                    _knownHovers.Remove(drawable);
                     drawable.Hover(false);
                 }
             }
