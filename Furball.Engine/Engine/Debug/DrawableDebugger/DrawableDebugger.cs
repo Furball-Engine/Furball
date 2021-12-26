@@ -18,7 +18,7 @@ namespace Furball.Engine.Engine.Debug.DrawableDebugger {
 
         public static void Draw() {
             if (Visible) {
-                ImGui.Begin("Drawable Debugger", ref Visible);
+                ImGui.Begin("Drawable Debugger", ref Visible, ImGuiWindowFlags.HorizontalScrollbar);
 
                 ImGui.Text("Warning! Expanding large DrawableManagers may slow down the entire application!");
                 ImGui.Separator();
