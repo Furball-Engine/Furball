@@ -85,6 +85,8 @@ namespace Furball.Engine.Engine.Input {
                 ManagedDrawable drawable = drawables[i];
 
                 if (drawable.RealContains(e.position.ToPoint())) {
+                    if (drawable.IsHovered && drawable.CoverHovers)
+                        break;
 
                     if (!drawable.IsHovered && drawable.Hoverable) {
                         drawable.Hover(true);
