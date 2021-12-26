@@ -3,6 +3,7 @@ using System.Numerics;
 using System.Text;
 using Furball.Engine.Engine.Graphics.Drawables;
 using ImGuiNET;
+using Silk.NET.Input;
 
 namespace Furball.Engine.Engine.DevConsole {
     public static class ImGuiConsole {
@@ -14,6 +15,11 @@ namespace Furball.Engine.Engine.DevConsole {
         public static bool Visible = false;
 
         public static unsafe void Initialize() {
+            FurballGame.InputManager.OnKeyDown += (_, key) => {
+                if (key == Key.F12 && !Visible)
+                    Visible = true;
+            };
+
             var style = ImGui.GetStyle();
 
             _consoleInputCoverDrawable             = new BlankDrawable();
@@ -57,6 +63,11 @@ namespace Furball.Engine.Engine.DevConsole {
 
                 ImGui.SetNextWindowSize(new Vector2(520, 600), ImGuiCond.FirstUseEver);
                 ImGui.Begin("Console", ref Visible, ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoCollapse);
+
+                _consoleInputCoverDrawable.Position     = ImGui.GetWindowPos();
+                _consoleInputCoverDrawable.OverrideSize = ImGui.GetWindowSize();
+
+                ImGui.Text($"{_consoleInputCoverDrawable.Position.ToString()}; {_consoleInputCoverDrawable.Size.ToString()}");
 
                 float heightReserved = ImGui.GetStyle().ItemSpacing.Y + ImGui.GetFrameHeightWithSpacing();
 
@@ -107,8 +118,7 @@ namespace Furball.Engine.Engine.DevConsole {
                 ImGui.SetItemDefaultFocus();
                 ImGui.End();
 
-                _consoleInputCoverDrawable.Position     = ImGui.GetWindowPos();
-                _consoleInputCoverDrawable.OverrideSize = ImGui.GetWindowSize();
+
             }
         }
 

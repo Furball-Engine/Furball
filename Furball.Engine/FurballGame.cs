@@ -128,8 +128,6 @@ namespace Furball.Engine {
                 InputManager.OnKeyDown += delegate(object _, Key keys) {
                     if (keys == Key.F11)
                         ConVars.DebugOverlay.BindableValue.Value = ConVars.DebugOverlay.BindableValue.Value == 0 ? 1 : 0;
-                    if (keys == Key.F12 && !ImGuiConsole.Visible)
-                        ImGuiConsole.Visible = true;
                 };
             }
 
