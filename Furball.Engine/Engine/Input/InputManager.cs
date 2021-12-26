@@ -228,7 +228,7 @@ namespace Furball.Engine.Engine.Input {
                 ManagedDrawable drawable = drawables[i];
 
                 if (drawable.RealContains(e.args.position.ToPoint())) {
-                    drawable.Click(true, e.args.position.ToPoint());
+                        drawable.Click(true, e.args.position.ToPoint());
 
                     if (drawable.CoverClicks) break;
                 }

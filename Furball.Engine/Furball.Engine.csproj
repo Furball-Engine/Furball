@@ -17,6 +17,7 @@
         <PackageVersion>1.0.3-develop</PackageVersion>
         <PackageReleaseNotes>+ Added PathTweens which allow Moving of Drawables in a Bezier Curve,
 + Added BezierCurveDrawable which allows for drawing of Bezier Curves</PackageReleaseNotes>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
     <PropertyGroup>
         <ApplicationManifest>app.manifest</ApplicationManifest>
@@ -47,18 +48,18 @@
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Jace" Version="1.0.0" />
-        <PackageReference Include="Kettu" Version="1.2.1"/>
-        <PackageReference Include="ManagedBass" Version="3.1.0"/>
-        <PackageReference Include="ManagedBass.Fx" Version="3.1.0"/>
-        <PackageReference Include="sowelipisona" Version="1.0.5"/>
-        <PackageReference Include="System.Drawing.Common" Version="5.0.2"/>
-        <PackageReference Include="TextCopy" Version="4.3.1"/>
-        <PackageReference Include="GtkSharp" Version="3.24.24.34"/>
-        <PackageReference Include="GtkSharp.Dependencies" Version="1.1.0"/>
-        <PackageReference Include="GtkSharp.Win32" Version="3.1.2"/>
-        <PackageReference Include="JetBrains.Annotations" Version="2021.3.0"/>
-        <PackageReference Include="Eto.Forms" Version="2.6.0"/>
-        <PackageReference Include="Eto.Platform.Gtk" Version="2.6.0"/>
+        <PackageReference Include="Kettu" Version="1.2.1" />
+        <PackageReference Include="ManagedBass" Version="3.1.0" />
+        <PackageReference Include="ManagedBass.Fx" Version="3.1.0" />
+        <PackageReference Include="sowelipisona" Version="1.0.5" />
+        <PackageReference Include="System.Drawing.Common" Version="5.0.2" />
+        <PackageReference Include="TextCopy" Version="4.3.1" />
+        <PackageReference Include="GtkSharp" Version="3.24.24.34" />
+        <PackageReference Include="GtkSharp.Dependencies" Version="1.1.0" />
+        <PackageReference Include="GtkSharp.Win32" Version="3.1.2" />
+        <PackageReference Include="JetBrains.Annotations" Version="2021.3.0" />
+        <PackageReference Include="Eto.Forms" Version="2.6.0" />
+        <PackageReference Include="Eto.Platform.Gtk" Version="2.6.0" />
     </ItemGroup>
     <ItemGroup>
         <Reference Include="SixLabors.Fonts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d998eea7b14cab13">
@@ -66,10 +67,10 @@
         </Reference>
     </ItemGroup>
     <ItemGroup>
-        <ProjectReference Include="..\Furball.Vixie\Furball.Vixie\Furball.Vixie.csproj"/>
+        <ProjectReference Include="..\Furball.Vixie\Furball.Vixie\Furball.Vixie.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <None Update="EngineContent/*.ttf" CopyToOutputDirectory="Always"/>
+        <None Update="EngineContent/*.ttf" CopyToOutputDirectory="Always" />
     </ItemGroup>
 </Project>
