@@ -80,20 +80,22 @@ namespace Furball.Engine.Engine.Input {
                 fakei++;
             }
 
+            bool doHover    = true;
             bool tooltipSet = false;
             for (int i = 0; i < drawables.Count; i++) {
                 ManagedDrawable drawable = drawables[i];
 
                 if (drawable.RealContains(e.position.ToPoint())) {
                     if (drawable.IsHovered && drawable.CoverHovers)
-                        break;
+                        doHover = false;
                     
                     if (!drawable.IsHovered && drawable.Hoverable) {
-                        drawable.Hover(true);
+                        if (doHover)
+                            drawable.Hover(true);
 
                         if (drawable.CoverHovers)
-                            break;
-                    } else if (drawable.Hoverable && !tooltipSet) {
+                            doHover = false;
+                    } else if (drawable.Hoverable && !tooltipSet && doHover) {
                         if (drawable.ToolTip != string.Empty && ConVars.ToolTips.Value == 1) {
                             FurballGame.TooltipDrawable.SetTooltip(drawable.ToolTip);
                             FurballGame.TooltipDrawable.Tweens.Clear();
