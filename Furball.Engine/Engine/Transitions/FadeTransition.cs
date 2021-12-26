@@ -5,7 +5,6 @@ using Furball.Engine.Engine.Graphics.Drawables.Tweens;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes;
 using Furball.Vixie.Graphics;
 
-
 namespace Furball.Engine.Engine.Transitions {
     /// <summary>
     /// Nice smooth Fade In and Out Transition
@@ -18,7 +17,9 @@ namespace Furball.Engine.Engine.Transitions {
                 Scale         = new Vector2(1280, 720),
                 ColorOverride = Color.Transparent,
                 Clickable     = false,
-                CoverClicks   = false
+                CoverClicks   = false,
+                Hoverable     = false,
+                CoverHovers   = false
             };
 
             this.Manager.Add(this._fadeScreen);
