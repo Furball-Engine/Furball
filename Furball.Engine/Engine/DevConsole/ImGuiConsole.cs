@@ -77,6 +77,11 @@ namespace Furball.Engine.Engine.DevConsole {
         }
 
         private static unsafe int OnTextEdit(ImGuiInputTextCallbackData* data) {
+            //Potentially maybe add some sort of autocomplete? i wont add it right now because volpe is gonna make us redo this entire thing anyway, but something for later
+            //if (data->EventKey == ImGuiKey.Tab) {
+            //
+            //}
+
             return 0;
         }
 
