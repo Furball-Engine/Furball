@@ -13,6 +13,9 @@ namespace Furball.Engine.Engine.DevConsole {
         private static BlankDrawable _consoleInputCoverDrawable;
         public static  bool          Visible = false;
 
+        private static bool ScrollDown = false;
+        private static bool ScrollDownIfNotBottom = false;
+
         public static unsafe void Initialize() {
             RefreshCache();
 
@@ -23,6 +26,8 @@ namespace Furball.Engine.Engine.DevConsole {
 
             DevConsole.ConsoleLog.CollectionChanged += (sender, args) => {
                 RefreshCache();
+
+                ScrollDownIfNotBottom = true;
             };
 
             var style = ImGui.GetStyle();
@@ -68,27 +73,32 @@ namespace Furball.Engine.Engine.DevConsole {
                 ImGui.BeginChild("ScrollingRegion", new Vector2(0,           -heightReserved), true, ImGuiWindowFlags.HorizontalScrollbar);
                 ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(4, 1));
 
-                for (int i = 0; i != _devConsoleCache.Count; i++) {
-                    ConsoleResult result = _devConsoleCache[i];
+                lock (_devConsoleCache) {
+                    for (int i = 0; i != _devConsoleCache.Count; i++) {
+                        ConsoleResult result = _devConsoleCache[i];
 
-                    switch (result.Result) {
-                        case ExecutionResult.Success:
-                        case ExecutionResult.Log:
-                        case ExecutionResult.Message:
-                            ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(255, 255, 255, 255));
-                            break;
-                        case ExecutionResult.Warning:
-                            ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(255, 255, 0, 255));
-                            break;
-                        case ExecutionResult.Error:
-                            ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(255, 0, 0, 255));
-                            break;
+                        switch (result.Result) {
+                            case ExecutionResult.Success:
+                            case ExecutionResult.Log:
+                            case ExecutionResult.Message:
+                                ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(255, 255, 255, 255));
+                                break;
+                            case ExecutionResult.Warning:
+                                ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(255, 255, 0, 255));
+                                break;
+                            case ExecutionResult.Error:
+                                ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(255, 0, 0, 255));
+                                break;
+                        }
+
+                        ImGui.TextWrapped(result.Message);
+                        ImGui.PopStyleColor();
+
+                        if (ScrollDown || (ScrollDownIfNotBottom && ImGui.GetScrollY() >= ImGui.GetScrollMaxY())) {
+                            ImGui.SetScrollY(ImGui.GetScrollMaxY());
+                            ScrollDown = false;
+                        }
                     }
-
-                    ImGui.SetScrollY(ImGui.GetScrollMaxY());
-
-                    ImGui.TextWrapped(result.Message);
-                    ImGui.PopStyleColor();
                 }
 
                 ImGui.PopStyleVar();
@@ -106,6 +116,7 @@ namespace Furball.Engine.Engine.DevConsole {
                     _consoleBuffer = new byte[4096];
 
                     ImGui.SetKeyboardFocusHere(-1);
+                    ScrollDown = true;
                 }
 
                 ImGui.PopItemWidth();
@@ -124,16 +135,18 @@ namespace Furball.Engine.Engine.DevConsole {
         }
 
         private static void RefreshCache() {
-            _devConsoleCache.Clear();
-            
-            for (int i = 0; i != DevConsole.ConsoleLog.Count; i++) {
-                var current = DevConsole.ConsoleLog[i];
-            
-                if (current.input != "") {
-                    _devConsoleCache.Add(new ConsoleResult(ExecutionResult.Message, $"] {current.input}"));
-                    _devConsoleCache.Add(current.Item2);
-                } else {
-                    _devConsoleCache.Add(current.Item2);
+            lock (_devConsoleCache) {
+                _devConsoleCache.Clear();
+
+                for (int i = 0; i != DevConsole.ConsoleLog.Count; i++) {
+                    var current = DevConsole.ConsoleLog[i];
+
+                    if (current.input != "") {
+                        _devConsoleCache.Add(new ConsoleResult(ExecutionResult.Message, $"] {current.input}"));
+                        _devConsoleCache.Add(current.Item2);
+                    } else {
+                        _devConsoleCache.Add(current.Item2);
+                    }
                 }
             }
         }

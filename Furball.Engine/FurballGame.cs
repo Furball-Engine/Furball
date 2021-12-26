@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Reflection;
+using System.Threading;
 using FontStashSharp;
 using Furball.Engine.Engine;
 using Furball.Engine.Engine.Debug.DebugCounter;
@@ -165,6 +166,14 @@ namespace Furball.Engine {
             base.Initialize();
 
             EtoHelper.Initialize();
+
+            new Thread(
+            () => {
+                while (true) {
+                    Thread.Sleep(500);
+                    DevConsole.AddMessage("jsdhfdsf");
+                }
+            }).Start();
         }
         protected override void OnClosing() {
             DevConsole.Run(":nt_on_exiting", false, true);
@@ -223,6 +232,8 @@ namespace Furball.Engine {
         public double    LastUpdateTime { get; private set; } = 0.0;
 
         protected override void Update(double gameTime) {
+
+
             if (RuntimeInfo.IsDebug()) {
                 this._updateWatch.Reset();
                 this._updateWatch.Start();
