@@ -14,21 +14,35 @@ namespace Furball.Engine.Engine.DevConsole {
         private static BlankDrawable _consoleInputCoverDrawable;
         public static  bool          Visible = false;
 
-        private static bool ScrollDown = false;
-        private static bool ScrollDownIfNotBottom = false;
+        private static bool _ScrollDown = false;
+        public static  bool AutoScroll  = true;
+        
+        public static string Title;
 
-        public static unsafe void Initialize() {
+        public static void UpdateTitle() {
+            //TODO: Figure out how to make this change without breaking the window
+            Title = $"Console (Press CTRL to toggle auto-scroll!)";
+        }
+        
+        public static void Initialize() {
+            UpdateTitle();
+
             RefreshCache();
 
             FurballGame.InputManager.OnKeyDown += (_, key) => {
                 if (key == Key.F12 && !Visible)
                     Visible = true;
+
+                if (key == Key.ControlLeft) {
+                    AutoScroll = !AutoScroll;
+                    UpdateTitle();
+                }
             };
 
             DevConsole.ConsoleLog.CollectionChanged += (sender, args) => {
                 RefreshCache();
-
-                ScrollDownIfNotBottom = true;
+                if(AutoScroll)
+                    _ScrollDown = true;
             };
 
             var style = ImGui.GetStyle();
@@ -64,7 +78,7 @@ namespace Furball.Engine.Engine.DevConsole {
         public static unsafe void Draw() {
             if (Visible) {
                 ImGui.SetNextWindowSize(new Vector2(520, 600), ImGuiCond.FirstUseEver);
-                ImGui.Begin("Console", ref Visible, ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoCollapse);
+                ImGui.Begin(Title, ref Visible, ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoCollapse);
 
                 _consoleInputCoverDrawable.Position     = ImGui.GetWindowPos() / FurballGame.VerticalRatio;
                 _consoleInputCoverDrawable.OverrideSize = ImGui.GetWindowSize() / FurballGame.VerticalRatio;
@@ -94,12 +108,12 @@ namespace Furball.Engine.Engine.DevConsole {
 
                         ImGui.TextWrapped(result.Message);
                         ImGui.PopStyleColor();
-
-                        if (ScrollDown || (ScrollDownIfNotBottom && ImGui.GetScrollY() >= ImGui.GetScrollMaxY())) {
-                            ImGui.SetScrollY(ImGui.GetScrollMaxY());
-                            ScrollDown = false;
-                        }
                     }
+                }
+                
+                if (_ScrollDown) {
+                    ImGui.SetScrollY(ImGui.GetScrollMaxY() + 100);
+                    _ScrollDown = false;
                 }
 
                 ImGui.PopStyleVar();
@@ -117,7 +131,7 @@ namespace Furball.Engine.Engine.DevConsole {
                     _consoleBuffer = new byte[4096];
 
                     ImGui.SetKeyboardFocusHere(-1);
-                    ScrollDown = true;
+                    _ScrollDown = true;
                 }
 
                 ImGui.PopItemWidth();
