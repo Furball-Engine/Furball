@@ -1,29 +1,62 @@
-using System;
 using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
-using Furball.Engine.Engine.Graphics;
 using Furball.Engine.Engine.Graphics.Drawables;
-using Furball.Engine.Engine.Graphics.Drawables.Managers;
-using Furball.Engine.Engine.Graphics.Drawables.UiElements;
-using Furball.Engine.Engine.Input;
-using Furball.Vixie.Graphics;
-using Furball.Vixie.Input;
 using ImGuiNET;
-using JetBrains.Annotations;
-using Silk.NET.Input;
 
 namespace Furball.Engine.Engine.DevConsole {
     public static class ImGuiConsole {
         private static List<ConsoleResult> _consoleLog    = new();
         private static byte[]              _consoleBuffer = new byte[4096];
 
+        private static BlankDrawable _consoleInputCoverDrawable;
+
         public static bool Visible = false;
+
+        public static unsafe void Initialize() {
+            var style = ImGui.GetStyle();
+
+            _consoleInputCoverDrawable             = new BlankDrawable();
+            _consoleInputCoverDrawable.CoverClicks = true;
+            _consoleInputCoverDrawable.Clickable   = true;
+            _consoleInputCoverDrawable.Visible     = true;
+            _consoleInputCoverDrawable.CoverHovers = true;
+            _consoleInputCoverDrawable.Hoverable   = true;
+            _consoleInputCoverDrawable.Depth       = 0;
+
+            FurballGame.DrawableManager.Add(_consoleInputCoverDrawable);
+
+            style.ScrollbarRounding = 0;
+            style.ChildRounding     = 0;
+            style.FrameRounding     = 0;
+            style.PopupRounding     = 0;
+            style.WindowRounding    = 0;
+
+            style.Colors[(int) ImGuiCol.WindowBg]         = new Vector4((40.0f / 255.0f), (5.0f / 255.0f),  (50.0f / 255.0f), 0.8f);
+            style.Colors[(int) ImGuiCol.FrameBg]          = new Vector4((50.0f / 255.0f), (10.0f / 255.0f), (90.0f / 255.0f), 0.8f);
+            style.Colors[(int) ImGuiCol.ChildBg]          = new Vector4((50.0f / 255.0f), (10.0f / 255.0f), (90.0f / 255.0f), 0.8f);
+            style.Colors[(int) ImGuiCol.TitleBgActive]    = new Vector4((70.0f / 255.0f), (10.0f / 255.0f), (90.0f / 255.0f), 0.8f);
+            style.Colors[(int) ImGuiCol.TitleBgCollapsed] = new Vector4((70.0f / 255.0f), (10.0f / 255.0f), (90.0f / 255.0f), 0.8f);
+
+            style.WindowPadding = new Vector2(8, 8);
+            style.ItemSpacing   = new Vector2(8, 8);
+            style.FramePadding  = new Vector2(8, 4);
+        }
 
         public static unsafe void Draw() {
             if (Visible) {
+                //var style = ImGui.GetStyle();
+                //style.Colors[(int) ImGuiCol.WindowBg]         = new Vector4((40.0f / 255.0f), (5.0f / 255.0f),  (50.0f / 255.0f), 0.8f);
+                //style.Colors[(int) ImGuiCol.FrameBg]          = new Vector4((50.0f / 255.0f), (10.0f / 255.0f), (90.0f / 255.0f), 0.8f);
+                //style.Colors[(int) ImGuiCol.ChildBg]          = new Vector4((50.0f / 255.0f), (10.0f / 255.0f), (90.0f / 255.0f), 0.8f);
+                //style.Colors[(int) ImGuiCol.TitleBgActive]    = new Vector4((70.0f / 255.0f), (10.0f / 255.0f), (90.0f / 255.0f), 0.8f);
+                //style.Colors[(int) ImGuiCol.TitleBgCollapsed] = new Vector4((70.0f / 255.0f), (10.0f / 255.0f), (90.0f / 255.0f), 0.8f);
+                //style.WindowPadding                           = new Vector2(8, 8);
+                //style.ItemSpacing                             = new Vector2(8,  8);
+                //style.FramePadding                            = new Vector2(8,  4);
+
                 ImGui.SetNextWindowSize(new Vector2(520, 600), ImGuiCond.FirstUseEver);
-                ImGui.Begin("Console", ref Visible, ImGuiWindowFlags.NoScrollbar);
+                ImGui.Begin("Console", ref Visible, ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoCollapse);
 
                 float heightReserved = ImGui.GetStyle().ItemSpacing.Y + ImGui.GetFrameHeightWithSpacing();
 
@@ -47,7 +80,7 @@ namespace Furball.Engine.Engine.DevConsole {
                             break;
                     }
 
-                    ImGui.TextUnformatted(current.Message);
+                    ImGui.TextWrapped(current.Message);
                     ImGui.PopStyleColor();
                 }
 
@@ -73,6 +106,9 @@ namespace Furball.Engine.Engine.DevConsole {
                 ImGui.PopItemWidth();
                 ImGui.SetItemDefaultFocus();
                 ImGui.End();
+
+                _consoleInputCoverDrawable.Position     = ImGui.GetWindowPos();
+                _consoleInputCoverDrawable.OverrideSize = ImGui.GetWindowSize();
             }
         }
 

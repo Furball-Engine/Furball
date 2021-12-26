@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Numerics;
 using System.Reflection;
 using FontStashSharp;
 using Furball.Engine.Engine;
@@ -13,8 +10,6 @@ using Furball.Engine.Engine.DevConsole;
 using Furball.Engine.Engine.Graphics;
 using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
-using Furball.Engine.Engine.Graphics.Drawables.Tweens;
-using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes;
 using Furball.Engine.Engine.Helpers;
 using Furball.Engine.Engine.Helpers.Logger;
 using Furball.Engine.Engine.Input;
@@ -29,7 +24,6 @@ using Kettu;
 using sowelipisona;
 using sowelipisona.ManagedBass;
 using Silk.NET.Input;
-using Silk.NET.Windowing;
 using Color=Furball.Vixie.Graphics.Color;
 
 namespace Furball.Engine {
@@ -178,6 +172,7 @@ namespace Furball.Engine {
             DebugOverlayDrawableManager.Add(DebugCounter);
 
             DevConsole.Initialize();
+            ImGuiConsole.Initialize();
 
             ScreenManager.SetTransition(new FadeTransition());
 

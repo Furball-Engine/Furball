@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Silk.NET.Input;
-using Silk.NET.Input.Extensions;
 
 namespace Furball.Engine.Engine.Input {
     public abstract class InputMethod {

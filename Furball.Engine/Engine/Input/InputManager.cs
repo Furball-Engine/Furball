@@ -9,7 +9,6 @@ using Furball.Engine.Engine.Graphics.Drawables.Tweens;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes;
 using Furball.Engine.Engine.Helpers;
 using Silk.NET.Input;
-using Silk.NET.Input.Extensions;
 
 namespace Furball.Engine.Engine.Input {
     public class InputManager {
@@ -202,7 +201,7 @@ namespace Furball.Engine.Engine.Input {
                 ManagedDrawable drawable = drawables[i];
 
                 if (drawable.RealContains(e.args.position.ToPoint())) {
-                    drawable.Click(true, e.args.position.ToPoint());
+                        drawable.Click(true, e.args.position.ToPoint());
 
                     if (drawable.CoverClicks) break;
                 }
