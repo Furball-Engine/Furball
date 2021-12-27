@@ -38,16 +38,13 @@ namespace Furball.Engine.Engine.DevConsole {
         public static async Task RunFile(string filename) {     
             byte[] data = ContentManager.LoadRawAsset(Path.Combine(ScriptPath, filename), ContentSource.External, true);
 
-            string file = Encoding.Default.GetString(data);
+            string file = Encoding.Default.GetString(data).Replace("\r", "");
 
-            AddMessage($"Running file { Path.GetFileName(filename) }");
+            AddMessage($"Running file { Path.GetFileName(filename) }", ExecutionResult.Warning);
 
             await Task.Run(
                 () => {
-                    string[] split = file.Replace("\r", "").Split("\n");
-
-                    foreach (string line in split)
-                        Run(line);
+                    Run(file);
                 }
             );
         }
