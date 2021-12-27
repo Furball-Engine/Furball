@@ -19,13 +19,13 @@ namespace Furball.Engine.Engine.DevConsole {
         /// </summary>
         public static bool WriteLog {
             get {
-                DevConsole.VolpeEnvironment.TryGetVariableValue("cl_write_log", out Value? value);
+                DevConsole.VolpeEnvironment.TryGetVariableValue("cl_console_log", out Value? value);
 
                 Value.Boolean? asBool = value as Value.Boolean;
 
                 return asBool != null && asBool.Value;
             }
-            set => DevConsole.VolpeEnvironment.SetVariableValue("cl_write_log", new Value.Boolean(value));
+            set => DevConsole.VolpeEnvironment.SetVariableValue("cl_console_log", new Value.Boolean(value));
         }
 
         /// <summary>
