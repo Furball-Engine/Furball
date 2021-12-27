@@ -63,7 +63,7 @@ namespace Furball.Engine.Engine.DevConsole {
                     _scrollDown = true;
             };
 
-            var style = ImGui.GetStyle();
+            ImGuiStylePtr style = ImGui.GetStyle();
 
             _consoleInputCoverDrawable = new BlankDrawable {
                 CoverClicks = true,
@@ -138,7 +138,7 @@ namespace Furball.Engine.Engine.DevConsole {
                 ImGui.EndChild();
                 ImGui.Separator();
 
-                ImGuiInputTextFlags textFlags = ImGuiInputTextFlags.EnterReturnsTrue | ImGuiInputTextFlags.CallbackCompletion | ImGuiInputTextFlags.CallbackHistory;
+                const ImGuiInputTextFlags textFlags = ImGuiInputTextFlags.EnterReturnsTrue | ImGuiInputTextFlags.CallbackCompletion | ImGuiInputTextFlags.CallbackHistory;
 
                 ImGui.PushItemWidth(-1);
 
@@ -176,13 +176,13 @@ namespace Furball.Engine.Engine.DevConsole {
                 _devConsoleCache.Clear();
 
                 for (int i = 0; i != DevConsole.ConsoleLog.Count; i++) {
-                    var current = DevConsole.ConsoleLog[i];
+                    (string input, ConsoleResult result) current = DevConsole.ConsoleLog[i];
 
                     if (current.input != "") {
                         _devConsoleCache.Add(new ConsoleResult(ExecutionResult.Message, $"] {current.input}"));
-                        _devConsoleCache.Add(current.Item2);
+                        _devConsoleCache.Add(current.result);
                     } else {
-                        _devConsoleCache.Add(current.Item2);
+                        _devConsoleCache.Add(current.result);
                     }
                 }
             }

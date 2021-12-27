@@ -24,7 +24,7 @@ namespace Furball.Engine.Engine.Debug.DebugCounter.Items {
                 this._lastUpdatedInstanceCount = drawableManagerCount;
 
                 for (int i = 0; i != drawableManagerCount; i++) {
-                    var current = DrawableManager.DrawableManagers[i];
+                    DrawableManager current = DrawableManager.DrawableManagers[i];
 
                     this._lastUpdatedManagedDrawables   += current.CountManaged;
                     this._lastUpdatedUnmanagedDrawables += current.CountUnmanaged;
