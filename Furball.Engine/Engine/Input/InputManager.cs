@@ -426,5 +426,9 @@ namespace Furball.Engine.Engine.Input {
             method.Dispose();
             this.registeredInputMethods.Remove(method);
         }
+
+        public bool ControlHeld => (this.HeldKeys.Contains(Key.ControlLeft) || this.HeldKeys.Contains(Key.ControlRight));
+        public bool ShiftHeld => (this.HeldKeys.Contains(Key.ShiftLeft) || this.HeldKeys.Contains(Key.ShiftRight));
+        public bool AltHeld => (this.HeldKeys.Contains(Key.AltLeft) || this.HeldKeys.Contains(Key.AltRight));
     }
 }

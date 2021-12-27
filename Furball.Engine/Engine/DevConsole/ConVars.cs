@@ -10,8 +10,8 @@ namespace Furball.Engine.Engine.DevConsole {
                 Value.Boolean? asBool = value as Value.Boolean;
 
                 return asBool != null && asBool.Value;
-
             }
+            set => DevConsole.VolpeEnvironment.SetVariableValue("cl_debug_overlay", new Value.Boolean(value));
         }
 
         /// <summary>
@@ -25,6 +25,7 @@ namespace Furball.Engine.Engine.DevConsole {
 
                 return asBool != null && asBool.Value;
             }
+            set => DevConsole.VolpeEnvironment.SetVariableValue("cl_write_log", new Value.Boolean(value));
         }
 
         /// <summary>
@@ -39,6 +40,7 @@ namespace Furball.Engine.Engine.DevConsole {
 
                 return asBool != null && asBool.Value;
             }
+            set => DevConsole.VolpeEnvironment.SetVariableValue("cl_tooltipping", new Value.Boolean(value));
         }
     }
 }
