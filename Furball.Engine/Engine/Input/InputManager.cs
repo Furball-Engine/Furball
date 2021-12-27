@@ -118,7 +118,7 @@ namespace Furball.Engine.Engine.Input {
                             doHover = false;
                         }
                     } else if (drawable.Hoverable && !tooltipSet && doHover) {
-                        if (drawable.ToolTip != string.Empty && ConVars.ToolTips.Value == 1) {
+                        if (drawable.ToolTip != string.Empty && ConVars.ToolTips) {
                             FurballGame.TooltipDrawable.SetTooltip(drawable.ToolTip);
                             FurballGame.TooltipDrawable.Tweens.Clear();
                             FurballGame.TooltipDrawable.Tweens.Add(
