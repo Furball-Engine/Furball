@@ -168,7 +168,6 @@ namespace Furball.Engine {
             EtoHelper.Initialize();
         }
         protected override void OnClosing() {
-            DevConsole.Run(":nt_on_exiting", false, true);
             DevConsole.WriteLog();
 
             GameTimeScheduler.Dispose(Time);
