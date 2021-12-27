@@ -1,3 +1,6 @@
 [submodule "Furball.Vixie"]
 	path = Furball.Vixie
 	url = https://github.com/Furball-Engine/Furball.Vixie
+[submodule "Furball.Volpe"]
+	path = Furball.Volpe
+	url = https://github.com/Furball-Engine/Furball.Volpe
