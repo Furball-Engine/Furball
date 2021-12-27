@@ -68,6 +68,7 @@
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Furball.Vixie\Furball.Vixie\Furball.Vixie.csproj" />
+        <ProjectReference Include="..\Furball.Volpe\Furball.Volpe\Furball.Volpe.csproj" />
     </ItemGroup>
 
     <ItemGroup>

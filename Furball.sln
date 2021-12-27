@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Furball.Vixie", "Furball.Vi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Furball.Tests", "Furball.Tests\Furball.Tests.csproj", "{6A9278AB-3A20-499C-B727-A8FC7886F578}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Furball.Volpe", "Furball.Volpe\Furball.Volpe\Furball.Volpe.csproj", "{65B4DF3C-1BB4-4EDB-929B-597C0E612CBE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,8 +34,13 @@ Global
 		{6A9278AB-3A20-499C-B727-A8FC7886F578}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6A9278AB-3A20-499C-B727-A8FC7886F578}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6A9278AB-3A20-499C-B727-A8FC7886F578}.Release|Any CPU.Build.0 = Release|Any CPU
+		{65B4DF3C-1BB4-4EDB-929B-597C0E612CBE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{65B4DF3C-1BB4-4EDB-929B-597C0E612CBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{65B4DF3C-1BB4-4EDB-929B-597C0E612CBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{65B4DF3C-1BB4-4EDB-929B-597C0E612CBE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{11D25A00-36DC-47FF-AA82-3D9254AF65E2} = {7B2F29B3-1240-48F9-BF57-0047C1499644}
+		{65B4DF3C-1BB4-4EDB-929B-597C0E612CBE} = {7B2F29B3-1240-48F9-BF57-0047C1499644}
 	EndGlobalSection
 EndGlobal

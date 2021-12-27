@@ -126,10 +126,10 @@ namespace Furball.Engine {
             InputManager.RegisterInputMethod(new VixieMouseInputMethod());
             InputManager.RegisterInputMethod(new VixieKeyboardInputMethod());
 
-            if (ConVars.DebugOverlay.Value == 1) {
+            if (ConVars.DebugOverlay) {
                 InputManager.OnKeyDown += delegate(object _, Key keys) {
                     if (keys == Key.F11)
-                        ConVars.DebugOverlay.BindableValue.Value = ConVars.DebugOverlay.BindableValue.Value == 0 ? 1 : 0;
+                        ConVars.DebugOverlay = !ConVars.DebugOverlay;
                 };
             }
 
@@ -179,6 +179,8 @@ namespace Furball.Engine {
             base.OnClosing();
         }
 
+        public double UnfocusedFpsScale => this._unfocusedFpsScale;
+
         public void SetTargetFps(int fps, double unfocusedScale = -1) {
             if (fps != -1) {
                 WindowManager.SetTargetFramerate(fps);
@@ -187,7 +189,12 @@ namespace Furball.Engine {
                 WindowManager.SetTargetFramerate(0);
             }
 
-            if (unfocusedScale != -1) {
+            if (unfocusedScale < 0)
+                unfocusedScale = this._unfocusedFpsScale;
+
+            if (unfocusedScale >= 0) {
+                this._unfocusedFpsScale = unfocusedScale;
+
                 double newFps       = fps   * unfocusedScale;
                 double milliseconds = 1000d / newFps;
 
@@ -242,7 +249,7 @@ namespace Furball.Engine {
 
             DrawableManager.Update(gameTime);
 
-            if (ConVars.DebugOverlay.Value == 1)
+            if (ConVars.DebugOverlay)
                 DebugOverlayDrawableManager.Update(gameTime);
 
             if (RuntimeInfo.LoggerEnabled())
@@ -259,6 +266,7 @@ namespace Furball.Engine {
         }
 
         private Stopwatch _drawWatch = new ();
+        private double    _unfocusedFpsScale      = 1;
         public double    LastDrawTime { get; private set; } = 0.0;
 
         protected override void Draw(double gameTime) {
@@ -284,7 +292,7 @@ namespace Furball.Engine {
                 this.LastDrawTime = this._drawWatch.Elapsed.TotalMilliseconds;
             }
 
-            if (ConVars.DebugOverlay.Value == 1)
+            if (ConVars.DebugOverlay)
                 DebugOverlayDrawableManager.Draw(gameTime, DrawableBatch);
         }
 
