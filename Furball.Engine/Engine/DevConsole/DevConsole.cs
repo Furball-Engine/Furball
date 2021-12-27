@@ -10,6 +10,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Furball.Engine.Engine.Graphics;
 using Furball.Engine.Engine.Helpers;
+using Furball.Engine.Engine.Platform;
 using Furball.Volpe.Evaluation;
 using Furball.Volpe.Exceptions;
 using Furball.Volpe.LexicalAnalysis;
@@ -25,12 +26,16 @@ namespace Furball.Engine.Engine.DevConsole {
         public static string ScriptPath = "scripts";
         public static string LogPath = "logs";
 
-        private static readonly Volpe.Evaluation.Environment VolpeEnvironment 
-            = new Volpe.Evaluation.Environment(DefaultBuiltins.Core.Concat(Builtins.Collection).ToArray());
+        internal static readonly Volpe.Evaluation.Environment VolpeEnvironment
+            = new Volpe.Evaluation.Environment(DefaultBuiltins.Core.Concat(DefaultBuiltins.Math).Concat(Builtins.Collection).ToArray());
         
         public static void Initialize() {
             if (!Directory.Exists(ScriptPath)) Directory.CreateDirectory(ScriptPath);
             if (!Directory.Exists(LogPath)) Directory.CreateDirectory(LogPath);
+
+            VolpeEnvironment.SetVariableValue("cl_debug_overlay", new Value.Boolean(RuntimeInfo.IsDebug()));
+            VolpeEnvironment.SetVariableValue("cl_write_log",     new Value.Boolean(true));
+            VolpeEnvironment.SetVariableValue("cl_tooltipping",   new Value.Boolean(true));
 
             AddMessage("DevConsole is initialized!");
         }
@@ -38,16 +43,13 @@ namespace Furball.Engine.Engine.DevConsole {
         public static async Task RunFile(string filename) {     
             byte[] data = ContentManager.LoadRawAsset(Path.Combine(ScriptPath, filename), ContentSource.External, true);
 
-            string file = Encoding.Default.GetString(data);
+            string file = Encoding.Default.GetString(data).Replace("\r", "");
 
-            AddMessage($"Running file { Path.GetFileName(filename) }");
+            AddMessage($"Running file { Path.GetFileName(filename) }", ExecutionResult.Warning);
 
             await Task.Run(
                 () => {
-                    string[] split = file.Replace("\r", "").Split("\n");
-
-                    foreach (string line in split)
-                        Run(line);
+                    Run(file);
                 }
             );
         }
@@ -61,7 +63,11 @@ namespace Furball.Engine.Engine.DevConsole {
 
             try {
                 while (parser.TryParseNextExpression(out Expression expression)) {
-                    new EvaluatorContext(expression!, VolpeEnvironment).Evaluate();
+                    Value value = new EvaluatorContext(expression!, VolpeEnvironment).Evaluate();
+
+                    if (value != Value.DefaultVoid) {
+                        AddMessage(value.Representation, ExecutionResult.Success);
+                    }
                 }
             }
             catch (VolpeException exception) {

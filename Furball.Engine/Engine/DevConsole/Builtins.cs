@@ -186,7 +186,13 @@ namespace Furball.Engine.Engine.DevConsole {
                      }
 
                      return new Value.Array(arrayList);
-                 })
+                 }),
+
+            new ("cl_clear", paramCount: 0,
+                 (_, _) => {
+                     DevConsole.ConsoleLog.Clear();
+                     return Value.DefaultVoid;
+                 }),
         };
     }
 }
