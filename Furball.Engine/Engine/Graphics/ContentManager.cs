@@ -28,44 +28,6 @@ namespace Furball.Engine.Engine.Graphics {
 
             Logger.Log("Content cache cleared!", LoggerLevelCacheEvent.Instance);
         }
-        /// <summary>
-        /// Looks for `filename` and returns it if it finds it at `source`
-        /// </summary>
-        /// <param name="filename">Asset Name</param>
-        /// <param name="source">Where to look for</param>
-        /// <typeparam name="pContentType">What type is the Asset</typeparam>
-        /// <returns>Asset Requested</returns>
-        /// <exception cref="Exception">other stuff</exception>
-        /// <exception cref="FileNotFoundException">Asset not Found</exception>
-        public static pContentType LoadMonogameAsset<pContentType>(string filename, ContentSource source = ContentSource.Game) {
-            Microsoft.Xna.Framework.Content.ContentManager tempManager = new(FurballGame.Instance.Content.ServiceProvider);
-
-            string executablePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? throw new Exception("shits fucked man");
-
-            if ((int)source >= (int)ContentSource.User) {
-                tempManager.RootDirectory = Path.Combine(executablePath, "/UserContent/");
-
-                try { return tempManager.Load<pContentType>(filename); }
-                catch {/* */
-                }
-            }
-            if ((int)source >= (int)ContentSource.Game) {
-                tempManager.RootDirectory = FurballGame.Instance.Content.RootDirectory;
-
-                try { return tempManager.Load<pContentType>(filename); }
-                catch {/* */
-                }
-            }
-            if ((int)source >= (int)ContentSource.Engine) {
-                tempManager.RootDirectory = Path.Combine(executablePath, "/EngineContent/");
-
-                try { return tempManager.Load<pContentType>(filename); }
-                catch {/* */
-                }
-            }
-
-            throw new FileNotFoundException();
-        }
 
         public static FontSystem LoadSystemFont(string familyName, FontSystemSettings settings = null) {
             SystemFonts.TryGet(familyName, out FontFamily font);
@@ -98,7 +60,7 @@ namespace Furball.Engine.Engine.Graphics {
             string path;
             if(source != ContentSource.External) {
                 if ((int)source >= (int)ContentSource.User) {
-                    path = Path.Combine(executablePath, "/UserContent/", filename);
+                    path = Path.Combine(executablePath, "UserContent/", filename);
                     if (File.Exists(path))
                         data = File.ReadAllBytes(path);
                 }
@@ -108,7 +70,7 @@ namespace Furball.Engine.Engine.Graphics {
                         data = File.ReadAllBytes(path);
                 }
                 if ((int)source >= (int)ContentSource.Engine && data.Length == 0) {
-                    path = Path.Combine(executablePath, "/EngineContent/", filename);
+                    path = Path.Combine(executablePath, "EngineContent/", filename);
                     if (File.Exists(path))
                         data = File.ReadAllBytes(path);
                 }
