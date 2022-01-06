@@ -110,9 +110,14 @@ namespace Furball.Engine.Engine.Input {
 
                             tooltipSet = true;
 
-                            FurballGame.TooltipDrawable.OriginType =
-                                FurballGame.TooltipDrawable.Position.X + FurballGame.TooltipDrawable.Size.X > FurballGame.DEFAULT_WINDOW_WIDTH ? OriginType.TopRight
-                                    : OriginType.TopLeft;
+                            if (FurballGame.TooltipDrawable.Position.Y + FurballGame.TooltipDrawable.Size.Y < FurballGame.DEFAULT_WINDOW_HEIGHT)
+                                FurballGame.TooltipDrawable.OriginType =
+                                    FurballGame.TooltipDrawable.Position.X + FurballGame.TooltipDrawable.Size.X > FurballGame.DEFAULT_WINDOW_WIDTH
+                                        ? OriginType.TopRight : OriginType.TopLeft;
+                            else
+                                FurballGame.TooltipDrawable.OriginType =
+                                    FurballGame.TooltipDrawable.Position.X + FurballGame.TooltipDrawable.Size.X > FurballGame.DEFAULT_WINDOW_WIDTH
+                                        ? OriginType.BottomRight : OriginType.BottomLeft;
 
                         } else {
                             FurballGame.TooltipDrawable.Visible = false;
