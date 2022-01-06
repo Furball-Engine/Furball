@@ -16,14 +16,14 @@ namespace Furball.Engine.Engine.Localization {
         public static Language DefaultLanguage = new EnglishLanguage();
         public static Language CurrentLanguage = DefaultLanguage;
 
-        public static string GetLocalizedString(string key, ISO639_2Code code = ISO639_2Code.und) {
+        public static string GetLocalizedString(object key, ISO639_2Code code = ISO639_2Code.und) {
             if (code == ISO639_2Code.und)
                 code = CurrentLanguage.Iso6392Code();
 
-            if (TRANSLATIONS.TryGetValue((key, code), out string localization))
+            if (TRANSLATIONS.TryGetValue((key.ToString(), code), out string localization))
                 return localization;
 
-            if (TRANSLATIONS.TryGetValue((key, DefaultLanguage.Iso6392Code()), out localization))
+            if (TRANSLATIONS.TryGetValue((key.ToString(), DefaultLanguage.Iso6392Code()), out localization))
                 return localization;
 
             throw new NoTranslationException();
