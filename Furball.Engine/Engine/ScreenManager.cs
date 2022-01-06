@@ -45,21 +45,15 @@ namespace Furball.Engine.Engine {
 
                     CurrentFadeState = FadeState.FadeIn;
 
-                    Thread fadeWaitThread = new(() => {
-                        Thread.Sleep(fadeInTime);
-
+                    FurballGame.GameTimeScheduler.ScheduleMethod(delegate {
                         FurballGame.Instance.ChangeScreen(newScreen);
-
+                        
                         int fadeOutTime = Transition.TransitionEnd();
-
-                        Thread.Sleep(fadeOutTime);
-
-                        CurrentFadeState = FadeState.FadeOut;
-                    }) {
-                        Priority = ThreadPriority.BelowNormal
-                    };
-
-                    fadeWaitThread.Start();
+                        
+                        FurballGame.GameTimeScheduler.ScheduleMethod(delegate {
+                            CurrentFadeState = FadeState.FadeOut;
+                        }, FurballGame.Time + fadeOutTime);
+                    }, FurballGame.Time + fadeInTime);
                 }
             } else {
                 FurballGame.Instance.ChangeScreen(newScreen);
