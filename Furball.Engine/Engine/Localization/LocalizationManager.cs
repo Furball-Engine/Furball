@@ -129,7 +129,7 @@ namespace Furball.Engine.Engine.Localization {
                     } else {
                         (string translationKey, ISO639_2Code languageCode) key = (splitLine[0], code);
 
-                        TRANSLATIONS.Add(key, splitLine[1].Trim());
+                        TRANSLATIONS.Add(key, splitLine[1].Trim().Replace("\\n", "\n"));
                     }
                 }
 
