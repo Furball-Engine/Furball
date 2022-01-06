@@ -63,9 +63,9 @@ namespace Furball.Engine.Engine.Localization {
 
             return null;
         }
-        
-        public static void AddDefaultTranslation(string key, string contents) {
-            TRANSLATIONS.Add((key, DefaultLanguage.Iso6392Code()), contents);
+
+        public static void AddDefaultTranslation(object key, string contents) {
+            TRANSLATIONS.Add((key.ToString(), DefaultLanguage.Iso6392Code()), contents);
         }
         
         public static void ReadTranslations() {
