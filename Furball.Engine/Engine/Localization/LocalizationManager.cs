@@ -29,6 +29,20 @@ namespace Furball.Engine.Engine.Localization {
             throw new NoTranslationException();
         }
 
+        public static double GetLocalizationCompletion(ISO639_2Code code) {
+            int total    = 0;
+            int complete = 0;
+
+            foreach (((string _, ISO639_2Code iso6392Code), string _) in TRANSLATIONS) {
+                if (iso6392Code == DefaultLanguage.Iso6392Code())
+                    total++;
+                if (iso6392Code == code)
+                    complete++;
+            }
+
+            return (double)complete / total;
+        }
+
         public static List<ISO639_2Code> GetSupportedLanguages() {
             List<ISO639_2Code> languages = new();
 
