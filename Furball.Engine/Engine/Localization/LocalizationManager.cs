@@ -119,6 +119,7 @@ namespace Furball.Engine.Engine.Localization {
                         try {
                             //Parse the language code
                             Enum.TryParse(splitLine[1], true, out code);
+                            Logger.Log($"Reading language file for {code}", LoggerLevelLocalizationInfo.Instance);
                         } catch {
                             break;
                         }
