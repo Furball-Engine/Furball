@@ -16,6 +16,7 @@ namespace Furball.Engine.Engine.Localization {
         public static Language DefaultLanguage = new EnglishLanguage();
         public static Language CurrentLanguage = DefaultLanguage;
 
+        [Pure]
         public static string GetLocalizedString(object key, Language language = null) {
             if (language == null)
                 language = DefaultLanguage;
@@ -23,7 +24,7 @@ namespace Furball.Engine.Engine.Localization {
             return GetLocalizedString(key, language.Iso6392Code());
         }
 
-        
+        [Pure]
         public static string GetLocalizedString(object key, ISO639_2Code code = ISO639_2Code.und) {
             if (code == ISO639_2Code.und)
                 code = CurrentLanguage.Iso6392Code();
@@ -51,6 +52,7 @@ namespace Furball.Engine.Engine.Localization {
             return (double)complete / total;
         }
 
+        [Pure]
         public static List<ISO639_2Code> GetSupportedLanguages() {
             List<ISO639_2Code> languages = new();
 
@@ -63,6 +65,7 @@ namespace Furball.Engine.Engine.Localization {
             return languages;
         }
 
+        [Pure]
         [CanBeNull]
         public static Language GetLanguageFromCode(ISO639_2Code code) {
             if (Languages.TryGetValue(code, out Type type)) {
