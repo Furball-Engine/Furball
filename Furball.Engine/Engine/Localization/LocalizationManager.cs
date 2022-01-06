@@ -25,6 +25,9 @@ namespace Furball.Engine.Engine.Localization {
         }
 
         [Pure]
+        public static string GetLocalizedString(object key) => GetLocalizedString(key, ISO639_2Code.und);
+
+        [Pure]
         public static string GetLocalizedString(object key, ISO639_2Code code = ISO639_2Code.und) {
             if (code == ISO639_2Code.und)
                 code = CurrentLanguage.Iso6392Code();
