@@ -170,7 +170,10 @@ namespace Furball.Engine {
             EtoHelper.Initialize();
         }
         protected override void OnClosing() {
-            DevConsole.WriteLog();
+            try {
+                DevConsole.WriteLog();
+            }
+            catch { /* */ }
 
             GameTimeScheduler.Dispose(Time);
             EtoHelper.Dispose();

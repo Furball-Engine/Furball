@@ -27,14 +27,15 @@ namespace Furball.Engine.Engine.DevConsole {
         public static string LogPath = "logs";
 
         internal static readonly Volpe.Evaluation.Environment VolpeEnvironment
-            = new Volpe.Evaluation.Environment(DefaultBuiltins.Core.Concat(DefaultBuiltins.Math).Concat(Builtins.Collection).ToArray());
-        
+            //= new Volpe.Evaluation.Environment(DefaultBuiltins.Core.Concat(DefaultBuiltins.Math).Concat(Builtins.Collection).ToArray());
+            = new Volpe.Evaluation.Environment(DefaultBuiltins.GetAll());
+
         public static void Initialize() {
             if (!Directory.Exists(ScriptPath)) Directory.CreateDirectory(ScriptPath);
             if (!Directory.Exists(LogPath)) Directory.CreateDirectory(LogPath);
 
             VolpeEnvironment.SetVariableValue("cl_debug_overlay", new Value.Boolean(RuntimeInfo.IsDebug()));
-            VolpeEnvironment.SetVariableValue("cl_write_log",     new Value.Boolean(true));
+            VolpeEnvironment.SetVariableValue("cl_console_log",   new Value.Boolean(true));
             VolpeEnvironment.SetVariableValue("cl_tooltipping",   new Value.Boolean(true));
 
             AddMessage("DevConsole is initialized!");
