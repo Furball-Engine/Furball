@@ -28,7 +28,7 @@ namespace Furball.Engine.Engine.DevConsole {
 
         internal static readonly Volpe.Evaluation.Environment VolpeEnvironment
             //= new Volpe.Evaluation.Environment(DefaultBuiltins.Core.Concat(DefaultBuiltins.Math).Concat(Builtins.Collection).ToArray());
-            = new Volpe.Evaluation.Environment(DefaultBuiltins.GetAll());
+            = new Volpe.Evaluation.Environment(DefaultBuiltins.GetAll().Concat(Builtins.Collection).ToArray());
 
         public static void Initialize() {
             if (!Directory.Exists(ScriptPath)) Directory.CreateDirectory(ScriptPath);
