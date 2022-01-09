@@ -32,7 +32,7 @@ Assuming you meet all the requirements, the build process should just be a simpl
 
 ## CLI
 
-`git clone --recurse submodules https://github.com/Furball-Engine/Furball/`
+`git clone --recurse submodules https://github.com/Furball-Engine/Furball/`<br>
 `dotnet build`
 
 ## License
