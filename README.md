@@ -2,7 +2,7 @@
 
 A Game Engine designed in C# using a custom made Renderer called Furball.Vixie, its mostly designed to provide an easy entity system for quickly getting a new game up and running quickly, providing all the tools to prototype fast, then expand to more complicated ideas.
 
-## Objective
+## Objectives
 
 * Supports shaders coded in GLSL. (OpenGL Shading Language)
 * Ease of adding new types of "drawables". (See `CompositeDrawable`, etc.)
