@@ -166,6 +166,19 @@ namespace Furball.Engine {
             base.Initialize();
 
             EtoHelper.Initialize();
+            
+            GameTimeScheduler.ScheduleMethod(delegate {
+                WindowManager.PositionMultiplier.Y = -0.5f;
+            }, 10000);
+            GameTimeScheduler.ScheduleMethod(delegate {
+                WindowManager.PositionMultiplier.X = -0.5f;
+            }, 15000);
+            GameTimeScheduler.ScheduleMethod(delegate {
+                WindowManager.PositionMultiplier.X = 1f;
+            }, 20000);
+            GameTimeScheduler.ScheduleMethod(delegate {
+                WindowManager.PositionMultiplier.Y = 1f;
+            }, 25000);
         }
         protected override void OnClosing() {
             try {
