@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes.BezierPathTween;
+using Furball.Engine.Engine.Input;
 using Furball.Engine.Engine.Timing;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -189,13 +190,13 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
 
             this.IsHovered = value;
         }
-        public void Click(bool value, Point point) {
+        public void Click(bool value, Point point, MouseButton button) {
             if (value == this.IsClicked) return;
 
             if (value)
-                this.OnClick?.Invoke(this, point);
+                this.OnClick?.Invoke(this, (point, button));
             else
-                this.OnClickUp?.Invoke(this, point);
+                this.OnClickUp?.Invoke(this, (point, button));
 
             this.IsClicked = value;
         }
@@ -225,11 +226,11 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// <summary>
         ///     Called when the drawable is clicked
         /// </summary>
-        public event EventHandler<Point> OnClick;
+        public event EventHandler<(Point pos, MouseButton button)> OnClick;
         /// <summary>
         ///     Called when the drawable is no longer being clicked
         /// </summary>
-        public event EventHandler<Point> OnClickUp;
+        public event EventHandler<(Point pos, MouseButton button)> OnClickUp;
         /// <summary>
         ///     Gets fired when the Drawable is first getting started to Drag
         /// </summary>
@@ -270,6 +271,14 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         }
 
         public virtual void Dispose(bool disposing) {
+            this.OnClick     = null;
+            this.OnClickUp   = null;
+            this.OnDrag      = null;
+            this.OnHover     = null;
+            this.OnHoverLost = null;
+            this.OnDragBegin = null;
+            this.OnDragEnd   = null;
+
             this.Tweens.Clear();
         }
 

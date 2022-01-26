@@ -1,5 +1,6 @@
 using FontStashSharp;
 using Furball.Engine.Engine.Helpers;
+using Furball.Engine.Engine.Input;
 using Microsoft.Xna.Framework;
 
 namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
@@ -34,7 +35,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
             this._colorDisplay.MoveTo(new(this._colorText.Size.X + 10, 0));
         }
 
-        private void OnColorDisplayClick(object sender, Point e) {
+        private void OnColorDisplayClick(object? sender, (Point pos, MouseButton button) valueTuple) {
             EtoHelper.OpenColorPicker(
             (o, color) => {
                 this.Color.Value = color;

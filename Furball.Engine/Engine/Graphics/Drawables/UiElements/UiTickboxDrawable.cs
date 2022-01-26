@@ -1,5 +1,6 @@
 using Furball.Engine.Engine.Graphics.Drawables.Primitives;
 using Furball.Engine.Engine.Helpers;
+using Furball.Engine.Engine.Input;
 using Microsoft.Xna.Framework;
 
 namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
@@ -41,7 +42,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
                 this.OnClick += this.OnDrawableClick;
         }
 
-        private void OnDrawableClick(object sender, Point e) {
+        private void OnDrawableClick(object? sender, (Point pos, MouseButton button) valueTuple) {
             this.Selected.Value = !this.Selected;
         }
 
