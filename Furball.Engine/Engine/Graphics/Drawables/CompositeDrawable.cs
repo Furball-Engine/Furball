@@ -3,7 +3,6 @@ using System.Numerics;
 using System.Collections.ObjectModel;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
 
-
 namespace Furball.Engine.Engine.Graphics.Drawables {
     public class CompositeDrawable : ManagedDrawable {
         /// <summary>
@@ -12,6 +11,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         protected List<ManagedDrawable> _drawables = new();
         public ReadOnlyCollection<ManagedDrawable> Drawables => this._drawables.AsReadOnly();
 
+        private bool _sortDrawables;
+        
         public override Vector2 Size {
             get {
                 Vector2 topLeft     = new(0, 0);
@@ -63,8 +64,20 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         }
 
         public override void Draw(double time, DrawableBatch batch, DrawableManagerArgs args) {
-            foreach (ManagedDrawable drawable in this.Drawables) {
-                if (!drawable.Visible) continue;
+            if (this._sortDrawables) {
+                this._drawables.Sort((x, y) => x.Depth.CompareTo(y.Depth));
+
+                this._sortDrawables = false;
+            }
+            
+            for (int i = 0; i < this._drawables.Count; i++) {
+                ManagedDrawable drawable = this._drawables[i];
+
+                // ReSharper disable once CompareOfFloatsByEqualityOperator
+                if (drawable.Depth != drawable.DrawablesLastKnownDepth)
+                    this._sortDrawables = true;
+
+                drawable.DrawablesLastKnownDepth = drawable.Depth;
                 
                 drawable.LastCalculatedOrigin = drawable.CalculateOrigin();
                 drawable.RealPosition = args.Position + (drawable.Position - drawable.LastCalculatedOrigin) * args.Scale;
