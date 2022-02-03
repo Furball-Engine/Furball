@@ -45,7 +45,7 @@ namespace Furball.Engine.Engine.Input {
         public static int RecurseCompositeDrawables(ref List<ManagedDrawable> drawablesToAddTo, CompositeDrawable compositeDrawableToIterate, int indexToAddAt) {
             int added = 0;
 
-            for (int i = 0; i < compositeDrawableToIterate.Drawables.Count; i++) {
+            for (int i = compositeDrawableToIterate.Drawables.Count - 1; i >= 0; i--) {
                 ManagedDrawable drawable = compositeDrawableToIterate.Drawables[i];
 
                 if (drawable is CompositeDrawable compositeDrawable) {
