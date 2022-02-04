@@ -7,52 +7,93 @@ using Furball.Vixie;
 
 namespace Furball.Engine.Engine.ECS {
     public class Entity : GameComponent {
+        /// <summary>
+        /// Transform of the Entity
+        /// </summary>
         public EntityTransform Transform;
 
+        /// <summary>
+        /// All the Entities Systems
+        /// </summary>
         private List<EntitySystem>                     _systems;
-        private ConcurrentDictionary<Type, IComponent> _components;
+        /// <summary>
+        /// All the Entities Components
+        /// </summary>
+        private ConcurrentDictionary<Type, IEntityComponent> _components;
 
+        /// <summary>
+        /// Creates a Empty Entity
+        /// </summary>
         public Entity() {
             this.DefaultInitialize();
         }
-
-        public Entity(List<EntitySystem> systems) {
-            this._systems = systems;
-
+        /// <summary>
+        /// Creates a Entity with EntitySystems and potentially EntityComponents
+        /// </summary>
+        /// <param name="systems"></param>
+        /// <param name="components"></param>
+        public Entity(IList<EntitySystem> systems = null, IList<IEntityComponent> components = null) {
             this.DefaultInitialize();
+
+            this._systems = systems?.ToList();
+
+            if (components == null)
+                return;
+
+            for (int i = 0; i != components.Count; i++) {
+                IEntityComponent current = components[i];
+
+                if (this._components.ContainsKey(current.GetType()))
+                    throw new Exception("Component of this Type already added.");
+
+                this._components.TryAdd(current.GetType(), current);
+            }
         }
 
-        public Entity(params EntitySystem[] components) {
-            this._systems = components.ToList();
-
-            this.DefaultInitialize();
-        }
-
-        public pComponentType GetComponent<pComponentType>() where pComponentType : class, IComponent, new()  {
-            if (this._components.TryGetValue(typeof(pComponentType), out IComponent component)) {
+        /// <summary>
+        /// Gets a Component
+        /// </summary>
+        /// <typeparam name="pComponentType">Type of Component to Get</typeparam>
+        /// <returns>Assuming it exists, the Component you're looking for</returns>
+        public pComponentType GetComponent<pComponentType>() where pComponentType : class, IEntityComponent, new()  {
+            if (this._components.TryGetValue(typeof(pComponentType), out IEntityComponent component)) {
                 return (pComponentType) component;
             }
 
             return null;
         }
 
-        public void AddComponent<pComponentType>(pComponentType component) where pComponentType : class, IComponent, new() {
+        /// <summary>
+        /// Adds a Component
+        /// </summary>
+        /// <param name="component">Instance of Component to Add</param>
+        /// <typeparam name="pComponentType">Type of Component</typeparam>
+        /// <exception cref="Exception">Throws if the Type of Component already exists</exception>
+        public void AddComponent<pComponentType>(pComponentType component) where pComponentType : class, IEntityComponent, new() {
             if (this._components.ContainsKey(typeof(pComponentType)))
                 throw new Exception("Component of this Type already added.");
 
             this._components.TryAdd(typeof(pComponentType), component);
         }
 
-        public void AddComponent<pComponentType>() where pComponentType : class, IComponent, new() {
+        /// <summary>
+        /// Adds and Instanciates a new Component of the specified type
+        /// </summary>
+        /// <typeparam name="pComponentType">Type of Component</typeparam>
+        /// <exception cref="Exception">Throws if the Type of Component already exists</exception>
+        public void AddComponent<pComponentType>() where pComponentType : class, IEntityComponent, new() {
             if (this._components.ContainsKey(typeof(pComponentType)))
                 throw new Exception("Component of this Type already added.");
 
             this._components.TryAdd(typeof(pComponentType), new pComponentType());
         }
 
+        /// <summary>
+        /// Default Initialization, Initializes Systems and Components and adds the Transform Component to the entity
+        /// </summary>
         private void DefaultInitialize() {
             this._systems    = new List<EntitySystem>();
-            this._components = new ConcurrentDictionary<Type, IComponent>();
+            this._components = new ConcurrentDictionary<Type, IEntityComponent>();
 
             this.AddComponent(this.Transform);
         }
