@@ -74,4 +74,8 @@
     <ItemGroup>
         <None Update="EngineContent/*.ttf" CopyToOutputDirectory="Always" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Engine\ECS\Components" />
+    </ItemGroup>
 </Project>

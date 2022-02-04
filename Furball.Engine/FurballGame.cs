@@ -8,6 +8,7 @@ using FontStashSharp;
 using Furball.Engine.Engine;
 using Furball.Engine.Engine.Debug.DebugCounter;
 using Furball.Engine.Engine.DevConsole;
+using Furball.Engine.Engine.ECS;
 using Furball.Engine.Engine.Graphics;
 using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
@@ -301,5 +302,13 @@ namespace Furball.Engine {
         public static int Time => (int)_stopwatch.ElapsedMilliseconds;
 
         #endregion
+
+        #region ECS Stuff
+
+        public void RegisterEntity(Entity entity) => this.Components.Add(entity);
+        public void UnregisterEntity(Entity entity) => this.Components.Remove(entity);
+
+        #endregion
+
     }
 }
