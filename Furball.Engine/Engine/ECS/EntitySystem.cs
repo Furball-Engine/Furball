@@ -1,7 +1,7 @@
 using Furball.Vixie;
 
 namespace Furball.Engine.Engine.ECS {
-    public class EntityComponent {
+    public class EntitySystem {
         /// <summary>
         /// Processing Order, higher order means drawn and updated first
         /// </summary>
@@ -9,7 +9,7 @@ namespace Furball.Engine.Engine.ECS {
         /// <summary>
         /// Gets fired when the GameComponent first gets added to the Component List
         /// </summary>
-        public virtual void Initialize() {}
+        public virtual void Initialize(Entity entity) {}
         /// <summary>
         /// Gets fired on Every Update
         /// </summary>

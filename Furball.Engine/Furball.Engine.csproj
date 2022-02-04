@@ -76,6 +76,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Engine\ECS\Components" />
+      <Folder Include="Engine\ECS\Systems" />
     </ItemGroup>
 </Project>
