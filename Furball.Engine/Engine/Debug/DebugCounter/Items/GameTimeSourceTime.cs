@@ -5,6 +5,6 @@ namespace Furball.Engine.Engine.Debug.DebugCounter.Items {
     /// Displays the Current Game Time as provided by FurballGame.GameTimeSource
     /// </summary>
     public class GameTimeSourceTime : DebugCounterItem {
-        public override string GetAsString(double time) => $"gt: {FurballGame.GameTimeSource.GetCurrentTime()}";
+        public override string GetAsString(double time) => $"gt: {FurballGame.GameTimeSource.GetCurrentTime():N0}";
     }
 }
