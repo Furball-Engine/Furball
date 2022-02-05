@@ -8,6 +8,7 @@ using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes.BezierPathTween
 using Furball.Engine.Engine.Helpers;
 using Furball.Engine.Engine.Timing;
 using Furball.Vixie.Graphics;
+using Silk.NET.Input;
 using Color=Furball.Vixie.Graphics.Color;
 
 namespace Furball.Engine.Engine.Graphics.Drawables {
@@ -192,13 +193,13 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
 
             this.IsHovered = value;
         }
-        public void Click(bool value, Point point) {
+        public void Click(bool value, Point point, MouseButton button) {
             if (value == this.IsClicked) return;
 
             if (value)
-                this.OnClick?.Invoke(this, point);
+                this.OnClick?.Invoke(this, (button, point));
             else
-                this.OnClickUp?.Invoke(this, point);
+                this.OnClickUp?.Invoke(this, (button, point));
 
             this.IsClicked = value;
         }
@@ -228,11 +229,11 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// <summary>
         ///     Called when the drawable is clicked
         /// </summary>
-        public event EventHandler<Point> OnClick;
+        public event EventHandler<(MouseButton button, Point pos)> OnClick;
         /// <summary>
         ///     Called when the drawable is no longer being clicked
         /// </summary>
-        public event EventHandler<Point> OnClickUp;
+        public event EventHandler<(MouseButton button, Point pos)> OnClickUp;
         /// <summary>
         ///     Gets fired when the Drawable is first getting started to Drag
         /// </summary>
