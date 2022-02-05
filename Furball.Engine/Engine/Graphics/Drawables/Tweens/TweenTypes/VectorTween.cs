@@ -25,7 +25,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes {
         /// <param name="endTime">End Time</param>
         /// <param name="easing">Easing</param>
         /// <exception cref="InvalidOperationException">You cannot use a Vector Tween to Tween Color, Fade or Rotation etc. </exception>
-        public VectorTween(TweenType type, Vector2 source, Vector2 dest, int startTime, int endTime, Easing easing = Easing.None) {
+        public VectorTween(TweenType type, Vector2 source, Vector2 dest, double startTime, double endTime, Easing easing = Easing.None) {
             if (type != TweenType.Movement && type != TweenType.Scale)
                 throw new InvalidOperationException("Vector Tweens on Drawables can only be used for Movement and Scaling tweens!");
 

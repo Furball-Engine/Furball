@@ -299,7 +299,7 @@ namespace Furball.Engine {
         #region Timing
 
         private static Stopwatch _stopwatch = new();
-        public static int Time => (int)_stopwatch.ElapsedMilliseconds;
+        public static double Time => _stopwatch.Elapsed.TotalMilliseconds;
 
         #endregion
 

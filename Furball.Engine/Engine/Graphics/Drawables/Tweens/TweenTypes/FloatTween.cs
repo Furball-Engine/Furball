@@ -24,7 +24,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes {
         /// <param name="endTime">End Time</param>
         /// <param name="easing">Easing</param>
         /// <exception cref="InvalidOperationException">You cannot use a Float Tween to Tween Movement, Color, etc. </exception>
-        public FloatTween(TweenType type, float source, float dest, int startTime, int endTime, Easing easing = Easing.None) {
+        public FloatTween(TweenType type, float source, float dest, double startTime, double endTime, Easing easing = Easing.None) {
             if (type != TweenType.Fade && type != TweenType.Rotation)
                 throw new InvalidOperationException("Color Tweens on Drawables can only be used for Color Tweens!");
 

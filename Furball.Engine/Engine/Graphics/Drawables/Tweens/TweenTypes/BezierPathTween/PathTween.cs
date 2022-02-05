@@ -4,7 +4,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes.BezierPathT
     public class PathTween : Tween {
         private readonly Path _path;
 
-        public PathTween(Path path, int startTime, int endTime, Easing easing = Easing.None) {
+        public PathTween(Path path, double startTime, double endTime, Easing easing = Easing.None) {
             this.TweenType = TweenType.Path;
 
             this._path     = path;
