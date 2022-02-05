@@ -25,8 +25,8 @@ namespace Furball.Engine.Engine.Transitions {
             this.Manager.Add(this._fadeScreen);
         }
 
-        public override int TransitionBegin() {
-            int currentTime = this._fadeScreen.DrawableTime;
+        public override double TransitionBegin() {
+            double currentTime = this._fadeScreen.DrawableTime;
 
             ColorTween fadeInTween = new ColorTween(TweenType.Color,  Color.Transparent, Color.Black,       currentTime,       currentTime + 500);
             ColorTween fadeOutTween = new ColorTween(TweenType.Color, Color.Black,       Color.Transparent, currentTime + 600, currentTime + 1100);
@@ -34,9 +34,9 @@ namespace Furball.Engine.Engine.Transitions {
             this._fadeScreen.Tweens.Add(fadeInTween);
             this._fadeScreen.Tweens.Add(fadeOutTween);
 
-            return 500;
+            return 500.0;
         }
 
-        public override int TransitionEnd() => 500;
+        public override double TransitionEnd() => 500.0;
     }
 }

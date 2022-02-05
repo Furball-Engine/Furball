@@ -14,19 +14,19 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Tweens {
         /// <summary>
         /// When does it Start?
         /// </summary>
-        public int StartTime;
+        public double StartTime;
         /// <summary>
         /// When does it End?
         /// </summary>
-        public int EndTime;
+        public double EndTime;
 
-        public int LastKnownStartTime = 0;
-        public int LastKnownEndTime   = 0;
+        public double LastKnownStartTime = 0;
+        public double LastKnownEndTime   = 0;
 
         /// <summary>
         /// How long is the Tween?
         /// </summary>
-        public int Duration => this.EndTime - this.StartTime;
+        public double Duration => this.EndTime - this.StartTime;
         /// <summary>
         /// What easing to use?
         /// </summary>
@@ -48,7 +48,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Tweens {
         /// <summary>
         /// Time right now
         /// </summary>
-        protected int TimeNow;
+        protected double TimeNow;
 
         /// <summary>
         /// Wrapper for <see cref="CalculateCurrent(double, double)"/> to not have to cast manually in code
@@ -81,7 +81,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Tweens {
         /// Updates the Tween by giving it the Up to Date Time
         /// </summary>
         /// <param name="time">Current Time</param>
-        public void Update(int time) {
+        public void Update(double time) {
             this.TimeNow = time;
 
             this.Initiated  = this.TimeNow >= this.StartTime;

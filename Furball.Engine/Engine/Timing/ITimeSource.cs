@@ -6,6 +6,6 @@ namespace Furball.Engine.Engine.Timing {
     /// Like in pEngine where we only have AudioController.Time and pEngineGame.Time
     /// </summary>
     public interface ITimeSource {
-        int GetCurrentTime();
+        double GetCurrentTime();
     }
 }
