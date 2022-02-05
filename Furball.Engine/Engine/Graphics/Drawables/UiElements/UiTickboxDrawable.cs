@@ -2,6 +2,7 @@ using System.Drawing;
 using System.Numerics;
 using Furball.Engine.Engine.Graphics.Drawables.Primitives;
 using Furball.Engine.Engine.Helpers;
+using Silk.NET.Input;
 
 namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
     public class UiTickboxDrawable : CompositeDrawable {
@@ -42,7 +43,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
                 this.OnClick += this.OnDrawableClick;
         }
 
-        private void OnDrawableClick(object sender, Point e) {
+        private void OnDrawableClick(object? sender, (MouseButton button, Point pos) valueTuple) {
             this.Selected.Value = !this.Selected;
         }
 

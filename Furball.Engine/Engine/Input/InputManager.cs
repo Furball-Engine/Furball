@@ -203,7 +203,7 @@ namespace Furball.Engine.Engine.Input {
                 ManagedDrawable drawable = drawables[i];
 
                 if (drawable.IsClicked)
-                    drawable.Click(false, e.args.position.ToPoint());
+                    drawable.Click(false, e.args.position.ToPoint(), e.args.mouseButton);
                 if (drawable.IsDragging)
                     drawable.DragState(false, e.args.position.ToPoint());
             }
@@ -233,7 +233,7 @@ namespace Furball.Engine.Engine.Input {
                 ManagedDrawable drawable = drawables[i];
 
                 if (drawable.RealContains(e.args.position.ToPoint())) {
-                        drawable.Click(true, e.args.position.ToPoint());
+                        drawable.Click(true, e.args.position.ToPoint(), e.args.mouseButton);
 
                     if (drawable.CoverClicks) break;
                 }
