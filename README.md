@@ -2,7 +2,7 @@
 
 A Game Engine designed in C# using a custom made Renderer called Furball.Vixie, its mostly designed to provide an easy entity system for quickly getting a new game up and running quickly, providing all the tools to prototype fast, then expand to more complicated ideas.
 
-On the prime ECS scale, we fall between E and EC (depending on how you classify our `DrawableManager` class) ![a](https://i.beyleyisnot.moe/W1nRXJQ.png)
+On the prime ECS scale, we fall between E and EC (depending on how you classify our `DrawableManager` class) ![prime-scale](https://i.beyleyisnot.moe/W1nRXJQ.png)
 
 ## Objectives
 
@@ -20,10 +20,12 @@ On the prime ECS scale, we fall between E and EC (depending on how you classify 
 
 ## Linux
 
-Due to ManagedBass not supporting loading the Bass libraries from anywhere but `/usr/lib`, the user is required to manually place libraries found from [here](https://www.un4seen.com/) into that or similar folders, specifically for Furball you will likely need Bass and Bass.FX
+Due to ManagedBass only checking system locations for libraries, the user is required to manually place the Bass and BassFx libraries found from [here](https://www.un4seen.com/) into your system library folder (usually `/usr/lib/`)
 
 ### Arch Linux
 On the AUR, 2 packages are available to automate the install process (`libbass` and `libbass_fx`)
+#### Side note:
+These package do not get updated often.
 
 # Building
 
@@ -35,11 +37,12 @@ Assuming you meet all the requirements, the build process should just be a simpl
 ## CLI
 
 `git clone --recurse submodules https://github.com/Furball-Engine/Furball/`<br>
+`dotnet restore`<br>
 `dotnet build`
 
 ## License
 
-This Game Engine is licensed under the [GPL-2.0 License](https://github.com/Furball-Engine/Furball/blob/master/LICENSE), meaning you're free to use this however you'd like as well as for commercial use (although see below regarding BASS) under the Conditions that you also follow the GPL-2.0 License and disclose the source code to your rendition of the Project. No Liability or Warranty is guaranteed.
+This Game Engine is licensed under the [GPL-2.0 License](https://github.com/Furball-Engine/Furball/blob/master/LICENSE), meaning you're free to use this however you'd like as well as for commercial use (although see below regarding BASS) under the Conditions that you also follow the GPL-2.0 License and disclose the source code to your rendition of the project. No Liability or Warranty is guaranteed.
 
 The BASS audio library (a dependency of this framework) is a commercial product. While it is free for non-commercial use, please ensure to [obtain a valid licence](http://www.un4seen.com/bass.html#license) if you plan on distributing any application using it commercially.
 
