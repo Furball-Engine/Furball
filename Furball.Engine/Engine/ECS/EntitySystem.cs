@@ -3,13 +3,19 @@ using Furball.Vixie;
 namespace Furball.Engine.Engine.ECS {
     public class EntitySystem {
         /// <summary>
+        /// The Entity this System is assigned to
+        /// </summary>
+        protected Entity AssignedEntity;
+        /// <summary>
         /// Processing Order, higher order means drawn and updated first
         /// </summary>
         public double ProcessOrder = 0;
         /// <summary>
         /// Gets fired when the GameComponent first gets added to the Component List
         /// </summary>
-        public virtual void Initialize(Entity entity) {}
+        public virtual void Initialize(Entity entity) {
+            this.AssignedEntity = entity;
+        }
         /// <summary>
         /// Gets fired on Every Update
         /// </summary>

@@ -87,6 +87,28 @@ namespace Furball.Engine.Engine.ECS {
 
             this._components.TryAdd(typeof(pComponentType), new pComponentType());
         }
+        /// <summary>
+        /// Checks whether or not a Component of the specified type exists
+        /// </summary>
+        /// <typeparam name="pComponentType">What Component to check for</typeparam>
+        /// <returns></returns>
+        public bool HasComponent<pComponentType>() where pComponentType : class, IEntityComponent, new() {
+            return this._components.ContainsKey(typeof(pComponentType));
+        }
+        /// <summary>
+        /// Replaces a Component with another instance of the Component
+        /// </summary>
+        /// <param name="with">With what to replace it</param>
+        /// <typeparam name="pComponentType">What component to replace</typeparam>
+        /// <returns></returns>
+        public bool ReplaceComponent<pComponentType>(pComponentType with) where pComponentType : class, IEntityComponent, new() {
+            if (!this.HasComponent<pComponentType>())
+                return false;
+
+            this._components[typeof(pComponentType)] = with;
+
+            return true;
+        }
 
         /// <summary>
         /// Default Initialization, Initializes Systems and Components and adds the Transform Component to the entity
