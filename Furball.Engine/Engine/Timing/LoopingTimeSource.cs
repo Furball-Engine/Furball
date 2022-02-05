@@ -8,6 +8,6 @@ namespace Furball.Engine.Engine.Timing {
             this.LoopTime       = loopTime;
         }
         
-        public int GetCurrentTime() => this.BaseTimeSource.GetCurrentTime() % this.LoopTime;
+        public double GetCurrentTime() => this.BaseTimeSource.GetCurrentTime() % this.LoopTime;
     }
 }

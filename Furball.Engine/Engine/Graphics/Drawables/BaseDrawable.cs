@@ -142,7 +142,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// <summary>
         ///     Shorter way of getting TimeSource.GetCurrentTime()
         /// </summary>
-        public int DrawableTime => this.TimeSource.GetCurrentTime();
+        public double DrawableTime => this.TimeSource.GetCurrentTime();
         /// <summary>
         ///     Whether a cursor is hovering over the drawable
         /// </summary>
@@ -285,11 +285,12 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
             this.Tweens.RemoveAll(tween => tween.Terminated && !tween.KeepAlive);
 
             if (this._sortTweenScheduled) {
-                this.Tweens.Sort((x, y) => x.StartTime - y.StartTime);
+                this.Tweens.Sort((x, y) => (int)(x.StartTime - y.StartTime));
                 this._sortTweenScheduled = false;
             }
 
-            int currentTime = this.TimeSource.GetCurrentTime();
+            double currentTime = this.TimeSource.GetCurrentTime();
+
             for (int i = 0; i != this.Tweens.Count; i++) {
                 Tween currentTween = this.Tweens[i];
 

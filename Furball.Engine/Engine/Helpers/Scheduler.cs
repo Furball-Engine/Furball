@@ -9,7 +9,7 @@ namespace Furball.Engine.Engine.Helpers {
             Kettu.Logger.Log("Scheduler Initialized!", LoggerLevelSchedulerInfo.Instance);
         }
 
-        public void Update(int time) {
+        public void Update(double time) {
             for (int i = 0; i < this._scheduledMethods.Count; i++) {
                 ScheduledMethod method = this._scheduledMethods[i];
                 if (time > method.Time) {
@@ -20,13 +20,13 @@ namespace Furball.Engine.Engine.Helpers {
             }
         }
 
-        public void ScheduleMethod(ScheduledMethod.Method method, int time, bool runOnDispose = false) {
+        public void ScheduleMethod(ScheduledMethod.Method method, double time, bool runOnDispose = false) {
             Kettu.Logger.Log($"ScheduledMethod scheduled at {time}, {(runOnDispose ? "does" : "does not")} run on dispose", LoggerLevelSchedulerInfo.Instance);
 
             this._scheduledMethods.Add(new ScheduledMethod(method, time, runOnDispose));
         }
 
-        public void Dispose(int time) {
+        public void Dispose(double time) {
             Kettu.Logger.Log($"Scheduler disposed at {time}", LoggerLevelSchedulerInfo.Instance);
 
             foreach (ScheduledMethod method in this._scheduledMethods) {
@@ -39,13 +39,13 @@ namespace Furball.Engine.Engine.Helpers {
     }
 
     public class ScheduledMethod {
-        public delegate void Method(int time);
+        public delegate void Method(double time);
 
         public readonly Method MethodToRun;
         public readonly bool   RunOnDispose;
-        public readonly int    Time;
+        public readonly double Time;
 
-        protected internal ScheduledMethod(Method method, int time, bool runOnDispose = false) {
+        protected internal ScheduledMethod(Method method, double time, bool runOnDispose = false) {
             this.MethodToRun  = method;
             this.Time         = time;
             this.RunOnDispose = runOnDispose;

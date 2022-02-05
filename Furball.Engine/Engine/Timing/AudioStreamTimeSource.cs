@@ -6,6 +6,6 @@ namespace Furball.Engine.Engine.Timing {
 
         public AudioStreamTimeSource(AudioStream stream) => this.Stream = stream;
 
-        public int GetCurrentTime() => (int)this.Stream.CurrentPosition;
+        public double GetCurrentTime() => this.Stream.CurrentPosition;
     }
 }

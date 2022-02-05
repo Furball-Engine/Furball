@@ -41,14 +41,14 @@ namespace Furball.Engine.Engine {
         public static void ChangeScreen(Screen newScreen) {
             if (Transition != null) {
                 lock (_fadeLock) {
-                    int fadeInTime = Transition.TransitionBegin();
+                    double fadeInTime = Transition.TransitionBegin();
 
                     CurrentFadeState = FadeState.FadeIn;
 
                     FurballGame.GameTimeScheduler.ScheduleMethod(delegate {
                         FurballGame.Instance.ChangeScreen(newScreen);
                         
-                        int fadeOutTime = Transition.TransitionEnd();
+                        double fadeOutTime = Transition.TransitionEnd();
                         
                         FurballGame.GameTimeScheduler.ScheduleMethod(delegate {
                             CurrentFadeState = FadeState.FadeOut;
