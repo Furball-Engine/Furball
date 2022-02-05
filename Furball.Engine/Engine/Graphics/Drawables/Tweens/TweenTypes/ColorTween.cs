@@ -1,4 +1,5 @@
 using System;
+using Furball.Engine.Engine.Helpers;
 using Furball.Vixie.Graphics;
 
 namespace Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes {
@@ -15,28 +16,27 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes {
         /// </summary>
         private readonly Color _endColor;
 
+        private ValueContainer<Color> _colorRefrence;
+
         /// <summary>
         /// Constructor for a basic Color Tween
         /// </summary>
-        /// <param name="type">What does this Tween affect on the Drawable</param>
+        /// <param name="toModify">Value to Modify</param>
         /// <param name="source">Start Value</param>
         /// <param name="dest">End Value</param>
         /// <param name="startTime">Start Time</param>
         /// <param name="endTime">End Time</param>
         /// <param name="easing">Easing</param>
         /// <exception cref="InvalidOperationException">You cannot use a Color Tween to Tween Movement, Fade or Rotation etc. </exception>
-        public ColorTween(TweenType type, Color source, Color dest, double startTime, double endTime, Easing easing = Easing.None) {
-            if (type != TweenType.Color)
-                throw new InvalidOperationException("Color Tweens on Drawables can only be used for Color Tweens!");
-
-            this.TweenType = type;
-
+        public ColorTween(ValueContainer<Color> toModify, Color source, Color dest, double startTime, double endTime, Easing easing = Easing.None) {
             this._startColor = source;
             this._endColor   = dest;
 
             this.StartTime = startTime;
             this.EndTime   = endTime;
             this.Easing    = easing;
+
+            this._colorRefrence = toModify;
         }
         /// <summary>
         /// Gets the Current Interpolated Value
@@ -54,6 +54,10 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes {
                 (int)this.CalculateCurrent(this._startColor.B, this._endColor.B),
                 (int)this.CalculateCurrent(this._startColor.A, this._endColor.A)
             );
+        }
+
+        protected override void UpdateValue() {
+            this._colorRefrence.Value = this.GetCurrent();
         }
     }
 }

@@ -1,3 +1,5 @@
+using Furball.Engine.Engine.Helpers;
+
 namespace Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes {
     //currently no use but its there!
     /// <summary>
@@ -22,7 +24,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes {
         /// <param name="startTime">Start Time</param>
         /// <param name="endTime">End Time</param>
         /// <param name="easing">Easing</param>
-        public DoubleTween(TweenType type, double source, double dest, double startTime, double endTime, Easing easing = Easing.None) {
+        public DoubleTween(ValueContainer<double> toModify, double source, double dest, double startTime, double endTime, Easing easing = Easing.None) {
             this.TweenType = type;
 
             this._startDouble = source;

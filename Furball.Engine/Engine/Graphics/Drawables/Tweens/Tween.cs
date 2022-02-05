@@ -5,7 +5,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Tweens {
     /// <summary>
     /// Base Tween Class
     /// </summary>
-    public class Tween {
+    public abstract class Tween {
         /// <summary>
         /// What does the Tween affect on the Drawable
         /// </summary>
@@ -86,6 +86,10 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Tweens {
 
             this.Initiated  = this.TimeNow >= this.StartTime;
             this.Terminated = this.Initiated && this.TimeNow > this.EndTime;
+
+            this.UpdateValue();
         }
+
+        protected abstract void UpdateValue();
     }
 }
