@@ -1,12 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Furball.Engine.Engine.Graphics;
 using Furball.Engine.Engine.Helpers;
@@ -15,9 +12,7 @@ using Furball.Volpe.Evaluation;
 using Furball.Volpe.Exceptions;
 using Furball.Volpe.LexicalAnalysis;
 using Furball.Volpe.SyntaxAnalysis;
-using Jace;
-using Jace.Execution;
-using JetBrains.Annotations;
+using Environment=Furball.Volpe.Evaluation.Environment;
 
 namespace Furball.Engine.Engine.DevConsole {
     public class DevConsole {
@@ -26,9 +21,9 @@ namespace Furball.Engine.Engine.DevConsole {
         public static string ScriptPath = "scripts";
         public static string LogPath = "logs";
 
-        internal static readonly Volpe.Evaluation.Environment VolpeEnvironment
+        public static readonly Environment VolpeEnvironment
             //= new Volpe.Evaluation.Environment(DefaultBuiltins.Core.Concat(DefaultBuiltins.Math).Concat(Builtins.Collection).ToArray());
-            = new Volpe.Evaluation.Environment(DefaultBuiltins.GetAll().Concat(Builtins.Collection).ToArray());
+            = new Environment(DefaultBuiltins.GetAll().Concat(Builtins.Collection).ToArray());
 
         public static void Initialize() {
             if (!Directory.Exists(ScriptPath)) Directory.CreateDirectory(ScriptPath);

@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Reflection;
-using System.Threading;
 using FontStashSharp;
 using Furball.Engine.Engine;
 using Furball.Engine.Engine.Debug.DebugCounter;
@@ -26,7 +25,6 @@ using Kettu;
 using Silk.NET.Input;
 using sowelipisona;
 using sowelipisona.ManagedBass;
-using Silk.NET.Input;
 using Color=Furball.Vixie.Graphics.Color;
 
 namespace Furball.Engine {
@@ -146,9 +144,7 @@ namespace Furball.Engine {
 
             TooltipDrawable = new();
             DrawableManager.Add(TooltipDrawable);
-
-            ScreenManager.ChangeScreen(this._startScreen);
-
+            
             DrawableBatch = new DrawableBatch(RendererType.Batched);
 
             this.ChangeScreenSize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
@@ -165,6 +161,8 @@ namespace Furball.Engine {
             ScreenManager.SetTransition(new FadeTransition());
 
             base.Initialize();
+
+            ScreenManager.ChangeScreen(this._startScreen);
 
             EtoHelper.Initialize();
         }

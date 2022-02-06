@@ -1,6 +1,5 @@
 using System;
 using System.Threading;
-using Eto;
 using Eto.Forms;
 using Furball.Vixie.Graphics;
 
@@ -14,7 +13,7 @@ namespace Furball.Engine.Engine.Helpers {
         public static void Initialize() {
             InitCalled = true;
 
-            Eto.Platform.Initialize(Platforms.Gtk);
+            // Eto.Platform.Initialize(Platforms.Gtk);
 
             _Thread = new(
             () => {
@@ -23,7 +22,7 @@ namespace Furball.Engine.Engine.Helpers {
             }
             );
 
-            _Thread.Start();
+            // _Thread.Start();
         }
 
         public static void Dispose() {

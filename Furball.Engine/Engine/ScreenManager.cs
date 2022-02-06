@@ -1,8 +1,6 @@
 #nullable enable
-using System.Threading;
 using Furball.Engine.Engine.Graphics;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
-
 
 namespace Furball.Engine.Engine {
     public class ScreenManager {
@@ -41,14 +39,16 @@ namespace Furball.Engine.Engine {
         public static void ChangeScreen(Screen newScreen) {
             if (Transition != null) {
                 lock (_fadeLock) {
+                    Transition t = Transition;
+                    
                     double fadeInTime = Transition.TransitionBegin();
 
                     CurrentFadeState = FadeState.FadeIn;
 
                     FurballGame.GameTimeScheduler.ScheduleMethod(delegate {
                         FurballGame.Instance.ChangeScreen(newScreen);
-                        
-                        double fadeOutTime = Transition.TransitionEnd();
+
+                        double fadeOutTime = t.TransitionEnd();
                         
                         FurballGame.GameTimeScheduler.ScheduleMethod(delegate {
                             CurrentFadeState = FadeState.FadeOut;
