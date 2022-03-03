@@ -8,11 +8,6 @@ using Furball.Vixie.Graphics.Renderers.OpenGL;
 using Color=Furball.Vixie.Graphics.Color;
 
 namespace Furball.Engine.Engine.Graphics {
-    public enum RendererType {
-        Batched,
-        Immediate,
-    }
-
     /// <summary>
     /// A Basic Abstraction for Vixie's different types of renderers
     /// </summary>
@@ -20,7 +15,6 @@ namespace Furball.Engine.Engine.Graphics {
         private readonly ITextureRenderer _textureRenderer;
         private readonly ILineRenderer    _lineRenderer;
         private readonly ITextRenderer    _textRenderer;
-        public readonly  RendererType     RendererType;
 
         private bool _begun;
         public bool Begun => _begun;
@@ -30,22 +24,10 @@ namespace Furball.Engine.Engine.Graphics {
             this._lineRenderer    = lineRenderer;
         }
 
-        public DrawableBatch(RendererType type) {
-            this.RendererType = type;
-
-            switch (type) {
-                default:
-                case RendererType.Batched:
-                    this._textureRenderer = new BatchedRenderer();
-                    this._lineRenderer    = new BatchedLineRenderer();
-                    this._textRenderer    = (ITextRenderer)this._textureRenderer;
-                    break;
-                case RendererType.Immediate:
-                    this._textureRenderer = new ImmediateRenderer();
-                    this._lineRenderer    = new ImmediateLineRenderer();
-                    this._textRenderer    = (ITextRenderer)this._textureRenderer;
-                    break;
-            }
+        public DrawableBatch() {
+            this._textureRenderer = new BatchedRenderer();
+            this._lineRenderer    = new BatchedLineRenderer();
+            this._textRenderer    = (ITextRenderer) this._textureRenderer;
         }
 
         public void Begin() {

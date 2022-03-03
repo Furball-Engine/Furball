@@ -30,7 +30,6 @@ namespace Furball.Engine.Engine.Debug.DebugCounter {
             new MousePosition(),
 #endif
             new KeyboardInputs(),
-            new DrawableBatchType()
         };
 
         public DebugCounter() {

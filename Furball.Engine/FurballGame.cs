@@ -149,7 +149,7 @@ namespace Furball.Engine {
 
             ScreenManager.ChangeScreen(this._startScreen);
 
-            DrawableBatch = new DrawableBatch(RendererType.Batched);
+            DrawableBatch = new DrawableBatch();
 
             this.ChangeScreenSize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
 
