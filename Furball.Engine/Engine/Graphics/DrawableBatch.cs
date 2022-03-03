@@ -25,8 +25,8 @@ namespace Furball.Engine.Engine.Graphics {
         }
 
         public DrawableBatch() {
-            this._textureRenderer = new BatchedRenderer();
-            this._lineRenderer    = new BatchedLineRenderer();
+            this._textureRenderer = new QuadRenderer();
+            this._lineRenderer    = new LineRenderer();
             this._textRenderer    = (ITextRenderer) this._textureRenderer;
         }
 
