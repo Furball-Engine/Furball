@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using System.Numerics;
 using System.Collections.ObjectModel;
+using System.Numerics;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
 
 namespace Furball.Engine.Engine.Graphics.Drawables {
@@ -11,7 +11,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         protected List<ManagedDrawable> _drawables = new();
         public ReadOnlyCollection<ManagedDrawable> Drawables => this._drawables.AsReadOnly();
 
-        private bool _sortDrawables;
+        protected bool _sortDrawables;
         
         public override Vector2 Size {
             get {
