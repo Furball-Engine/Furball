@@ -283,7 +283,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         ///     Updates the pDrawables Tweens
         /// </summary>
         public void UpdateTweens() {
-            this.Tweens.RemoveAll(tween => tween.Terminated && !tween.KeepAlive);
+            this.Tweens.RemoveAll(tween => tween == null || tween.Terminated && !tween.KeepAlive);
 
             if (this._sortTweenScheduled) {
                 this.Tweens.Sort((x, y) => (int)(x.StartTime - y.StartTime));
