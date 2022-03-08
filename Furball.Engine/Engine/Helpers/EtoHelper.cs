@@ -13,7 +13,7 @@ namespace Furball.Engine.Engine.Helpers {
         public static void Initialize() {
             InitCalled = true;
 
-            // Eto.Platform.Initialize(Platforms.Gtk);
+            Eto.Platform.Initialize(Eto.Platform.Detect);
 
             _Thread = new(
             () => {
@@ -22,7 +22,7 @@ namespace Furball.Engine.Engine.Helpers {
             }
             );
 
-            // _Thread.Start();
+            _Thread.Start();
         }
 
         public static void Dispose() {
