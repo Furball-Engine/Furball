@@ -1,9 +1,6 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
 using System.Runtime.InteropServices;
-using System.Text;
 using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Platform;
 using Furball.Vixie.Graphics;
@@ -138,6 +135,11 @@ namespace Furball.Engine.Engine.DevConsole {
         }
 
         public static unsafe void Draw() {
+            _consoleInputCoverDrawable.Clickable   = Visible;
+            _consoleInputCoverDrawable.CoverClicks = Visible;
+            _consoleInputCoverDrawable.Hoverable   = Visible;
+            _consoleInputCoverDrawable.CoverHovers = Visible;
+
             if (Visible) {
                 ImGui.SetNextWindowSize(new Vector2(520, 600), ImGuiCond.FirstUseEver);
                 ImGui.Begin(Title, ref Visible, ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoCollapse);
