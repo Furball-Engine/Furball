@@ -3,10 +3,9 @@ using System.Numerics;
 using FontStashSharp;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Furball.Engine.Engine.Helpers;
+using Furball.Vixie.Graphics;
 using Silk.NET.Input;
 using TextCopy;
-using Color=Furball.Vixie.Graphics.Color;
-using MouseButton=Silk.NET.Input.MouseButton;
 
 namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
     /// <summary>
@@ -117,7 +116,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         }
 
         public void OnMouseDown(object sender, ((MouseButton mouseButton, Vector2 position) args, string cursorName) e) {
-            if (this.Rectangle.Contains(e.args.position.ToPoint()) && this.Visible && this.Clickable)
+            if (this.RealContains(e.args.position.ToPoint()) && this.Visible && this.Clickable)
                 this.Selected = true;
             else
                 this.Selected = false;
