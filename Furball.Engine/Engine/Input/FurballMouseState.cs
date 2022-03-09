@@ -1,12 +1,12 @@
-using Silk.NET.Input;
 using System.Numerics;
+using Silk.NET.Input;
 
 namespace Furball.Engine.Engine.Input {
     public struct FurballMouseState {
         public Vector2       Position;
         public string        Name;
         public MouseButton[] PressedButtons;
-        public ScrollWheel[] ScrollWheels;
+        public ScrollWheel   ScrollWheel;
 
         public bool IsButtonPressed(MouseButton button) {
             for (int i = 0; i < this.PressedButtons.Length; i++) {

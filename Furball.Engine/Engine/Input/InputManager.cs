@@ -350,8 +350,8 @@ namespace Furball.Engine.Engine.Input {
             #region OnMouseUp/Down/Move/Scroll
 
             for (int i = 0; i < oldCursorStates.Count; i++) {
-                FurballMouseState        oldState             = oldCursorStates[i];
-                Span<ScrollWheel> oldStateScrollWheels = oldState.ScrollWheels;
+                FurballMouseState oldState = oldCursorStates[i];
+                ScrollWheel       oldWheel = oldState.ScrollWheel;
 
                 List<FurballMouseState> filteredStates = new();
 
@@ -395,13 +395,10 @@ namespace Furball.Engine.Engine.Input {
                          else
                              this.OnMouseUp?.Invoke(this, ((MouseButton.Middle, newState.Position), newState.Name));
 
-                     for (int i2 = 0; i2 < newState.ScrollWheels.Length; i2++) {
-                         ScrollWheel newWheel = newState.ScrollWheels[i2];
-                         ScrollWheel oldWheel = oldStateScrollWheels[i2];
-                         //Handling Scrolling by comparing to the last Input Frame
-                         if (Math.Abs(oldWheel.Y - newWheel.Y) > 0.01f)
-                             this.OnMouseScroll?.Invoke(this, ((i2, newWheel.Y - oldWheel.Y), newState.Name));
-                     }
+                     ScrollWheel newWheel = newState.ScrollWheel;
+                     //Handling Scrolling by comparing to the last Input Frame
+                     if (oldWheel != newWheel)
+                         this.OnMouseScroll?.Invoke(this, ((0, newWheel.Y - oldWheel.Y), newState.Name));
                 }
             }
 
