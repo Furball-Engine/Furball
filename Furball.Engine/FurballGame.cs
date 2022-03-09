@@ -232,8 +232,6 @@ namespace Furball.Engine {
         public double    LastUpdateTime { get; private set; } = 0.0;
 
         protected override void Update(double gameTime) {
-
-
             if (RuntimeInfo.IsDebug()) {
                 this._updateWatch.Reset();
                 this._updateWatch.Start();
@@ -242,8 +240,6 @@ namespace Furball.Engine {
             InputManager.Update();
 
             base.Update(gameTime);
-
-            ImGuiConsole.Draw();
 
             DrawableManager.Update(gameTime);
 
@@ -282,6 +278,8 @@ namespace Furball.Engine {
             ScreenManager.DrawTransition(gameTime, DrawableBatch);
             
             DrawableManager.Draw(gameTime, DrawableBatch);
+
+            ImGuiConsole.Draw();
 
             base.Draw(gameTime);
 

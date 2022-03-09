@@ -72,22 +72,20 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                 //also given that drawablemanagers will have to scale on their own width and height instead of screen width and height,
                 //itll def make developing easier
 
-                
-                DrawableManagerArgs args = new() {
-                    Color    = currentDrawable.ColorOverride,
-                    Effects  = currentDrawable.SpriteEffect,
-                    Position = currentDrawable.RealPosition,
-                    Rotation = currentDrawable.Rotation,
-                    Scale    = currentDrawable.RealScale = currentDrawable.Scale
-                };
+
+                this._args.Color    = currentDrawable.ColorOverride;
+                this._args.Effects  = currentDrawable.SpriteEffect;
+                this._args.Position = currentDrawable.RealPosition;
+                this._args.Rotation = currentDrawable.Rotation;
+                this._args.Scale    = currentDrawable.RealScale = currentDrawable.Scale;
 
                 Rectangle rect = new(
-                    (args.Position - origin).ToPoint(),
-                    new Size((int)Math.Ceiling(currentDrawable.Size.X * args.Scale.X), (int)Math.Ceiling(currentDrawable.Size.Y * args.Scale.Y))
+                (this._args.Position - origin).ToPoint(),
+                new Size((int)Math.Ceiling(currentDrawable.Size.X * this._args.Scale.X), (int)Math.Ceiling(currentDrawable.Size.Y * this._args.Scale.Y))
                 );
 
                 if(rect.IntersectsWith(FurballGame.DisplayRect))
-                    currentDrawable.Draw(time, drawableBatch, args);
+                    currentDrawable.Draw(time, drawableBatch, this._args);
             }
 
             drawableBatch.End();
@@ -119,7 +117,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
             }
         }
 
-        private TextureRenderTarget _target2D;
+        private          TextureRenderTarget _target2D;
+        private readonly DrawableManagerArgs _args = new();
         public TextureRenderTarget DrawRenderTarget2D(double time, DrawableBatch batch, DrawableManagerArgs _ = null) {
             if(this._target2D?.TargetWidth != FurballGame.WindowWidth || this._target2D?.TargetHeight != FurballGame.WindowHeight)
                 this._target2D = new TextureRenderTarget((uint) FurballGame.WindowWidth, (uint) FurballGame.WindowHeight);

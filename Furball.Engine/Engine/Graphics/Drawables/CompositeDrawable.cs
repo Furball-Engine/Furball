@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Numerics;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
 
@@ -8,18 +7,18 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// <summary>
         ///     The list of drawables contained in the CompositeDrawable
         /// </summary>
-        protected List<ManagedDrawable> _drawables = new();
-        public ReadOnlyCollection<ManagedDrawable> Drawables => this._drawables.AsReadOnly();
+        public List<ManagedDrawable> Drawables = new();
 
-        protected bool _sortDrawables;
-        
+        protected        bool                _sortDrawables;
+        private readonly DrawableManagerArgs _drawableArgs = new();
+
         public override Vector2 Size {
             get {
                 Vector2 topLeft     = new(0, 0);
                 Vector2 bottomRight = new(0, 0);
 
-                for (int i = 0; i < this._drawables.Count; i++) {
-                    ManagedDrawable managedDrawable = this._drawables[i];
+                for (int i = 0; i < this.Drawables.Count; i++) {
+                    ManagedDrawable managedDrawable = this.Drawables[i];
                     
                     if (managedDrawable.Rectangle.X < topLeft.X) topLeft.X = managedDrawable.Rectangle.X;
                     if (managedDrawable.Rectangle.Y < topLeft.Y) topLeft.Y = managedDrawable.Rectangle.Y;
@@ -65,13 +64,13 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
 
         public override void Draw(double time, DrawableBatch batch, DrawableManagerArgs args) {
             if (this._sortDrawables) {
-                this._drawables.Sort((x, y) => x.Depth.CompareTo(y.Depth));
+                this.Drawables.Sort((x, y) => x.Depth.CompareTo(y.Depth));
 
                 this._sortDrawables = false;
             }
-            
-            for (int i = 0; i < this._drawables.Count; i++) {
-                ManagedDrawable drawable = this._drawables[i];
+
+            for (int i = 0; i < this.Drawables.Count; i++) {
+                ManagedDrawable drawable = this.Drawables[i];
 
                 // ReSharper disable once CompareOfFloatsByEqualityOperator
                 if (drawable.Depth != drawable.DrawablesLastKnownDepth)
@@ -84,20 +83,20 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
 
                 if (!drawable.Visible) continue;
 
-                DrawableManagerArgs drawableArgs = new() {
-                    Color = new(
-                    (byte)(this.ColorOverride.R / 255f * drawable.ColorOverride.R),
-                    (byte)(this.ColorOverride.G / 255f * drawable.ColorOverride.G),
-                    (byte)(this.ColorOverride.B / 255f * drawable.ColorOverride.B),
-                    (byte)(this.ColorOverride.A / 255f * drawable.ColorOverride.A)
-                    ),
-                    Effects  = args.Effects,
-                    Position = drawable.RealPosition,
-                    Rotation = args.Rotation,
-                    Scale    = drawable.RealScale = args.Scale * drawable.Scale
-                };
 
-                drawable.Draw(time, batch, drawableArgs);
+                this._drawableArgs.Color = new(
+                (byte)(this.ColorOverride.R / 255f * drawable.ColorOverride.R),
+                (byte)(this.ColorOverride.G / 255f * drawable.ColorOverride.G),
+                (byte)(this.ColorOverride.B / 255f * drawable.ColorOverride.B),
+                (byte)(this.ColorOverride.A / 255f * drawable.ColorOverride.A)
+                );
+                this._drawableArgs.Effects  = args.Effects;
+                this._drawableArgs.Position = drawable.RealPosition;
+                this._drawableArgs.Rotation = args.Rotation;
+                this._drawableArgs.Scale    = drawable.RealScale = args.Scale * drawable.Scale;
+
+
+                drawable.Draw(time, batch, this._drawableArgs);
             }
         }
     }

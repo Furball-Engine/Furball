@@ -30,7 +30,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         }
 
         public void Update() {
-            this._drawables.Clear();
+            this.Drawables.Clear();
 
             if (this.Selected) {
                 UiButtonDrawable element = new(new(0, 0), this.SelectedItem, this.Font, this.FontSize, Color.Blue, Color.White, Color.Black, this.ButtonSize);
@@ -41,7 +41,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
                     this.Update();
                 };
 
-                this._drawables.Add(element);
+                this.Drawables.Add(element);
 
                 float y = element.Size.Y;
                 foreach (string item in this.Items) {
@@ -57,7 +57,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
                         this.Update();
                     };
 
-                    this._drawables.Add(element);
+                    this.Drawables.Add(element);
 
                     y += element.Size.Y;
                 }
@@ -70,7 +70,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
                     this.Update();
                 };
 
-                this._drawables.Add(element);
+                this.Drawables.Add(element);
             }
         }
     }

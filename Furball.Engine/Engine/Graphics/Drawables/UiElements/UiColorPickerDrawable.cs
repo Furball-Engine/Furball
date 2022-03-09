@@ -26,8 +26,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
 
             this.Color.OnChange += this.OnColorChange;
 
-            this._drawables.Add(this._colorText);
-            this._drawables.Add(this._colorDisplay);
+            this.Drawables.Add(this._colorText);
+            this.Drawables.Add(this._colorDisplay);
         }
 
         private void OnColorChange(object sender, Color e) {
