@@ -46,10 +46,7 @@ namespace Furball.Engine.Engine.Graphics {
             this._begun = false;
         }
 
-        public void Draw(
-            Texture texture, Vector2 position, Vector2? size = null, Vector2? scale = null, float rotation = 0f, Color? colorOverride = null,
-            Rectangle? sourceRect = null, TextureFlip texFlip = TextureFlip.None
-        ) {
+        public void Draw(Texture texture, Vector2 position, Vector2 scale, float rotation, Color colorOverride, TextureFlip texFlip = TextureFlip.None, Vector2 rotOrigin = default) {
             if (this._lineRenderer.IsBegun)
                 this._lineRenderer.End();
             if (this._textureRenderer != this._textRenderer && this._textRenderer.IsBegun)
@@ -58,8 +55,53 @@ namespace Furball.Engine.Engine.Graphics {
             if (!this._textureRenderer.IsBegun)
                 this._textureRenderer.Begin();
 
-            this._textureRenderer.Draw(texture, position, size, scale, rotation, colorOverride, sourceRect, texFlip);
+            this._textureRenderer.Draw(texture, position, scale, rotation, colorOverride, texFlip, rotOrigin);
         }
+
+        public void Draw(Texture texture, Vector2 position, Vector2 scale, float rotation, Color colorOverride, Rectangle sourceRect, TextureFlip texFlip = TextureFlip.None, Vector2 rotOrigin = default) {
+            if (this._lineRenderer.IsBegun)
+                this._lineRenderer.End();
+            if (this._textureRenderer != this._textRenderer && this._textRenderer.IsBegun)
+                this._textRenderer.End();
+
+            if (!this._textureRenderer.IsBegun)
+                this._textureRenderer.Begin();
+
+            this._textureRenderer.Draw(texture, position, scale, rotation, colorOverride, sourceRect, texFlip, rotOrigin);
+        }
+        public void Draw(Texture texture, Vector2 position, float rotation = 0, TextureFlip flip = TextureFlip.None, Vector2 rotOrigin = default) {
+            if (this._lineRenderer.IsBegun)
+                this._lineRenderer.End();
+            if (this._textureRenderer != this._textRenderer && this._textRenderer.IsBegun)
+                this._textRenderer.End();
+
+            if (!this._textureRenderer.IsBegun)
+                this._textureRenderer.Begin();
+        }
+        public void Draw(Texture texture, Vector2 position, Vector2 scale, float rotation = 0, TextureFlip flip = TextureFlip.None, Vector2 rotOrigin = default) {
+            if (this._lineRenderer.IsBegun)
+                this._lineRenderer.End();
+            if (this._textureRenderer != this._textRenderer && this._textRenderer.IsBegun)
+                this._textRenderer.End();
+
+            if (!this._textureRenderer.IsBegun)
+                this._textureRenderer.Begin();
+
+            this._textureRenderer.Draw(texture, position, texture.Size, Vector2.One, rotation, Color.White, flip, rotOrigin);
+        }
+
+        public void Draw(Texture texture, Vector2 position, Vector2 scale, Color colorOverride, float rotation = 0, TextureFlip texFlip = TextureFlip.None, Vector2 rotOrigin = default) {
+            if (this._lineRenderer.IsBegun)
+                this._lineRenderer.End();
+            if (this._textureRenderer != this._textRenderer && this._textRenderer.IsBegun)
+                this._textRenderer.End();
+
+            if (!this._textureRenderer.IsBegun)
+                this._textureRenderer.Begin();
+
+            this._textureRenderer.Draw(texture, position, texture.Size, scale, rotation, Color.White, texFlip, rotOrigin);
+        }
+
 
         public void DrawLine(Vector2 begin, Vector2 end, float thickness, Color color) {
             if (this._textureRenderer.IsBegun)
@@ -94,7 +136,7 @@ namespace Furball.Engine.Engine.Graphics {
         }
 
         public void FillRectangle(Vector2 position, Vector2 size, Color color, float rotation = 0f) {
-            this.Draw(FurballGame.WhitePixel, position, null, size, rotation, color);
+            this.Draw(FurballGame.WhitePixel, position, size, Vector2.One, rotation, color);
         }
 
         public void DrawString(DynamicSpriteFont font, string text, Vector2 position, Color color, float rotation = 0f, Vector2? scale = null) {

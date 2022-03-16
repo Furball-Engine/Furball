@@ -164,7 +164,7 @@ namespace Furball.Engine {
 
             ScreenManager.ChangeScreen(this._startScreen);
 
-            EtoHelper.Initialize();
+            //EtoHelper.Initialize();
         }
         protected override void OnClosing() {
             try {
