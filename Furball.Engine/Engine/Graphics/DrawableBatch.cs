@@ -3,8 +3,8 @@ using System.Drawing;
 using System.Numerics;
 using FontStashSharp;
 using Furball.Vixie.Graphics;
+using Furball.Vixie.Graphics.Backends;
 using Furball.Vixie.Graphics.Renderers;
-using Furball.Vixie.Graphics.Renderers.OpenGL;
 using Color=Furball.Vixie.Graphics.Color;
 
 namespace Furball.Engine.Engine.Graphics {
@@ -12,22 +12,15 @@ namespace Furball.Engine.Engine.Graphics {
     /// A Basic Abstraction for Vixie's different types of renderers
     /// </summary>
     public class DrawableBatch : IDisposable {
-        private readonly ITextureRenderer _textureRenderer;
+        private readonly IQuadRenderer _textureRenderer;
         private readonly ILineRenderer    _lineRenderer;
-        private readonly ITextRenderer    _textRenderer;
 
         private bool _begun;
         public bool Begun => _begun;
 
-        public DrawableBatch(ITextureRenderer textureRenderer, ILineRenderer lineRenderer, ITextRenderer renderer) {
-            this._textureRenderer = textureRenderer;
-            this._lineRenderer    = lineRenderer;
-        }
-
         public DrawableBatch() {
-            this._textureRenderer = new QuadRenderer();
-            this._lineRenderer    = new LineRenderer();
-            this._textRenderer    = (ITextRenderer) this._textureRenderer;
+            this._textureRenderer = GraphicsBackend.Current.CreateTextureRenderer();
+            this._lineRenderer    = GraphicsBackend.Current.CreateLineRenderer();
         }
 
         public void Begin() {
@@ -40,8 +33,6 @@ namespace Furball.Engine.Engine.Graphics {
                 this._textureRenderer.End();
             if (this._lineRenderer.IsBegun)
                 this._lineRenderer.End();
-            if (this._textRenderer.IsBegun)
-                this._textRenderer.End();
 
             this._begun = false;
         }
@@ -49,9 +40,6 @@ namespace Furball.Engine.Engine.Graphics {
         public void Draw(Texture texture, Vector2 position, Vector2 scale, float rotation, Color colorOverride, TextureFlip texFlip = TextureFlip.None, Vector2 rotOrigin = default) {
             if (this._lineRenderer.IsBegun)
                 this._lineRenderer.End();
-            if (this._textureRenderer != this._textRenderer && this._textRenderer.IsBegun)
-                this._textRenderer.End();
-
             if (!this._textureRenderer.IsBegun)
                 this._textureRenderer.Begin();
 
@@ -61,9 +49,6 @@ namespace Furball.Engine.Engine.Graphics {
         public void Draw(Texture texture, Vector2 position, Vector2 scale, float rotation, Color colorOverride, Rectangle sourceRect, TextureFlip texFlip = TextureFlip.None, Vector2 rotOrigin = default) {
             if (this._lineRenderer.IsBegun)
                 this._lineRenderer.End();
-            if (this._textureRenderer != this._textRenderer && this._textRenderer.IsBegun)
-                this._textRenderer.End();
-
             if (!this._textureRenderer.IsBegun)
                 this._textureRenderer.Begin();
 
@@ -72,34 +57,27 @@ namespace Furball.Engine.Engine.Graphics {
         public void Draw(Texture texture, Vector2 position, float rotation = 0, TextureFlip flip = TextureFlip.None, Vector2 rotOrigin = default) {
             if (this._lineRenderer.IsBegun)
                 this._lineRenderer.End();
-            if (this._textureRenderer != this._textRenderer && this._textRenderer.IsBegun)
-                this._textRenderer.End();
-
             if (!this._textureRenderer.IsBegun)
                 this._textureRenderer.Begin();
+
+            this._textureRenderer.Draw(texture, position, rotation, flip, rotOrigin);
         }
         public void Draw(Texture texture, Vector2 position, Vector2 scale, float rotation = 0, TextureFlip flip = TextureFlip.None, Vector2 rotOrigin = default) {
             if (this._lineRenderer.IsBegun)
                 this._lineRenderer.End();
-            if (this._textureRenderer != this._textRenderer && this._textRenderer.IsBegun)
-                this._textRenderer.End();
-
             if (!this._textureRenderer.IsBegun)
                 this._textureRenderer.Begin();
 
-            this._textureRenderer.Draw(texture, position, texture.Size, Vector2.One, rotation, Color.White, flip, rotOrigin);
+            this._textureRenderer.Draw(texture, position, Vector2.One, rotation, Color.White, flip, rotOrigin);
         }
 
         public void Draw(Texture texture, Vector2 position, Vector2 scale, Color colorOverride, float rotation = 0, TextureFlip texFlip = TextureFlip.None, Vector2 rotOrigin = default) {
             if (this._lineRenderer.IsBegun)
                 this._lineRenderer.End();
-            if (this._textureRenderer != this._textRenderer && this._textRenderer.IsBegun)
-                this._textRenderer.End();
-
             if (!this._textureRenderer.IsBegun)
                 this._textureRenderer.Begin();
 
-            this._textureRenderer.Draw(texture, position, texture.Size, scale, rotation, Color.White, texFlip, rotOrigin);
+            this._textureRenderer.Draw(texture, position, scale, rotation, Color.White, texFlip, rotOrigin);
         }
 
 
@@ -136,49 +114,40 @@ namespace Furball.Engine.Engine.Graphics {
         }
 
         public void FillRectangle(Vector2 position, Vector2 size, Color color, float rotation = 0f) {
-            this.Draw(FurballGame.WhitePixel, position, size, Vector2.One, rotation, color);
+            this.Draw(FurballGame.WhitePixel, position, size, rotation, color);
         }
 
         public void DrawString(DynamicSpriteFont font, string text, Vector2 position, Color color, float rotation = 0f, Vector2? scale = null) {
             if (this._lineRenderer.IsBegun)
                 this._lineRenderer.End();
-            if (this._textRenderer == this._textureRenderer) {
-                if (!this._textRenderer.IsBegun)
-                    this._textRenderer.Begin();
-            } else this._textureRenderer.End();
+            if(!this._textureRenderer.IsBegun)
+                this._textureRenderer.Begin();
 
-            this._textRenderer.DrawString(font, text, position, color, rotation, scale);
+            this._textureRenderer.DrawString(font, text, position, color, rotation, scale);
         }
 
         public void DrawString(DynamicSpriteFont font, string text, Vector2 position, System.Drawing.Color color, float rotation = 0f, Vector2? scale = null) {
             if (this._lineRenderer.IsBegun)
                 this._lineRenderer.End();
-            if (this._textRenderer == this._textureRenderer) {
-                if (!this._textRenderer.IsBegun)
-                    this._textRenderer.Begin();
-            } else this._textureRenderer.End();
+            if(!this._textureRenderer.IsBegun)
+                this._textureRenderer.Begin();
 
-            this._textRenderer.DrawString(font, text, position, color, rotation, scale);
+            this._textureRenderer.DrawString(font, text, position, color, rotation, scale);
         }
 
         public void DrawString(DynamicSpriteFont font, string text, Vector2 position, System.Drawing.Color[] colors, float rotation = 0f, Vector2? scale = null) {
             if (this._lineRenderer.IsBegun)
                 this._lineRenderer.End();
-            if (this._textRenderer == this._textureRenderer) {
-                if (!this._textRenderer.IsBegun)
-                    this._textRenderer.Begin();
-            } else this._textureRenderer.End();
+            if(!this._textureRenderer.IsBegun)
+                this._textureRenderer.Begin();
 
-            this._textRenderer.DrawString(font, text, position, colors, rotation, scale);
+            this._textureRenderer.DrawString(font, text, position, colors, rotation, scale);
         }
 
 
         public void Dispose() {
             this._lineRenderer.Dispose();
             this._textureRenderer.Dispose();
-
-            if(this._textRenderer != this._textureRenderer)
-                this._textRenderer.Dispose();
         }
     }
 }

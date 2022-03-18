@@ -48,7 +48,7 @@ namespace Furball.Engine.Engine.Graphics {
         }
 
         public static Texture LoadTextureFromFile(string filename, ContentSource source = ContentSource.Game, bool bypassCache = false)
-            => new Texture(new MemoryStream(LoadRawAsset(filename, source, bypassCache)));
+            => Texture.Create(new MemoryStream(LoadRawAsset(filename, source, bypassCache)));
 
         public static byte[] LoadRawAsset(string filename, ContentSource source = ContentSource.Game, bool bypassCache = false) {
             if (CONTENT_CACHE.TryGetValue(filename, out byte[] cacheData) && !bypassCache)

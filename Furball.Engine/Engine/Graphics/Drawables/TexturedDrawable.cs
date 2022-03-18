@@ -60,7 +60,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
             if(this._cropping != null)
                 batch.Draw(this._texture, args.Position, args.Scale, args.Rotation, args.Color, this._cropping.Value, args.Effects);
             else
-                batch.Draw(this._texture, args.Position, this._texture.Size, args.Scale, args.Rotation, args.Color, args.Effects);
+                batch.Draw(this._texture, args.Position, args.Scale, args.Rotation, args.Color, args.Effects);
         }
 
         /// <summary>

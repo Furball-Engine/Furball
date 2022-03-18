@@ -21,6 +21,7 @@ using Furball.Engine.Engine.Timing;
 using Furball.Engine.Engine.Transitions;
 using Furball.Vixie;
 using Furball.Vixie.Graphics;
+using Furball.Vixie.Graphics.Backends;
 using Kettu;
 using Silk.NET.Input;
 using sowelipisona;
@@ -138,7 +139,7 @@ namespace Furball.Engine {
             DrawableManager             = new DrawableManager();
             DebugOverlayDrawableManager = new DrawableManager();
 
-            WhitePixel = new Texture();
+            WhitePixel = Texture.Create();
 
             LocalizationManager.ReadTranslations();
 
@@ -269,8 +270,7 @@ namespace Furball.Engine {
                 this._drawWatch.Start();
             }
 
-            this.GraphicsDevice.GlClearColor(Color.Black);
-            this.GraphicsDevice.GlClear();
+            GraphicsBackend.Current.Clear();
 
             if(DrawableBatch.Begun)
                 DrawableBatch.End();

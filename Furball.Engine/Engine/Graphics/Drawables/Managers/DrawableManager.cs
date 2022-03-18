@@ -5,6 +5,7 @@ using System.Linq;
 using System.Numerics;
 using Furball.Engine.Engine.Helpers;
 using Furball.Vixie.Graphics;
+using Furball.Vixie.Graphics.Backends;
 using Color=Furball.Vixie.Graphics.Color;
 
 namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
@@ -120,13 +121,12 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
         private          TextureRenderTarget _target2D;
         private readonly DrawableManagerArgs _args = new();
         public TextureRenderTarget DrawRenderTarget2D(double time, DrawableBatch batch, DrawableManagerArgs _ = null) {
-            if(this._target2D?.TargetWidth != FurballGame.WindowWidth || this._target2D?.TargetHeight != FurballGame.WindowHeight)
-                this._target2D = new TextureRenderTarget((uint) FurballGame.WindowWidth, (uint) FurballGame.WindowHeight);
+            if(this._target2D?.Size.X != FurballGame.WindowWidth || this._target2D?.Size.Y != FurballGame.WindowHeight)
+                this._target2D = TextureRenderTarget.Create((uint) FurballGame.WindowWidth, (uint) FurballGame.WindowHeight);
             
             this._target2D.Bind();
 
-            FurballGame.Instance.GraphicsDevice.GlClearColor(Color.Transparent);
-            FurballGame.Instance.GraphicsDevice.GlClear();
+            GraphicsBackend.Current.Clear();
 
             this.Draw(time, batch, _);
 
