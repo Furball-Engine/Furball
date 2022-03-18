@@ -163,8 +163,7 @@ namespace Furball.Engine {
 
             base.Initialize();
 
-            //TODO: make transitions work properly, then this skipFade can be set to false
-            ScreenManager.ChangeScreen(this._startScreen, true);
+            ScreenManager.ChangeScreen(this._startScreen);
 
             //EtoHelper.Initialize();
         }
@@ -276,8 +275,6 @@ namespace Furball.Engine {
             if(DrawableBatch.Begun)
                 DrawableBatch.End();
 
-            ScreenManager.DrawTransition(gameTime, DrawableBatch);
-            
             DrawableManager.Draw(gameTime, DrawableBatch);
 
             ImGuiConsole.Draw();
@@ -288,6 +285,8 @@ namespace Furball.Engine {
                 this._drawWatch.Stop();
                 this.LastDrawTime = this._drawWatch.Elapsed.TotalMilliseconds;
             }
+
+            ScreenManager.DrawTransition(gameTime, DrawableBatch);
 
             if (ConVars.DebugOverlay)
                 DebugOverlayDrawableManager.Draw(gameTime, DrawableBatch);
