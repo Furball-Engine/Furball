@@ -26,6 +26,7 @@
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Furball.Engine\Furball.Engine.csproj" />
+        <ProjectReference Include="..\Furball.Vixie\Furball.Vixie\Furball.Vixie.csproj" />
     </ItemGroup>
     <ItemGroup>
       <PackageReference Include="Silk.NET.Input" Version="2.14.0" />
