@@ -163,7 +163,8 @@ namespace Furball.Engine {
 
             base.Initialize();
 
-            ScreenManager.ChangeScreen(this._startScreen);
+            //TODO: make transitions work properly, then this skipFade can be set to false
+            ScreenManager.ChangeScreen(this._startScreen, true);
 
             //EtoHelper.Initialize();
         }
