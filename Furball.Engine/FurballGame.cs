@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Numerics;
 using System.Reflection;
 using FontStashSharp;
 using Furball.Engine.Engine;
@@ -11,6 +12,8 @@ using Furball.Engine.Engine.ECS;
 using Furball.Engine.Engine.Graphics;
 using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
+using Furball.Engine.Engine.Graphics.Drawables.Tweens;
+using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes;
 using Furball.Engine.Engine.Helpers;
 using Furball.Engine.Engine.Helpers.Logger;
 using Furball.Engine.Engine.Input;
@@ -143,8 +146,10 @@ namespace Furball.Engine {
 
             LocalizationManager.ReadTranslations();
 
-            TooltipDrawable = new();
+            TooltipDrawable = new TooltipDrawable();
             DrawableManager.Add(TooltipDrawable);
+
+            TooltipDrawable.Visible = false;
             
             DrawableBatch = new DrawableBatch();
 
@@ -166,6 +171,36 @@ namespace Furball.Engine {
             ScreenManager.ChangeScreen(this._startScreen);
 
             //EtoHelper.Initialize();
+
+            if (Assembly.GetExecutingAssembly().GetType("MonoMod.WasHere") != null) {
+                GameTimeScheduler.ScheduleMethod(
+                delegate {
+                    TextDrawable easterEggText = new TextDrawable(
+                        new Vector2(5, 5),
+                        DEFAULT_FONT_STROKED,
+                        "Hello MonoMod user! :3c",
+                        36
+                    );
+
+                    easterEggText.Hoverable = true;
+                    easterEggText.ToolTip   = "Enjoy Modding!";
+
+                    double drawableTime = easterEggText.DrawableTime;
+
+                    easterEggText.Depth = 1.0;
+
+                    easterEggText.Tweens.Add(new FloatTween(TweenType.Fade, 0.0f, 1.0f, drawableTime, drawableTime + 250));
+                    easterEggText.Tweens.Add(new FloatTween(TweenType.Fade, 1.0f, 0.0f, drawableTime + 2250, easterEggText.DrawableTime + 2500));
+
+                    DrawableManager.Add(easterEggText);
+
+                    GameTimeScheduler.ScheduleMethod(
+                    delegate {
+                        DrawableManager.Remove(easterEggText);
+                    }, easterEggText.DrawableTime + 2500);
+
+                }, 1500);
+            }
         }
         protected override void OnClosing() {
             try {
@@ -275,11 +310,11 @@ namespace Furball.Engine {
             if(DrawableBatch.Begun)
                 DrawableBatch.End();
 
-            DrawableManager.Draw(gameTime, DrawableBatch);
-
             ImGuiConsole.Draw();
 
             base.Draw(gameTime);
+
+            DrawableManager.Draw(gameTime, DrawableBatch);
 
             if (RuntimeInfo.IsDebug()) {
                 this._drawWatch.Stop();
