@@ -29,7 +29,6 @@ using Kettu;
 using Silk.NET.Input;
 using sowelipisona;
 using sowelipisona.ManagedBass;
-using Color=Furball.Vixie.Graphics.Color;
 
 namespace Furball.Engine {
     public class FurballGame : Game {
@@ -260,8 +259,14 @@ namespace Furball.Engine {
             
             this.AfterScreenChange?.Invoke(this, screen);
         }
-        public void ChangeScreenSize(int width, int height, bool fullscreen = false) {
+
+        public void ChangeScreenSize(int width, int height, bool fullscreen) {
             WindowManager.SetWindowSize(width, height);
+            this.WindowManager.Fullscreen = fullscreen;
+        }
+
+        public void ChangeScreenSize(int width, int height) {
+            this.WindowManager.SetWindowSize(width, height);
         }
 
         private Stopwatch _updateWatch    = new ();
