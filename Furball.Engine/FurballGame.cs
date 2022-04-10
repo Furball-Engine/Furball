@@ -23,8 +23,7 @@ using Furball.Engine.Engine.Platform;
 using Furball.Engine.Engine.Timing;
 using Furball.Engine.Engine.Transitions;
 using Furball.Vixie;
-using Furball.Vixie.Graphics;
-using Furball.Vixie.Graphics.Backends;
+using Furball.Vixie.Backends.Shared;
 using Kettu;
 using Silk.NET.Input;
 using sowelipisona;
@@ -141,7 +140,7 @@ namespace Furball.Engine {
             DrawableManager             = new DrawableManager();
             DebugOverlayDrawableManager = new DrawableManager();
 
-            WhitePixel = Texture.Create();
+            WhitePixel = Resources.CreateTexture();
 
             LocalizationManager.ReadTranslations();
 

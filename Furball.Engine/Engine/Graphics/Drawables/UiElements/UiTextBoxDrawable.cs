@@ -3,7 +3,7 @@ using System.Numerics;
 using FontStashSharp;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Furball.Engine.Engine.Helpers;
-using Furball.Vixie.Graphics;
+using Furball.Vixie.Backends.Shared;
 using Silk.NET.Input;
 using TextCopy;
 

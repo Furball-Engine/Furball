@@ -3,7 +3,7 @@ using System.Numerics;
 using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes;
-using Furball.Vixie.Graphics;
+using Furball.Vixie.Backends.Shared;
 
 namespace Furball.Engine.Engine.Transitions {
     /// <summary>

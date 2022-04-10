@@ -2,10 +2,10 @@ using System;
 using System.Drawing;
 using System.Numerics;
 using FontStashSharp;
-using Furball.Vixie.Graphics;
-using Furball.Vixie.Graphics.Backends;
-using Furball.Vixie.Graphics.Renderers;
-using Color=Furball.Vixie.Graphics.Color;
+using Furball.Vixie;
+using Furball.Vixie.Backends.Shared;
+using Furball.Vixie.Backends.Shared.Renderers;
+using Color=Furball.Vixie.Backends.Shared.Color;
 
 namespace Furball.Engine.Engine.Graphics {
     /// <summary>

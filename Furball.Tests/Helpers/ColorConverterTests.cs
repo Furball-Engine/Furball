@@ -1,5 +1,5 @@
 using Furball.Engine.Engine.Helpers;
-using Furball.Vixie.Graphics;
+using Furball.Vixie.Backends.Shared;
 using Xunit;
 
 namespace Furball.Tests.Helpers {

@@ -4,9 +4,9 @@ using System.Drawing;
 using System.Linq;
 using System.Numerics;
 using Furball.Engine.Engine.Helpers;
-using Furball.Vixie.Graphics;
-using Furball.Vixie.Graphics.Backends;
-using Color=Furball.Vixie.Graphics.Color;
+using Furball.Vixie;
+using Furball.Vixie.Backends.Shared;
+using Color=Furball.Vixie.Backends.Shared.Color;
 
 namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
     public class DrawableManager : UnmanagedDrawable {
@@ -122,7 +122,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
         private readonly DrawableManagerArgs _args = new();
         public TextureRenderTarget DrawRenderTarget2D(double time, DrawableBatch batch, DrawableManagerArgs _ = null) {
             if(this._target2D?.Size.X != FurballGame.WindowWidth || this._target2D?.Size.Y != FurballGame.WindowHeight)
-                this._target2D = TextureRenderTarget.Create((uint) FurballGame.WindowWidth, (uint) FurballGame.WindowHeight);
+                this._target2D = Resources.CreateTextureRenderTarget((uint) FurballGame.WindowWidth, (uint) FurballGame.WindowHeight);
             
             this._target2D.Bind();
 

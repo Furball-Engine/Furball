@@ -1,5 +1,5 @@
 using Furball.Engine.Engine.Graphics.Drawables.Primitives;
-using Color=Furball.Vixie.Graphics.Color;
+using Furball.Vixie.Backends.Shared;
 using Screen=Furball.Engine.Engine.Screen;
 
 namespace Furball.Game.Screens {

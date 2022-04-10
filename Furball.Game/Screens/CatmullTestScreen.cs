@@ -6,7 +6,7 @@ using Furball.Engine.Engine;
 using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes.BezierPathTween;
 using Furball.Engine.Engine.Helpers;
-using Color=Furball.Vixie.Graphics.Color;
+using Color=Furball.Vixie.Backends.Shared.Color;
 
 
 namespace Furball.Game.Screens {

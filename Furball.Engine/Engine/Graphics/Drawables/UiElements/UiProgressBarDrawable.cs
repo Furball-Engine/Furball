@@ -1,7 +1,7 @@
 using System.Numerics;
 using FontStashSharp;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
-using Furball.Vixie.Graphics;
+using Furball.Vixie.Backends.Shared;
 
 namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
     /// <summary>

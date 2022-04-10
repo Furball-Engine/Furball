@@ -1,6 +1,6 @@
 using System.Drawing;
 using System.Numerics;
-using Color=Furball.Vixie.Graphics.Color;
+using Color=Furball.Vixie.Backends.Shared.Color;
 
 namespace Furball.Engine.Engine.Helpers {
     public static class ConversionHelpers {

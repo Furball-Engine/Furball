@@ -3,7 +3,7 @@ using System.Numerics;
 using FontStashSharp;
 using Furball.Engine.Engine.Helpers;
 using Silk.NET.Input;
-using Color=Furball.Vixie.Graphics.Color;
+using Color=Furball.Vixie.Backends.Shared.Color;
 
 namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
     public class UiColorPickerDrawable : CompositeDrawable {

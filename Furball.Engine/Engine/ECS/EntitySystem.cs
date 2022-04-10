@@ -1,5 +1,3 @@
-using Furball.Vixie;
-
 namespace Furball.Engine.Engine.ECS {
     public class EntitySystem {
         /// <summary>

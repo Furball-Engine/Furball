@@ -1,7 +1,7 @@
 using System;
 using System.Threading;
 using Eto.Forms;
-using Furball.Vixie.Graphics;
+using Furball.Vixie.Backends.Shared;
 
 namespace Furball.Engine.Engine.Helpers {
     public static class EtoHelper {

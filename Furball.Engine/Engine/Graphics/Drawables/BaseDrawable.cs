@@ -7,9 +7,9 @@ using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes.BezierPathTween;
 using Furball.Engine.Engine.Helpers;
 using Furball.Engine.Engine.Timing;
-using Furball.Vixie.Graphics;
+using Furball.Vixie.Backends.Shared;
 using Silk.NET.Input;
-using Color=Furball.Vixie.Graphics.Color;
+using Color=Furball.Vixie.Backends.Shared.Color;
 
 namespace Furball.Engine.Engine.Graphics.Drawables {
     public enum OriginType {

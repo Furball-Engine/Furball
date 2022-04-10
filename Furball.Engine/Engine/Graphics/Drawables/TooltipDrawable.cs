@@ -1,6 +1,6 @@
 
 using Furball.Engine.Engine.Graphics.Drawables.Primitives;
-using Furball.Vixie.Graphics;
+using Furball.Vixie.Backends.Shared;
 
 namespace Furball.Engine.Engine.Graphics.Drawables {
     public class TooltipDrawable : CompositeDrawable {

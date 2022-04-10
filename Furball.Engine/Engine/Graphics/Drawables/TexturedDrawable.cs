@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Numerics;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
-using Furball.Vixie.Graphics;
+using Furball.Vixie.Backends.Shared;
 
 namespace Furball.Engine.Engine.Graphics.Drawables {
     /// <summary>

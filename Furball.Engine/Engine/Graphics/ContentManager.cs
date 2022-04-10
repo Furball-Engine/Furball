@@ -5,7 +5,8 @@ using System.Reflection;
 using FontStashSharp;
 using Furball.Engine.Engine.Helpers;
 using Furball.Engine.Engine.Helpers.Logger;
-using Furball.Vixie.Graphics;
+using Furball.Vixie;
+using Furball.Vixie.Backends.Shared;
 using Kettu;
 using SixLabors.Fonts;
 
@@ -48,7 +49,7 @@ namespace Furball.Engine.Engine.Graphics {
         }
 
         public static Texture LoadTextureFromFile(string filename, ContentSource source = ContentSource.Game, bool bypassCache = false)
-            => Texture.Create(new MemoryStream(LoadRawAsset(filename, source, bypassCache)));
+            => Resources.CreateTexture(new MemoryStream(LoadRawAsset(filename, source, bypassCache)));
 
         public static byte[] LoadRawAsset(string filename, ContentSource source = ContentSource.Game, bool bypassCache = false) {
             if (CONTENT_CACHE.TryGetValue(filename, out byte[] cacheData) && !bypassCache)

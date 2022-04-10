@@ -1,5 +1,5 @@
 using System;
-using Furball.Vixie.Graphics;
+using Furball.Vixie.Backends.Shared;
 
 namespace Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes {
     /// <summary>

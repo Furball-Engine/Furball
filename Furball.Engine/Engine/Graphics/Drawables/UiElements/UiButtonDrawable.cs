@@ -6,7 +6,7 @@ using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes;
 using Silk.NET.Input;
-using Color=Furball.Vixie.Graphics.Color;
+using Color=Furball.Vixie.Backends.Shared.Color;
 
 namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
     /// <summary>

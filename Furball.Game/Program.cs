@@ -1,4 +1,4 @@
-﻿using Furball.Vixie.Graphics.Backends;
+﻿using Furball.Vixie.Backends.Shared.Backends;
 using Silk.NET.Windowing;
 
 namespace Furball.Game {
@@ -8,7 +8,7 @@ namespace Furball.Game {
             options.VSync = false;
 
             using(FurballTestGame game = new FurballTestGame())
-                game.Run(options, Backend.OpenGL);
+                game.Run(options, Backend.OpenGL41);
         }
     }
 }
