@@ -20,7 +20,24 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Primitives {
         }
         
         public override void Draw(double time, DrawableBatch batch, DrawableManagerArgs args) {
-            batch.DrawLine(this.Position, this.RelativePosition ? this.Position + this.EndPosition: this.EndPosition, this.Thickness, this.ColorOverride);
+            if (this.RelativePosition) {
+                batch.DrawLine(
+                args.Position,
+                (args.Position + (this.EndPosition * args.Scale)) * FurballGame.VerticalRatio,
+                (this.Thickness * args.Scale.X)                   * FurballGame.VerticalRatio,
+                this.ColorOverride
+                );
+            } 
+            else {
+                Vector2 diff = this.EndPosition - this.Position;
+
+                batch.DrawLine(
+                args.Position,
+                (args.Position + diff * args.Scale) * FurballGame.VerticalRatio,
+                this.Thickness                      * args.Scale.X * FurballGame.VerticalRatio,
+                this.ColorOverride
+                );
+            }
         }
     }
 }
