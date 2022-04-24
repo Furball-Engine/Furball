@@ -2,7 +2,11 @@
 
 A Game Engine designed in C# using a custom made Renderer called Furball.Vixie, its mostly designed to provide an easy entity system for quickly getting a new game up and running quickly, providing all the tools to prototype fast, then expand to more complicated ideas.
 
-On the prime ECS scale, we fall between E and EC (depending on how you classify our `DrawableManager` class) ![prime-scale](https://i.beyleyisnot.moe/W1nRXJQ.png)
+### On the prime ECS scale, we fall between E and EC (depending on how you classify our `DrawableManager` class)
+#### E: Entity classes with subclasses. Loop through a List<Entity> and call Update/Draw on each.
+#### C: (Unity like) Component based, sealed Entity/GameObject class with a list of Components. Loop through a List<Entity> and call Update/Draw on each.
+#### EC: (Unreal like) Entity classes with the ability to subclass <i>along with</i> a list of Components per Entity (E + C from above). Loop through a List<Entity> then loop through each Entity's List<Component> and call Update/Draw on each.
+#### ECS: AKA <i>pure</i> ECS. Entity is reduced to an integer, Components are plan old structs stored in arrays. Systems are optional and merely functions that iterate and optionally modify Components.
 
 ## Objectives
 
