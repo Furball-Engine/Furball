@@ -6,6 +6,7 @@ using System.Numerics;
 using System.Reflection;
 using FontStashSharp;
 using Furball.Engine.Engine;
+using Furball.Engine.Engine.Config;
 using Furball.Engine.Engine.Debug.DebugCounter;
 using Furball.Engine.Engine.DevConsole;
 using Furball.Engine.Engine.ECS;
@@ -24,10 +25,12 @@ using Furball.Engine.Engine.Timing;
 using Furball.Engine.Engine.Transitions;
 using Furball.Vixie;
 using Furball.Vixie.Backends.Shared;
+using Furball.Volpe.Evaluation;
 using Kettu;
 using Silk.NET.Input;
 using sowelipisona;
 using sowelipisona.ManagedBass;
+using Environment=System.Environment;
 
 namespace Furball.Engine {
     public class FurballGame : Game {
@@ -98,6 +101,9 @@ namespace Furball.Engine {
             //this._graphics.PreparingDeviceSettings += (_, e) => e.GraphicsDeviceInformation.PresentationParameters.MultiSampleCount = 4;
             //this._graphics.ApplyChanges();
 
+            FurballConfig.Instance = new FurballConfig();
+            FurballConfig.Instance.Load();
+
             GameTimeSource    = new GameTimeSource();
             Instance          = this;
             GameTimeScheduler = new Scheduler();
@@ -165,7 +171,16 @@ namespace Furball.Engine {
             ScreenManager.SetTransition(new FadeTransition());
 
             base.Initialize();
+            
+            if(FurballConfig.Instance.Values["limit_fps"].ToBoolean().Value)
+                SetTargetFps((int) FurballConfig.Instance.Values["target_fps"].ToNumber().Value);
 
+            ChangeScreenSize(
+            (int) FurballConfig.Instance.Values["screen_width"].ToNumber().Value,
+            (int) FurballConfig.Instance.Values["screen_height"].ToNumber().Value,
+            FurballConfig.Instance.Values["fullscreen"].ToBoolean().Value
+            );
+            
             ScreenManager.ChangeScreen(this._startScreen);
 
             //EtoHelper.Initialize();
@@ -209,6 +224,8 @@ namespace Furball.Engine {
             GameTimeScheduler.Dispose(Time);
             EtoHelper.Dispose();
 
+            FurballConfig.Instance.Save();
+            
             base.OnClosing();
         }
 
@@ -260,12 +277,16 @@ namespace Furball.Engine {
         }
 
         public void ChangeScreenSize(int width, int height, bool fullscreen) {
-            WindowManager.SetWindowSize(width, height);
+            this.ChangeScreenSize(width, height);
             this.WindowManager.Fullscreen = fullscreen;
+            
+            FurballConfig.Instance.Values["fullscreen"] = new Value.Boolean(fullscreen);
         }
 
         public void ChangeScreenSize(int width, int height) {
             this.WindowManager.SetWindowSize(width, height);
+            FurballConfig.Instance.Values["screen_width"] = new Value.Number(width);
+            FurballConfig.Instance.Values["screen_height"] = new Value.Number(height);
         }
 
         private Stopwatch _updateWatch    = new ();
