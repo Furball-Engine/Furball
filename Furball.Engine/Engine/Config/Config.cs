@@ -63,7 +63,7 @@ namespace Furball.Engine.Engine.Config {
             
             try {
                 while (parser.TryParseNextExpression(out Expression expression)) {
-                    Value value = new EvaluatorContext(expression!, this._environment).Evaluate();
+                    new EvaluatorContext(expression!, this._environment).Evaluate();
                 }
             }
             catch (VolpeException exception) {
