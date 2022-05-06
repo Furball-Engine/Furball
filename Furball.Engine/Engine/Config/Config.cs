@@ -2,10 +2,9 @@ using System.Collections.Generic;
 using System.IO;
 using Furball.Volpe.Evaluation;
 using Furball.Volpe.Exceptions;
-using Furball.Volpe.SyntaxAnalysis;
 using Furball.Volpe.LexicalAnalysis;
+using Furball.Volpe.SyntaxAnalysis;
 using Kettu;
-using Path=System.IO.Path;
 
 namespace Furball.Engine.Engine.Config {
     internal class LoggerLevelConfigError : LoggerLevel {

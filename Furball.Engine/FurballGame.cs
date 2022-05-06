@@ -157,8 +157,6 @@ namespace Furball.Engine {
             
             DrawableBatch = new DrawableBatch();
 
-            this.ChangeScreenSize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
-
             DebugCounter = new DebugCounter {
                 Clickable   = false,
                 CoverClicks = false
