@@ -71,6 +71,8 @@ namespace Furball.Engine {
 
         public static byte[] DefaultFontData;
 
+        public static bool BypassFurballFPSLimit = false;
+        
         public static readonly FontSystem DEFAULT_FONT = new(new FontSystemSettings {
             FontResolutionFactor = 2f,
             KernelWidth          = 2,
@@ -93,14 +95,6 @@ namespace Furball.Engine {
 
         private Screen _startScreen;
         public FurballGame(Screen startScreen) : base()  {
-            //this._graphics = new GraphicsDeviceManager(this) {
-            //    GraphicsProfile     = GraphicsProfile.HiDef,
-            //    PreferMultiSampling = true
-            //};
-//
-            //this._graphics.PreparingDeviceSettings += (_, e) => e.GraphicsDeviceInformation.PresentationParameters.MultiSampleCount = 4;
-            //this._graphics.ApplyChanges();
-
             FurballConfig.Instance = new FurballConfig();
             FurballConfig.Instance.Load();
 
@@ -169,8 +163,8 @@ namespace Furball.Engine {
             ScreenManager.SetTransition(new FadeTransition());
 
             base.Initialize();
-            
-            if(FurballConfig.Instance.Values["limit_fps"].ToBoolean().Value)
+
+            if (!BypassFurballFPSLimit && FurballConfig.Instance.Values["limit_fps"].ToBoolean().Value)
                 SetTargetFps((int) FurballConfig.Instance.Values["target_fps"].ToNumber().Value);
 
             ChangeScreenSize(
@@ -230,13 +224,11 @@ namespace Furball.Engine {
         public double UnfocusedFpsScale => this._unfocusedFpsScale;
 
         public void SetTargetFps(int fps, double unfocusedScale = -1) {
-            if (fps != -1) {
-                WindowManager.SetTargetFramerate(fps);
-            } else {
-                //Setting to 0 makes it unlimited
-                WindowManager.SetTargetFramerate(0);
-            }
+            this.WindowManager.SetTargetFramerate(fps == -1 ? 0 : fps);
 
+            if (!BypassFurballFPSLimit)
+                FurballConfig.Instance.Values["target_fps"] = new Value.Number(fps);
+            
             if (unfocusedScale < 0)
                 unfocusedScale = this._unfocusedFpsScale;
 
@@ -283,7 +275,7 @@ namespace Furball.Engine {
 
         public void ChangeScreenSize(int width, int height) {
             this.WindowManager.SetWindowSize(width, height);
-            FurballConfig.Instance.Values["screen_width"] = new Value.Number(width);
+            FurballConfig.Instance.Values["screen_width"]  = new Value.Number(width);
             FurballConfig.Instance.Values["screen_height"] = new Value.Number(height);
         }
 
