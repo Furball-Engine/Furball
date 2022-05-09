@@ -58,9 +58,9 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
             args.Scale    *= FurballGame.VerticalRatio;
 
             if(this._cropping != null)
-                batch.Draw(this._texture, args.Position, args.Scale, args.Rotation, args.Color, this._cropping.Value, args.Effects);
+                batch.Draw(this._texture, args.Position, args.Scale, args.Rotation, args.Color, this._cropping.Value, args.Effects, this.RotationOrigin);
             else
-                batch.Draw(this._texture, args.Position, args.Scale, args.Rotation, args.Color, args.Effects);
+                batch.Draw(this._texture, args.Position, args.Scale, args.Rotation, args.Color, args.Effects, this.RotationOrigin);
         }
 
         /// <summary>

@@ -117,31 +117,31 @@ namespace Furball.Engine.Engine.Graphics {
             this.Draw(FurballGame.WhitePixel, position, size, rotation, color);
         }
 
-        public void DrawString(DynamicSpriteFont font, string text, Vector2 position, Color color, float rotation = 0f, Vector2? scale = null) {
+        public void DrawString(DynamicSpriteFont font, string text, Vector2 position, Color color, float rotation = 0f, Vector2? scale = null, Vector2 origin = default) {
             if (this._lineRenderer.IsBegun)
                 this._lineRenderer.End();
             if(!this._textureRenderer.IsBegun)
                 this._textureRenderer.Begin();
 
-            this._textureRenderer.DrawString(font, text, position, color, rotation, scale);
+            this._textureRenderer.DrawString(font, text, position, color, rotation, scale, origin);
         }
 
-        public void DrawString(DynamicSpriteFont font, string text, Vector2 position, System.Drawing.Color color, float rotation = 0f, Vector2? scale = null) {
+        public void DrawString(DynamicSpriteFont font, string text, Vector2 position, System.Drawing.Color color, float rotation = 0f, Vector2? scale = null, Vector2 origin = default) {
             if (this._lineRenderer.IsBegun)
                 this._lineRenderer.End();
             if(!this._textureRenderer.IsBegun)
                 this._textureRenderer.Begin();
 
-            this._textureRenderer.DrawString(font, text, position, color, rotation, scale);
+            this._textureRenderer.DrawString(font, text, position, color, rotation, scale, origin);
         }
 
-        public void DrawString(DynamicSpriteFont font, string text, Vector2 position, System.Drawing.Color[] colors, float rotation = 0f, Vector2? scale = null) {
+        public void DrawString(DynamicSpriteFont font, string text, Vector2 position, System.Drawing.Color[] colors, float rotation = 0f, Vector2? scale = null, Vector2 origin = default ) {
             if (this._lineRenderer.IsBegun)
                 this._lineRenderer.End();
             if(!this._textureRenderer.IsBegun)
                 this._textureRenderer.Begin();
 
-            this._textureRenderer.DrawString(font, text, position, colors, rotation, scale);
+            this._textureRenderer.DrawString(font, text, position, colors, rotation, scale, origin);
         }
 
 

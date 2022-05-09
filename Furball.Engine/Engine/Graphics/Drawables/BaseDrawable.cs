@@ -36,7 +36,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         ///     This is the real scale of a drawable, ignoring whether it is inside of a CompositeDrawable or not
         /// </summary>
         public Vector2 RealScale;
-
+        
         // private Vector2 _position = Vector2.Zero;
         /// <summary>
         ///     Radius of the Circle (Used for Click detection and other hitboxes)
@@ -89,6 +89,10 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         ///     </remarks>
         /// </summary>
         public float Rotation = 0f;
+        /// <summary>
+        /// The origin which around the drawable will rotation
+        /// </summary>
+        public Vector2 RotationOrigin;
         /// <summary>
         ///     Unprocessed Scale of the Drawable, new Vector(1, 1) draws the Drawable at full scale
         ///     <remarks>
