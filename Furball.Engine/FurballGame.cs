@@ -144,6 +144,13 @@ namespace Furball.Engine {
 
             LocalizationManager.ReadTranslations();
 
+            if (Enum.TryParse(FurballConfig.Instance.Language, out ISO639_2Code code)) {
+                LocalizationManager.CurrentLanguage = LocalizationManager.GetLanguageFromCode(code);
+            } else {
+                Logger.Log($"Invalid language in config! Resetting to default: {LocalizationManager.DefaultLanguage}.", LoggerLevelLocalizationInfo.Instance);
+                LocalizationManager.CurrentLanguage = LocalizationManager.DefaultLanguage;
+            }
+            
             TooltipDrawable = new TooltipDrawable();
             DrawableManager.Add(TooltipDrawable);
 

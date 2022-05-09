@@ -39,13 +39,12 @@ namespace Furball.Engine.Engine.Config {
                 
             using FileStream stream = File.OpenWrite(this.FilePath);
             using StreamWriter writer = new(stream);
+            writer.AutoFlush = true;
 
             foreach ((string key, Value value) in this.Values) {
                 string line = $"${key} = {value.Representation};\n";
                 writer.Write(line);
             }
-            
-            writer.Flush();
         }
 
         public override void Load() {

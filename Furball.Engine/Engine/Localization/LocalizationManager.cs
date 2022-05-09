@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Furball.Engine.Engine.Config;
 using Furball.Engine.Engine.Helpers.Logger;
 using Furball.Engine.Engine.Localization.Exceptions;
 using Furball.Engine.Engine.Localization.Languages;
+using Furball.Volpe.Evaluation;
 using JetBrains.Annotations;
 using Kettu;
 
@@ -13,8 +15,17 @@ namespace Furball.Engine.Engine.Localization {
 
         public static Dictionary<ISO639_2Code, Type> Languages = new();
 
-        public static Language DefaultLanguage = new EnglishLanguage();
-        public static Language CurrentLanguage = DefaultLanguage;
+        public static  Language DefaultLanguage  = new EnglishLanguage();
+        private static Language _CurrentLanguage = DefaultLanguage;
+
+        public static Language CurrentLanguage {
+            get => _CurrentLanguage;
+            set {
+                FurballConfig.Instance.Values["language"] = new Value.String(value.Iso6392Code().ToString());
+
+                _CurrentLanguage = value;
+            }
+        }
 
         [Pure]
         public static string GetLocalizedString(object key, Language language = null) {
