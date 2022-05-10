@@ -70,7 +70,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
 
             switch (this.ColorType) {
                 case TextColorType.Solid: {
-                    batch.DrawString(this.Font, this.Text, args.Position, args.Color, args.Rotation, args.Scale);
+                    batch.DrawString(this.Font, this.Text, args.Position, args.Color, args.Rotation, args.Scale, this.RotationOrigin);
                     break;
                 }
                 case TextColorType.Repeating: {
@@ -78,7 +78,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
                     while (colors.Length < this.Text.Length)
                         colors = colors.Concat(colors).ToArray();
 
-                    batch.DrawString(this.Font, this.Text, args.Position, colors, args.Rotation, args.Scale);
+                    batch.DrawString(this.Font, this.Text, args.Position, colors, args.Rotation, args.Scale, this.RotationOrigin);
                     break;
                 }
                 case TextColorType.Stretch: {
@@ -88,7 +88,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
                         args.Position,
                         ArrayHelper.FitElementsInANewArray(this.Colors, this.Text.Length),
                         args.Rotation,
-                        args.Scale
+                        args.Scale,
+                        this.RotationOrigin
                     );
                     break;
                 }

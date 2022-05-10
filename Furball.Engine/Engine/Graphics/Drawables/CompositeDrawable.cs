@@ -31,24 +31,6 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
             }
         }
 
-        // public CompositeDrawable() => this.OnClick += this.OnDrawableClick;
-
-        /// <summary>
-        ///     When the drawable is clicked, this is called to allow for things inside of the drawable to be clicked
-        /// </summary>
-        // private void OnDrawableClick(object sender, Point e) {
-        //     Point adjustedPoint = ((e.ToVector2() - this.Position + this.LastCalculatedOrigin) * this.Scale).ToPoint();
-        //
-        //     for (int i = 0; i < this._drawables.Count; i++) {
-        //         ManagedDrawable drawable = this._drawables[i];
-        //
-        //         if (drawable.Contains(adjustedPoint)) {
-        //             drawable.Click(true,  adjustedPoint);
-        //             drawable.Click(false, adjustedPoint);
-        //         }
-        //     }
-        // }
-
         public override void Update(double time) {
             foreach (ManagedDrawable drawable in this.Drawables) {
                 drawable.Update(time);
@@ -92,7 +74,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
                 );
                 this._drawableArgs.Effects  = args.Effects;
                 this._drawableArgs.Position = drawable.RealPosition;
-                this._drawableArgs.Rotation = args.Rotation;
+                this._drawableArgs.Rotation = args.Rotation + drawable.Rotation;
                 this._drawableArgs.Scale    = drawable.RealScale = args.Scale * drawable.Scale;
 
 
