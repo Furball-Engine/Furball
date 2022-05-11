@@ -22,11 +22,12 @@ namespace Furball.Engine.Engine.Debug.DebugCounter {
             new FrameRate(),
             new UpdateRate(),
             new DrawableManagerStats(),
+            new GraphicsBackend(),
             new GameTimeSourceTime(),
             new BoundByDrawUpdate(),
             new ContentCacheItems(),
 #if DESKTOP
-            //If Android ever gets implemented, add new item called MousePoints and have it display all current cursors
+            //TODO: When Android gets implemented, add new item called MousePoints and have it display all current cursors
             new MousePosition(),
 #endif
             new KeyboardInputs(),
