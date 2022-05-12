@@ -149,7 +149,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
             batch.DrawRectangle(
                 args.Position * FurballGame.VerticalRatio,
                 this.Size * FurballGame.VerticalRatio,
-                0.0055f,
+                1f,
                 this.Selected ? Color.LightGray : Color.DarkGray
              );
             
