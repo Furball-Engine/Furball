@@ -8,6 +8,7 @@ using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes;
 using Furball.Engine.Engine.Helpers;
+using JetBrains.Annotations;
 using Silk.NET.Input;
 
 namespace Furball.Engine.Engine.Input {
@@ -432,5 +433,20 @@ namespace Furball.Engine.Engine.Input {
         public bool ControlHeld => (this.HeldKeys.Contains(Key.ControlLeft) || this.HeldKeys.Contains(Key.ControlRight));
         public bool ShiftHeld => (this.HeldKeys.Contains(Key.ShiftLeft) || this.HeldKeys.Contains(Key.ShiftRight));
         public bool AltHeld => (this.HeldKeys.Contains(Key.AltLeft) || this.HeldKeys.Contains(Key.AltRight));
+
+        [NotNull]
+        public string Clipboard {
+            get {
+                foreach (IKeyboard keyboard in this.Keyboards)
+                    return keyboard.ClipboardText;
+
+                return "";
+            }
+            set {
+                foreach (IKeyboard keyboard in this.Keyboards) {
+                    keyboard.ClipboardText = value;
+                }
+            }
+        }
     }
 }

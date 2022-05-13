@@ -6,7 +6,6 @@ using Furball.Engine.Engine.Platform;
 using Furball.Vixie.Backends.Shared;
 using ImGuiNET;
 using Silk.NET.Input;
-using TextCopy;
 
 namespace Furball.Engine.Engine.DevConsole {
     public static class ImGuiConsole {
@@ -45,11 +44,11 @@ namespace Furball.Engine.Engine.DevConsole {
                 }
                 if (Visible) {
                     if (key == Key.V && FurballGame.InputManager.ControlHeld && RuntimeInfo.CurrentPlatform() == OSPlatform.Linux) {
-                        _consoleBuffer = _consoleBuffer.Insert(_cursorPosition, ClipboardService.GetText() ?? string.Empty);
+                        _consoleBuffer = _consoleBuffer.Insert(_cursorPosition, FurballGame.InputManager.Clipboard ?? string.Empty);
                     }
 
                     if (key == Key.C && FurballGame.InputManager.ControlHeld && RuntimeInfo.CurrentPlatform() == OSPlatform.Linux) {
-                        ClipboardService.SetText(_consoleBuffer.Substring(_selectionStart, _selectionEnd));
+                        FurballGame.InputManager.Clipboard = _consoleBuffer.Substring(_selectionStart, _selectionEnd);
                     }
                 }
             };

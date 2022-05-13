@@ -5,7 +5,6 @@ using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Furball.Engine.Engine.Helpers;
 using Furball.Vixie.Backends.Shared;
 using Silk.NET.Input;
-using TextCopy;
 
 namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
     /// <summary>
@@ -87,7 +86,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
             
             switch(e) {
                 case Key.V when FurballGame.InputManager.HeldKeys.Contains(Key.ControlLeft): {
-                    string clipboard = ClipboardService.GetText();
+                    string clipboard = FurballGame.InputManager.Clipboard;
 
                     this.Text += clipboard;
                     this.OnLetterTyped?.Invoke(this, 'v');
