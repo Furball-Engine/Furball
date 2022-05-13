@@ -68,7 +68,7 @@ namespace Furball.Engine.Engine.Graphics {
             if (!this._textureRenderer.IsBegun)
                 this._textureRenderer.Begin();
 
-            this._textureRenderer.Draw(texture, position, Vector2.One, rotation, Color.White, flip, rotOrigin);
+            this._textureRenderer.Draw(texture, position, scale, rotation, Color.White, flip, rotOrigin);
         }
 
         public void Draw(Texture texture, Vector2 position, Vector2 scale, Color colorOverride, float rotation = 0, TextureFlip texFlip = TextureFlip.None, Vector2 rotOrigin = default) {
@@ -77,7 +77,7 @@ namespace Furball.Engine.Engine.Graphics {
             if (!this._textureRenderer.IsBegun)
                 this._textureRenderer.Begin();
 
-            this._textureRenderer.Draw(texture, position, scale, rotation, Color.White, texFlip, rotOrigin);
+            this._textureRenderer.Draw(texture, position, scale, rotation, colorOverride, texFlip, rotOrigin);
         }
 
 

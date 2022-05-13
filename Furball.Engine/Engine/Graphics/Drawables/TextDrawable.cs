@@ -1,4 +1,6 @@
 
+using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Numerics;
 using FontStashSharp;
@@ -25,7 +27,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// <summary>
         /// The height of the text
         /// </summary>
-        public override Vector2 Size => this.Font.MeasureString(this.Text) * this.Scale;
+        public override Vector2 Size => this.Font.MeasureString(this.Text, this.Scale);
+        public List<Rectangle> TextRectangles => this.Font.GetGlyphRects(this.Text, this.Scale);
 
         /// <summary>
         ///     The color type of the text, Solid means a single color, Repeating means the pattern in Colors repeats, and Stretch
@@ -74,7 +77,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
                     break;
                 }
                 case TextColorType.Repeating: {
-                    System.Drawing.Color[] colors = this.Colors;
+                    Color[] colors = this.Colors;
                     while (colors.Length < this.Text.Length)
                         colors = colors.Concat(colors).ToArray();
 
