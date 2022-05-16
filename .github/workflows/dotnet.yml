@@ -9,12 +9,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-    
-        # Setup monogame
-      - name: monogame dev
-        id: monogame
-        run: dotnet tool update --global dotnet-mgcb-editor --version *-*; mgcb-editor --register;
-
 
       # - name: Setup dotnet
       #   uses: actions/setup-dotnet@v1
