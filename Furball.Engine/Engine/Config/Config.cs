@@ -36,6 +36,9 @@ namespace Furball.Engine.Engine.Config {
         public override void Save() {
             if (!Directory.Exists(VOLPE_CONFIG_FOLDER))
                 Directory.CreateDirectory(VOLPE_CONFIG_FOLDER);
+
+            if (File.Exists(this.Filename))
+                File.Delete(this.Filename);
                 
             using FileStream stream = File.OpenWrite(this.FilePath);
             using StreamWriter writer = new(stream);
