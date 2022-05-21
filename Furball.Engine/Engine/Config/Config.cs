@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using Furball.Volpe.Evaluation;
 using Furball.Volpe.Exceptions;
@@ -37,10 +38,7 @@ namespace Furball.Engine.Engine.Config {
             if (!Directory.Exists(VOLPE_CONFIG_FOLDER))
                 Directory.CreateDirectory(VOLPE_CONFIG_FOLDER);
 
-            if (File.Exists(this.Filename))
-                File.Delete(this.Filename);
-                
-            using FileStream stream = File.OpenWrite(this.FilePath);
+            using FileStream   stream = File.Create(this.FilePath);
             using StreamWriter writer = new(stream);
             writer.AutoFlush = true;
 
@@ -69,6 +67,7 @@ namespace Furball.Engine.Engine.Config {
             }
             catch (VolpeException exception) {
                 Logger.Log($"Unable to parse config script {this.Name}! Message:{exception.Message}", LoggerLevelConfigError.Instance);
+                Debugger.Break();
             }
 
             IReadOnlyDictionary<string, Variable> vars = this._environment.Variables;
