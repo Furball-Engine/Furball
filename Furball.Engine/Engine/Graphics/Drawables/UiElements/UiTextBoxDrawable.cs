@@ -156,6 +156,11 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
 
                 List<Rectangle> rects = this.TextRectangles;
 
+                if (rects.Count == 0) {
+                    this.SelectedRange.Value = new Range(0, 0);
+                    return;
+                }
+                
                 if (e.args.position.X > rects.Last().Right + this.RealPosition.X) {
                     this.SelectedRange.Value = new Range(this.Text.Length, this.Text.Length);
                     return;
