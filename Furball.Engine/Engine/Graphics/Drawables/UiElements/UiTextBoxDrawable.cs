@@ -236,6 +236,10 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
                     }
                     position.Y =  args.Position.Y; //this will have to do for now :(
                     position.X -= 1;
+
+                    if (this.Text.EndsWith(" "))
+                        position.X += this.Font.MeasureString(" ").X;
+                    
                     batch.Draw(FurballGame.WhitePixel, position, new Vector2(1.5f * FurballGame.VerticalRatio, this.Font.LineHeight * FurballGame.VerticalRatio));
                 }
             }
