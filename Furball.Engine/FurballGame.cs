@@ -289,7 +289,7 @@ namespace Furball.Engine {
         private Stopwatch _updateWatch    = new ();
         public double    LastUpdateTime { get; private set; } = 0.0;
 
-        protected override void Update(double gameTime) {
+        protected override void Update(double deltaTime) {
             if (RuntimeInfo.IsDebug()) {
                 this._updateWatch.Reset();
                 this._updateWatch.Start();
@@ -297,17 +297,17 @@ namespace Furball.Engine {
 
             InputManager.Update();
 
-            base.Update(gameTime);
+            base.Update(deltaTime);
 
-            DrawableManager.Update(gameTime);
+            DrawableManager.Update(deltaTime);
 
             if (ConVars.DebugOverlay)
-                DebugOverlayDrawableManager.Update(gameTime);
+                DebugOverlayDrawableManager.Update(deltaTime);
 
             if (RuntimeInfo.LoggerEnabled())
-                Logger.XnaUpdate(gameTime);
+                Logger.XnaUpdate(deltaTime);
 
-            ScreenManager.UpdateTransition(gameTime);
+            ScreenManager.UpdateTransition(deltaTime);
 
             GameTimeScheduler.Update(Time);
 
