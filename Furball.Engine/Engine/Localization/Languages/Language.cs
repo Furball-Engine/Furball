@@ -13,5 +13,15 @@ namespace Furball.Engine.Engine.Localization.Languages {
         public abstract List<string> OtherNames();
 
         public override string ToString() => $"{this.EnglishName()} ({this.NativeName()})";
+
+        public static bool operator ==(Language a, Language b) {
+            if (a is null && b is null)
+                return true;
+            if (a is null || b is null)
+                return false;
+            
+            return a.Iso6392Code() == b.Iso6392Code();
+        }
+        public static bool operator !=(Language a, Language b) => !(a == b);
     }
 }
