@@ -1,32 +1,37 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Furball.Engine", "Furball.Engine\Furball.Engine.csproj", "{E83B6828-8CF3-4DE3-8F2F-AFD748615706}"
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32328.378
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Furball.Engine", "Furball.Engine\Furball.Engine.csproj", "{E83B6828-8CF3-4DE3-8F2F-AFD748615706}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Furball.Game", "Furball.Game\Furball.Game.csproj", "{2BA8D1D2-3680-4654-8339-8485D4237DB7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Furball.Game", "Furball.Game\Furball.Game.csproj", "{2BA8D1D2-3680-4654-8339-8485D4237DB7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dependencies", "Dependencies", "{7B2F29B3-1240-48F9-BF57-0047C1499644}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Furball.Vixie", "Furball.Vixie\Furball.Vixie\Furball.Vixie.csproj", "{11D25A00-36DC-47FF-AA82-3D9254AF65E2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Furball.Vixie", "Furball.Vixie\Furball.Vixie\Furball.Vixie.csproj", "{11D25A00-36DC-47FF-AA82-3D9254AF65E2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Furball.Tests", "Furball.Tests\Furball.Tests.csproj", "{6A9278AB-3A20-499C-B727-A8FC7886F578}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Furball.Tests", "Furball.Tests\Furball.Tests.csproj", "{6A9278AB-3A20-499C-B727-A8FC7886F578}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Furball.Volpe", "Furball.Volpe\Furball.Volpe\Furball.Volpe.csproj", "{65B4DF3C-1BB4-4EDB-929B-597C0E612CBE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Furball.Volpe", "Furball.Volpe\Furball.Volpe\Furball.Volpe.csproj", "{65B4DF3C-1BB4-4EDB-929B-597C0E612CBE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Furball.Vixie.Helpers", "Furball.Vixie\Furball.Vixie.Helpers\Furball.Vixie.Helpers.csproj", "{AD8D3C59-980D-441C-A5B1-DA76CB9FCD9D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Furball.Vixie.Helpers", "Furball.Vixie\Furball.Vixie.Helpers\Furball.Vixie.Helpers.csproj", "{AD8D3C59-980D-441C-A5B1-DA76CB9FCD9D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Furball.Vixie.Backends.Shared", "Furball.Vixie\Furball.Vixie.Backends.Shared\Furball.Vixie.Backends.Shared.csproj", "{090F85E6-55E0-4603-B01D-6AC468E97B3B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Furball.Vixie.Backends.Shared", "Furball.Vixie\Furball.Vixie.Backends.Shared\Furball.Vixie.Backends.Shared.csproj", "{090F85E6-55E0-4603-B01D-6AC468E97B3B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Furball.Vixie.Backends.Direct3D11", "Furball.Vixie\Furball.Vixie.Backends.Direct3D11\Furball.Vixie.Backends.Direct3D11.csproj", "{CB68A04E-8357-4D47-96E9-478B5947B0B7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Furball.Vixie.Backends.Direct3D11", "Furball.Vixie\Furball.Vixie.Backends.Direct3D11\Furball.Vixie.Backends.Direct3D11.csproj", "{CB68A04E-8357-4D47-96E9-478B5947B0B7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Furball.Vixie.Backends.OpenGL.Shared", "Furball.Vixie\Furball.Vixie.Backends.OpenGL.Shared\Furball.Vixie.Backends.OpenGL.Shared.csproj", "{FB1C9422-BD34-491F-8D5F-01F1B0A6A1D0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Furball.Vixie.Backends.OpenGL.Shared", "Furball.Vixie\Furball.Vixie.Backends.OpenGL.Shared\Furball.Vixie.Backends.OpenGL.Shared.csproj", "{FB1C9422-BD34-491F-8D5F-01F1B0A6A1D0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Furball.Vixie.Backends.OpenGL20", "Furball.Vixie\Furball.Vixie.Backends.OpenGL20\Furball.Vixie.Backends.OpenGL20.csproj", "{5383DB37-FF53-42DF-A62E-88378DFD495C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Furball.Vixie.Backends.OpenGL20", "Furball.Vixie\Furball.Vixie.Backends.OpenGL20\Furball.Vixie.Backends.OpenGL20.csproj", "{5383DB37-FF53-42DF-A62E-88378DFD495C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Furball.Vixie.Backends.OpenGL41", "Furball.Vixie\Furball.Vixie.Backends.OpenGL41\Furball.Vixie.Backends.OpenGL41.csproj", "{565D3697-75D4-4761-880C-399450ED4C5C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Furball.Vixie.Backends.OpenGL41", "Furball.Vixie\Furball.Vixie.Backends.OpenGL41\Furball.Vixie.Backends.OpenGL41.csproj", "{565D3697-75D4-4761-880C-399450ED4C5C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Furball.Vixie.Backends.OpenGLES", "Furball.Vixie\Furball.Vixie.Backends.OpenGLES\Furball.Vixie.Backends.OpenGLES.csproj", "{782E6324-70EC-424D-B1EA-C0188BF71914}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Furball.Vixie.Backends.OpenGLES", "Furball.Vixie\Furball.Vixie.Backends.OpenGLES\Furball.Vixie.Backends.OpenGLES.csproj", "{782E6324-70EC-424D-B1EA-C0188BF71914}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Furball.Vixie.Backends.Veldrid", "Furball.Vixie\Furball.Vixie.Backends.Veldrid\Furball.Vixie.Backends.Veldrid.csproj", "{0B76B9F2-E6DF-4918-A8F5-BC7239066125}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Furball.Vixie.Backends.Veldrid", "Furball.Vixie\Furball.Vixie.Backends.Veldrid\Furball.Vixie.Backends.Veldrid.csproj", "{0B76B9F2-E6DF-4918-A8F5-BC7239066125}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Furball.Vixie.OpenGLDetector", "Furball.Vixie\Furball.Vixie.OpenGLDetector\Furball.Vixie.OpenGLDetector.csproj", "{BF53008A-3351-4966-B434-CEBB6E4A1295}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -86,6 +91,13 @@ Global
 		{0B76B9F2-E6DF-4918-A8F5-BC7239066125}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0B76B9F2-E6DF-4918-A8F5-BC7239066125}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0B76B9F2-E6DF-4918-A8F5-BC7239066125}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF53008A-3351-4966-B434-CEBB6E4A1295}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF53008A-3351-4966-B434-CEBB6E4A1295}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF53008A-3351-4966-B434-CEBB6E4A1295}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF53008A-3351-4966-B434-CEBB6E4A1295}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{11D25A00-36DC-47FF-AA82-3D9254AF65E2} = {7B2F29B3-1240-48F9-BF57-0047C1499644}
@@ -98,5 +110,9 @@ Global
 		{565D3697-75D4-4761-880C-399450ED4C5C} = {7B2F29B3-1240-48F9-BF57-0047C1499644}
 		{782E6324-70EC-424D-B1EA-C0188BF71914} = {7B2F29B3-1240-48F9-BF57-0047C1499644}
 		{0B76B9F2-E6DF-4918-A8F5-BC7239066125} = {7B2F29B3-1240-48F9-BF57-0047C1499644}
+		{BF53008A-3351-4966-B434-CEBB6E4A1295} = {7B2F29B3-1240-48F9-BF57-0047C1499644}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F975C095-8BEA-40A5-A325-09E52C534F36}
 	EndGlobalSection
 EndGlobal
