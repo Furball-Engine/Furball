@@ -29,6 +29,27 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         public override Vector2 Size => this.Font.MeasureString(this.Text, this.Scale);
         public List<Rectangle> TextRectangles => this.Font.GetGlyphRects(this.Text, Vector2.Zero, this.Scale);
 
+        public string PreWrapText { get; protected set; }
+
+        public void Wrap(float width, bool setPrewrap = true) {
+            if(setPrewrap)
+                this.PreWrapText = this.Text;
+
+            List<Rectangle> rects = this.TextRectangles;
+
+            for (int i = 0; i < rects.Count; i++) {
+                Rectangle rectangle = rects[i];
+
+                if (rectangle.Right > width) {
+                    this.Text = this.Text.Insert(i, "\n");
+
+                    rects = this.TextRectangles;
+
+                    i -= 1;
+                }
+            }
+        }
+        
         /// <summary>
         ///     The color type of the text, Solid means a single color, Repeating means the pattern in Colors repeats, and Stretch
         ///     means the colours stretch to fit
