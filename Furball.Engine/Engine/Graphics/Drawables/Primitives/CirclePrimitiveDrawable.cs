@@ -23,7 +23,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Primitives {
             
             for (int i = 0; i < this.Detail; i++) {    
                 double angle = 2 * Math.PI *i / this.Detail; 
-                this._calculatedPoints[i] = new((float)(Math.Cos(angle) * this.CircleRadius), (float)(Math.Sin(angle) * this.CircleRadius)); 
+                this._calculatedPoints[i] = new Vector2((float)(Math.Cos(angle) * this.CircleRadius), (float)(Math.Sin(angle) * this.CircleRadius)); 
             } 
         }
 
@@ -36,11 +36,11 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Primitives {
         /// <param name="thickness">The thickness of the outline</param>
         /// <param name="detail">How many sides are on the circle</param>
         public CirclePrimitiveDrawable(Vector2 position, float radius, Color outlineColor, float thickness, int detail = 25) {
-            this.CircleRadius  = new(radius);
+            this.CircleRadius  = new Bindable<float>(radius);
             this.Circular      = true;
             this.ColorOverride = outlineColor;
             this.Position      = position;
-            this.Detail        = new(detail);
+            this.Detail        = new Bindable<int>(detail);
             this.Thickness     = thickness;
             
             this.Recalculate();

@@ -46,7 +46,7 @@ namespace Furball.Engine.Engine.Input.InputMethods {
 
             state.Position       = tempState.Position / FurballGame.VerticalRatio;
             state.PressedButtons = tempState.GetPressedButtons().ToArray();
-            state.ScrollWheel    = new();
+            state.ScrollWheel    = new ScrollWheel();
             
             state.Name = mouse.Name;
             

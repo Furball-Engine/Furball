@@ -1,4 +1,5 @@
 
+using System.Numerics;
 using Furball.Engine.Engine.Graphics.Drawables.Primitives;
 using Furball.Vixie.Backends.Shared;
 
@@ -8,10 +9,10 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         private readonly RectanglePrimitiveDrawable _backgroundRect;
 
         public TooltipDrawable() {
-            this._backgroundRect = new(new(0), new(100, 20), 2, true) {
-                ColorOverride = new(0, 0, 0, 155)
+            this._backgroundRect = new RectanglePrimitiveDrawable(new Vector2(0), new Vector2(100, 20), 2, true) {
+                ColorOverride = new Color(0, 0, 0, 155)
             };
-            this._textDrawable = new(new(0), FurballGame.DEFAULT_FONT, "", 20) {
+            this._textDrawable = new TextDrawable(new Vector2(0), FurballGame.DEFAULT_FONT, "", 20) {
                 ColorOverride = Color.White
             };
 

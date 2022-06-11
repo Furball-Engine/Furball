@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Numerics;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
+using Furball.Vixie.Backends.Shared;
 
 namespace Furball.Engine.Engine.Graphics.Drawables {
     public class CompositeDrawable : ManagedDrawable {
@@ -66,7 +67,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
                 if (!drawable.Visible) continue;
 
 
-                this._drawableArgs.Color = new(
+                this._drawableArgs.Color = new Color(
                 (byte)(this.ColorOverride.R / 255f * drawable.ColorOverride.R),
                 (byte)(this.ColorOverride.G / 255f * drawable.ColorOverride.G),
                 (byte)(this.ColorOverride.B / 255f * drawable.ColorOverride.B),

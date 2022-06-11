@@ -40,23 +40,24 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         public  float   OutlineThickness = 1f;
 
         public override Vector2 Size => this.BarSize * this.Scale;
-        
+
         /// <summary>
         /// Creates a Progress Bar
         /// </summary>
         /// <param name="position">Where to Draw it</param>
         /// <param name="font">What SpriteFont to use</param>
-        /// <param name="size">What size should it be?</param>
+        /// <param name="fontSize">What size should the font be</param>
+        /// <param name="barSize">What size should it be?</param>
         /// <param name="outlineColor">Outline Color</param>
         /// <param name="barColor">Bar Color</param>
         /// <param name="textColor">Text Color</param>
-        public DrawableProgressBar(Vector2 position, FontSystem font, Vector2 size, Color outlineColor, Color barColor, Color textColor) {
+        public DrawableProgressBar(Vector2 position, FontSystem font, int fontSize, Vector2 barSize, Color outlineColor, Color barColor, Color textColor) {
             this.Position      = position;
-            this.BarSize       = size;
+            this.BarSize       = barSize;
             this.OutlineColor  = outlineColor;
             this.ColorOverride = barColor;
 
-            this.TextDrawable = new TextDrawable(Vector2.Zero, font, "", (int)(size.Y * 0.9f)) {
+            this.TextDrawable = new TextDrawable(Vector2.Zero, font, "", fontSize) {
                 ColorOverride = textColor
             };
         }

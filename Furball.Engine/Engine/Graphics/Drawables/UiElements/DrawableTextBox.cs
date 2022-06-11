@@ -63,14 +63,15 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         /// </summary>
         /// <param name="position">Where to Draw</param>
         /// <param name="font">What font to use</param>
-        /// <param name="text">Initial Text</param>
-        /// <param name="size">Size of the text</param>
+        /// <param name="fontSize">Size of the text</param>
         /// <param name="width">Width/Length of the Textbox</param>
-        public DrawableTextBox(Vector2 position, FontSystem font, string text, int size, float width, bool isInContainerDrawable = false) : base(
+        /// <param name="text">Initial Text</param>
+        /// <param name="isInContainerDrawable"></param>
+        public DrawableTextBox(Vector2 position, FontSystem font, int fontSize, float width, string text, bool isInContainerDrawable = false) : base(
             Vector2.Zero,
             font,
             text,
-            size
+            fontSize
         ) {
             this.Position     = position;
             this.TextBoxWidth = width;

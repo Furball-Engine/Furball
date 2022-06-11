@@ -8,7 +8,7 @@ namespace Furball.Game.Screens {
         public override void Initialize() {
             base.Initialize();
 
-            this.Manager.Add(new DrawableTextBox(new Vector2(10, 10), FurballGame.DEFAULT_FONT, "hi", 24, 240));
+            this.Manager.Add(new DrawableTextBox(new Vector2(10, 10), FurballGame.DEFAULT_FONT, 24, 240, "hi"));
         }
     }
 }

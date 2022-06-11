@@ -15,9 +15,9 @@ namespace Furball.Engine.Engine.Helpers {
 
             Eto.Platform.Initialize(Eto.Platform.Detect);
 
-            _Thread = new(
+            _Thread = new Thread(
             () => {
-                App = new();
+                App = new Application();
                 App.Run();
             }
             );
@@ -38,7 +38,7 @@ namespace Furball.Engine.Engine.Helpers {
             () => {
                 ColorPickerForm form = new(title, allowAlpha);
 
-                form.ColorPicker.Value = new(existingColor.R / 255f, existingColor.G / 255f, existingColor.B / 255f, existingColor.A / 255f);
+                form.ColorPicker.Value = new Eto.Drawing.Color(existingColor.R / 255f, existingColor.G / 255f, existingColor.B / 255f, existingColor.A / 255f);
 
                 form.Show();
                 form.BringToFront();
@@ -61,7 +61,7 @@ namespace Furball.Engine.Engine.Helpers {
                 () => {
                     this.Title = title;
                     // ClientSize = new Size(200, 200);
-                    this.Content = this.ColorPicker = new() {
+                    this.Content = this.ColorPicker = new ColorPicker {
                         AllowAlpha = true
                     };
                     this.Resizable = false;

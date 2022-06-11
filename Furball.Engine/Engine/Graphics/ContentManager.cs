@@ -38,9 +38,9 @@ namespace Furball.Engine.Engine.Graphics {
 
             FontSystem system;
             if (settings != null)
-                system = new(settings);
+                system = new FontSystem(settings);
             else
-                system = new();
+                system = new FontSystem();
 
             foreach (string path in paths)
                 system.AddFont(File.OpenRead(path));

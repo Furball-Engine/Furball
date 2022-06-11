@@ -12,13 +12,13 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         private readonly TexturedDrawable _colorDisplay;
         private readonly TextDrawable     _colorText;
 
-        public DrawableColorPicker(Vector2 position, FontSystem font, int size, Color initialColor) {
+        public DrawableColorPicker(Vector2 position, FontSystem font, int fontSize, Color initialColor) {
             this.Position = position;
-            this.Color    = new(initialColor);
+            this.Color    = new Bindable<Color>(initialColor);
 
-            this._colorText = new(new(0), font, this.Color.Value.ToHexString(), size);
-            this._colorDisplay = new(FurballGame.WhitePixel, new(this._colorText.Size.X + 10, 0)) {
-                Scale         = new(this._colorText.Size.Y),
+            this._colorText = new TextDrawable(new Vector2(0), font, this.Color.Value.ToHexString(), fontSize);
+            this._colorDisplay = new TexturedDrawable(FurballGame.WhitePixel, new Vector2(this._colorText.Size.X + 10, 0)) {
+                Scale         = new Vector2(this._colorText.Size.Y),
                 ColorOverride = this.Color
             };
 
@@ -34,7 +34,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
             this._colorDisplay.FadeColor(e, 100);
             this._colorText.Text = e.ToHexString();
 
-            this._colorDisplay.MoveTo(new(this._colorText.Size.X + 10, 0));
+            this._colorDisplay.MoveTo(new Vector2(this._colorText.Size.X + 10, 0));
         }
 
         private void OnColorDisplayClick(object? sender, (MouseButton button, Point pos) valueTuple) {

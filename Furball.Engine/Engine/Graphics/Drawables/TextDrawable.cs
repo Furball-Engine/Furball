@@ -72,17 +72,17 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// <param name="position">Where to Draw</param>
         /// <param name="font">A byte[] containing the font in ttf form)</param>
         /// <param name="text">What Text to Draw (can be changed later)</param>
-        /// <param name="size">The size of the text as a float</param>
-        public TextDrawable(Vector2 position, FontSystem font, string text, int size) {
+        /// <param name="fontSize">The size of the text as a float</param>
+        public TextDrawable(Vector2 position, FontSystem font, string text, int fontSize) {
             this.Position = position;
 
-            if (!ContentManager.FSS_CACHE.TryGetValue((font, size), out this.Font)) {
-                this.Font = font.GetFont(size);
-                ContentManager.FSS_CACHE.Add((font, size), this.Font);
-                Logger.Log($"Caching DynamicSpriteFont of size {size}", LoggerLevelCacheEvent.Instance);
+            if (!ContentManager.FSS_CACHE.TryGetValue((font, fontSize), out this.Font)) {
+                this.Font = font.GetFont(fontSize);
+                ContentManager.FSS_CACHE.Add((font, fontSize), this.Font);
+                Logger.Log($"Caching DynamicSpriteFont of size {fontSize}", LoggerLevelCacheEvent.Instance);
             }
             
-            this.Font = font.GetFont(size);
+            this.Font = font.GetFont(fontSize);
 
             this.Text = text;
         }

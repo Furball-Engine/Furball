@@ -1,5 +1,6 @@
 using System.Drawing;
 using System.Numerics;
+using FontStashSharp;
 using Furball.Engine.Engine.Graphics.Drawables.Primitives;
 using Furball.Engine.Engine.Helpers;
 using Silk.NET.Input;
@@ -16,23 +17,23 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         private readonly TextDrawable               _textDrawable;
         private readonly RectanglePrimitiveDrawable _rectangleDrawable;
 
-        public DrawableTickbox(Vector2 position, string text, int size, bool initialState = false, bool managed = false) {
+        public DrawableTickbox(Vector2 position, FontSystem font, int fontSize, string text, bool initialState = false, bool managed = false) {
             this.Position       = position;
             this.Selected.Value = initialState;
 
-            this._textDrawable = new(new(30, 0), FurballGame.DEFAULT_FONT, text, size) {
+            this._textDrawable = new TextDrawable(new Vector2(30, 0), font, text, fontSize) {
                 Clickable   = false,
                 CoverClicks = false
             };
 
             float fontHeight = this._textDrawable.Font.MeasureString("A").Y;
 
-            this._rectangleDrawable = new(Vector2.Zero, new(fontHeight - 5f), 1f, initialState) {
+            this._rectangleDrawable = new RectanglePrimitiveDrawable(Vector2.Zero, new Vector2(fontHeight - 5f), 1f, initialState) {
                 Clickable   = false,
                 CoverClicks = false
             };
 
-            this._textDrawable.Position = new(fontHeight + 5f, -7.5f);
+            this._textDrawable.Position = new Vector2(fontHeight + 5f, -7.5f);
 
             this.Drawables.Add(this._textDrawable);
             this.Drawables.Add(this._rectangleDrawable);
