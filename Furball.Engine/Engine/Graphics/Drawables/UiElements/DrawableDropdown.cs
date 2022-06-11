@@ -38,7 +38,16 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
             this.Drawables.Clear();
 
             if (this.Selected) {
-                DrawableButton element = new(new Vector2(0, 0), this.SelectedItem.Value.Value, this.FontSize, this.Font, Color.Blue, Color.White, Color.Black, this.ButtonSize);
+                DrawableButton element = new(
+                new Vector2(0, 0),
+                this.Font,
+                this.FontSize,
+                this.SelectedItem.Value.Value,
+                Color.Blue,
+                Color.White,
+                Color.Black,
+                this.ButtonSize
+                );
 
                 element.OnClick += delegate {
                     this.Selected = false;
@@ -52,7 +61,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
                 foreach (KeyValuePair<object, string> item in this.Items) {
                     if (item.Key == this.SelectedItem.Value.Key) continue;
 
-                    element = new DrawableButton(new Vector2(0, y), item.Value, this.FontSize, this.Font, Color.Blue, Color.White, Color.Black, this.ButtonSize);
+                    element = new DrawableButton(new Vector2(0, y), this.Font, this.FontSize, item.Value, Color.Blue, Color.White, Color.Black, this.ButtonSize);
 
                     element.OnClick += delegate {
                         this.SelectedItem.Value = item;
@@ -67,7 +76,16 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
                     y += element.Size.Y;
                 }
             } else {
-                DrawableButton element = new(new Vector2(0, 0), this.SelectedItem.Value.Value, this.FontSize, this.Font, Color.Blue, Color.White, Color.Black, this.ButtonSize);
+                DrawableButton element = new(
+                new Vector2(0, 0),
+                this.Font,
+                this.FontSize,
+                this.SelectedItem.Value.Value,
+                Color.Blue,
+                Color.White,
+                Color.Black,
+                this.ButtonSize
+                );
 
                 element.OnClick += delegate {
                     this.Selected = true;
