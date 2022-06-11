@@ -39,7 +39,7 @@ namespace Furball.Game.Screens {
             int i = 0;
 
             foreach ((string screenName, Screen screen) in this.Screens) {
-                UiButtonDrawable screenButton = new UiButtonDrawable(
+                DrawableButton screenButton = new DrawableButton(
                     new Vector2(currentX, currentY),
                     screenName,
                     FurballGame.DEFAULT_FONT,

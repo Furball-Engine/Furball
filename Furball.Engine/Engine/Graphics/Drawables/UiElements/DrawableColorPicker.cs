@@ -6,13 +6,13 @@ using Silk.NET.Input;
 using Color=Furball.Vixie.Backends.Shared.Color;
 
 namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
-    public class UiColorPickerDrawable : CompositeDrawable {
+    public class DrawableColorPicker : CompositeDrawable {
         public readonly Bindable<Color> Color;
 
         private readonly TexturedDrawable _colorDisplay;
         private readonly TextDrawable     _colorText;
 
-        public UiColorPickerDrawable(Vector2 position, FontSystem font, int size, Color initialColor) {
+        public DrawableColorPicker(Vector2 position, FontSystem font, int size, Color initialColor) {
             this.Position = position;
             this.Color    = new(initialColor);
 

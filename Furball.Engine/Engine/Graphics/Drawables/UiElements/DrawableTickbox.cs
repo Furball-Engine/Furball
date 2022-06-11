@@ -5,7 +5,7 @@ using Furball.Engine.Engine.Helpers;
 using Silk.NET.Input;
 
 namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
-    public class UiTickboxDrawable : CompositeDrawable {
+    public class DrawableTickbox : CompositeDrawable {
         public string Text {
             get => this._textDrawable.Text;
             set => this._textDrawable.Text = value;
@@ -16,7 +16,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         private readonly TextDrawable               _textDrawable;
         private readonly RectanglePrimitiveDrawable _rectangleDrawable;
 
-        public UiTickboxDrawable(Vector2 position, string text, int size, bool initialState = false, bool managed = false) {
+        public DrawableTickbox(Vector2 position, string text, int size, bool initialState = false, bool managed = false) {
             this.Position       = position;
             this.Selected.Value = initialState;
 

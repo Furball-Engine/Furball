@@ -12,7 +12,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
     /// <summary>
     /// Creates a Simple Button Object
     /// </summary>
-    public class UiButtonDrawable : ManagedDrawable {
+    public class DrawableButton : ManagedDrawable {
         /// <summary>
         ///     The text to display on the button
         /// </summary>
@@ -84,7 +84,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         /// <param name="buttonSize">The size of the button, set to Vector2.Zero for it to auto calculate</param>
         /// <param name="onClick">What happens when the button is clicked</param>
         /// <param name="margin">The margin between the text and the side of the button</param>
-        public UiButtonDrawable(Vector2 position, string text, FontSystem font, int textSize, Color buttonColor, Color textColor, Color outlineColor, Vector2 buttonSize, EventHandler<
+        public DrawableButton(Vector2 position, string text, FontSystem font, int textSize, Color buttonColor, Color textColor, Color outlineColor, Vector2 buttonSize, EventHandler<
                                     (MouseButton, Point)> onClick = null, float margin = 5f) {
             this.Position     = position;
             this.TextDrawable = new TextDrawable(Vector2.Zero, font, text, textSize);

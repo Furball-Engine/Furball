@@ -13,7 +13,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
     /// <summary>
     /// Creates a Basic Textbox
     /// </summary>
-    public class UiTextBoxDrawable : TextDrawable {
+    public class DrawableTextBox : TextDrawable {
         /// <summary>
         ///     The width of the text box
         /// </summary>
@@ -66,7 +66,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         /// <param name="text">Initial Text</param>
         /// <param name="size">Size of the text</param>
         /// <param name="width">Width/Length of the Textbox</param>
-        public UiTextBoxDrawable(Vector2 position, FontSystem font, string text, int size, float width, bool isInContainerDrawable = false) : base(
+        public DrawableTextBox(Vector2 position, FontSystem font, string text, int size, float width, bool isInContainerDrawable = false) : base(
             Vector2.Zero,
             font,
             text,

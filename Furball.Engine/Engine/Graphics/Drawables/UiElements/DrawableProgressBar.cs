@@ -7,7 +7,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
     /// <summary>
     /// Creates a simple Progress Bar
     /// </summary>
-    public class UiProgressBarDrawable : ManagedDrawable {
+    public class DrawableProgressBar : ManagedDrawable {
         /// <summary>
         ///     The format string for the progress bar
         /// </summary>
@@ -50,7 +50,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         /// <param name="outlineColor">Outline Color</param>
         /// <param name="barColor">Bar Color</param>
         /// <param name="textColor">Text Color</param>
-        public UiProgressBarDrawable(Vector2 position, FontSystem font, Vector2 size, Color outlineColor, Color barColor, Color textColor) {
+        public DrawableProgressBar(Vector2 position, FontSystem font, Vector2 size, Color outlineColor, Color barColor, Color textColor) {
             this.Position      = position;
             this.BarSize       = size;
             this.OutlineColor  = outlineColor;
