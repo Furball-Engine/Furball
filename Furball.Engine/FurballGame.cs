@@ -329,6 +329,8 @@ namespace Furball.Engine {
 
             GraphicsBackend.Current.Clear();
 
+            GraphicsBackend.Current.SetFullScissorRect();
+            
             if(DrawableBatch.Begun)
                 DrawableBatch.End();
 

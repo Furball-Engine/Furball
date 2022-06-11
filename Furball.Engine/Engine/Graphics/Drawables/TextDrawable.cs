@@ -27,7 +27,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// The height of the text
         /// </summary>
         public override Vector2 Size => this.Font.MeasureString(this.Text, this.Scale);
-        public List<Rectangle> TextRectangles => this.Font.GetGlyphRects(this.Text, Vector2.Zero, this.Scale);
+        public List<Rectangle> TextRectangles => this.Font.GetGlyphRects(this.Text, Vector2.Zero, Vector2.Zero, this.Scale);
 
         public string PreWrapText { get; protected set; }
 
