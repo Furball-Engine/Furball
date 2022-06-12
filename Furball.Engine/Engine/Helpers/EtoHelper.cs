@@ -17,6 +17,7 @@ namespace Furball.Engine.Engine.Helpers {
 
             _Thread = new Thread(
             () => {
+                Kettu.Logger.Log("Eto Initialized");
                 App = new Application();
                 App.Run();
             }
@@ -40,14 +41,25 @@ namespace Furball.Engine.Engine.Helpers {
 
                 form.ColorPicker.Value = new Eto.Drawing.Color(existingColor.R / 255f, existingColor.G / 255f, existingColor.B / 255f, existingColor.A / 255f);
 
+                bool preventClosure = true;
+                
                 form.Show();
                 form.BringToFront();
-                form.ColorPicker.ValueChanged += (sender, args) => {
+                form.ColorPicker.ValueChanged += (_, _) => {
                     Eto.Drawing.Color color = form.ColorPicker.Value;
 
                     callback.Invoke(App, new Color(color.Rb, color.Gb, color.Bb, color.Ab));
 
-                    form.Close();
+                    preventClosure = false;
+                    App.Invoke(
+                    () => {
+                        form.Close();
+                    }
+                    );
+                };
+                form.Closing += (_, args) => {
+                    if (preventClosure)
+                        args.Cancel = true;
                 };
             }
             );

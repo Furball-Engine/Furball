@@ -182,7 +182,7 @@ namespace Furball.Engine {
             
             ScreenManager.ChangeScreen(this._startScreen);
 
-            //EtoHelper.Initialize();
+            EtoHelper.Initialize();
 
             if (Assembly.GetExecutingAssembly().GetType("MonoMod.WasHere") != null) {
                 GameTimeScheduler.ScheduleMethod(
