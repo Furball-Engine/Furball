@@ -19,6 +19,7 @@ namespace Furball.Game.Screens {
                 ("UI TextBox Testing", new TextBoxTest()),
                 ("Circle Test", new CircleDrawableTest()),
                 ("Scrolling Stutter Test", new ScrollingTest()),
+                ("Audio Effects Testing", new AudioEffectTesting()),
             };
 
             TexturedDrawable background = new TexturedDrawable(FurballGame.WhitePixel, Vector2.Zero) {
@@ -41,9 +42,9 @@ namespace Furball.Game.Screens {
             foreach ((string screenName, Screen screen) in this.Screens) {
                 DrawableButton screenButton = new DrawableButton(
                     new Vector2(currentX, currentY),
-                    screenName,
                     FurballGame.DEFAULT_FONT,
                     26,
+                    screenName,
                     Color.White,
                     Color.Black,
                     Color.Black,
