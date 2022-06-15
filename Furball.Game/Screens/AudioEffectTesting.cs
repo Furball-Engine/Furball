@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Drawing;
 using System.Numerics;
 using Furball.Engine;
@@ -19,7 +20,6 @@ namespace Furball.Game.Screens {
         private FloatTween       _frequencyTween;
 
         private DrawableTextBox _filenameTextBox;
-
 
         public override void Initialize() {
             base.Initialize();
@@ -120,6 +120,8 @@ namespace Furball.Game.Screens {
             this._frequencyTween?.Update(FurballGame.Time);
 
             if (this._frequencyTween != null && !this._frequencyTween.Terminated) {
+                Stopwatch stopwatch = Stopwatch.StartNew();
+
                 BQFParameters lowPassParams = new BQFParameters() {
                     fBandwidth = 0,
                     fCenter    = this._frequencyTween.GetCurrent(),
@@ -128,6 +130,10 @@ namespace Furball.Game.Screens {
                 };
 
                 Bass.FXSetParameters(this._lowPassFxHandle, lowPassParams);
+
+                stopwatch.Stop();
+
+                double ms = ((double) stopwatch.ElapsedTicks / (double) Stopwatch.Frequency) * 1000.0;
             }
 
             base.Update(gameTime);
