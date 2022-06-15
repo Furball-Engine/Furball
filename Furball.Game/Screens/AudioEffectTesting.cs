@@ -2,8 +2,9 @@ using System.Drawing;
 using System.Numerics;
 using Furball.Engine;
 using Furball.Engine.Engine;
-using Furball.Engine.Engine.Graphics;
 using Furball.Engine.Engine.Graphics.Drawables;
+using Furball.Engine.Engine.Graphics.Drawables.Tweens;
+using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes;
 using Furball.Engine.Engine.Graphics.Drawables.UiElements;
 using ManagedBass;
 using ManagedBass.Fx;
@@ -14,11 +15,11 @@ using Color=Furball.Vixie.Backends.Shared.Color;
 namespace Furball.Game.Screens {
     public class AudioEffectTesting : Screen {
         private AudioStream _testingStream;
-        private int         _currentAudioHandle;
+        private int         _lowPassFxHandle;
+        private FloatTween       _frequencyTween;
 
         private DrawableTextBox _filenameTextBox;
 
-        private DrawableTickbox _lowPassTickbox;
 
         public override void Initialize() {
             base.Initialize();
@@ -85,12 +86,13 @@ namespace Furball.Game.Screens {
             this._testingStream = FurballGame.AudioEngine.CreateStream(this._filenameTextBox.Text);
 
             int lowPassHandle = Bass.ChannelSetFX(this._testingStream.Handle, EffectType.BQF, 1);
+            this._lowPassFxHandle = lowPassHandle;
 
             BQFParameters lowPassParams = new BQFParameters() {
                 fBandwidth = 0,
-                fCenter = 200,
-                lFilter = BQFType.LowPass,
-                fQ = 1f,
+                fCenter    = 22049,
+                lFilter    = BQFType.LowPass,
+                fQ         = 1f,
             };
 
             bool succeded = Bass.FXSetParameters(lowPassHandle, lowPassParams);
@@ -98,7 +100,10 @@ namespace Furball.Game.Screens {
             if (succeded) {
                 this._testingStream.Volume = 0.4;
                 this._testingStream.Play();
+                this._testingStream.CurrentPosition = 27500;
             }
+
+            this._frequencyTween = new FloatTween(TweenType.Fade, 22049, 200, FurballGame.Time, FurballGame.Time + 2500);
         }
 
         private void PlayButtonOnClick(object sender, (MouseButton, Point) e) {
@@ -109,6 +114,23 @@ namespace Furball.Game.Screens {
             this._testingStream        = FurballGame.AudioEngine.CreateStream(this._filenameTextBox.Text);
             this._testingStream.Volume = 0.4;
             this._testingStream.Play();
+        }
+
+        public override void Update(double gameTime) {
+            this._frequencyTween?.Update(FurballGame.Time);
+
+            if (this._frequencyTween != null && !this._frequencyTween.Terminated) {
+                BQFParameters lowPassParams = new BQFParameters() {
+                    fBandwidth = 0,
+                    fCenter    = this._frequencyTween.GetCurrent(),
+                    lFilter    = BQFType.LowPass,
+                    fQ         = 1f,
+                };
+
+                Bass.FXSetParameters(this._lowPassFxHandle, lowPassParams);
+            }
+
+            base.Update(gameTime);
         }
     }
 }
