@@ -1,13 +1,11 @@
-using System.Diagnostics;
 using System.Drawing;
 using System.Numerics;
 using Furball.Engine;
 using Furball.Engine.Engine;
 using Furball.Engine.Engine.Graphics.Drawables;
-using Furball.Engine.Engine.Graphics.Drawables.Tweens;
-using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes;
 using Furball.Engine.Engine.Graphics.Drawables.UiElements;
 using ManagedBass;
+using ManagedBass.DirectX8;
 using ManagedBass.Fx;
 using Silk.NET.Input;
 using sowelipisona;
@@ -16,8 +14,6 @@ using Color=Furball.Vixie.Backends.Shared.Color;
 namespace Furball.Game.Screens {
     public class AudioEffectTesting : Screen {
         private AudioStream _testingStream;
-        private int         _lowPassFxHandle;
-        private FloatTween       _frequencyTween;
 
         private DrawableTextBox _filenameTextBox;
 
@@ -77,7 +73,47 @@ namespace Furball.Game.Screens {
             );
 
             this.Manager.Add(lowPassPlayButton);
+
+            currentY += 60;
+
+            DrawableButton reverbPlayButton = new DrawableButton(
+                new Vector2(50, currentY),
+                FurballGame.DEFAULT_FONT,
+                28,
+                "Play Audio with Reverb",
+                Color.White,
+                Color.Black,
+                Color.Black,
+                new Vector2(350, 40), ReverbPlayOnClick
+            );
+
+            this.Manager.Add(reverbPlayButton);
         }
+
+        private void ReverbPlayOnClick(object sender, (MouseButton, Point) e) {
+            if (this._testingStream?.PlaybackState == PlaybackState.Playing) {
+                this._testingStream.Stop();
+            }
+
+            this._testingStream = FurballGame.AudioEngine.CreateStream(this._filenameTextBox.Text);
+
+            int reverbFxHandle = Bass.ChannelSetFX(this._testingStream.Handle, EffectType.DXReverb, 1);
+
+            DXReverbParameters reverbParameters = new DXReverbParameters() {
+                fHighFreqRTRatio = 0.001f,
+                fInGain          = 0,
+                fReverbMix       = -5,
+                fReverbTime      = 3000,
+            };
+
+            bool succeded = Bass.FXSetParameters(reverbFxHandle, reverbParameters);
+
+            if (succeded) {
+                this._testingStream.Volume = 0.4;
+                this._testingStream.Play();
+            }
+        }
+
         private void LowPassPlayOnClick(object sender, (MouseButton, Point) e) {
             if (this._testingStream?.PlaybackState == PlaybackState.Playing) {
                 this._testingStream.Stop();
@@ -86,11 +122,10 @@ namespace Furball.Game.Screens {
             this._testingStream = FurballGame.AudioEngine.CreateStream(this._filenameTextBox.Text);
 
             int lowPassHandle = Bass.ChannelSetFX(this._testingStream.Handle, EffectType.BQF, 1);
-            this._lowPassFxHandle = lowPassHandle;
 
             BQFParameters lowPassParams = new BQFParameters() {
                 fBandwidth = 0,
-                fCenter    = 22049,
+                fCenter    = 200,
                 lFilter    = BQFType.LowPass,
                 fQ         = 1f,
             };
@@ -100,10 +135,7 @@ namespace Furball.Game.Screens {
             if (succeded) {
                 this._testingStream.Volume = 0.4;
                 this._testingStream.Play();
-                this._testingStream.CurrentPosition = 27500;
             }
-
-            this._frequencyTween = new FloatTween(TweenType.Fade, 22049, 200, FurballGame.Time, FurballGame.Time + 2500);
         }
 
         private void PlayButtonOnClick(object sender, (MouseButton, Point) e) {
@@ -114,29 +146,6 @@ namespace Furball.Game.Screens {
             this._testingStream        = FurballGame.AudioEngine.CreateStream(this._filenameTextBox.Text);
             this._testingStream.Volume = 0.4;
             this._testingStream.Play();
-        }
-
-        public override void Update(double gameTime) {
-            this._frequencyTween?.Update(FurballGame.Time);
-
-            if (this._frequencyTween != null && !this._frequencyTween.Terminated) {
-                Stopwatch stopwatch = Stopwatch.StartNew();
-
-                BQFParameters lowPassParams = new BQFParameters() {
-                    fBandwidth = 0,
-                    fCenter    = this._frequencyTween.GetCurrent(),
-                    lFilter    = BQFType.LowPass,
-                    fQ         = 1f,
-                };
-
-                Bass.FXSetParameters(this._lowPassFxHandle, lowPassParams);
-
-                stopwatch.Stop();
-
-                double ms = ((double) stopwatch.ElapsedTicks / (double) Stopwatch.Frequency) * 1000.0;
-            }
-
-            base.Update(gameTime);
         }
     }
 }
