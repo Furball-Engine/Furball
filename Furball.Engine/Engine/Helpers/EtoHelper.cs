@@ -13,25 +13,25 @@ namespace Furball.Engine.Engine.Helpers {
         public static void Initialize() {
             InitCalled = true;
 
-            //Eto.Platform.Initialize(Eto.Platform.Detect);
-//
-            //_Thread = new Thread(
-            //() => {
-            //    Kettu.Logger.Log("Eto Initialized");
-            //    App = new Application();
-            //    App.Run();
-            //}
-            //);
-//
-            //_Thread.Start();
+            Eto.Platform.Initialize(Eto.Platform.Detect);
+
+            _Thread = new Thread(
+            () => {
+                Kettu.Logger.Log("Eto Initialized");
+                App = new Application();
+                App.Run();
+            }
+            );
+
+            _Thread.Start();
         }
 
         public static void Dispose() {
-            //while (InitCalled && App == null) {
-            //    Thread.Sleep(150);
-            //}
-//
-            //App?.Invoke(() => App?.Quit());
+            while (InitCalled && App == null) {
+                Thread.Sleep(150);
+            }
+
+            App?.Invoke(() => App?.Quit());
         }
 
         public static void OpenColorPicker(EventHandler<Color> callback, Color existingColor, string title = "Color Picker", bool allowAlpha = true) {
