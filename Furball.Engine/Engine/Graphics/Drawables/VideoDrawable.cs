@@ -37,5 +37,11 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
             if (data != null)
                 this.Texture.SetData(0, data);
         }
+
+        public override void Dispose() {
+            base.Dispose();
+
+            this._decoder.Dispose();
+        }
     }
 }
