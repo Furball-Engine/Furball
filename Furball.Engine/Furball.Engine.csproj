@@ -47,6 +47,7 @@
         <TrimmerRootAssembly Include="Microsoft.Xna.Framework.Content.ContentTypeReader" Visible="false" />
     </ItemGroup>
     <ItemGroup>
+        <PackageReference Include="FFmpeg.AutoGen" Version="5.0.0"/>
         <PackageReference Include="GtkSharp.Win32" Version="3.1.2" />
         <PackageReference Include="ImGui.NET" Version="1.86.0" />
         <PackageReference Include="Jace" Version="1.0.0" />
