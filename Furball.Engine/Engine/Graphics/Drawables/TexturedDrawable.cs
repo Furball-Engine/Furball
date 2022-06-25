@@ -12,7 +12,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// <summary>
         /// The Texture Being drawn
         /// </summary>
-        private Texture _texture;
+        protected Texture _texture;
         /// <summary>
         ///     The texture being drawn
         /// </summary>
