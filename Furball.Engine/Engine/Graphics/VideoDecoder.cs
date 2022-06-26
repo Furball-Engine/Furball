@@ -79,6 +79,9 @@ namespace Furball.Engine.Engine.Graphics {
             this._frameBuffer      = new byte[this._bufferSize][];
 
             this._decodingThread = new Thread(this.DecodingRun);
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || RuntimeInformation.IsOSPlatform(OSPlatform.FreeBSD))
+                RootPath = "/usr/lib";
         }
 
         public void Load(string path) {
