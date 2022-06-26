@@ -305,6 +305,8 @@ namespace Furball.Engine.Engine.Graphics {
         private long _seekingTo;
         public void Seek(double time) {
             lock (this) {
+                Logger.Log($"Seeking to {time}ms", VideoDecoderLoggerLevel.InstanceInfo);
+                
                 int    flags     = 0;
                 double timestamp = time / 1000 / this.FrameDelay + this.Data.VideoStream->start_time;
 

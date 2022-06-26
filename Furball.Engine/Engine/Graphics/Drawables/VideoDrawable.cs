@@ -1,3 +1,4 @@
+using System;
 using System.Numerics;
 using Furball.Engine.Engine.Timing;
 using Furball.Vixie;
@@ -30,11 +31,18 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
             this.StartTime = this.VideoTimeSource.GetCurrentTime();
         }
 
+        private double _lastSeek = -1;
+        
         /// <summary>
         ///     Seems the video decoder to the specified time (prevents speedup and such)
         /// </summary>
         /// <param name="milis">The time in miliseconds</param>
-        public void Seek(double milis) {
+        public void Seek(double milis, bool force = false) {
+            // ReSharper disable once CompareOfFloatsByEqualityOperator
+            if (this._lastSeek != -1 && Math.Abs(milis - this._lastSeek) < 2000 && !force) return;
+
+            this._lastSeek = milis;
+            
             this._decoder.Seek(milis);
         }
 
