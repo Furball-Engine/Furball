@@ -317,12 +317,20 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
                         if (colorTween != null)
                             this.ColorOverride = colorTween.GetCurrent();
                         break;
-                    case TweenType.Movement:
+                    case TweenType.Movement: {
                         VectorTween vectorTween = currentTween as VectorTween;
 
                         if (vectorTween != null)
                             this.Position = vectorTween.GetCurrent();
                         break;
+                    }
+                    case TweenType.RotationOrigin: {
+                        VectorTween vectorTween = currentTween as VectorTween;
+
+                        if (vectorTween != null)
+                            this.RotationOrigin = vectorTween.GetCurrent();
+                        break;
+                    }
                     case TweenType.Path:
                         PathTween pathTween = currentTween as PathTween;
 

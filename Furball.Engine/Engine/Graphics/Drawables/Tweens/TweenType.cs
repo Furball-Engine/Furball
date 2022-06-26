@@ -9,6 +9,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Tweens {
         Fade,
         Color,
         Scale,
-        Rotation
+        Rotation,
+        RotationOrigin
     }
 }
