@@ -30,6 +30,14 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
             this.StartTime = this.VideoTimeSource.GetCurrentTime();
         }
 
+        /// <summary>
+        ///     Seems the video decoder to the specified time (prevents speedup and such)
+        /// </summary>
+        /// <param name="milis">The time in miliseconds</param>
+        public void Seek(int milis) {
+            this._decoder.Seek(milis);
+        }
+
         public override void Update(double time) {
             base.Update(time);
 

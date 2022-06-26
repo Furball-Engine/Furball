@@ -223,6 +223,11 @@ namespace Furball.Engine.Engine.Graphics {
                                     }
                                 }
 
+                                if (this.Data.Packet->dts < this._seekingTo)
+                                    continue;
+
+                                this._seekingTo = 0;
+
                                 if (frameFinished && this.Data.Packet->data != null) {
                                     if (this.Data.ConvertContext == null)
                                         this.Data.ConvertContext = sws_getContext(
@@ -294,6 +299,7 @@ namespace Furball.Engine.Engine.Graphics {
             return null;
         }
 
+        private long _seekingTo;
         public void Seek(int time) {
             lock (this) {
                 int    flags     = 0;
@@ -302,6 +308,7 @@ namespace Furball.Engine.Engine.Graphics {
                 if (timestamp < this.lastPts)
                     flags = AVSEEK_FLAG_BACKWARD;
                 av_seek_frame(this.Data.FormatContext, this.Data.VideoStreamIndex, (long)timestamp, flags);
+                this._seekingTo  = (long)timestamp;
                 this.readCursor  = 0;
                 this.writeCursor = 0;
             }
@@ -318,7 +325,8 @@ namespace Furball.Engine.Engine.Graphics {
 
             this._runDecoding = false;
 
-            this._decodingThread.Join();
+            if (this._decodingThread.IsAlive)
+                this._decodingThread.Join();
 
             AppData data = this.Data;
 
