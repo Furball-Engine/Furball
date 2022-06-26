@@ -107,6 +107,7 @@ namespace Furball.Engine.Engine.Input {
                             
                             _knownHovers.Add(drawable);
                             drawable.Hover(true);
+                            Console.WriteLine($"HOVER: {drawable.RealPosition.X},{drawable.RealPosition.Y}:{drawable.Size.X},{drawable.Size.Y}");
                         }
 
                         if (drawable.CoverHovers) {
@@ -118,7 +119,8 @@ namespace Furball.Engine.Engine.Input {
                             // _knownHovers.RemoveAll(x => x != drawable);
                             doHover = false;
                         }
-                    } else if (drawable.Hoverable && !tooltipSet && doHover) {
+                    }
+                    if (drawable.Hoverable && !tooltipSet/* && doHover */) {
                         if (drawable.ToolTip != string.Empty && ConVars.ToolTips) {
                             FurballGame.TooltipDrawable.SetTooltip(drawable.ToolTip);
                             FurballGame.TooltipDrawable.Tweens.Clear();

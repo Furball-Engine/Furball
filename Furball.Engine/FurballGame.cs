@@ -271,6 +271,7 @@ namespace Furball.Engine {
             this.RunningScreen = screen;
             
             this.AfterScreenChange?.Invoke(this, screen);
+            TooltipDrawable.Visible = false;
         }
 
         public void ChangeScreenSize(int width, int height, bool fullscreen) {
