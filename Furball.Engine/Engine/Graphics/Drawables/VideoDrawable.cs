@@ -34,7 +34,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         ///     Seems the video decoder to the specified time (prevents speedup and such)
         /// </summary>
         /// <param name="milis">The time in miliseconds</param>
-        public void Seek(int milis) {
+        public void Seek(double milis) {
             this._decoder.Seek(milis);
         }
 

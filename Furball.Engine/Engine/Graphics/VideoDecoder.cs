@@ -300,10 +300,10 @@ namespace Furball.Engine.Engine.Graphics {
         }
 
         private long _seekingTo;
-        public void Seek(int time) {
+        public void Seek(double time) {
             lock (this) {
                 int    flags     = 0;
-                double timestamp = (double)time / 1000 / this.FrameDelay + this.Data.VideoStream->start_time;
+                double timestamp = time / 1000 / this.FrameDelay + this.Data.VideoStream->start_time;
 
                 if (timestamp < this.lastPts)
                     flags = AVSEEK_FLAG_BACKWARD;
