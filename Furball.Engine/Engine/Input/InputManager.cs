@@ -235,6 +235,7 @@ namespace Furball.Engine.Engine.Input {
                 ManagedDrawable drawable = drawables[i];
 
                 if (drawable.RealContains(e.args.position.ToPoint())) {
+                    if (drawable.Clickable)
                         drawable.Click(true, e.args.position.ToPoint(), e.args.mouseButton);
 
                     if (drawable.CoverClicks) break;
