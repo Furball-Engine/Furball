@@ -134,8 +134,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// </summary>
         public Vector2 Position = Vector2.Zero;
 
-        public Rectangle Rectangle     => new(this.Position.ToPoint(), this.Size.ToSize());
-        public Rectangle RealRectangle => new(this.RealPosition.ToPoint(), this.Size.ToSize());
+        public Rectangle Rectangle     => new((this.Position     - this.RotationOrigin).ToPoint(), this.Size.ToSize());
+        public Rectangle RealRectangle => new((this.RealPosition - this.RotationOrigin).ToPoint(), this.Size.ToSize());
         /// <summary>
         ///     Unprocessed Size of the Drawable in Pixels
         ///     <remarks>
@@ -177,13 +177,13 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// <returns>Whether the point is inside the drawable</returns>
         public bool Contains(Point point) {
             if (this.Circular)
-                return Vector2.Distance(point.ToVector2(), this.Position) < this.CircleRadius;
+                return Vector2.Distance(point.ToVector2(), this.Position - this.RotationOrigin) < this.CircleRadius;
 
             return this.Rectangle.Contains(point);
         }
         public bool RealContains(Point point) {
             if (this.Circular)
-                return Vector2.Distance(point.ToVector2(), this.RealPosition) < this.CircleRadius;
+                return Vector2.Distance(point.ToVector2(), this.RealPosition - this.RotationOrigin) < this.CircleRadius;
 
             return this.RealRectangle.Contains(point);
         }
