@@ -76,15 +76,19 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         public TextDrawable(Vector2 position, FontSystem font, string text, int fontSize) {
             this.Position = position;
 
+            this.SetFont(font, fontSize);
+
+            this.Text = text;
+        }
+
+        public void SetFont(FontSystem font, int fontSize) {
             if (!ContentManager.FSS_CACHE.TryGetValue((font, fontSize), out this.Font)) {
                 this.Font = font.GetFont(fontSize);
                 ContentManager.FSS_CACHE.Add((font, fontSize), this.Font);
                 Logger.Log($"Caching DynamicSpriteFont of size {fontSize}", LoggerLevelCacheEvent.Instance);
             }
-            
-            this.Font = font.GetFont(fontSize);
 
-            this.Text = text;
+            this.Font = font.GetFont(fontSize);
         }
 
         public override void Draw(double time, DrawableBatch batch, DrawableManagerArgs args) {

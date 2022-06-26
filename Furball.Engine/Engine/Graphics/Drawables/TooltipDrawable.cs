@@ -5,19 +5,19 @@ using Furball.Vixie.Backends.Shared;
 
 namespace Furball.Engine.Engine.Graphics.Drawables {
     public class TooltipDrawable : CompositeDrawable {
-        private readonly TextDrawable               _textDrawable;
+        public readonly  TextDrawable               TextDrawable;
         private readonly RectanglePrimitiveDrawable _backgroundRect;
 
         public TooltipDrawable() {
             this._backgroundRect = new RectanglePrimitiveDrawable(new Vector2(0), new Vector2(100, 20), 2, true) {
                 ColorOverride = new Color(0, 0, 0, 155)
             };
-            this._textDrawable = new TextDrawable(new Vector2(0), FurballGame.DEFAULT_FONT, "", 20) {
+            this.TextDrawable = new TextDrawable(new Vector2(0), FurballGame.DEFAULT_FONT, "", 20) {
                 ColorOverride = Color.White
             };
 
             this.Drawables.Add(this._backgroundRect);
-            this.Drawables.Add(this._textDrawable);
+            this.Drawables.Add(this.TextDrawable);
 
             this.Clickable   = false;
             this.CoverClicks = false;
@@ -30,8 +30,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// </summary>
         /// <param name="text"></param>
         public void SetTooltip(string text) {
-            this._textDrawable.Text       = text;
-            this._backgroundRect.RectSize = this._textDrawable.Size;
+            this.TextDrawable.Text        = text;
+            this._backgroundRect.RectSize = this.TextDrawable.Size;
         }
     }
 }
