@@ -107,7 +107,6 @@ namespace Furball.Engine.Engine.Input {
                             
                             _knownHovers.Add(drawable);
                             drawable.Hover(true);
-                            Console.WriteLine($"HOVER: {drawable.RealPosition.X},{drawable.RealPosition.Y}:{drawable.Size.X},{drawable.Size.Y}");
                         }
 
                         if (drawable.CoverHovers) {
