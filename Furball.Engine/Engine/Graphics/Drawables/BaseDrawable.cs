@@ -353,7 +353,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
                         FloatTween fadeTween = currentTween as FloatTween;
 
                         if (fadeTween != null)
-                            this.ColorOverride.A = (byte)(255 * fadeTween.GetCurrent());
+                            this.ColorOverride.Af = fadeTween.GetCurrent();
                         break;
                 }
             }
