@@ -71,13 +71,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
                         Vector2 p0 = BezierHelper.CubicBezier(this.P0, this.P1, this.P2, this.P3, t);
                         Vector2 p1 = BezierHelper.CubicBezier(this.P0,   this.P1, this.P2, this.P3, nextT);
 
-                        p0.X *= FurballGame.VerticalRatio;
-                        p0.Y *= FurballGame.VerticalRatio;
-                        p1.X *= FurballGame.VerticalRatio;
-                        p1.Y *= FurballGame.VerticalRatio;
-
-                        batch.DrawLine(p0.X, p0.Y, p1.X, p1.Y, this.Thickness * FurballGame.VerticalRatio, args.Color);
-                        batch.DrawLine(p0.X, p0.Y, p1.X, p1.Y, this.Thickness * FurballGame.VerticalRatio, args.Color);
+                        batch.DrawLine(p0.X, p0.Y, p1.X, p1.Y, this.Thickness, args.Color);
+                        batch.DrawLine(p0.X, p0.Y, p1.X, p1.Y, this.Thickness, args.Color);
 
                         break;
                     }
@@ -85,13 +80,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
                         Vector2 p0 = BezierHelper.QuadraticBezier(this.P0, this.P1, this.P2, t);
                         Vector2 p1 = BezierHelper.QuadraticBezier(this.P0, this.P1, this.P2, nextT);
 
-                        p0.X *= FurballGame.VerticalRatio;
-                        p0.Y *= FurballGame.VerticalRatio;
-                        p1.X *= FurballGame.VerticalRatio;
-                        p1.Y *= FurballGame.VerticalRatio;
-
-                        batch.DrawLine(p0.X, p0.Y, p1.X, p1.Y, this.Thickness * FurballGame.VerticalRatio, args.Color);
-                        batch.DrawLine(p0.X, p0.Y, p1.X, p1.Y, this.Thickness * FurballGame.VerticalRatio, args.Color);
+                        batch.DrawLine(p0.X, p0.Y, p1.X, p1.Y, this.Thickness, args.Color);
+                        batch.DrawLine(p0.X, p0.Y, p1.X, p1.Y, this.Thickness, args.Color);
 
                         break;
                     }
@@ -99,11 +89,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
                         Vector2 p1 = MathHelper.CatmullRom(this.P0, this.P1, this.P2, this.P3, t);
                         Vector2 p2 = MathHelper.CatmullRom(this.P0, this.P1, this.P2, this.P3, nextT);
 
-                        p1  *= FurballGame.VerticalRatio;
-                        p2  *= FurballGame.VerticalRatio;
-
-                        batch.DrawLine(p1.X, p1.Y, p2.X, p2.Y, this.Thickness * FurballGame.VerticalRatio, args.Color);
-                        batch.DrawLine(p1.X, p1.Y, p2.X, p2.Y, this.Thickness * FurballGame.VerticalRatio, args.Color);
+                        batch.DrawLine(p1.X, p1.Y, p2.X, p2.Y, this.Thickness, args.Color);
+                        batch.DrawLine(p1.X, p1.Y, p2.X, p2.Y, this.Thickness, args.Color);
 
                         break;
                     }

@@ -208,9 +208,6 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         }
 
         public override void Draw(double time, DrawableBatch batch, DrawableManagerArgs args) {
-            args.Position *= FurballGame.VerticalRatio;
-            args.Scale    *= FurballGame.VerticalRatio;
-            
             batch.DrawRectangle(
                 args.Position,
                 this.Size * args.Scale,
@@ -229,25 +226,22 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
                     }
                     else if (this.SelectedRange.Value.End.Value == this.Text.Length) {
                         rect     = rects[^1];
-                        position = args.Position + (new Vector2(rect.Right, rect.Y) * FurballGame.VerticalRatio);
+                        position = args.Position + new Vector2(rect.Right, rect.Y);
                     } 
                     else {
-                        rect = rects[this.SelectedRange.Value.Start];
-                        position = args.Position + (new Vector2(rect.Left, rect.Y) * FurballGame.VerticalRatio);
+                        rect     = rects[this.SelectedRange.Value.Start];
+                        position = args.Position + new Vector2(rect.Left, rect.Y);
                     }
                     position.Y =  args.Position.Y; //this will have to do for now :(
                     position.X -= 1;
 
                     if (this.Text.EndsWith(" "))
                         position.X += this.Font.MeasureString(" ").X;
-                    
-                    batch.Draw(FurballGame.WhitePixel, position, new Vector2(1.5f * FurballGame.VerticalRatio, this.Font.LineHeight * FurballGame.VerticalRatio));
+
+                    batch.Draw(FurballGame.WhitePixel, position, new Vector2(1.5f, this.Font.LineHeight));
                 }
             }
 
-            args.Position /= FurballGame.VerticalRatio;
-            args.Scale    /= FurballGame.VerticalRatio;
-            
             base.Draw(time, batch, args);
         }
     }

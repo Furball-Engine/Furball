@@ -22,9 +22,9 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Primitives {
         public override void Draw(double time, DrawableBatch batch, DrawableManagerArgs args) {
             if (this.RelativePosition) {
                 batch.DrawLine(
-                args.Position                                     * FurballGame.VerticalRatio,
-                (args.Position + (this.EndPosition * args.Scale)) * FurballGame.VerticalRatio,
-                (this.Thickness * args.Scale.X)                   * FurballGame.VerticalRatio,
+                args.Position,
+                args.Position + this.EndPosition * args.Scale,
+                this.Thickness * args.Scale.X,
                 this.ColorOverride
                 );
             } 
@@ -32,9 +32,9 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Primitives {
                 Vector2 diff = this.EndPosition - this.Position;
 
                 batch.DrawLine(
-                args.Position                       * FurballGame.VerticalRatio,
-                (args.Position + diff * args.Scale) * FurballGame.VerticalRatio,
-                this.Thickness                      * args.Scale.X * FurballGame.VerticalRatio,
+                args.Position,
+                args.Position + diff * args.Scale,
+                this.Thickness * args.Scale.X,
                 this.ColorOverride
                 );
             }

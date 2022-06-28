@@ -92,9 +92,6 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         }
 
         public override void Draw(double time, DrawableBatch batch, DrawableManagerArgs args) {
-            args.Position *= FurballGame.VerticalRatio;
-            args.Scale    *= FurballGame.VerticalRatio;
-
             switch (this.ColorType) {
                 case TextColorType.Solid: {
                     batch.DrawString(this.Font, this.Text, args.Position, args.Color, args.Rotation, args.Scale, this.RotationOrigin);

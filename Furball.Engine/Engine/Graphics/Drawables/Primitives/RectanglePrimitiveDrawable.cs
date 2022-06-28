@@ -40,15 +40,15 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Primitives {
         public override void Draw(double time, DrawableBatch batch, DrawableManagerArgs args) {
             if (this.Filled)
                 batch.FillRectangle(
-                    args.Position * FurballGame.VerticalRatio,
-                    this.Size * FurballGame.VerticalRatio,
+                args.Position,
+                this.Size,
                     args.Color
                 );
 
             batch.DrawRectangle(
-                args.Position * FurballGame.VerticalRatio,
-                this.Size     * FurballGame.VerticalRatio,
-                this.Thickness * FurballGame.VerticalRatio,
+            args.Position,
+            this.Size,
+            this.Thickness,
                 args.Color
             );
         }
