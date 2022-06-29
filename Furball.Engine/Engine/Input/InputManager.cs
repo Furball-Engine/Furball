@@ -154,6 +154,8 @@ namespace Furball.Engine.Engine.Input {
                     drawable.Hover(false);
                 }
             }
+            if (!tooltipSet)
+                FurballGame.TooltipDrawable.Visible = false;
         }
 
         private static void DrawableOnMouseDrag(object sender, ((Vector2 lastPosition, Vector2 newPosition), string cursorName) e) {
