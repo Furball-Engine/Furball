@@ -401,7 +401,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         }
 
         public void FadeInFromZero(int duration, Easing easing = Easing.None) {
-            if (this.ColorOverride.A == 0)
+            if (this.ColorOverride.A == 255)
                 return;
 
             lock (this.Tweens) {
