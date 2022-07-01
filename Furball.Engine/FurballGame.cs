@@ -51,6 +51,8 @@ namespace Furball.Engine {
         public static DrawableManager DrawableManager;
         public static DrawableManager DebugOverlayDrawableManager;
 
+        public static bool DrawInputOverlay;
+
         public const int DEFAULT_WINDOW_WIDTH  = 1280;
         public const int DEFAULT_WINDOW_HEIGHT = 720;
 
@@ -65,6 +67,8 @@ namespace Furball.Engine {
         //public static float VerticalRatio => 1;
         public static Rectangle DisplayRect => new(0, 0, (int)Math.Ceiling(WindowWidth / VerticalRatio), (int)Math.Ceiling(WindowHeight / VerticalRatio));
         public static Rectangle DisplayRectActual => new(0, 0, WindowWidth, WindowHeight);
+
+        private bool _drawDebugOverlay = true;
 
         private static TextDrawable    _ConsoleAutoComplete;
         public static  TooltipDrawable TooltipDrawable;
@@ -126,12 +130,16 @@ namespace Furball.Engine {
             InputManager.RegisterInputMethod(new VixieMouseInputMethod());
             InputManager.RegisterInputMethod(new VixieKeyboardInputMethod());
 
-            if (ConVars.DebugOverlay) {
-                InputManager.OnKeyDown += delegate(object _, Key keys) {
-                    if (keys == Key.F11)
-                        ConVars.DebugOverlay = !ConVars.DebugOverlay;
-                };
-            }
+            InputManager.OnKeyDown += delegate(object _, Key keys) {
+                switch (keys) {
+                    case Key.F11:
+                        this._drawDebugOverlay = !this._drawDebugOverlay;
+                        break;
+                    case Key.F10:
+                        DrawInputOverlay = !DrawInputOverlay;
+                        break;
+                }
+            };
 
             //TODO: Add logic to decide on what audio backend to use, and maybe write some code to help change backend on the fly
             AudioEngine = new ManagedBassAudioEngine();
@@ -302,7 +310,7 @@ namespace Furball.Engine {
 
             DrawableManager.Update(deltaTime);
 
-            if (ConVars.DebugOverlay)
+            if (this._drawDebugOverlay)
                 DebugOverlayDrawableManager.Update(deltaTime);
 
             if (RuntimeInfo.LoggerEnabled())
@@ -348,14 +356,14 @@ namespace Furball.Engine {
 
             ScreenManager.DrawTransition(gameTime, DrawableBatch);
 
-            if (ConVars.DebugOverlay)
+            if (this._drawDebugOverlay)
                 DebugOverlayDrawableManager.Draw(gameTime, DrawableBatch);
         }
 
         #region Timing
 
         private static Stopwatch _stopwatch = new();
-        public static double Time => _stopwatch.Elapsed.TotalMilliseconds;
+        public static  double    Time => _stopwatch.Elapsed.TotalMilliseconds;
 
         #endregion
 

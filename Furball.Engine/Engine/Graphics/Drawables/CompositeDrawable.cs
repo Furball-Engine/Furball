@@ -80,6 +80,25 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
 
 
                 drawable.Draw(time, batch, this._drawableArgs);
+                if (FurballGame.DrawInputOverlay)
+                    switch (drawable.Clickable) {
+                        case false when drawable.CoverClicks:
+                            batch.DrawRectangle(
+                            new(drawable.RealRectangle.X, drawable.RealRectangle.Y),
+                            new(drawable.RealRectangle.Width, drawable.RealRectangle.Height),
+                            1,
+                            Color.Red
+                            );
+                            break;
+                        case true when drawable.CoverClicks:
+                            batch.DrawRectangle(
+                            new(drawable.RealRectangle.X, drawable.RealRectangle.Y),
+                            new(drawable.RealRectangle.Width, drawable.RealRectangle.Height),
+                            1,
+                            Color.Green
+                            );
+                            break;
+                    }
             }
         }
     }

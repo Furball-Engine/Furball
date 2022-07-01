@@ -32,8 +32,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
         }
 
         private bool _sortDrawables = false;
-        
-        public override void Draw(double time, DrawableBatch drawableBatch, DrawableManagerArgs _ = null) {
+
+        public override void Draw(double time, DrawableBatch batch, DrawableManagerArgs _ = null) {
             if (this._sortDrawables) {
                 this._totalDrawables     = this._totalDrawables.OrderByDescending(o => o.Depth).ToList();
                 this._managedDrawables   = this._managedDrawables.OrderByDescending(o => o.Depth).ToList();
@@ -41,27 +41,27 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
 
                 this._sortDrawables = false;
             }
-            
-            drawableBatch.Begin();
+
+            batch.Begin();
 
             int tempCount = this._managedDrawables.Count;
             this.CountManaged = tempCount;
 
             for (int i = 0; i < tempCount; i++) {
-                ManagedDrawable currentDrawable = this._managedDrawables[i];
+                ManagedDrawable drawable = this._managedDrawables[i];
 
-                currentDrawable.LastCalculatedOrigin = currentDrawable.CalculateOrigin();
-                currentDrawable.RealPosition         = currentDrawable.Position - currentDrawable.LastCalculatedOrigin;
+                drawable.LastCalculatedOrigin = drawable.CalculateOrigin();
+                drawable.RealPosition         = drawable.Position - drawable.LastCalculatedOrigin;
 
-                if (!currentDrawable.Visible) continue;
+                if (!drawable.Visible) continue;
 
-                if (Math.Abs(currentDrawable.DrawablesLastKnownDepth - currentDrawable.Depth) > 0.01d) {
+                if (Math.Abs(drawable.DrawablesLastKnownDepth - drawable.Depth) > 0.01d) {
                     this._sortDrawables = true;
 
-                    currentDrawable.DrawablesLastKnownDepth = currentDrawable.Depth;
+                    drawable.DrawablesLastKnownDepth = drawable.Depth;
                 }
-                Vector2 origin = currentDrawable.CalculateOrigin();
-                currentDrawable.LastCalculatedOrigin = origin;
+                Vector2 origin = drawable.CalculateOrigin();
+                drawable.LastCalculatedOrigin = origin;
                 
                 //TODO: Potentially give ScaledPosition and ScaledScale
                 //Which would just be:
@@ -74,22 +74,42 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                 //itll def make developing easier
 
 
-                this._args.Color    = currentDrawable.ColorOverride;
-                this._args.Effects  = currentDrawable.SpriteEffect;
-                this._args.Position = currentDrawable.RealPosition;
-                this._args.Rotation = currentDrawable.Rotation;
-                this._args.Scale    = currentDrawable.RealScale = currentDrawable.Scale;
+                this._args.Color    = drawable.ColorOverride;
+                this._args.Effects  = drawable.SpriteEffect;
+                this._args.Position = drawable.RealPosition;
+                this._args.Rotation = drawable.Rotation;
+                this._args.Scale    = drawable.RealScale = drawable.Scale;
 
                 Rectangle rect = new(
                 (this._args.Position - origin).ToPoint(),
-                new Size((int)Math.Ceiling(currentDrawable.Size.X * this._args.Scale.X), (int)Math.Ceiling(currentDrawable.Size.Y * this._args.Scale.Y))
+                new Size((int)Math.Ceiling(drawable.Size.X * this._args.Scale.X), (int)Math.Ceiling(drawable.Size.Y * this._args.Scale.Y))
                 );
 
-                if(rect.IntersectsWith(FurballGame.DisplayRect))
-                    currentDrawable.Draw(time, drawableBatch, this._args);
+                if (rect.IntersectsWith(FurballGame.DisplayRect)) {
+                    drawable.Draw(time, batch, this._args);
+                    if (FurballGame.DrawInputOverlay)
+                        switch (drawable.Clickable) {
+                            case false when drawable.CoverClicks:
+                                batch.DrawRectangle(
+                                new(drawable.RealRectangle.X, drawable.RealRectangle.Y),
+                                new(drawable.RealRectangle.Width, drawable.RealRectangle.Height),
+                                1,
+                                Color.Red
+                                );
+                                break;
+                            case true when drawable.CoverClicks:
+                                batch.DrawRectangle(
+                                new(drawable.RealRectangle.X, drawable.RealRectangle.Y),
+                                new(drawable.RealRectangle.Width, drawable.RealRectangle.Height),
+                                1,
+                                Color.Green
+                                );
+                                break;
+                        }
+                }
             }
 
-            drawableBatch.End();
+            batch.End();
 
             tempCount           = this._unmanagedDrawables.Count;
             this.CountUnmanaged = tempCount;
@@ -114,7 +134,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                     Scale    = currentDrawable.Scale
                 };
 
-                currentDrawable.Draw(time, drawableBatch, args);
+                currentDrawable.Draw(time, batch, args);
             }
         }
 
