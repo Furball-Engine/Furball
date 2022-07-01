@@ -12,7 +12,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
     /// <summary>
     /// Creates a Simple Button Object
     /// </summary>
-    public class DrawableButton : ManagedDrawable {
+    public class DrawableButton : Drawable {
         /// <summary>
         ///     The text to display on the button
         /// </summary>

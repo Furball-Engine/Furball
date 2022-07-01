@@ -13,7 +13,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
     /// <summary>
     /// Simple way to Draw Text
     /// </summary>
-    public class TextDrawable : ManagedDrawable {
+    public class TextDrawable : Drawable {
         /// <summary>
         /// SpriteFont that gets used during Drawing
         /// </summary>

@@ -4,11 +4,11 @@ using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Furball.Vixie.Backends.Shared;
 
 namespace Furball.Engine.Engine.Graphics.Drawables {
-    public class CompositeDrawable : ManagedDrawable {
+    public class CompositeDrawable : Drawable {
         /// <summary>
         ///     The list of drawables contained in the CompositeDrawable
         /// </summary>
-        public List<ManagedDrawable> Drawables = new();
+        public List<Drawable> Drawables = new();
 
         protected        bool                _sortDrawables;
         private readonly DrawableManagerArgs _drawableArgs = new();
@@ -19,13 +19,13 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
                 Vector2 bottomRight = new(0, 0);
 
                 for (int i = 0; i < this.Drawables.Count; i++) {
-                    ManagedDrawable managedDrawable = this.Drawables[i];
-                    
-                    if (managedDrawable.Rectangle.X < topLeft.X) topLeft.X = managedDrawable.Rectangle.X;
-                    if (managedDrawable.Rectangle.Y < topLeft.Y) topLeft.Y = managedDrawable.Rectangle.Y;
+                    Drawable drawable = this.Drawables[i];
 
-                    if (managedDrawable.Rectangle.Right  > bottomRight.X) bottomRight.X = managedDrawable.Rectangle.Right;
-                    if (managedDrawable.Rectangle.Bottom > bottomRight.Y) bottomRight.Y = managedDrawable.Rectangle.Bottom;
+                    if (drawable.Rectangle.X < topLeft.X) topLeft.X = drawable.Rectangle.X;
+                    if (drawable.Rectangle.Y < topLeft.Y) topLeft.Y = drawable.Rectangle.Y;
+
+                    if (drawable.Rectangle.Right  > bottomRight.X) bottomRight.X = drawable.Rectangle.Right;
+                    if (drawable.Rectangle.Bottom > bottomRight.Y) bottomRight.Y = drawable.Rectangle.Bottom;
                 }
 
                 return (bottomRight - topLeft) * this.Scale;
@@ -33,7 +33,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         }
 
         public override void Update(double time) {
-            foreach (ManagedDrawable drawable in this.Drawables) {
+            foreach (Drawable drawable in this.Drawables) {
                 drawable.Update(time);
                 drawable.UpdateTweens();
             }
@@ -53,7 +53,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
             }
 
             for (int i = 0; i < this.Drawables.Count; i++) {
-                ManagedDrawable drawable = this.Drawables[i];
+                Drawable drawable = this.Drawables[i];
 
                 // ReSharper disable once CompareOfFloatsByEqualityOperator
                 if (drawable.Depth != drawable.DrawablesLastKnownDepth)

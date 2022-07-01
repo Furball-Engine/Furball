@@ -9,13 +9,10 @@ using Furball.Vixie.Backends.Shared;
 using Color=Furball.Vixie.Backends.Shared.Color;
 
 namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
-    public class DrawableManager : UnmanagedDrawable {
-        private List<BaseDrawable> _totalDrawables = new();
+    public class DrawableManager : Drawable {
+        private List<Drawable> _drawables = new();
 
-        private List<ManagedDrawable>   _managedDrawables   = new();
-        private List<UnmanagedDrawable> _unmanagedDrawables = new();
-
-        public IReadOnlyList<BaseDrawable> Drawables => this._totalDrawables.AsReadOnly();
+        public IReadOnlyList<Drawable> Drawables => this._drawables.AsReadOnly();
 
         public int CountManaged { get; private set; }
         public int CountUnmanaged { get; private set; }
@@ -35,20 +32,21 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
 
         public override void Draw(double time, DrawableBatch batch, DrawableManagerArgs _ = null) {
             if (this._sortDrawables) {
-                this._totalDrawables     = this._totalDrawables.OrderByDescending(o => o.Depth).ToList();
-                this._managedDrawables   = this._managedDrawables.OrderByDescending(o => o.Depth).ToList();
-                this._unmanagedDrawables = this._unmanagedDrawables.OrderByDescending(o => o.Depth).ToList();
+                this._drawables = this._drawables.OrderByDescending(o => o.Depth).ToList();
 
                 this._sortDrawables = false;
             }
 
-            batch.Begin();
+            bool unmanaged = !batch.Begun;
 
-            int tempCount = this._managedDrawables.Count;
+            if (unmanaged)
+                batch.Begin();
+
+            int tempCount = this._drawables.Count;
             this.CountManaged = tempCount;
 
             for (int i = 0; i < tempCount; i++) {
-                ManagedDrawable drawable = this._managedDrawables[i];
+                Drawable drawable = this._drawables[i];
 
                 drawable.LastCalculatedOrigin = drawable.CalculateOrigin();
                 drawable.RealPosition         = drawable.Position - drawable.LastCalculatedOrigin;
@@ -109,33 +107,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                 }
             }
 
-            batch.End();
-
-            tempCount           = this._unmanagedDrawables.Count;
-            this.CountUnmanaged = tempCount;
-
-            for (int i = 0; i < tempCount; i++) {
-                UnmanagedDrawable currentDrawable = this._unmanagedDrawables[i];
-                if (!currentDrawable.Visible) continue;
-
-                if (Math.Abs(currentDrawable.DrawablesLastKnownDepth - currentDrawable.Depth) > 0.01d) {
-                    this._sortDrawables = true;
-
-                    currentDrawable.DrawablesLastKnownDepth = currentDrawable.Depth;
-                }
-
-                currentDrawable.LastCalculatedOrigin = currentDrawable.CalculateOrigin();
-
-                DrawableManagerArgs args = new() {
-                    Color    = currentDrawable.ColorOverride,
-                    Effects  = currentDrawable.SpriteEffect,
-                    Position = currentDrawable.Position - currentDrawable.LastCalculatedOrigin,
-                    Rotation = currentDrawable.Rotation,
-                    Scale    = currentDrawable.Scale
-                };
-
-                currentDrawable.Draw(time, batch, args);
-            }
+            if (unmanaged)
+                batch.End();
         }
 
         private          TextureRenderTarget _target2D;
@@ -156,92 +129,35 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
         }
 
         public override void Update(double time) {
-            int tempCount = this._managedDrawables.Count;
+            int tempCount = this._drawables.Count;
             for (int i = 0; i < tempCount; i++) {
-                ManagedDrawable currentDrawable = this._managedDrawables[i];
-
-                currentDrawable.UpdateTweens();
-                currentDrawable.Update(time);
-            }
-
-            tempCount = this._unmanagedDrawables.Count;
-            for (int i = 0; i < tempCount; i++) {
-                UnmanagedDrawable currentDrawable = this._unmanagedDrawables[i];
+                Drawable currentDrawable = this._drawables[i];
 
                 currentDrawable.UpdateTweens();
                 currentDrawable.Update(time);
             }
         }
 
-        public void Add(BaseDrawable drawable) {
-            this._totalDrawables.Add(drawable);
-
-            switch (drawable) {
-                case ManagedDrawable managedDrawable:
-                    this._managedDrawables.Add(managedDrawable);
-                    break;
-                case UnmanagedDrawable unmanagedDrawable:
-                    this._unmanagedDrawables.Add(unmanagedDrawable);
-                    break;
-            }
-
-            this._totalDrawables     = this._totalDrawables.OrderByDescending(o => o.Depth).ToList();
-            this._managedDrawables   = this._managedDrawables.OrderByDescending(o => o.Depth).ToList();
-            this._unmanagedDrawables = this._unmanagedDrawables.OrderByDescending(o => o.Depth).ToList();
+        public void Add(Drawable drawable) {
+            this._drawables.Add(drawable);
+            this._drawables = this._drawables.OrderByDescending(o => o.Depth).ToList();
         }
 
-        public void Add(List<BaseDrawable> drawables) {
-            this._totalDrawables.AddRange(drawables);
-
-            foreach (BaseDrawable drawable in drawables)
-                switch (drawable) {
-                    case ManagedDrawable managedDrawable:
-                        this._managedDrawables.Add(managedDrawable);
-                        break;
-                    case UnmanagedDrawable unmanagedDrawable:
-                        this._unmanagedDrawables.Add(unmanagedDrawable);
-                        break;
-                }
-
-            this._totalDrawables     = this._totalDrawables.OrderByDescending(o => o.Depth).ToList();
-            this._managedDrawables   = this._managedDrawables.OrderByDescending(o => o.Depth).ToList();
-            this._unmanagedDrawables = this._unmanagedDrawables.OrderByDescending(o => o.Depth).ToList();
+        public void Add(List<Drawable> drawables) {
+            this._drawables.AddRange(drawables);
+            this._drawables = this._drawables.OrderByDescending(o => o.Depth).ToList();
         }
 
-        public void Add(params BaseDrawable[] drawables) {
-            this._totalDrawables.AddRange(drawables);
-
-            foreach (BaseDrawable drawable in drawables)
-                switch (drawable) {
-                    case ManagedDrawable managedDrawable:
-                        this._managedDrawables.Add(managedDrawable);
-                        break;
-                    case UnmanagedDrawable unmanagedDrawable:
-                        this._unmanagedDrawables.Add(unmanagedDrawable);
-                        break;
-                }
-
-            this._totalDrawables     = this._totalDrawables.OrderByDescending(o => o.Depth).ToList();
-            this._managedDrawables   = this._managedDrawables.OrderByDescending(o => o.Depth).ToList();
-            this._unmanagedDrawables = this._unmanagedDrawables.OrderByDescending(o => o.Depth).ToList();
+        public void Add(params Drawable[] drawables) {
+            this._drawables.AddRange(drawables);
+            this._drawables = this._drawables.OrderByDescending(o => o.Depth).ToList();
         }
-        public void Remove(BaseDrawable drawable) {
-            this._totalDrawables.Remove(drawable);
-
-            switch (drawable) {
-                case ManagedDrawable managedDrawable:
-                    managedDrawable.Dispose();
-                    this._managedDrawables.Remove(managedDrawable);
-                    break;
-                case UnmanagedDrawable unmanagedDrawable:
-                    unmanagedDrawable.Dispose();
-                    this._unmanagedDrawables.Remove(unmanagedDrawable);
-                    break;
-            }
+        public void Remove(Drawable drawable) {
+            this._drawables.Remove(drawable);
         }
 
         public override void Dispose() {
-            foreach (BaseDrawable drawable in this._totalDrawables)
+            foreach (Drawable drawable in this._drawables)
                 drawable.Dispose();
 
             lock (StatLock) {

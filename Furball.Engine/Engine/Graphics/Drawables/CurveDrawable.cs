@@ -3,7 +3,7 @@ using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Furball.Engine.Engine.Helpers;
 
 namespace Furball.Engine.Engine.Graphics.Drawables {
-    public class CurveDrawable : ManagedDrawable {
+    public class CurveDrawable : Drawable {
         /// <summary>
         ///     The type of curve
         /// </summary>

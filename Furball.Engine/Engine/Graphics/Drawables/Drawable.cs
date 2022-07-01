@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Numerics;
+using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes.BezierPathTween;
@@ -23,11 +24,17 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         LeftCenter,
         RightCenter
     }
-
+    
     /// <summary>
-    ///     Base Class for Managed and Unmanaged Drawable
+    /// A Basic Drawable that gets passed in an Already Started SpriteBatch,
+    /// Do not use this for Drawables that require Effects, or other Special SpriteBatch behaviour,
+    /// as This Drawable is getting passed an Already Begun SpriteBatch
+    /// use <see cref="UnmanagedDrawable"/> for this task
+    /// <remarks>
+    /// Basic Drawables get drawn before UnmanagedDrawables.
+    /// </remarks>
     /// </summary>
-    public abstract class BaseDrawable {
+    public abstract class Drawable {
         /// <summary>
         ///     This is the real position of a drawable, ignoring whether it is inside of a CompositeDrawable or not
         /// </summary>
@@ -312,47 +319,39 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
 
                 switch (currentTween.TweenType) {
                     case TweenType.Color:
-                        ColorTween colorTween = currentTween as ColorTween;
-
-                        if (colorTween != null)
+                        if (currentTween is ColorTween colorTween)
                             this.ColorOverride = colorTween.GetCurrent();
                         break;
                     case TweenType.Movement: {
-                        VectorTween vectorTween = currentTween as VectorTween;
 
-                        if (vectorTween != null)
+                        if (currentTween is VectorTween vectorTween)
                             this.Position = vectorTween.GetCurrent();
                         break;
                     }
                     case TweenType.RotationOrigin: {
-                        VectorTween vectorTween = currentTween as VectorTween;
 
-                        if (vectorTween != null)
+                        if (currentTween is VectorTween vectorTween)
                             this.RotationOrigin = vectorTween.GetCurrent();
                         break;
                     }
                     case TweenType.Path:
-                        PathTween pathTween = currentTween as PathTween;
 
-                        if (pathTween != null)
+                        if (currentTween is PathTween pathTween)
                             this.Position = pathTween.GetCurrent();
                         break;
                     case TweenType.Scale:
-                        VectorTween scaleTween = currentTween as VectorTween;
 
-                        if (scaleTween != null)
+                        if (currentTween is VectorTween scaleTween)
                             this.Scale = scaleTween.GetCurrent();
                         break;
                     case TweenType.Rotation:
-                        FloatTween rotationTween = currentTween as FloatTween;
 
-                        if (rotationTween != null)
+                        if (currentTween is FloatTween rotationTween)
                             this.Rotation = rotationTween.GetCurrent();
                         break;
                     case TweenType.Fade:
-                        FloatTween fadeTween = currentTween as FloatTween;
 
-                        if (fadeTween != null)
+                        if (currentTween is FloatTween fadeTween)
                             this.ColorOverride.Af = fadeTween.GetCurrent();
                         break;
                 }
@@ -522,5 +521,20 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         }
 
         #endregion
+
+        /// <summary>
+        ///     Method for Drawing the Drawable,
+        ///     Gets called every Draw
+        /// </summary>
+        /// <param name="time">How much time has passed since last Draw</param>
+        /// <param name="batch">Already Started SpriteBatch</param>
+        /// <param name="args">The DrawableManagerArgs variable, which contains the arguments to pass into your batch.Draw call</param>
+        public virtual void Draw(double time, DrawableBatch batch, DrawableManagerArgs args) {}
+        /// <summary>
+        ///     If your Drawable needs updating, this is the Method to Override,
+        ///     Gets Called every Update
+        /// </summary>
+        /// <param name="time">How much time has passed since last Update</param>
+        public virtual void Update(double time) {}
     }
 }

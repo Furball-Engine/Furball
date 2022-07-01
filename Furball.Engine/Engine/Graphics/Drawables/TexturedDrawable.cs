@@ -8,7 +8,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
     /// <summary>
     /// A Basic Managed Drawable that just Draws a Texture to the Screen,
     /// </summary>
-    public class TexturedDrawable : ManagedDrawable {
+    public class TexturedDrawable : Drawable {
         /// <summary>
         /// The Texture Being drawn
         /// </summary>

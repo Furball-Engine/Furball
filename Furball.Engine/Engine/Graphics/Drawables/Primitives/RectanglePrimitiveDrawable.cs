@@ -5,7 +5,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Primitives {
     /// <summary>
     /// Simple rectangle Drawable
     /// </summary>
-    public class RectanglePrimitiveDrawable : ManagedDrawable {
+    public class RectanglePrimitiveDrawable : Drawable {
         /// <summary>
         ///     Whether the rectangle is filled in
         /// </summary>

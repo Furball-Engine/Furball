@@ -6,7 +6,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Primitives {
     /// <summary>
     /// Simple Line Drawable
     /// </summary>
-    public class LinePrimitiveDrawable : ManagedDrawable {
+    public class LinePrimitiveDrawable : Drawable {
         public Vector2 EndPosition;
         public float   Thickness;
         public bool    RelativePosition;

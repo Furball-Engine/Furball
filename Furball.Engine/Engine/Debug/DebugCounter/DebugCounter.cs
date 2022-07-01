@@ -5,12 +5,11 @@ using Furball.Engine.Engine.Graphics;
 using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
 
-
 namespace Furball.Engine.Engine.Debug.DebugCounter {
     /// <summary>
     /// Debug Counter which is displayed on the bottom left corner
     /// </summary>
-    public class DebugCounter : ManagedDrawable {
+    public class DebugCounter : Drawable {
         private TextDrawable _textDrawable = new(new Vector2(0, 700), FurballGame.DEFAULT_FONT, "a", 24);
 
         private Vector2 _size;

@@ -2,9 +2,8 @@ using Furball.Engine.Engine.Graphics;
 using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
 
-
 namespace Furball.Engine.Engine {
-    public abstract class Transition : UnmanagedDrawable {
+    public abstract class Transition : Drawable {
         protected DrawableManager Manager = new();
         /// <summary>
         /// This gets called right before the Screen gets Changed,

@@ -7,7 +7,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
     /// <summary>
     /// Creates a simple Progress Bar
     /// </summary>
-    public class DrawableProgressBar : ManagedDrawable {
+    public class DrawableProgressBar : Drawable {
         /// <summary>
         ///     The format string for the progress bar
         /// </summary>
