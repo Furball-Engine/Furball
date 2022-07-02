@@ -95,6 +95,7 @@ namespace Furball.Engine.Engine.Graphics {
             this.DrawLine(new Vector2(x0, y0), new Vector2(x1, y1), thickness, color);
         }
 
+        //TODO: add rotations
         public void DrawRectangle(Vector2 position, Vector2 size, float thickness, Color color) {
             Vector2 p0 = position; //TL
             Vector2 p1 = new Vector2(position.X + size.X, position.Y); //TR
