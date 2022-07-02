@@ -34,6 +34,18 @@ namespace Furball.Engine.Engine.Helpers {
             App?.Invoke(() => App?.Quit());
         }
 
+        public static DialogResult MessageDialog(string message, MessageBoxButtons buttons) {
+            DialogResult response = DialogResult.Cancel;
+
+            App?.InvokeAsync(
+            () => {
+                response = MessageBox.Show(message, buttons);
+            }
+            ).Wait();
+
+            return response;
+        }
+
         public static void OpenColorPicker(EventHandler<Color> callback, Color existingColor, string title = "Color Picker", bool allowAlpha = true) {
             App?.Invoke(
             () => {
