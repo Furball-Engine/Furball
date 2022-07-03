@@ -16,10 +16,19 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
             this.Position = position;
             this.Color    = new Bindable<Color>(initialColor);
 
-            this._colorText = new TextDrawable(new Vector2(0), font, this.Color.Value.ToHexString(), fontSize);
+            this._colorText = new TextDrawable(new Vector2(0), font, this.Color.Value.ToHexString(), fontSize) {
+                Clickable   = false,
+                CoverClicks = false,
+                Hoverable   = false,
+                CoverHovers = false
+            };
             this._colorDisplay = new TexturedDrawable(FurballGame.WhitePixel, new Vector2(this._colorText.Size.X + 10, 0)) {
                 Scale         = new Vector2(this._colorText.Size.Y),
-                ColorOverride = this.Color
+                ColorOverride = this.Color,
+                Clickable     = false,
+                CoverClicks   = false,
+                Hoverable     = false,
+                CoverHovers   = false
             };
 
             this.OnClick += this.OnColorDisplayClick;
