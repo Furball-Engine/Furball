@@ -41,12 +41,13 @@ namespace Furball.Engine.Engine.Input {
         /// <param name="drawablesToAddTo">A pre sorted list of drawables</param>
         public static int RecurseCompositeDrawables(ref List<Drawable> drawablesToAddTo, CompositeDrawable compositeDrawableToIterate, int indexToAddAt) {
             int added = 0;
-
+            
             for (int i = compositeDrawableToIterate.Drawables.Count - 1; i >= 0; i--) {
                 Drawable drawable = compositeDrawableToIterate.Drawables[i];
 
                 if (drawable is CompositeDrawable compositeDrawable) {
-                    drawablesToAddTo.Insert(indexToAddAt, compositeDrawable);
+                    if (!compositeDrawable.InvisibleToInput)
+                        drawablesToAddTo.Insert(indexToAddAt, compositeDrawable);
                     indexToAddAt++;
                     added++;
                     added += RecurseCompositeDrawables(ref drawablesToAddTo, compositeDrawable, indexToAddAt);
@@ -81,6 +82,12 @@ namespace Furball.Engine.Engine.Input {
 
                 fakei++;
             }
+
+            drawables.RemoveAll(
+            x => x is CompositeDrawable {
+                InvisibleToInput: true
+            }
+            );
 
             bool doHover    = true;
             bool tooltipSet = false;
@@ -174,6 +181,12 @@ namespace Furball.Engine.Engine.Input {
                 fakei++;
             }
 
+            drawables.RemoveAll(
+            x => x is CompositeDrawable {
+                InvisibleToInput: true
+            }
+            );
+            
             for (int i = 0; i < drawables.Count; i++) {
                 Drawable drawable = drawables[i];
 
@@ -201,6 +214,12 @@ namespace Furball.Engine.Engine.Input {
                 fakei++;
             }
 
+            drawables.RemoveAll(
+            x => x is CompositeDrawable {
+                InvisibleToInput: true
+            }
+            );
+            
             for (int i = 0; i < drawables.Count; i++) {
                 Drawable drawable = drawables[i];
 
@@ -230,6 +249,12 @@ namespace Furball.Engine.Engine.Input {
 
                 fakei++;
             }
+
+            drawables.RemoveAll(
+            x => x is CompositeDrawable {
+                InvisibleToInput: true
+            }
+            );
 
             for (int i = 0; i < drawables.Count; i++) {
                 Drawable drawable = drawables[i];

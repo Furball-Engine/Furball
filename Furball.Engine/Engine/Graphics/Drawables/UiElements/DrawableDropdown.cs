@@ -24,7 +24,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
             this.Font       = font;
             this.FontSize   = fontSize;
 
-            this.Clickable = false;
+            this.InvisibleToInput = true;
 
             if (items.Count == 0)
                 throw new InvalidOperationException("Your dropdown needs at least one item!");

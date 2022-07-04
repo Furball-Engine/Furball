@@ -10,9 +10,12 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// </summary>
         public List<Drawable> Drawables = new();
 
-        protected        bool                _sortDrawables;
+        protected bool _sortDrawables;
+
         private readonly DrawableManagerArgs _drawableArgs = new();
 
+        public bool InvisibleToInput = false;
+        
         public override Vector2 Size {
             get {
                 Vector2 topLeft     = new(0, 0);
