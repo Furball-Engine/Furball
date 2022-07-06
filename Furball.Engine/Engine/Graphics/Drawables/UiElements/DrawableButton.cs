@@ -16,11 +16,10 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         /// <summary>
         ///     The text to display on the button
         /// </summary>
-        private string _text;
-        /// <summary>
-        ///     The text to display on the button
-        /// </summary>
-        public string Text => this._text;
+        public string Text {
+            get => this.TextDrawable.Text;
+            set => this.TextDrawable.Text = value;
+        }
         /// <summary>
         ///     The internal TextDrawable used to display the text
         /// </summary>
@@ -91,7 +90,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
             this.Position     = position;
             this.TextDrawable = new TextDrawable(Vector2.Zero, font, text, textSize);
             this._margin      = margin;
-            this._text        = text;
+            this.Text         = text;
 
             this.TextColor     = textColor;
             this.OutlineColor  = outlineColor;
