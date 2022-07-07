@@ -313,8 +313,7 @@ namespace Furball.Engine {
             if (this._drawDebugOverlay)
                 DebugOverlayDrawableManager.Update(deltaTime);
 
-            if (RuntimeInfo.LoggerEnabled())
-                Logger.XnaUpdate(deltaTime);
+            Logger.XnaUpdate(deltaTime);
 
             ScreenManager.UpdateTransition(deltaTime);
 
