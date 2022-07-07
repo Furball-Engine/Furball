@@ -12,11 +12,11 @@ using SixLabors.Fonts;
 
 namespace Furball.Engine.Engine.Graphics {
     public static class ContentManager {
-        private static readonly Dictionary<string, byte[]>                       CONTENT_CACHE = new();
+        private static readonly Dictionary<string, WeakReference<byte[]>>        CONTENT_CACHE = new();
         public static readonly  Dictionary<(FontSystem, int), DynamicSpriteFont> FSS_CACHE     = new();
         public static           string                                           ContentPath   = "Content";
-        
-        public static int CacheSizeLimit = 40000000;//4 MB
+
+        public static int CacheSizeLimit = 100000000;// 8 MB
 
         public static int ContentCacheItems => CONTENT_CACHE.Count;
         public static int FSSCacheItems => FSS_CACHE.Count;
@@ -52,8 +52,13 @@ namespace Furball.Engine.Engine.Graphics {
             => Resources.CreateTexture(new MemoryStream(LoadRawAsset(filename, source, bypassCache)));
 
         public static byte[] LoadRawAsset(string filename, ContentSource source = ContentSource.Game, bool bypassCache = false) {
-            if (CONTENT_CACHE.TryGetValue(filename, out byte[] cacheData) && !bypassCache)
-                return cacheData;
+            if (CONTENT_CACHE.TryGetValue(filename, out WeakReference<byte[]> cacheReference) && !bypassCache) {
+                if (cacheReference.TryGetTarget(out byte[] cacheData))
+                    return cacheData;
+
+                //If we fail to get the data from the weak reference, then remove the reference from the cache
+                CONTENT_CACHE.Remove(filename);
+            }
 
             byte[] data = Array.Empty<byte>();
 
@@ -87,7 +92,7 @@ namespace Furball.Engine.Engine.Graphics {
             //We dont want to be caching anything huge as that could cause unnessesarily high memory usage
             if (data.Length < CacheSizeLimit && !bypassCache) {
                 Logger.Log($"Caching content with filepath: {filename}, hash:{CryptoHelper.GetMd5(data)}, dataSize:{data.LongLength}", LoggerLevelCacheEvent.Instance);
-                CONTENT_CACHE.Add(filename, data);
+                CONTENT_CACHE.Add(filename, new WeakReference<byte[]>(data));
             }
 
             return data;
