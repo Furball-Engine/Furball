@@ -13,6 +13,7 @@ using SixLabors.Fonts;
 namespace Furball.Engine.Engine.Graphics {
     public static class ContentManager {
         private static readonly Dictionary<string, WeakReference<byte[]>>        CONTENT_CACHE = new();
+        private static readonly Dictionary<string, WeakReference<Texture>>       TEXTURE_CACHE = new();
         public static readonly  Dictionary<(FontSystem, int), DynamicSpriteFont> FSS_CACHE     = new();
         public static           string                                           ContentPath   = "Content";
 
@@ -48,6 +49,21 @@ namespace Furball.Engine.Engine.Graphics {
             return system;
         }
 
+        public static Texture LoadTextureFromFileCached(string filename, ContentSource source = ContentSource.Game) {
+            if (TEXTURE_CACHE.TryGetValue(filename, out WeakReference<Texture> reference)) {
+                if (reference.TryGetTarget(out Texture refTex))
+                    return refTex;
+
+                TEXTURE_CACHE.Remove(filename);
+            }
+
+            Texture tex = Resources.CreateTexture(new MemoryStream(LoadRawAsset(filename, source)));
+
+            TEXTURE_CACHE[filename] = new WeakReference<Texture>(tex);
+
+            return tex;
+        }
+        
         public static Texture LoadTextureFromFile(string filename, ContentSource source = ContentSource.Game, bool bypassCache = false)
             => Resources.CreateTexture(new MemoryStream(LoadRawAsset(filename, source, bypassCache)));
 
