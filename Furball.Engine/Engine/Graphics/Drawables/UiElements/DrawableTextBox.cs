@@ -183,6 +183,9 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
         private void OnTextInput(object sender, (IKeyboard keyboard, char @char)e) {
             if (!this.Selected) return;
 
+            if (this.SelectedRange.Value.Start.Value > this.Text.Length)
+                this.SelectedRange.Value = new Range(0, 0);
+            
             //If it was a control character, dont concat the character to the typed string
             if (char.IsControl(e.@char)) return;
 
