@@ -22,6 +22,7 @@ namespace Furball.Engine.Engine.Debug.DebugCounter {
             new UpdateRate(),
             new DrawableManagerStats(),
             new GraphicsBackend(),
+            new TrackedVixieResources(),
             new GameTimeSourceTime(),
             new BoundByDrawUpdate(),
             new ContentCacheItems(),
@@ -29,7 +30,7 @@ namespace Furball.Engine.Engine.Debug.DebugCounter {
             //TODO: When Android gets implemented, add new item called MousePoints and have it display all current cursors
             new MousePosition(),
 #endif
-            new KeyboardInputs(),
+            new KeyboardInputs()
         };
 
         public DebugCounter() {
