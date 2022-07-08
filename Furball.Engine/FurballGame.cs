@@ -189,6 +189,8 @@ namespace Furball.Engine {
             );
             
             ScreenManager.ChangeScreen(this._startScreen);
+            //Clear the reference
+            this._startScreen = null;
 
             EtoHelper.Initialize();
 
