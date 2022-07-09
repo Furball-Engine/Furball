@@ -30,6 +30,7 @@ using Kettu;
 using Silk.NET.Input;
 using sowelipisona;
 using sowelipisona.ManagedBass;
+using Color=System.Drawing.Color;
 using Environment=System.Environment;
 
 namespace Furball.Engine {
@@ -236,6 +237,28 @@ namespace Furball.Engine {
             FurballConfig.Instance.Save();
             
             base.OnClosing();
+        }
+
+        protected override void DrawLoadingScreen() {
+            GraphicsBackend.Current.Clear();
+
+            DrawableBatch b = new();
+
+            FontSystem fontSystem = new();
+            fontSystem.AddFont(ContentManager.LoadRawAsset("default-font.ttf"));
+            DynamicSpriteFont font = fontSystem.GetFont(80);
+
+            string text = $"Loading {Assembly.GetEntryAssembly()!.GetName().Name}...";
+
+            Vector2 textSize = font.MeasureString(text);
+
+            b.Begin();
+            b.DrawString(font, text, new Vector2(DEFAULT_WINDOW_WIDTH / 2f - textSize.X / 2f, DEFAULT_WINDOW_HEIGHT / 2f - textSize.Y / 2f), Color.White);
+            b.End();
+
+            fontSystem.Dispose();
+
+            b.Dispose();
         }
 
         public double UnfocusedFpsScale => this._unfocusedFpsScale;
