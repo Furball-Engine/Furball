@@ -8,7 +8,6 @@ using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes.BezierPathTween
 using Furball.Engine.Engine.Helpers;
 using Color=Furball.Vixie.Backends.Shared.Color;
 
-
 namespace Furball.Game.Screens {
     public class CatmullTestScreen : Screen {
         private CurveDrawable pathVisualization;
@@ -29,7 +28,7 @@ namespace Furball.Game.Screens {
             Vector2 p3 = new Vector2(160 + ((1280/4) * 2), -250 + (1280/2) + (1280/4));
             Vector2 p4 = new Vector2(160 + ((1280/4) * 3), -250 + 1280 / 2);
 
-            List<BaseDrawable> anchors = new List<BaseDrawable>();
+            List<Drawable> anchors = new();
 
             var a1 = new TexturedDrawable(FurballGame.WhitePixel, p1) {
                 Scale      = new Vector2(16, 16),
