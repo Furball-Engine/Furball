@@ -5,10 +5,9 @@ using Furball.Engine.Engine;
 using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Graphics.Drawables.UiElements;
 using ManagedBass;
-using ManagedBass.DirectX8;
-using ManagedBass.Fx;
 using Silk.NET.Input;
 using sowelipisona;
+using sowelipisona.Effects;
 using Color=Furball.Vixie.Backends.Shared.Color;
 
 namespace Furball.Game.Screens {
@@ -61,18 +60,34 @@ namespace Furball.Game.Screens {
             int currentY = 220;
 
             DrawableButton lowPassPlayButton = new DrawableButton(
-                new Vector2(50, currentY),
-                FurballGame.DEFAULT_FONT,
-                28,
-                "Play Audio with Low Pass filter",
-                Color.White,
-                Color.Black,
-                Color.Black,
-                new Vector2(350, 40),
-                LowPassPlayOnClick
+            new Vector2(50, currentY),
+            FurballGame.DEFAULT_FONT,
+            28,
+            "Play Audio with Low Pass filter",
+            Color.White,
+            Color.Black,
+            Color.Black,
+            new Vector2(350, 40),
+            this.LowPassPlayOnClick
             );
 
             this.Manager.Add(lowPassPlayButton);
+
+            currentY += 60;
+
+            DrawableButton highPassPlayButton = new(
+            new Vector2(50, currentY),
+            FurballGame.DEFAULT_FONT,
+            28,
+            "Play Audio with High Pass filter",
+            Color.White,
+            Color.Black,
+            Color.Black,
+            new Vector2(350, 40),
+            this.HighPassPlayOnClick
+            );
+
+            this.Manager.Add(highPassPlayButton);
 
             currentY += 60;
 
@@ -97,21 +112,12 @@ namespace Furball.Game.Screens {
 
             this._testingStream = FurballGame.AudioEngine.CreateStream(this._filenameTextBox.Text);
 
-            int reverbFxHandle = Bass.ChannelSetFX(this._testingStream.Handle, EffectType.DXReverb, 1);
+            ReverbAudioEffect effect = FurballGame.AudioEngine.CreateReverbEffect(this._testingStream);
 
-            DXReverbParameters reverbParameters = new DXReverbParameters() {
-                fHighFreqRTRatio = 0.001f,
-                fInGain          = 0,
-                fReverbMix       = -5,
-                fReverbTime      = 3000,
-            };
+            effect.Apply();
 
-            bool succeded = Bass.FXSetParameters(reverbFxHandle, reverbParameters);
-
-            if (succeded) {
-                this._testingStream.Volume = 0.4;
-                this._testingStream.Play();
-            }
+            this._testingStream.Volume = 0.4;
+            this._testingStream.Play();
         }
 
         private void LowPassPlayOnClick(object sender, (MouseButton, Point) e) {
@@ -121,21 +127,28 @@ namespace Furball.Game.Screens {
 
             this._testingStream = FurballGame.AudioEngine.CreateStream(this._filenameTextBox.Text);
 
-            int lowPassHandle = Bass.ChannelSetFX(this._testingStream.Handle, EffectType.BQF, 1);
+            LowPassFilterAudioEffect effect = FurballGame.AudioEngine.CreateLowPassFilterEffect(this._testingStream);
 
-            BQFParameters lowPassParams = new BQFParameters() {
-                fBandwidth = 0,
-                fCenter    = 200,
-                lFilter    = BQFType.LowPass,
-                fQ         = 1f,
-            };
+            effect.Apply();
 
-            bool succeded = Bass.FXSetParameters(lowPassHandle, lowPassParams);
+            effect.FrequencyCutoff = 200;
 
-            if (succeded) {
-                this._testingStream.Volume = 0.4;
-                this._testingStream.Play();
-            }
+            this._testingStream.Volume = 0.4;
+            this._testingStream.Play();
+        }
+
+        private void HighPassPlayOnClick(object sender, (MouseButton, Point) e) {
+            if (this._testingStream?.PlaybackState == PlaybackState.Playing)
+                this._testingStream.Stop();
+
+            this._testingStream = FurballGame.AudioEngine.CreateStream(this._filenameTextBox.Text);
+
+            HighPassFilterAudioEffect effect = FurballGame.AudioEngine.CreateHighPassFilterEffect(this._testingStream);
+
+            effect.Apply();
+
+            this._testingStream.Volume = 0.4;
+            this._testingStream.Play();
         }
 
         private void PlayButtonOnClick(object sender, (MouseButton, Point) e) {
