@@ -12,12 +12,13 @@ namespace Furball.Engine.Engine.Helpers {
 
         public static void Initialize() {
             InitCalled = true;
-
-            Eto.Platform.Initialize(Eto.Platform.Detect);
-
+            
             _Thread = new Thread(
             () => {
+                Eto.Platform.Initialize(Eto.Platform.Detect);
+                
                 Kettu.Logger.Log("Eto Initialized");
+                
                 App = new Application();
                 App.Run();
             }

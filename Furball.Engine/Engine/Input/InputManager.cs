@@ -438,6 +438,7 @@ namespace Furball.Engine.Engine.Input {
         /// </summary>
         /// <param name="method">The InputMethod to add</param>
         public void RegisterInputMethod(InputMethod method) {
+            Profiler.StartProfile($"register_input_method_{method.GetType().Name}");
             this.registeredInputMethods.Add(method);
             method.Initialize();
             
@@ -447,6 +448,7 @@ namespace Furball.Engine.Engine.Input {
                     this.OnCharInput?.Invoke(this, (keyboard, c));
                 };
             }
+            Profiler.EndProfileAndPrint($"register_input_method_{method.GetType().Name}");
         }
         /// <summary>
         /// Removes an input method and calls its Dispose method

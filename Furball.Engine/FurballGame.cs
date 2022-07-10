@@ -117,22 +117,30 @@ namespace Furball.Engine {
         }
 
         protected override void Initialize() {
+            Profiler.StartProfile("full_furball_initialize");
+
+            Profiler.StartProfile("init_localizations");
             this.InitializeLocalizations();
+            Profiler.EndProfileAndPrint("init_localizations");
             
             Logger.Log(
             $@"Starting Furball {(Environment.Is64BitProcess ? "64-bit" : "32-bit")} on {Environment.OSVersion.VersionString} {(Environment.Is64BitOperatingSystem ? "64-bit" : "32-bit")}",
                 LoggerLevelEngineInfo.Instance
             );
 
+            Profiler.StartProfile("create_default_fonts");
             DefaultFontData = ContentManager.LoadRawAsset("default-font.ttf");
             DEFAULT_FONT.AddFont(DefaultFontData);
             DEFAULT_FONT_STROKED.AddFont(DefaultFontData);
+            Profiler.EndProfileAndPrint("create_default_fonts");
 
             _stopwatch.Start();
 
+            Profiler.StartProfile("init_input_manager");
             InputManager = new InputManager();
             InputManager.RegisterInputMethod(new VixieMouseInputMethod());
             InputManager.RegisterInputMethod(new VixieKeyboardInputMethod());
+            Profiler.EndProfileAndPrint("init_input_manager");
 
             InputManager.OnKeyDown += delegate(object _, Key keys) {
                 switch (keys) {
@@ -145,16 +153,24 @@ namespace Furball.Engine {
                 }
             };
 
+            Profiler.StartProfile("init_audio_engine");
             //TODO: Add logic to decide on what audio backend to use, and maybe write some code to help change backend on the fly
             AudioEngine = new ManagedBassAudioEngine();
             AudioEngine.Initialize(this.WindowManager.GetWindowHandle());
+            Profiler.EndProfileAndPrint("init_audio_engine");
 
+            Profiler.StartProfile("init_drawable_managers");
             DrawableManager             = new DrawableManager();
             DebugOverlayDrawableManager = new DrawableManager();
+            Profiler.EndProfileAndPrint("init_drawable_managers");
 
+            Profiler.StartProfile("create_white_texture");
             WhitePixel = Resources.CreateTexture();
+            Profiler.EndProfileAndPrint("create_white_texture");
 
+            Profiler.StartProfile("read_translations");
             LocalizationManager.ReadTranslations();
+            Profiler.EndProfileAndPrint("read_translations");
 
             if (Enum.TryParse(FurballConfig.Instance.Language, out ISO639_2Code code)) {
                 LocalizationManager.CurrentLanguage = LocalizationManager.GetLanguageFromCode(code);
@@ -167,8 +183,10 @@ namespace Furball.Engine {
             DrawableManager.Add(TooltipDrawable);
 
             TooltipDrawable.Visible = false;
-            
+
+            Profiler.StartProfile("create_drawable_batch");
             DrawableBatch = new DrawableBatch();
+            Profiler.EndProfileAndPrint("create_drawable_batch");
 
             DebugCounter = new DebugCounter {
                 Clickable   = false,
@@ -176,13 +194,18 @@ namespace Furball.Engine {
             };
             DebugOverlayDrawableManager.Add(DebugCounter);
 
+            Profiler.StartProfile("init_dev+imgui_console");
             DevConsole.Initialize();
             ImGuiConsole.Initialize();
+            Profiler.EndProfileAndPrint("init_dev+imgui_console");
 
             ScreenManager.SetTransition(new FadeTransition());
 
+            Profiler.StartProfile("load_content");
             base.Initialize();
+            Profiler.EndProfileAndPrint("load_content");
 
+            Profiler.StartProfile("set_window_properties");
             if (!BypassFurballFPSLimit && FurballConfig.Instance.Values["limit_fps"].ToBoolean().Value)
                 SetTargetFps((int) FurballConfig.Instance.Values["target_fps"].ToNumber().Value);
 
@@ -191,12 +214,17 @@ namespace Furball.Engine {
             (int) FurballConfig.Instance.Values["screen_height"].ToNumber().Value,
             FurballConfig.Instance.Values["fullscreen"].ToBoolean().Value
             );
-            
+            Profiler.EndProfileAndPrint("set_window_properties");
+
+            Profiler.StartProfile("change_to_start_screen");
             ScreenManager.ChangeScreen(this._startScreen);
             //Clear the reference
             this._startScreen = null;
+            Profiler.EndProfileAndPrint("change_to_start_screen");
 
+            Profiler.StartProfile("init_eto");
             EtoHelper.Initialize();
+            Profiler.EndProfileAndPrint("init_eto");
 
             if (Assembly.GetExecutingAssembly().GetType("MonoMod.WasHere") != null) {
                 GameTimeScheduler.ScheduleMethod(
@@ -227,6 +255,7 @@ namespace Furball.Engine {
 
                 }, 1500);
             }
+            Profiler.EndProfileAndPrint("full_furball_initialize");
         }
 
         public void Run(Backend backend = Backend.None) {
