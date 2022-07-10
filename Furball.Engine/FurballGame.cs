@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Numerics;
 using System.Reflection;
@@ -25,13 +24,17 @@ using Furball.Engine.Engine.Timing;
 using Furball.Engine.Engine.Transitions;
 using Furball.Vixie;
 using Furball.Vixie.Backends.Shared;
+using Furball.Vixie.Backends.Shared.Backends;
 using Furball.Volpe.Evaluation;
 using Kettu;
 using Silk.NET.Input;
+using Silk.NET.Maths;
+using Silk.NET.Windowing;
 using sowelipisona;
 using sowelipisona.ManagedBass;
 using Color=System.Drawing.Color;
 using Environment=System.Environment;
+using Rectangle=System.Drawing.Rectangle;
 
 namespace Furball.Engine {
     public class FurballGame : Game {
@@ -225,6 +228,17 @@ namespace Furball.Engine {
                 }, 1500);
             }
         }
+
+        public void Run(Backend backend = Backend.None) {
+            WindowOptions options = WindowOptions.Default;
+
+            options.VSync = false;
+
+            options.Size = new Vector2D<int>(FurballConfig.Instance.ScreenWidth, FurballConfig.Instance.ScreenHeight);
+
+            this.Run(options, backend);
+        }
+        
         protected override void OnClosing() {
             try {
                 DevConsole.WriteLog();

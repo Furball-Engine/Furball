@@ -8,7 +8,7 @@ namespace Furball.Game {
 
             using FurballTestGame game = new();
 
-            game.Run(options);
+            game.Run();
         }
     }
 }
