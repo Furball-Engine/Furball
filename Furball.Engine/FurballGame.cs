@@ -369,6 +369,7 @@ namespace Furball.Engine {
         private bool _loadingScreenChangeOffQueued = false;
         public static readonly List<FixedTimeStepMethod> TimeStepMethods = new();
         
+        private bool _loadingScreenChangeOffQueued = false;
         protected override void Update(double deltaTime) {
             if (RuntimeInfo.IsDebug()) {
                 this._updateWatch.Reset();
