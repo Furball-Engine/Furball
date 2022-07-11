@@ -2,6 +2,7 @@ using System;
 using System.Drawing;
 using System.Numerics;
 using FontStashSharp;
+using Furball.Engine.Engine.Helpers;
 using Furball.Vixie;
 using Furball.Vixie.Backends.Shared;
 using Furball.Vixie.Backends.Shared.Renderers;
@@ -19,8 +20,10 @@ namespace Furball.Engine.Engine.Graphics {
         public bool Begun => _begun;
 
         public DrawableBatch() {
+            Profiler.StartProfile("create_drawable_batch");
             this._textureRenderer = GraphicsBackend.Current.CreateTextureRenderer();
             this._lineRenderer    = GraphicsBackend.Current.CreateLineRenderer();
+            Profiler.EndProfileAndPrint("create_drawable_batch");
         }
 
         public void Begin() {

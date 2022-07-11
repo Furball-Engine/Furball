@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using Furball.Engine.Engine.Graphics.Drawables;
+using Furball.Engine.Engine.Helpers;
 using Furball.Engine.Engine.Platform;
 using Furball.Vixie.Backends.Shared;
 using ImGuiNET;
@@ -30,6 +31,8 @@ namespace Furball.Engine.Engine.DevConsole {
         }
 
         public static void Initialize() {
+            Profiler.StartProfile("init_imgui_console");
+
             UpdateTitle();
 
             RefreshCache();
@@ -131,6 +134,8 @@ namespace Furball.Engine.Engine.DevConsole {
             style.ScrollbarRounding = 0.0f;
             style.GrabRounding      = 0.0f;
             style.TabRounding       = 0.0f;
+
+            Profiler.EndProfileAndPrint("init_imgui_console");
         }
 
         public static unsafe void Draw() {

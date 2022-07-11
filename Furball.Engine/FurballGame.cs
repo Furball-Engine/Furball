@@ -119,28 +119,22 @@ namespace Furball.Engine {
         protected override void Initialize() {
             Profiler.StartProfile("full_furball_initialize");
 
-            Profiler.StartProfile("init_localizations");
             this.InitializeLocalizations();
-            Profiler.EndProfileAndPrint("init_localizations");
             
             Logger.Log(
             $@"Starting Furball {(Environment.Is64BitProcess ? "64-bit" : "32-bit")} on {Environment.OSVersion.VersionString} {(Environment.Is64BitOperatingSystem ? "64-bit" : "32-bit")}",
                 LoggerLevelEngineInfo.Instance
             );
 
-            Profiler.StartProfile("create_default_fonts");
             DefaultFontData = ContentManager.LoadRawAsset("default-font.ttf");
             DEFAULT_FONT.AddFont(DefaultFontData);
             DEFAULT_FONT_STROKED.AddFont(DefaultFontData);
-            Profiler.EndProfileAndPrint("create_default_fonts");
 
             _stopwatch.Start();
 
-            Profiler.StartProfile("init_input_manager");
             InputManager = new InputManager();
             InputManager.RegisterInputMethod(new VixieMouseInputMethod());
             InputManager.RegisterInputMethod(new VixieKeyboardInputMethod());
-            Profiler.EndProfileAndPrint("init_input_manager");
 
             InputManager.OnKeyDown += delegate(object _, Key keys) {
                 switch (keys) {
@@ -159,18 +153,12 @@ namespace Furball.Engine {
             AudioEngine.Initialize(this.WindowManager.GetWindowHandle());
             Profiler.EndProfileAndPrint("init_audio_engine");
 
-            Profiler.StartProfile("init_drawable_managers");
             DrawableManager             = new DrawableManager();
             DebugOverlayDrawableManager = new DrawableManager();
-            Profiler.EndProfileAndPrint("init_drawable_managers");
 
-            Profiler.StartProfile("create_white_texture");
             WhitePixel = Resources.CreateTexture();
-            Profiler.EndProfileAndPrint("create_white_texture");
 
-            Profiler.StartProfile("read_translations");
             LocalizationManager.ReadTranslations();
-            Profiler.EndProfileAndPrint("read_translations");
 
             if (Enum.TryParse(FurballConfig.Instance.Language, out ISO639_2Code code)) {
                 LocalizationManager.CurrentLanguage = LocalizationManager.GetLanguageFromCode(code);
@@ -184,9 +172,7 @@ namespace Furball.Engine {
 
             TooltipDrawable.Visible = false;
 
-            Profiler.StartProfile("create_drawable_batch");
             DrawableBatch = new DrawableBatch();
-            Profiler.EndProfileAndPrint("create_drawable_batch");
 
             DebugCounter = new DebugCounter {
                 Clickable   = false,
@@ -194,10 +180,8 @@ namespace Furball.Engine {
             };
             DebugOverlayDrawableManager.Add(DebugCounter);
 
-            Profiler.StartProfile("init_dev+imgui_console");
             DevConsole.Initialize();
             ImGuiConsole.Initialize();
-            Profiler.EndProfileAndPrint("init_dev+imgui_console");
 
             ScreenManager.SetTransition(new FadeTransition());
 
@@ -216,15 +200,11 @@ namespace Furball.Engine {
             );
             Profiler.EndProfileAndPrint("set_window_properties");
 
-            Profiler.StartProfile("change_to_start_screen");
             ScreenManager.ChangeScreen(this._startScreen);
             //Clear the reference
             this._startScreen = null;
-            Profiler.EndProfileAndPrint("change_to_start_screen");
 
-            Profiler.StartProfile("init_eto");
             EtoHelper.Initialize();
-            Profiler.EndProfileAndPrint("init_eto");
 
             if (Assembly.GetExecutingAssembly().GetType("MonoMod.WasHere") != null) {
                 GameTimeScheduler.ScheduleMethod(

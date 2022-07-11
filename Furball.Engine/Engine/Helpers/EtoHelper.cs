@@ -11,6 +11,8 @@ namespace Furball.Engine.Engine.Helpers {
         private static bool InitCalled = false;
 
         public static void Initialize() {
+            Profiler.StartProfile("init_eto");
+
             InitCalled = true;
             
             _Thread = new Thread(
@@ -25,6 +27,8 @@ namespace Furball.Engine.Engine.Helpers {
             );
 
             _Thread.Start();
+
+            Profiler.EndProfileAndPrint("init_eto");
         }
 
         public static void Dispose() {
