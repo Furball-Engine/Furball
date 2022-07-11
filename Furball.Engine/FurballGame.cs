@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Numerics;
 using System.Reflection;
+using System.Threading;
 using FontStashSharp;
 using Furball.Engine.Engine;
 using Furball.Engine.Engine.Config;
@@ -40,6 +41,7 @@ namespace Furball.Engine {
     public class FurballGame : Game {
         private GameComponent _running;
         public  GameComponent RunningScreen;
+        private Screen        LoadingScreen;
 
         public static Random Random = new();
 
@@ -309,7 +311,7 @@ namespace Furball.Engine {
         /// <summary>
         /// Use this function to initialize the default strings for all your localizations
         /// </summary>
-        public virtual void InitializeLocalizations() {
+        protected virtual void InitializeLocalizations() {
             
         }
 
@@ -323,11 +325,28 @@ namespace Furball.Engine {
                 this.RunningScreen = null;
             }
 
-            this.Components.Add(screen);
-            this.RunningScreen = screen;
-            
-            this.AfterScreenChange?.Invoke(this, screen);
-            TooltipDrawable.Visible = false;
+            if((!screen.RequireLoadingScreen) || (screen.RequireLoadingScreen && screen.LoadingComplete)) {
+                this.LoadingScreen                 = null;
+                this._loadingScreenChangeOffQueued = false;
+                
+                this.Components.Add(screen);
+                this.RunningScreen = screen;
+
+                this.AfterScreenChange?.Invoke(this, screen);
+                TooltipDrawable.Visible = false;
+            } else {
+                this.LoadingScreen = screen;
+
+                if (screen.BackgroundThread == null) {
+                    screen.BackgroundThread = new Thread(
+                    _ => {
+                        screen.BackgroundInitialize();
+                    }
+                    );
+                    
+                    screen.BackgroundThread.Start();
+                }
+            }
         }
 
         public void ChangeScreenSize(int width, int height, bool fullscreen) {
@@ -346,10 +365,18 @@ namespace Furball.Engine {
         private Stopwatch _updateWatch    = new ();
         public double    LastUpdateTime { get; private set; } = 0.0;
 
+        private bool _loadingScreenChangeOffQueued = false;
         protected override void Update(double deltaTime) {
             if (RuntimeInfo.IsDebug()) {
                 this._updateWatch.Reset();
                 this._updateWatch.Start();
+            }
+
+            if (this.LoadingScreen is {
+                    LoadingComplete: true
+                } && !this._loadingScreenChangeOffQueued) {
+                this._loadingScreenChangeOffQueued = true;
+                ScreenManager.ChangeScreen(this.LoadingScreen);
             }
 
             InputManager.Update();
@@ -396,15 +423,35 @@ namespace Furball.Engine {
 
             DrawableManager.Draw(gameTime, DrawableBatch);
 
-            if (RuntimeInfo.IsDebug()) {
-                this._drawWatch.Stop();
-                this.LastDrawTime = this._drawWatch.Elapsed.TotalMilliseconds;
-            }
+            if (this.LoadingScreen != null) {
+                DynamicSpriteFont f = DEFAULT_FONT.GetFont(40);
 
+                string text = this.LoadingScreen.LoadingStatus;
+
+                Vector2 textSize = f.MeasureString(text);
+                
+                if(!DrawableBatch.Begun)
+                    DrawableBatch.Begin();
+
+                const float gap       = DEFAULT_WINDOW_HEIGHT * 0.05f;
+                const float barHeight = 30;
+                
+                DrawableBatch.DrawString(f, text, new Vector2(DEFAULT_WINDOW_WIDTH / 2f - textSize.X / 2f, DEFAULT_WINDOW_HEIGHT * 0.3f), Color.White);
+                DrawableBatch.FillRectangle(new Vector2(gap, DEFAULT_WINDOW_HEIGHT - gap - barHeight), new((DEFAULT_WINDOW_WIDTH - gap * 2f) * this.LoadingScreen.LoadingProgress, barHeight), Vixie.Backends.Shared.Color.Grey);
+                DrawableBatch.DrawRectangle(new Vector2(gap, DEFAULT_WINDOW_HEIGHT - gap - barHeight), new(DEFAULT_WINDOW_WIDTH - gap * 2f, barHeight), 1, Vixie.Backends.Shared.Color.White);
+                
+                DrawableBatch.End();
+            }
+            
             ScreenManager.DrawTransition(gameTime, DrawableBatch);
 
             if (this._drawDebugOverlay)
                 DebugOverlayDrawableManager.Draw(gameTime, DrawableBatch);
+
+            if (RuntimeInfo.IsDebug()) {
+                this._drawWatch.Stop();
+                this.LastDrawTime = this._drawWatch.Elapsed.TotalMilliseconds;
+            }
         }
 
         #region Timing

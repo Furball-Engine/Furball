@@ -8,7 +8,7 @@ namespace Furball.Game {
             //this.Window.AllowUserResizing = true;
         }
 
-        public override void InitializeLocalizations() {
+        protected override void InitializeLocalizations() {
             LocalizationManager.AddDefaultTranslation("cat", "Cat");
         }
     }

@@ -13,8 +13,6 @@ namespace Furball.Game.Screens {
         private CurveDrawable pathVisualization;
 
         public override void Initialize() {
-            base.Initialize();
-            
             TexturedDrawable background = new TexturedDrawable(FurballGame.WhitePixel, Vector2.Zero) {
                 ColorOverride = Color.BlueViolet,
                 Scale = new Vector2(1280, 720),
