@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Numerics;
@@ -366,6 +367,8 @@ namespace Furball.Engine {
         public double    LastUpdateTime { get; private set; } = 0.0;
 
         private bool _loadingScreenChangeOffQueued = false;
+        public static readonly List<FixedTimeStepMethod> TimeStepMethods = new();
+        
         protected override void Update(double deltaTime) {
             if (RuntimeInfo.IsDebug()) {
                 this._updateWatch.Reset();
@@ -383,6 +386,10 @@ namespace Furball.Engine {
 
             base.Update(deltaTime);
 
+            foreach (FixedTimeStepMethod fixedTimeStepMethod in TimeStepMethods) {
+                fixedTimeStepMethod.Update(deltaTime);
+            }
+            
             DrawableManager.Update(deltaTime);
 
             if (this._drawDebugOverlay)
