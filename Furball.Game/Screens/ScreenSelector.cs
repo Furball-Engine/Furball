@@ -20,6 +20,7 @@ namespace Furball.Game.Screens {
                 ("Circle Test", new CircleDrawableTest()),
                 ("Scrolling Stutter Test", new ScrollingTest()),
                 ("Audio Effects Testing", new AudioEffectTesting()),
+                ("Fixed Time Step test", new FixedTimeStepTest()),
             };
 
             TexturedDrawable background = new TexturedDrawable(FurballGame.WhitePixel, Vector2.Zero) {
