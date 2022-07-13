@@ -1,5 +1,3 @@
-using System;
-using System.Numerics;
 using Furball.Engine;
 using Furball.Engine.Engine;
 using Furball.Engine.Engine.Graphics.Drawables;
@@ -8,7 +6,7 @@ using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes;
 using Furball.Vixie.Backends.Shared;
 
 namespace Furball.Game.Screens {
-    public class FixedTimeStepTest : Screen {
+    public class FixedTimeStepTest : TestScreen {
         private TexturedDrawable _1PerSecond;
         private TexturedDrawable _2PerSecond;
         private TexturedDrawable _3PerSecond;
@@ -16,12 +14,6 @@ namespace Furball.Game.Screens {
         public override void Initialize() {
             base.Initialize();
             
-            this.Manager.Add(new TexturedDrawable(FurballGame.WhitePixel, Vector2.Zero) {
-                ColorOverride = Color.BlueViolet,
-                Scale         = new Vector2(1280, 720),
-                Depth         = 1f
-            });
-
             const float x    = 15; 
             float       y    = 15;
             const float size = 50;

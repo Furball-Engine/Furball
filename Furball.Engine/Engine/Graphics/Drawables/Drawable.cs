@@ -74,7 +74,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// </summary>
         public bool CoverHovers = true;
         /// <summary>
-        ///     The draw depth of the Drawable
+        ///     The draw depth of the Drawable, more number = further backwards
         /// </summary>
         public double Depth = 0f;
         public double DrawablesLastKnownDepth = 0f;

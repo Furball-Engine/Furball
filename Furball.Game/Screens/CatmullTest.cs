@@ -9,17 +9,11 @@ using Furball.Engine.Engine.Helpers;
 using Color=Furball.Vixie.Backends.Shared.Color;
 
 namespace Furball.Game.Screens {
-    public class CatmullTestScreen : Screen {
+    public class CatmullTest : TestScreen {
         private CurveDrawable pathVisualization;
 
         public override void Initialize() {
-            TexturedDrawable background = new TexturedDrawable(FurballGame.WhitePixel, Vector2.Zero) {
-                ColorOverride = Color.BlueViolet,
-                Scale = new Vector2(1280, 720),
-                Depth = 1f
-            };
-            
-            this.Manager.Add(background);
+            base.Initialize();
 
             Vector2 p1 = new Vector2(160,                  -250 + 1280 / 2);
             Vector2 p2 = new Vector2(160 + ((1280/4) * 1), -250 + (1280/2) - (1280/4));

@@ -23,6 +23,18 @@ namespace Furball.Engine.Engine.Transitions {
             };
 
             this.Manager.Add(this._fadeScreen);
+            
+            FurballGame.Instance.OnRelayout += this.OnRelayout;
+        }
+        
+        private void OnRelayout(object sender, Vector2 e) {
+            this._fadeScreen.Scale = e;
+        }
+
+        public override void Dispose() {
+            base.Dispose();
+            
+            FurballGame.Instance.OnRelayout += this.OnRelayout;
         }
 
         public override double TransitionBegin() {

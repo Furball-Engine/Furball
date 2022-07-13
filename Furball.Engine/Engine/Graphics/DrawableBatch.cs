@@ -16,8 +16,10 @@ namespace Furball.Engine.Engine.Graphics {
         private readonly IQuadRenderer _textureRenderer;
         private readonly ILineRenderer    _lineRenderer;
 
-        private bool _begun;
-        public bool Begun => _begun;
+        public bool Begun {
+            get;
+            private set;
+        }
 
         public DrawableBatch() {
             Profiler.StartProfile("create_drawable_batch");
@@ -27,8 +29,11 @@ namespace Furball.Engine.Engine.Graphics {
         }
 
         public void Begin() {
+            if (this.Begun)
+                throw new Exception("DrawableBatch already begun!");
+            
             this._textureRenderer.Begin();
-            this._begun = true;
+            this.Begun = true;
         }
 
         public void End() {
@@ -37,7 +42,7 @@ namespace Furball.Engine.Engine.Graphics {
             if (this._lineRenderer.IsBegun)
                 this._lineRenderer.End();
 
-            this._begun = false;
+            this.Begun = false;
         }
 
         public void Draw(Texture texture, Vector2 position, Vector2 scale, float rotation, Color colorOverride, TextureFlip texFlip = TextureFlip.None, Vector2 rotOrigin = default) {

@@ -8,32 +8,33 @@ using Furball.Vixie.Backends.Shared;
 
 
 namespace Furball.Game.Screens {
-    public class ScreenSelector : Screen {
-        public List<(string, Screen)> Screens;
+    public class ScreenSelector : TestScreen {
+        public  List<(string, Screen)> Screens;
+        private TextDrawable           _topText;
+
+        public override void Relayout(float newWidth, float newHeight) {
+            base.Relayout(newWidth, newHeight);
+
+            this._topText.Position = new Vector2(newWidth / 2f, 40);
+        }
 
         public override void Initialize() {
+            base.Initialize();
+            
             this.Screens = new List<(string, Screen)> {
-                ("Catmull Testing", new CatmullTestScreen()),
+                ("Catmull Testing", new CatmullTest()),
                 ("UI TextBox Testing", new TextBoxTest()),
                 ("Circle Test", new CircleDrawableTest()),
                 ("Scrolling Stutter Test", new ScrollingTest()),
-                ("Audio Effects Testing", new AudioEffectTesting()),
+                ("Audio Effects Testing", new AudioEffectTest()),
                 ("Loading Screen Test", new LoadingScreenTest()),
-                ("Fixed Time Step test", new FixedTimeStepTest())
+                ("Fixed Time Step test", new FixedTimeStepTest()),
+                ("Layouting Test", new LayoutingTest())
             };
 
-            TexturedDrawable background = new TexturedDrawable(FurballGame.WhitePixel, Vector2.Zero) {
-                ColorOverride = Color.BlueViolet,
-                Scale         = new Vector2(1280, 720),
-                Depth         = 1f
-            };
-
-            this.Manager.Add(background);
-            TextDrawable topText = new TextDrawable(new Vector2(1280f / 2f, 40), FurballGame.DEFAULT_FONT, "Choose Screen", 48) {
+            this.Manager.Add(this._topText = new TextDrawable(new Vector2(1280f / 2f, 40), FurballGame.DEFAULT_FONT, "Choose Screen", 48) {
                 OriginType = OriginType.Center
-            };
-
-            this.Manager.Add(topText);
+            });
 
             int currentY = 90;
             int currentX = 55;

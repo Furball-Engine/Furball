@@ -63,10 +63,18 @@ namespace Furball.Engine.Engine {
         /// Sets the Transition Effect to something else
         /// </summary>
         /// <param name="transition">New Transition Effect</param>
-        public static void SetTransition(Transition transition) => Transition = transition;
+        public static void SetTransition(Transition transition) {
+            Transition?.Dispose();
+            
+            Transition = transition;
+        }
         /// <summary>
         /// Sets the Transition effect to literally nothing, No Fading or anything will happen
         /// </summary>
-        public static void SetBlankTransition() => Transition = null;
+        public static void SetBlankTransition() {
+            Transition?.Dispose();
+
+            Transition = null;
+        }
     }
 }

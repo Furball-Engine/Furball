@@ -11,19 +11,13 @@ using sowelipisona.Effects;
 using Color=Furball.Vixie.Backends.Shared.Color;
 
 namespace Furball.Game.Screens {
-    public class AudioEffectTesting : Screen {
+    public class AudioEffectTest : TestScreen {
         private AudioStream _testingStream;
 
         private DrawableTextBox _filenameTextBox;
 
         public override void Initialize() {
-            TexturedDrawable background = new TexturedDrawable(FurballGame.WhitePixel, Vector2.Zero) {
-                ColorOverride = new Color(0x80, 0x00, 0x80),
-                Scale         = new Vector2(1280, 720),
-                Depth         = 1f
-            };
-
-            this.Manager.Add(background);
+            base.Initialize();
 
             TextDrawable topText = new TextDrawable(new Vector2(1280f / 2f, 40), FurballGame.DEFAULT_FONT, "Audio Effects testing!!!", 48) {
                 OriginType = OriginType.Center

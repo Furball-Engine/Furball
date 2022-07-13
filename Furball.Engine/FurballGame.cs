@@ -28,6 +28,7 @@ using Furball.Vixie;
 using Furball.Vixie.Backends.Shared;
 using Furball.Vixie.Backends.Shared.Backends;
 using Furball.Volpe.Evaluation;
+using JetBrains.Annotations;
 using Kettu;
 using Silk.NET.Input;
 using Silk.NET.Maths;
@@ -41,7 +42,8 @@ using Rectangle=System.Drawing.Rectangle;
 namespace Furball.Engine {
     public class FurballGame : Game {
         private GameComponent _running;
-        public  GameComponent RunningScreen;
+        [CanBeNull]
+        public  Screen        RunningScreen;
         private Screen        LoadingScreen;
 
         public static Random Random = new();
@@ -66,14 +68,18 @@ namespace Furball.Engine {
         public static string AssemblyPath       = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? throw new Exception("shits fucked man");
         public static string LocalizationFolder => $"{AssemblyPath}/Localization";
 
-        public static int WindowWidth => (int) Instance.WindowManager.WindowSize.X;
-        public static int WindowHeight => (int) Instance.WindowManager.WindowSize.Y;
+        public static int RealWindowWidth => (int) Instance.WindowManager.WindowSize.X;
+        public static int RealWindowHeight => (int) Instance.WindowManager.WindowSize.Y;
 
-        public static float HorizontalRatio => (float)WindowWidth / DEFAULT_WINDOW_WIDTH;
-        public static float VerticalRatio => (float)WindowHeight / DEFAULT_WINDOW_HEIGHT;
+        public static float HorizontalRatio => (float)RealWindowWidth / DEFAULT_WINDOW_WIDTH;
+        public static float VerticalRatio => (float)RealWindowHeight / DEFAULT_WINDOW_HEIGHT;
+
+        public static float WindowWidth => RealWindowWidth / (float)RealWindowHeight * 720f;
+        public static float WindowHeight => DEFAULT_WINDOW_HEIGHT;
+
         //public static float VerticalRatio => 1;
-        public static Rectangle DisplayRect => new(0, 0, (int)Math.Ceiling(WindowWidth / VerticalRatio), (int)Math.Ceiling(WindowHeight / VerticalRatio));
-        public static Rectangle DisplayRectActual => new(0, 0, WindowWidth, WindowHeight);
+        public static Rectangle DisplayRect => new(0, 0, (int)Math.Ceiling(RealWindowWidth / VerticalRatio), (int)Math.Ceiling(RealWindowHeight / VerticalRatio));
+        public static Rectangle DisplayRectActual => new(0, 0, RealWindowWidth, RealWindowHeight);
 
         private bool _drawDebugOverlay = true;
 
@@ -103,6 +109,8 @@ namespace Furball.Engine {
 
         public event EventHandler<Screen> BeforeScreenChange; 
         public event EventHandler<Screen> AfterScreenChange;
+
+        public event EventHandler<Vector2> OnRelayout; 
 
         private Screen _startScreen;
         public FurballGame(Screen startScreen) : base()  {
@@ -331,6 +339,8 @@ namespace Furball.Engine {
                 this._loadingScreenChangeOffQueued = false;
                 
                 this.Components.Add(screen);
+                screen.Relayout(WindowWidth, WindowHeight);
+                this.OnRelayout?.Invoke(this, new(WindowWidth, WindowHeight));
                 this.RunningScreen = screen;
 
                 this.AfterScreenChange?.Invoke(this, screen);
@@ -361,11 +371,25 @@ namespace Furball.Engine {
             this.WindowManager.SetWindowSize(width, height);
             FurballConfig.Instance.Values["screen_width"]  = new Value.Number(width);
             FurballConfig.Instance.Values["screen_height"] = new Value.Number(height);
+            
+            this.RunningScreen?.Relayout(WindowWidth, WindowHeight);
+            this.OnRelayout?.Invoke(this, new(WindowWidth, WindowHeight));
+        }
+
+        protected override void OnWindowResize(Vector2D<int> newSize) {
+            base.OnWindowResize(newSize);
+            
+            this.RunningScreen?.Relayout(WindowWidth, WindowHeight);
+            this.OnRelayout?.Invoke(this, new(WindowWidth, WindowHeight));
+
+            FurballConfig.Instance.Values["screen_width"]  = new Value.Number(newSize.X);
+            FurballConfig.Instance.Values["screen_height"] = new Value.Number(newSize.Y);
         }
 
         private Stopwatch _updateWatch    = new ();
         public double    LastUpdateTime { get; private set; } = 0.0;
 
+        // ReSharper disable once InconsistentNaming
         public static readonly List<FixedTimeStepMethod> TimeStepMethods = new();
         
         private bool _loadingScreenChangeOffQueued = false;
@@ -443,9 +467,9 @@ namespace Furball.Engine {
                 const float gap       = DEFAULT_WINDOW_HEIGHT * 0.05f;
                 const float barHeight = 30;
                 
-                DrawableBatch.DrawString(f, text, new Vector2(DEFAULT_WINDOW_WIDTH / 2f - textSize.X / 2f, DEFAULT_WINDOW_HEIGHT * 0.3f), Color.White);
-                DrawableBatch.FillRectangle(new Vector2(gap, DEFAULT_WINDOW_HEIGHT - gap - barHeight), new((DEFAULT_WINDOW_WIDTH - gap * 2f) * this.LoadingScreen.LoadingProgress, barHeight), Vixie.Backends.Shared.Color.Grey);
-                DrawableBatch.DrawRectangle(new Vector2(gap, DEFAULT_WINDOW_HEIGHT - gap - barHeight), new(DEFAULT_WINDOW_WIDTH - gap * 2f, barHeight), 1, Vixie.Backends.Shared.Color.White);
+                DrawableBatch.DrawString(f, text, new Vector2(WindowWidth / 2f - textSize.X / 2f, WindowHeight * 0.3f), Color.White);
+                DrawableBatch.FillRectangle(new Vector2(gap, WindowHeight - gap - barHeight), new((WindowWidth - gap * 2f) * this.LoadingScreen.LoadingProgress, barHeight), Vixie.Backends.Shared.Color.Grey);
+                DrawableBatch.DrawRectangle(new Vector2(gap, WindowHeight - gap - barHeight), new(WindowWidth - gap * 2f, barHeight), 1, Vixie.Backends.Shared.Color.White);
                 
                 DrawableBatch.End();
             }

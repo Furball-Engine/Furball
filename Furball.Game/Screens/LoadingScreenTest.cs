@@ -7,7 +7,7 @@ using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Vixie.Backends.Shared;
 
 namespace Furball.Game.Screens {
-    public class LoadingScreenTest : Screen {
+    public class LoadingScreenTest : TestScreen {
         public override bool RequireLoadingScreen => true;
 
         public override void BackgroundInitialize() {
@@ -29,14 +29,6 @@ namespace Furball.Game.Screens {
 
         public override void Initialize() {
             base.Initialize();
-            
-            this.Manager.Add(
-            new TexturedDrawable(FurballGame.WhitePixel, Vector2.Zero) {
-                ColorOverride = new Color(0x80, 0x00, 0x80),
-                Scale         = new Vector2(1280, 720),
-                Depth         = 1f
-            }
-            );
 
             this.Manager.Add(new TextDrawable(new Vector2(10), FurballGame.DEFAULT_FONT_STROKED, "Loading Complete!", 30));
         }

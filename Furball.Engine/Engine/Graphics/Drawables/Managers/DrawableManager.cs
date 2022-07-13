@@ -114,8 +114,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
         private          TextureRenderTarget _target2D;
         private readonly DrawableManagerArgs _args = new();
         public TextureRenderTarget DrawRenderTarget2D(double time, DrawableBatch batch, DrawableManagerArgs _ = null) {
-            if(this._target2D?.Size.X != FurballGame.WindowWidth || this._target2D?.Size.Y != FurballGame.WindowHeight)
-                this._target2D = Resources.CreateTextureRenderTarget((uint) FurballGame.WindowWidth, (uint) FurballGame.WindowHeight);
+            if(this._target2D?.Size.X != FurballGame.RealWindowWidth || this._target2D?.Size.Y != FurballGame.RealWindowHeight)
+                this._target2D = Resources.CreateTextureRenderTarget((uint) FurballGame.RealWindowWidth, (uint) FurballGame.RealWindowHeight);
             
             this._target2D.Bind();
 

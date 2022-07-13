@@ -57,6 +57,10 @@ namespace Furball.Engine.Engine {
             }
         }
 
+        public virtual void Relayout(float newWidth, float newHeight) {
+            
+        }
+
         public override void Draw(double gameTime) {
             this.Manager?.Draw(gameTime, FurballGame.DrawableBatch);
 
