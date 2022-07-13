@@ -365,7 +365,7 @@ namespace Furball.Engine {
 
         private Stopwatch _updateWatch    = new ();
         public double    LastUpdateTime { get; private set; } = 0.0;
-        
+
         public static readonly List<FixedTimeStepMethod> TimeStepMethods = new();
         
         private bool _loadingScreenChangeOffQueued = false;
