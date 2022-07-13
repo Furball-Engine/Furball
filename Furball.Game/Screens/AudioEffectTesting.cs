@@ -17,8 +17,6 @@ namespace Furball.Game.Screens {
         private DrawableTextBox _filenameTextBox;
 
         public override void Initialize() {
-            base.Initialize();
-
             TexturedDrawable background = new TexturedDrawable(FurballGame.WhitePixel, Vector2.Zero) {
                 ColorOverride = new Color(0x80, 0x00, 0x80),
                 Scale         = new Vector2(1280, 720),

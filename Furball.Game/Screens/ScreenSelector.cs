@@ -12,15 +12,14 @@ namespace Furball.Game.Screens {
         public List<(string, Screen)> Screens;
 
         public override void Initialize() {
-            base.Initialize();
-
             this.Screens = new List<(string, Screen)> {
                 ("Catmull Testing", new CatmullTestScreen()),
                 ("UI TextBox Testing", new TextBoxTest()),
                 ("Circle Test", new CircleDrawableTest()),
                 ("Scrolling Stutter Test", new ScrollingTest()),
                 ("Audio Effects Testing", new AudioEffectTesting()),
-                ("Fixed Time Step test", new FixedTimeStepTest()),
+                ("Loading Screen Test", new LoadingScreenTest()),
+                ("Fixed Time Step test", new FixedTimeStepTest())
             };
 
             TexturedDrawable background = new TexturedDrawable(FurballGame.WhitePixel, Vector2.Zero) {

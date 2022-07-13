@@ -6,8 +6,6 @@ using Furball.Engine.Engine.Graphics.Drawables;
 namespace Furball.Game.Screens {
     public class ScrollingTest : Screen {
         public override void Initialize() {
-            base.Initialize();
-
             TexturedDrawable drawable = new TexturedDrawable(FurballGame.WhitePixel, Vector2.Zero) {
                 Scale = new Vector2(50, 50)
             };

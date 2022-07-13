@@ -36,8 +36,8 @@ namespace Furball.Engine.Engine {
         /// Changes the Screen to a new Screen
         /// </summary>
         /// <param name="newScreen">Screen to Switch to</param>
-        public static void ChangeScreen(Screen newScreen, bool skipFade = false) {
-            if (Transition != null && !skipFade) {
+        public static void ChangeScreen(Screen newScreen, bool skipTransition = false) {
+            if (Transition != null && !skipTransition) {
                 lock (_fadeLock) {
                     Transition t = Transition;
                     
