@@ -26,13 +26,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
     }
     
     /// <summary>
-    /// A Basic Drawable that gets passed in an Already Started SpriteBatch,
-    /// Do not use this for Drawables that require Effects, or other Special SpriteBatch behaviour,
-    /// as This Drawable is getting passed an Already Begun SpriteBatch
-    /// use <see cref="UnmanagedDrawable"/> for this task
-    /// <remarks>
-    /// Basic Drawables get drawn before UnmanagedDrawables.
-    /// </remarks>
+    /// A Basic Drawable
     /// </summary>
     public abstract class Drawable {
         /// <summary>
@@ -59,10 +53,6 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         public bool Clickable = true;
         /// <summary>
         ///     Unprocessed Color Override of the Drawable, if a White Texture gets drawn with a red override, voila its red
-        ///     <remarks>
-        ///         This variable does not get changed as the DrawableManager translates the Drawable to be Scaled to be
-        ///         properly visible on all resolutions
-        ///     </remarks>
         /// </summary>
         public Color ColorOverride = Color.White;
         /// <summary>
@@ -85,9 +75,13 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
 
         public Vector2 LastCalculatedOrigin = Vector2.Zero;
         /// <summary>
-        ///     The position of the Origin to render at
+        ///     The render origin of the drawable
         /// </summary>
         public OriginType OriginType = OriginType.TopLeft;
+        /// <summary>
+        ///     The origin of the screen where 0,0 is
+        /// </summary>
+        public OriginType ScreenOriginType = OriginType.TopLeft;
         /// <summary>
         ///     Unprocessed Rotation of the Drawable in Radians
         ///     <remarks>

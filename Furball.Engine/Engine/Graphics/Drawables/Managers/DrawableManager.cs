@@ -49,7 +49,23 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                 Drawable drawable = this._drawables[i];
 
                 drawable.LastCalculatedOrigin = drawable.CalculateOrigin();
-                drawable.RealPosition         = drawable.Position - drawable.LastCalculatedOrigin;
+                drawable.RealPosition         = drawable.Position;
+
+                drawable.RealPosition -= drawable.ScreenOriginType switch {
+                    OriginType.TopLeft     => drawable.LastCalculatedOrigin,
+                    OriginType.TopRight    => new(-drawable.LastCalculatedOrigin.X, drawable.LastCalculatedOrigin.Y),
+                    OriginType.BottomLeft  => new(drawable.LastCalculatedOrigin.X, -drawable.LastCalculatedOrigin.Y),
+                    OriginType.BottomRight => new(-drawable.LastCalculatedOrigin.X, -drawable.LastCalculatedOrigin.Y),
+                    _                      => throw new ArgumentOutOfRangeException()
+                };
+
+                drawable.RealPosition = drawable.ScreenOriginType switch {
+                    OriginType.TopLeft     => drawable.RealPosition,
+                    OriginType.TopRight    => new(FurballGame.WindowWidth - drawable.RealPosition.X, drawable.RealPosition.Y),
+                    OriginType.BottomLeft  => new(drawable.RealPosition.X, FurballGame.WindowHeight - drawable.RealPosition.Y),
+                    OriginType.BottomRight => new(FurballGame.WindowWidth - drawable.RealPosition.X, FurballGame.WindowHeight - drawable.RealPosition.Y),
+                    _                      => throw new ArgumentOutOfRangeException()
+                };
 
                 if (!drawable.Visible) continue;
 
@@ -60,17 +76,6 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                 }
                 Vector2 origin = drawable.CalculateOrigin();
                 drawable.LastCalculatedOrigin = origin;
-                
-                //TODO: Potentially give ScaledPosition and ScaledScale
-                //Which would just be:
-                /*
-                    args.Position *= FurballGame.VerticalRatio;
-                    args.Scale    *= FurballGame.VerticalRatio;
-                 */
-                //Since literally every single drawable does this, might aswell make it easier,
-                //also given that drawablemanagers will have to scale on their own width and height instead of screen width and height,
-                //itll def make developing easier
-
 
                 this._args.Color    = drawable.ColorOverride;
                 this._args.Effects  = drawable.SpriteEffect;
