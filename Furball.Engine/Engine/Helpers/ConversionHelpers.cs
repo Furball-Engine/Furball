@@ -34,7 +34,9 @@ namespace Furball.Engine.Engine.Helpers {
 
         public static Vector2 ToVector2(this Point point) => new Vector2(point.X, point.Y);
 
-        public static Point ToPoint(this Vector2 vec2) => new Point((int) vec2.X, (int) vec2.Y);
-        public static Size ToSize(this Vector2 vec2) => new Size((int) vec2.X, (int) vec2.Y);
+        public static Point  ToPoint(this  Vector2 vec2) => new((int)vec2.X, (int)vec2.Y);
+        public static PointF ToPointF(this Vector2 vec2) => new(vec2.X, vec2.Y);
+        public static Size   ToSize(this   Vector2 vec2) => new((int)vec2.X, (int)vec2.Y);
+        public static SizeF  ToSizeF(this  Vector2 vec2) => new(vec2.X, vec2.Y);
     }
 }

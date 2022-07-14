@@ -83,10 +83,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
                 this._args.Rotation = drawable.Rotation;
                 this._args.Scale    = drawable.RealScale = drawable.Scale;
 
-                Rectangle rect = new(
-                (this._args.Position - origin).ToPoint(),
-                new Size((int)Math.Ceiling(drawable.Size.X * this._args.Scale.X), (int)Math.Ceiling(drawable.Size.Y * this._args.Scale.Y))
-                );
+                RectangleF rect = new(drawable.RealPosition.ToPointF(), new SizeF(drawable.Size.X, drawable.Size.Y));
 
                 if (rect.IntersectsWith(FurballGame.DisplayRect)) {
                     drawable.Draw(time, batch, this._args);

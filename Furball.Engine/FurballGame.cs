@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Numerics;
 using System.Reflection;
@@ -78,8 +79,8 @@ namespace Furball.Engine {
         public static float WindowHeight => DEFAULT_WINDOW_HEIGHT;
 
         //public static float VerticalRatio => 1;
-        public static Rectangle DisplayRect => new(0, 0, (int)Math.Ceiling(RealWindowWidth / VerticalRatio), (int)Math.Ceiling(RealWindowHeight / VerticalRatio));
-        public static Rectangle DisplayRectActual => new(0, 0, RealWindowWidth, RealWindowHeight);
+        public static RectangleF DisplayRect       => new(0, 0, WindowWidth, WindowHeight);
+        public static Rectangle  DisplayRectActual => new(0, 0, RealWindowWidth, RealWindowHeight);
 
         private bool _drawDebugOverlay = true;
 

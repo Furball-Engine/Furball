@@ -135,8 +135,8 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// </summary>
         public Vector2 Position = Vector2.Zero;
 
-        public Rectangle Rectangle     => new((this.Position     - this.RotationOrigin).ToPoint(), this.Size.ToSize());
-        public Rectangle RealRectangle => new((this.RealPosition - this.RotationOrigin).ToPoint(), this.Size.ToSize());
+        public RectangleF Rectangle     => new((this.Position     - this.RotationOrigin).ToPointF(), this.Size.ToSizeF());
+        public RectangleF RealRectangle => new((this.RealPosition - this.RotationOrigin).ToPointF(), this.Size.ToSizeF());
         /// <summary>
         ///     Unprocessed Size of the Drawable in Pixels
         ///     <remarks>
