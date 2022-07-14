@@ -288,7 +288,7 @@ namespace Furball.Engine {
             Vector2 textSize = font.MeasureString(text);
 
             b.Begin();
-            b.DrawString(font, text, new Vector2(DEFAULT_WINDOW_WIDTH / 2f - textSize.X / 2f, DEFAULT_WINDOW_HEIGHT / 2f - textSize.Y / 2f), Color.White);
+            b.DrawString(font, text, new Vector2(WindowWidth / 2f - textSize.X / 2f, WindowHeight / 2f - textSize.Y / 2f), Color.White);
             b.End();
 
             fontSystem.Dispose();
