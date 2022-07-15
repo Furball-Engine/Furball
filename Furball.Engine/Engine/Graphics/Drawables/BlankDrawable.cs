@@ -12,6 +12,6 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// </summary>
         public Vector2 OverrideSize = new();
 
-        public override Vector2 Size => this.OverrideSize;
+        public override Vector2 Size => this.OverrideSize * this.Scale;
     }
 }

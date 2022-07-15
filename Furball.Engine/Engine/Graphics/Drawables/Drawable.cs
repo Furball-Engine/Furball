@@ -136,7 +136,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         public Vector2 Position = Vector2.Zero;
 
         public RectangleF Rectangle     => new((this.Position     - this.RotationOrigin).ToPointF(), this.Size.ToSizeF());
-        public RectangleF RealRectangle => new((this.RealPosition - this.RotationOrigin).ToPointF(), this.Size.ToSizeF());
+        public RectangleF RealRectangle => new((this.RealPosition - this.RotationOrigin).ToPointF(), this.RealSize.ToSizeF());
         /// <summary>
         ///     Unprocessed Size of the Drawable in Pixels
         ///     <remarks>
@@ -145,6 +145,10 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         ///     </remarks>
         /// </summary>
         public virtual Vector2 Size { get; } = new();
+        /// <summary>
+        ///     The real size of the drawable in pixels
+        /// </summary>
+        public Vector2 RealSize => this.Size / this.Scale * this.RealScale;
         /// <summary>
         ///     Shorter way of getting TimeSource.GetCurrentTime()
         /// </summary>
@@ -187,6 +191,23 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
                 return Vector2.Distance(point.ToVector2(), this.RealPosition - this.RotationOrigin) < this.CircleRadius;
 
             return this.RealRectangle.Contains(point);
+        }
+        /// <summary>
+        ///     Checks whether a point is inside of the drawable
+        /// </summary>
+        /// <param name="point">The point to check</param>
+        /// <returns>Whether the point is inside the drawable</returns>
+        public bool Contains(Vector2 point) {
+            if (this.Circular)
+                return Vector2.Distance(point, this.Position - this.RotationOrigin) < this.CircleRadius;
+
+            return this.Rectangle.Contains(point.ToPointF());
+        }
+        public bool RealContains(Vector2 point) {
+            if (this.Circular)
+                return Vector2.Distance(point, this.RealPosition - this.RotationOrigin) < this.CircleRadius;
+
+            return this.RealRectangle.Contains(point.ToPointF());
         }
         public void Hover(bool value) {
             if (value == this.IsHovered) return;

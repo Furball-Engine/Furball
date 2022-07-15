@@ -36,7 +36,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables {
         /// </summary>
         public float Thickness = 2f;
 
-        public override Vector2 Size => new(100);
+        public override Vector2 Size => new(100);//TODO: actually do the math to figure this out performantly
 
         /// <summary>
         ///     The constructor for a Quadratic Bezier curve
