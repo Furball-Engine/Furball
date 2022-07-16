@@ -215,14 +215,14 @@ namespace Furball.Engine.Engine.Graphics {
                                 if (this.Data.CodecContext->codec_type == AVMediaType.AVMEDIA_TYPE_VIDEO ||
                                     this.Data.CodecContext->codec_type == AVMediaType.AVMEDIA_TYPE_AUDIO) {
                                     response = avcodec_send_packet(this.Data.CodecContext, this.Data.Packet);
-                                    if (response < 0 && response != AVERROR(EAGAIN) && response != AVERROR_EOF) {} else {
+                                    if (response < 0 && response != AVERROR(EAGAIN) && response != AVERROR(AVERROR_EOF)) {} else {
                                         if (response >= 0)
                                             this.Data.Packet->size = 0;
                                         response = avcodec_receive_frame(this.Data.CodecContext, this.Data.AVFrame);
+                                        if (response == AVERROR(EAGAIN) || response == AVERROR(AVERROR_EOF))
+                                            response = 0;
                                         if (response >= 0)
                                             frameFinished = true;
-                                        //if (response == AVERROR(EAGAIN) || response == AVERROR_EOF)
-                                        //response = 0;
                                     }
                                 }
 
@@ -240,7 +240,7 @@ namespace Furball.Engine.Engine.Graphics {
                                         this.Data.CodecContext->width,
                                         this.Data.CodecContext->height,
                                         AVPixelFormat.AV_PIX_FMT_RGBA,
-                                        SWS_BICUBIC,
+                                        0,
                                         null,
                                         null,
                                         null
