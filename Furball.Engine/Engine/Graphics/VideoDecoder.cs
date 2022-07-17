@@ -13,6 +13,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using FFmpeg.AutoGen;
 using Kettu;
+using Silk.NET.Core.Native;
 using static FFmpeg.AutoGen.ffmpeg;
 
 namespace Furball.Engine.Engine.Graphics {
@@ -196,6 +197,18 @@ namespace Furball.Engine.Engine.Graphics {
             this._decodingThread.Start();
         }
 
+        private string DescribeError(int err) {
+            byte* temp = (byte*)SilkMarshal.Allocate(AV_ERROR_MAX_STRING_SIZE);
+
+            av_make_error_string(temp, AV_ERROR_MAX_STRING_SIZE, err);
+
+            string s = SilkMarshal.PtrToString((nint)temp);
+
+            SilkMarshal.Free((nint)temp);
+
+            return s;
+        }
+
         private void DecodingRun() {
             try {
                 bool gotNewFrame;
@@ -338,11 +351,12 @@ namespace Furball.Engine.Engine.Graphics {
             //Clean up after ourselves
             avformat_close_input(&data.FormatContext);
 
-            if (data.AVFrame       != null) av_free(data.AVFrame);
-            if (data.RenderFrame   != null) av_free(data.RenderFrame);
-            if (data.Packet        != null) av_free(data.Packet);
-            if (data.CodecContext  != null) avcodec_close(data.CodecContext);
-            if (data.FormatContext != null) avformat_free_context(data.FormatContext);
+            if (data.AVFrame        != null) av_free(data.AVFrame);
+            if (data.RenderFrame    != null) av_free(data.RenderFrame);
+            if (data.Packet         != null) av_free(data.Packet);
+            if (data.CodecContext   != null) avcodec_close(data.CodecContext);
+            if (data.FormatContext  != null) avformat_free_context(data.FormatContext);
+            if (data.ConvertContext != null) sws_freeContext(data.ConvertContext);
         }
     }
 
