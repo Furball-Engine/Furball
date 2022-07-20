@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
+namespace System.Runtime.CompilerServices {
+    internal static class IsExternalInit { }
+}
+
 namespace Furball.Engine.Engine.Helpers {
     public class ObjectHelper {
         public static IEnumerable<T> GetEnumerableOfType <T>(params object[] constructorArgs) where T : class, IComparable<T> {

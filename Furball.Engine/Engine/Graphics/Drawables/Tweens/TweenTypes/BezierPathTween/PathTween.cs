@@ -1,25 +1,25 @@
 using System.Numerics;
 
-namespace Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes.BezierPathTween {
-    public class PathTween : Tween {
-        private readonly Path _path;
+namespace Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes.BezierPathTween; 
 
-        public PathTween(Path path, double startTime, double endTime, Easing easing = Easing.None) {
-            this.TweenType = TweenType.Path;
+public class PathTween : Tween {
+    private readonly Path _path;
 
-            this._path     = path;
-            this.StartTime = startTime;
-            this.EndTime   = endTime;
-            this.Easing    = easing;
-        }
+    public PathTween(Path path, double startTime, double endTime, Easing easing = Easing.None) {
+        this.TweenType = TweenType.Path;
 
-        public Vector2 GetCurrent() {
-            if (!this.Initiated)
-                return this._path.SegmentFromProgress(0).GetPosition(0.0, this._path.PathSegments.Length);
-            if (this.Terminated)
-                return this._path.SegmentFromProgress(1.0).GetPosition(1.0, this._path.PathSegments.Length);
+        this._path     = path;
+        this.StartTime = startTime;
+        this.EndTime   = endTime;
+        this.Easing    = easing;
+    }
 
-            return this._path.GetCurrent(this.CalculateCurrent(0.0, 1.0));
-        }
+    public Vector2 GetCurrent() {
+        if (!this.Initiated)
+            return this._path.SegmentFromProgress(0).GetPosition(0.0, this._path.PathSegments.Length);
+        if (this.Terminated)
+            return this._path.SegmentFromProgress(1.0).GetPosition(1.0, this._path.PathSegments.Length);
+
+        return this._path.GetCurrent(this.CalculateCurrent(0.0, 1.0));
     }
 }

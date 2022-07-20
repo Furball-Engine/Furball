@@ -1,3 +1,3 @@
-namespace Furball.Engine.Engine.ECS {
-    public interface IEntityComponent {}
-}
+namespace Furball.Engine.Engine.ECS; 
+
+public interface IEntityComponent {}

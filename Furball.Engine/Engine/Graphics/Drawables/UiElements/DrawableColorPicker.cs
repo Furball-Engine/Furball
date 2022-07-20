@@ -5,54 +5,54 @@ using Furball.Engine.Engine.Helpers;
 using Silk.NET.Input;
 using Color=Furball.Vixie.Backends.Shared.Color;
 
-namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
-    public class DrawableColorPicker : CompositeDrawable {
-        public readonly Bindable<Color> Color;
+namespace Furball.Engine.Engine.Graphics.Drawables.UiElements; 
 
-        private readonly TexturedDrawable _colorDisplay;
-        private readonly TextDrawable     _colorText;
+public class DrawableColorPicker : CompositeDrawable {
+    public readonly Bindable<Color> Color;
 
-        public DrawableColorPicker(Vector2 position, FontSystem font, int fontSize, Color initialColor) {
-            this.Position = position;
-            this.Color    = new Bindable<Color>(initialColor);
+    private readonly TexturedDrawable _colorDisplay;
+    private readonly TextDrawable     _colorText;
 
-            this._colorText = new TextDrawable(new Vector2(0), font, this.Color.Value.ToHexString(), fontSize) {
-                Clickable   = false,
-                CoverClicks = false,
-                Hoverable   = false,
-                CoverHovers = false
-            };
-            this._colorDisplay = new TexturedDrawable(FurballGame.WhitePixel, new Vector2(this._colorText.Size.X + 10, 0)) {
-                Scale         = new Vector2(this._colorText.Size.Y),
-                ColorOverride = this.Color,
-                Clickable     = false,
-                CoverClicks   = false,
-                Hoverable     = false,
-                CoverHovers   = false
-            };
+    public DrawableColorPicker(Vector2 position, FontSystem font, int fontSize, Color initialColor) {
+        this.Position = position;
+        this.Color    = new Bindable<Color>(initialColor);
 
-            this.OnClick += this.OnColorDisplayClick;
+        this._colorText = new TextDrawable(new Vector2(0), font, this.Color.Value.ToHexString(), fontSize) {
+            Clickable   = false,
+            CoverClicks = false,
+            Hoverable   = false,
+            CoverHovers = false
+        };
+        this._colorDisplay = new TexturedDrawable(FurballGame.WhitePixel, new Vector2(this._colorText.Size.X + 10, 0)) {
+            Scale         = new Vector2(this._colorText.Size.Y),
+            ColorOverride = this.Color,
+            Clickable     = false,
+            CoverClicks   = false,
+            Hoverable     = false,
+            CoverHovers   = false
+        };
 
-            this.Color.OnChange += this.OnColorChange;
+        this.OnClick += this.OnColorDisplayClick;
 
-            this.Drawables.Add(this._colorText);
-            this.Drawables.Add(this._colorDisplay);
-        }
+        this.Color.OnChange += this.OnColorChange;
 
-        private void OnColorChange(object sender, Color e) {
-            this._colorDisplay.FadeColor(e, 100);
-            this._colorText.Text = e.ToHexString();
+        this.Drawables.Add(this._colorText);
+        this.Drawables.Add(this._colorDisplay);
+    }
 
-            this._colorDisplay.MoveTo(new Vector2(this._colorText.Size.X + 10, 0));
-        }
+    private void OnColorChange(object sender, Color e) {
+        this._colorDisplay.FadeColor(e, 100);
+        this._colorText.Text = e.ToHexString();
 
-        private void OnColorDisplayClick(object? sender, (MouseButton button, Point pos) valueTuple) {
-            EtoHelper.OpenColorPicker(
-            (o, color) => {
-                this.Color.Value = color;
-            },
-            this.Color.Value
-            );
-        }
+        this._colorDisplay.MoveTo(new Vector2(this._colorText.Size.X + 10, 0));
+    }
+
+    private void OnColorDisplayClick(object? sender, (MouseButton button, Point pos) valueTuple) {
+        EtoHelper.OpenColorPicker(
+        (o, color) => {
+            this.Color.Value = color;
+        },
+        this.Color.Value
+        );
     }
 }

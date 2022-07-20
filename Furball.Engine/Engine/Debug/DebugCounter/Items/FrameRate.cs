@@ -1,28 +1,28 @@
 using System;
 
 
-namespace Furball.Engine.Engine.Debug.DebugCounter.Items {
-    /// <summary>
-    /// Basic Frame Rate counter, updates every second
-    /// </summary>
-    public class FrameRate : DebugCounterItem {
-        private int    _lastUpdatedFramerate;
-        private int    _frames;
-        private double _deltaTime;
+namespace Furball.Engine.Engine.Debug.DebugCounter.Items; 
 
-        public override void Draw(double time) {
-            this._deltaTime += time;
-            this._frames++;
+/// <summary>
+/// Basic Frame Rate counter, updates every second
+/// </summary>
+public class FrameRate : DebugCounterItem {
+    private int    _lastUpdatedFramerate;
+    private int    _frames;
+    private double _deltaTime;
 
-            if (this._deltaTime >= 1.0) {
-                this._lastUpdatedFramerate = this._frames;
-                this._deltaTime            = 0.0;
-                this._frames               = 0;
-            }
+    public override void Draw(double time) {
+        this._deltaTime += time;
+        this._frames++;
 
-            base.Draw(time);
+        if (this._deltaTime >= 1.0) {
+            this._lastUpdatedFramerate = this._frames;
+            this._deltaTime            = 0.0;
+            this._frames               = 0;
         }
 
-        public override string GetAsString(double time) => $"{this._lastUpdatedFramerate}fps ({Math.Round(1000.0 / this._lastUpdatedFramerate, 2)}ms)";
+        base.Draw(time);
     }
+
+    public override string GetAsString(double time) => $"{this._lastUpdatedFramerate}fps ({Math.Round(1000.0 / this._lastUpdatedFramerate, 2)}ms)";
 }

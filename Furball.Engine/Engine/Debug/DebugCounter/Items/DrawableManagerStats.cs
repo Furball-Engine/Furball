@@ -1,41 +1,41 @@
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
 
 
-namespace Furball.Engine.Engine.Debug.DebugCounter.Items {
-    /// <summary>
-    /// Displays some basic DrawableManager stats, like the amount of UnmanagedDrawables total compares to ManagedDrawables total
-    /// aswell as how many DrawableManager instances exist
-    /// </summary>
-    public class DrawableManagerStats : DebugCounterItem {
-        private int    _lastUpdatedManagedDrawables;
-        private int    _lastUpdatedUnmanagedDrawables;
-        private int    _lastUpdatedInstanceCount;
-        private double _deltaTime;
+namespace Furball.Engine.Engine.Debug.DebugCounter.Items; 
 
-        public override void Update(double time) {
-            this._deltaTime += time;
+/// <summary>
+/// Displays some basic DrawableManager stats, like the amount of UnmanagedDrawables total compares to ManagedDrawables total
+/// aswell as how many DrawableManager instances exist
+/// </summary>
+public class DrawableManagerStats : DebugCounterItem {
+    private int    _lastUpdatedManagedDrawables;
+    private int    _lastUpdatedUnmanagedDrawables;
+    private int    _lastUpdatedInstanceCount;
+    private double _deltaTime;
 
-            if (this._deltaTime >= 1.0) {
-                this._lastUpdatedManagedDrawables   = 0;
-                this._lastUpdatedUnmanagedDrawables = 0;
+    public override void Update(double time) {
+        this._deltaTime += time;
 
-                int drawableManagerCount = DrawableManager.DrawableManagers.Count;
+        if (this._deltaTime >= 1.0) {
+            this._lastUpdatedManagedDrawables   = 0;
+            this._lastUpdatedUnmanagedDrawables = 0;
 
-                this._lastUpdatedInstanceCount = drawableManagerCount;
+            int drawableManagerCount = DrawableManager.DrawableManagers.Count;
 
-                for (int i = 0; i != drawableManagerCount; i++) {
-                    DrawableManager current = DrawableManager.DrawableManagers[i];
+            this._lastUpdatedInstanceCount = drawableManagerCount;
 
-                    this._lastUpdatedManagedDrawables   += current.CountManaged;
-                    this._lastUpdatedUnmanagedDrawables += current.CountUnmanaged;
-                }
+            for (int i = 0; i != drawableManagerCount; i++) {
+                DrawableManager current = DrawableManager.DrawableManagers[i];
 
-                this._deltaTime = 0.0;
+                this._lastUpdatedManagedDrawables   += current.CountManaged;
+                this._lastUpdatedUnmanagedDrawables += current.CountUnmanaged;
             }
 
-            base.Update(time);
+            this._deltaTime = 0.0;
         }
 
-        public override string GetAsString(double time) => $"dmi: {this._lastUpdatedInstanceCount}; ud/md: {this._lastUpdatedUnmanagedDrawables}/{this._lastUpdatedManagedDrawables}";
+        base.Update(time);
     }
+
+    public override string GetAsString(double time) => $"dmi: {this._lastUpdatedInstanceCount}; ud/md: {this._lastUpdatedUnmanagedDrawables}/{this._lastUpdatedManagedDrawables}";
 }

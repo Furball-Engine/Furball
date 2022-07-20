@@ -1,35 +1,35 @@
 using System;
 
-namespace Furball.Engine.Engine {
-    public class FixedTimeStepMethod {
-        /// <summary>
-        /// The miliseconds per call
-        /// </summary>
-        public double Tempo;
+namespace Furball.Engine.Engine; 
 
-        public delegate void MethodDefinition();
+public class FixedTimeStepMethod {
+    /// <summary>
+    /// The miliseconds per call
+    /// </summary>
+    public double Tempo;
 
-        /// <summary>
-        /// The method to call every `Tempo` miliseconds
-        /// </summary>
-        public MethodDefinition Method;
+    public delegate void MethodDefinition();
+
+    /// <summary>
+    /// The method to call every `Tempo` miliseconds
+    /// </summary>
+    public MethodDefinition Method;
         
-        private double _delta;
+    private double _delta;
 
-        public FixedTimeStepMethod(double tempo, MethodDefinition method) {
-            this.Tempo  = tempo;
-            this.Method = method;
-        }
+    public FixedTimeStepMethod(double tempo, MethodDefinition method) {
+        this.Tempo  = tempo;
+        this.Method = method;
+    }
 
-        internal void Update(double delta) {
-            this._delta += delta * 1000d;
+    internal void Update(double delta) {
+        this._delta += delta * 1000d;
 
-            int timesToRun = (int)Math.Floor(this._delta / this.Tempo);
+        int timesToRun = (int)Math.Floor(this._delta / this.Tempo);
 
-            for (int i = 0; i < timesToRun; i++) {
-                this.Method.Invoke();
-                this._delta -= this.Tempo;
-            }
+        for (int i = 0; i < timesToRun; i++) {
+            this.Method.Invoke();
+            this._delta -= this.Tempo;
         }
     }
 }

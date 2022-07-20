@@ -1,17 +1,17 @@
 
 
-namespace Furball.Engine.Engine.Debug.DebugCounter.Items {
-    public class KeyboardInputs : DebugCounterItem {
-        public override bool ForceNewLine { get; } = true;
+namespace Furball.Engine.Engine.Debug.DebugCounter.Items; 
 
-        public override string GetAsString(double time) {
-            string endString = "keyboard: {";
+public class KeyboardInputs : DebugCounterItem {
+    public override bool ForceNewLine { get; } = true;
 
-            for (int i = 0; i != FurballGame.InputManager.HeldKeys.Count; i++) {
-                endString += $"{FurballGame.InputManager.HeldKeys[i].ToString()}, ";
-            }
+    public override string GetAsString(double time) {
+        string endString = "keyboard: {";
 
-            return endString + "}";
+        for (int i = 0; i != FurballGame.InputManager.HeldKeys.Count; i++) {
+            endString += $"{FurballGame.InputManager.HeldKeys[i].ToString()}, ";
         }
+
+        return endString + "}";
     }
 }

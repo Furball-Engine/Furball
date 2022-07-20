@@ -2,12 +2,12 @@
 using System.Numerics;
 using Furball.Vixie.Backends.Shared;
 
-namespace Furball.Engine.Engine.Graphics.Drawables.Managers {
-    public class DrawableManagerArgs {
-        public Vector2     Position;
-        public Color       Color;
-        public float       Rotation;
-        public Vector2     Scale;
-        public TextureFlip Effects;
-    }
+namespace Furball.Engine.Engine.Graphics.Drawables.Managers; 
+
+public class DrawableManagerArgs {
+    public Vector2     Position;
+    public Color       Color;
+    public float       Rotation;
+    public Vector2     Scale;
+    public TextureFlip Effects;
 }

@@ -9,143 +9,143 @@ using Furball.Volpe.Evaluation;
 using JetBrains.Annotations;
 using Kettu;
 
-namespace Furball.Engine.Engine.Localization {
-    public class LocalizationManager {
-        private static readonly Dictionary<(string translationKey, ISO639_2Code code), string> TRANSLATIONS = new();
+namespace Furball.Engine.Engine.Localization; 
 
-        public static Dictionary<ISO639_2Code, Type> Languages = new();
+public class LocalizationManager {
+    private static readonly Dictionary<(string translationKey, ISO639_2Code code), string> TRANSLATIONS = new();
 
-        public static  Language DefaultLanguage  = new EnglishLanguage();
-        private static Language _CurrentLanguage = DefaultLanguage;
+    public static Dictionary<ISO639_2Code, Type> Languages = new();
 
-        public static Language CurrentLanguage {
-            get => _CurrentLanguage;
-            set {
-                FurballConfig.Instance.Values["language"] = new Value.String(value.Iso6392Code().ToString());
+    public static  Language DefaultLanguage  = new EnglishLanguage();
+    private static Language _CurrentLanguage = DefaultLanguage;
 
-                _CurrentLanguage = value;
-            }
+    public static Language CurrentLanguage {
+        get => _CurrentLanguage;
+        set {
+            FurballConfig.Instance.Values["language"] = new Value.String(value.Iso6392Code().ToString());
+
+            _CurrentLanguage = value;
+        }
+    }
+
+    [Pure]
+    public static string GetLocalizedString(object key, Language language = null) {
+        if (language == null)
+            language = DefaultLanguage;
+
+        return GetLocalizedString(key, language.Iso6392Code());
+    }
+
+    [Pure]
+    public static string GetLocalizedString(object key) => GetLocalizedString(key, ISO639_2Code.und);
+
+    [Pure]
+    public static string GetLocalizedString(object key, ISO639_2Code code = ISO639_2Code.und) {
+        if (code == ISO639_2Code.und)
+            code = CurrentLanguage.Iso6392Code();
+
+        if (TRANSLATIONS.TryGetValue((key.ToString(), code), out string localization))
+            return localization;
+
+        if (TRANSLATIONS.TryGetValue((key.ToString(), DefaultLanguage.Iso6392Code()), out localization))
+            return localization;
+
+        throw new NoTranslationException();
+    }
+
+    public static double GetLocalizationCompletion(ISO639_2Code code) {
+        int total    = 0;
+        int complete = 0;
+
+        foreach (KeyValuePair<(string translationKey, ISO639_2Code code),string> pair in TRANSLATIONS) {
+            if (pair.Key.code == DefaultLanguage.Iso6392Code())
+                total++;
+            if (pair.Key.code == code)
+                complete++;
         }
 
-        [Pure]
-        public static string GetLocalizedString(object key, Language language = null) {
-            if (language == null)
-                language = DefaultLanguage;
+        return (double)complete / total;
+    }
 
-            return GetLocalizedString(key, language.Iso6392Code());
-        }
+    [Pure]
+    public static List<ISO639_2Code> GetSupportedLanguages() {
+        List<ISO639_2Code> languages = new();
 
-        [Pure]
-        public static string GetLocalizedString(object key) => GetLocalizedString(key, ISO639_2Code.und);
-
-        [Pure]
-        public static string GetLocalizedString(object key, ISO639_2Code code = ISO639_2Code.und) {
-            if (code == ISO639_2Code.und)
-                code = CurrentLanguage.Iso6392Code();
-
-            if (TRANSLATIONS.TryGetValue((key.ToString(), code), out string localization))
-                return localization;
-
-            if (TRANSLATIONS.TryGetValue((key.ToString(), DefaultLanguage.Iso6392Code()), out localization))
-                return localization;
-
-            throw new NoTranslationException();
-        }
-
-        public static double GetLocalizationCompletion(ISO639_2Code code) {
-            int total    = 0;
-            int complete = 0;
-
-            foreach (((string _, ISO639_2Code iso6392Code), string _) in TRANSLATIONS) {
-                if (iso6392Code == DefaultLanguage.Iso6392Code())
-                    total++;
-                if (iso6392Code == code)
-                    complete++;
-            }
-
-            return (double)complete / total;
-        }
-
-        [Pure]
-        public static List<ISO639_2Code> GetSupportedLanguages() {
-            List<ISO639_2Code> languages = new();
-
-            foreach (KeyValuePair<(string translationKey, ISO639_2Code code), string> translation in TRANSLATIONS) {
-                if (languages.Contains(translation.Key.code)) continue;
+        foreach (KeyValuePair<(string translationKey, ISO639_2Code code), string> translation in TRANSLATIONS) {
+            if (languages.Contains(translation.Key.code)) continue;
                 
-                languages.Add(translation.Key.code);
-            }
-
-            return languages;
+            languages.Add(translation.Key.code);
         }
 
-        [Pure]
-        [CanBeNull]
-        public static Language GetLanguageFromCode(ISO639_2Code code) {
-            if (Languages.TryGetValue(code, out Type type)) {
-                return (Language)Activator.CreateInstance(type);
-            }
+        return languages;
+    }
 
-            return null;
+    [Pure]
+    [CanBeNull]
+    public static Language GetLanguageFromCode(ISO639_2Code code) {
+        if (Languages.TryGetValue(code, out Type type)) {
+            return (Language)Activator.CreateInstance(type);
         }
 
-        public static void AddDefaultTranslation(object key, string contents) {
-            TRANSLATIONS.Add((key.ToString(), DefaultLanguage.Iso6392Code()), contents);
-        }
+        return null;
+    }
+
+    public static void AddDefaultTranslation(object key, string contents) {
+        TRANSLATIONS.Add((key.ToString(), DefaultLanguage.Iso6392Code()), contents);
+    }
         
-        public static void ReadTranslations() {
-            Languages.Add(ISO639_2Code.eng, typeof(EnglishLanguage));
-            Languages.Add(ISO639_2Code.jbo, typeof(LojbanLanguage));
-            Languages.Add(ISO639_2Code.epo, typeof(EsperantoLanguage));
-            Languages.Add(ISO639_2Code.pol, typeof(PolishLanguage));
-            Languages.Add(ISO639_2Code.deu, typeof(GermanLanguage));
-            Languages.Add(ISO639_2Code.jpn, typeof(JapaneseLanguage));
-            Languages.Add(ISO639_2Code.spa, typeof(SpanishLanguage));
-            Languages.Add(ISO639_2Code.ara, typeof(ArabicLanguage));
-            Languages.Add(ISO639_2Code.ita, typeof(ItalianLanguage));
-            Languages.Add(ISO639_2Code.fra, typeof(FrenchLanguage));
+    public static void ReadTranslations() {
+        Languages.Add(ISO639_2Code.eng, typeof(EnglishLanguage));
+        Languages.Add(ISO639_2Code.jbo, typeof(LojbanLanguage));
+        Languages.Add(ISO639_2Code.epo, typeof(EsperantoLanguage));
+        Languages.Add(ISO639_2Code.pol, typeof(PolishLanguage));
+        Languages.Add(ISO639_2Code.deu, typeof(GermanLanguage));
+        Languages.Add(ISO639_2Code.jpn, typeof(JapaneseLanguage));
+        Languages.Add(ISO639_2Code.spa, typeof(SpanishLanguage));
+        Languages.Add(ISO639_2Code.ara, typeof(ArabicLanguage));
+        Languages.Add(ISO639_2Code.ita, typeof(ItalianLanguage));
+        Languages.Add(ISO639_2Code.fra, typeof(FrenchLanguage));
 
-            string localizationFolder = Path.Combine(FurballGame.AssemblyPath, FurballGame.LocalizationFolder);
+        string localizationFolder = Path.Combine(FurballGame.AssemblyPath, FurballGame.LocalizationFolder);
             
-            DirectoryInfo dirInfo = null;
+        DirectoryInfo dirInfo = null;
             
-            if (!Directory.Exists(localizationFolder)) {
-                dirInfo = Directory.CreateDirectory(localizationFolder);
-            }
+        if (!Directory.Exists(localizationFolder)) {
+            dirInfo = Directory.CreateDirectory(localizationFolder);
+        }
 
-            dirInfo ??= new DirectoryInfo(localizationFolder);
+        dirInfo ??= new DirectoryInfo(localizationFolder);
             
-            IEnumerable<FileInfo> langFiles = dirInfo.EnumerateFiles("*.lang", SearchOption.TopDirectoryOnly);
-            foreach (FileInfo file in langFiles) {
-                StreamReader stream = file.OpenText();
+        IEnumerable<FileInfo> langFiles = dirInfo.EnumerateFiles("*.lang", SearchOption.TopDirectoryOnly);
+        foreach (FileInfo file in langFiles) {
+            StreamReader stream = file.OpenText();
 
-                ISO639_2Code code = ISO639_2Code.und;
+            ISO639_2Code code = ISO639_2Code.und;
                 
-                string line;
-                //Iterate through all lines of file
-                while ((line = stream.ReadLine()) != null) {
-                    if(line.Trim().Length == 0) continue;
+            string line;
+            //Iterate through all lines of file
+            while ((line = stream.ReadLine()) != null) {
+                if(line.Trim().Length == 0) continue;
                     
-                    string[] splitLine = line.Split("=");
+                string[] splitLine = line.Split('=');
 
-                    //Checks if the first section is LanguageCode, which defines the language of the file
-                    if (splitLine[0] == "LanguageCode") {
-                        try {
-                            //Parse the language code
-                            Enum.TryParse(splitLine[1], true, out code);
-                            Logger.Log($"Reading language file for {code}", LoggerLevelLocalizationInfo.Instance);
-                        } catch {
-                            break;
-                        }
-                    } else {
-                        (string translationKey, ISO639_2Code languageCode) key = (splitLine[0], code);
-
-                        TRANSLATIONS.Add(key, splitLine[1].Trim().Replace("\\n", "\n"));
+                //Checks if the first section is LanguageCode, which defines the language of the file
+                if (splitLine[0] == "LanguageCode") {
+                    try {
+                        //Parse the language code
+                        Enum.TryParse(splitLine[1], true, out code);
+                        Logger.Log($"Reading language file for {code}", LoggerLevelLocalizationInfo.Instance);
+                    } catch {
+                        break;
                     }
-                }
+                } else {
+                    (string translationKey, ISO639_2Code languageCode) key = (splitLine[0], code);
 
-                Logger.Log($"Parsed localization for {GetLanguageFromCode(code)}", LoggerLevelLocalizationInfo.Instance);
+                    TRANSLATIONS.Add(key, splitLine[1].Trim().Replace("\\n", "\n"));
+                }
             }
+
+            Logger.Log($"Parsed localization for {GetLanguageFromCode(code)}", LoggerLevelLocalizationInfo.Instance);
         }
     }
 }

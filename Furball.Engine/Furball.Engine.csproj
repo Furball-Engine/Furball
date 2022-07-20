@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
+        <TargetFramework>netstandard2.0</TargetFramework>
         <PublishReadyToRun>false</PublishReadyToRun>
         <TieredCompilation>false</TieredCompilation>
         <Nullable>disable</Nullable>
@@ -18,6 +18,7 @@
         <PackageReleaseNotes>+ Added PathTweens which allow Moving of Drawables in a Bezier Curve,
 + Added BezierCurveDrawable which allows for drawing of Bezier Curves</PackageReleaseNotes>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <LangVersion>10</LangVersion>
     </PropertyGroup>
     <PropertyGroup>
         <ApplicationManifest>app.manifest</ApplicationManifest>
@@ -54,7 +55,7 @@
         <PackageReference Include="Kettu" Version="1.4.0" />
         <PackageReference Include="ManagedBass" Version="3.1.1" />
         <PackageReference Include="ManagedBass.Fx" Version="3.1.1" />
-        <PackageReference Include="sowelipisona" Version="1.1.2" />
+        <PackageReference Include="sowelipisona" Version="1.2.0" />
         <PackageReference Include="System.Drawing.Common" Version="5.0.2" />
         <PackageReference Include="GtkSharp" Version="3.24.24.38" />
         <!--        <PackageReference Include="GtkSharp.Dependencies" Version="1.1.1" />-->

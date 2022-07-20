@@ -1,27 +1,27 @@
 using System.Collections.Generic;
 
-namespace Furball.Engine.Engine.Localization.Languages {
-    public abstract class Language {
-        public abstract ISO639_2Code Iso6392Code();
-        public abstract ISO639_1Code Iso6391Code();
+namespace Furball.Engine.Engine.Localization.Languages; 
+
+public abstract class Language {
+    public abstract ISO639_2Code Iso6392Code();
+    public abstract ISO639_1Code Iso6391Code();
         
-        public abstract ISO639_2Scope Scope();
-        public abstract ISO639_2Type  Type();
+    public abstract ISO639_2Scope Scope();
+    public abstract ISO639_2Type  Type();
 
-        public abstract string       EnglishName();
-        public abstract string       NativeName();
-        public abstract List<string> OtherNames();
+    public abstract string       EnglishName();
+    public abstract string       NativeName();
+    public abstract List<string> OtherNames();
 
-        public override string ToString() => $"{this.EnglishName()} ({this.NativeName()})";
+    public override string ToString() => $"{this.EnglishName()} ({this.NativeName()})";
 
-        public static bool operator ==(Language a, Language b) {
-            if (a is null && b is null)
-                return true;
-            if (a is null || b is null)
-                return false;
+    public static bool operator ==(Language a, Language b) {
+        if (a is null && b is null)
+            return true;
+        if (a is null || b is null)
+            return false;
             
-            return a.Iso6392Code() == b.Iso6392Code();
-        }
-        public static bool operator !=(Language a, Language b) => !(a == b);
+        return a.Iso6392Code() == b.Iso6392Code();
     }
+    public static bool operator !=(Language a, Language b) => !(a == b);
 }

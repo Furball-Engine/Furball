@@ -1,17 +1,17 @@
-namespace Furball.Engine.Engine.DevConsole {
-    public class ConsoleResult {
-        public ExecutionResult Result;
-        public string          Message;
+namespace Furball.Engine.Engine.DevConsole; 
 
-        public ConsoleResult(ExecutionResult result, string message) {
-            this.Message = message;
-            this.Result  = result;
-        }
+public class ConsoleResult {
+    public ExecutionResult Result;
+    public string          Message;
 
-        public ExecutionResult GetResult(out string result) {
-            result = this.Message;
+    public ConsoleResult(ExecutionResult result, string message) {
+        this.Message = message;
+        this.Result  = result;
+    }
 
-            return this.Result;
-        }
+    public ExecutionResult GetResult(out string result) {
+        result = this.Message;
+
+        return this.Result;
     }
 }

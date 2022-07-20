@@ -3,62 +3,62 @@ using System.Collections.Generic;
 using System.Numerics;
 using JetBrains.Annotations;
 
-namespace Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes.BezierPathTween {
-    internal record PathRange(double Begin, double End);
+namespace Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes.BezierPathTween; 
 
-    public class Path {
-        public readonly PathSegment[] PathSegments;
+internal record PathRange(double Begin, double End);
 
-        private List<PathRange> _pathRanges;
-        private double          _segmentLength;
+public class Path {
+    public readonly PathSegment[] PathSegments;
 
-        public Path(params PathSegment[] segments) {
-            this.PathSegments = segments;
+    private List<PathRange> _pathRanges;
+    private double          _segmentLength;
 
-            int segmentCount = this.PathSegments.Length;
-            double segmentLength = 1.0 / segmentCount;
+    public Path(params PathSegment[] segments) {
+        this.PathSegments = segments;
 
-            List<PathRange> ranges = new();
+        int    segmentCount  = this.PathSegments.Length;
+        double segmentLength = 1.0 / segmentCount;
 
-            double current = 0.0;
+        List<PathRange> ranges = new();
 
-            for (int i = 0; i != segmentCount; i++) {
-                PathSegment currentSegment = this.PathSegments[i];
-                currentSegment.Index = i;
+        double current = 0.0;
 
-                double begin = current;
-                double end = current + segmentLength;
+        for (int i = 0; i != segmentCount; i++) {
+            PathSegment currentSegment = this.PathSegments[i];
+            currentSegment.Index = i;
 
-                PathRange assignedRange = new PathRange(begin, end);
+            double begin = current;
+            double end   = current + segmentLength;
 
-                ranges.Add(assignedRange);
-                currentSegment.PathProgressRange = assignedRange;
+            PathRange assignedRange = new PathRange(begin, end);
 
-                current = end;
-            }
+            ranges.Add(assignedRange);
+            currentSegment.PathProgressRange = assignedRange;
 
-            this._pathRanges    = ranges;
-            this._segmentLength = segmentLength;
+            current = end;
         }
 
-        [CanBeNull]
-        public PathSegment SegmentFromProgress(double progress) {
-            if (progress > 1.0 || progress < 0.0)
-                throw new InvalidOperationException("SegmentFromProgress requires `progress` to be between 0 and 1..");
+        this._pathRanges    = ranges;
+        this._segmentLength = segmentLength;
+    }
 
-            for (int i = 0; i != this.PathSegments.Length; i++) {
-                PathSegment current = this.PathSegments[i];
+    [CanBeNull]
+    public PathSegment SegmentFromProgress(double progress) {
+        if (progress > 1.0 || progress < 0.0)
+            throw new InvalidOperationException("SegmentFromProgress requires `progress` to be between 0 and 1..");
 
-                if (current.IsBetween(progress))
-                    return current;
-            }
+        for (int i = 0; i != this.PathSegments.Length; i++) {
+            PathSegment current = this.PathSegments[i];
 
-            return null;
+            if (current.IsBetween(progress))
+                return current;
         }
 
-        public Vector2 GetCurrent(double progress) {
-            PathSegment segment = this.SegmentFromProgress(progress);
-            return segment.GetPosition(progress, this.PathSegments.Length);
-        }
+        return null;
+    }
+
+    public Vector2 GetCurrent(double progress) {
+        PathSegment segment = this.SegmentFromProgress(progress);
+        return segment.GetPosition(progress, this.PathSegments.Length);
     }
 }

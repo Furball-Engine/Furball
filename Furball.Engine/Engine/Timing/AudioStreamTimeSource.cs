@@ -1,11 +1,11 @@
 using sowelipisona;
 
-namespace Furball.Engine.Engine.Timing {
-    public class AudioStreamTimeSource : ITimeSource {
-        public AudioStream Stream;
+namespace Furball.Engine.Engine.Timing; 
 
-        public AudioStreamTimeSource(AudioStream stream) => this.Stream = stream;
+public class AudioStreamTimeSource : ITimeSource {
+    public AudioStream Stream;
 
-        public double GetCurrentTime() => this.Stream.CurrentPosition;
-    }
+    public AudioStreamTimeSource(AudioStream stream) => this.Stream = stream;
+
+    public double GetCurrentTime() => this.Stream.CurrentPosition;
 }

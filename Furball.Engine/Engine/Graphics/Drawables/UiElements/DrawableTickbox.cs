@@ -5,58 +5,58 @@ using Furball.Engine.Engine.Graphics.Drawables.Primitives;
 using Furball.Engine.Engine.Helpers;
 using Silk.NET.Input;
 
-namespace Furball.Engine.Engine.Graphics.Drawables.UiElements {
-    public class DrawableTickbox : CompositeDrawable {
-        public string Text {
-            get => this._textDrawable.Text;
-            set => this._textDrawable.Text = value;
-        }
+namespace Furball.Engine.Engine.Graphics.Drawables.UiElements; 
 
-        public readonly Bindable<bool> Selected = new(false);
+public class DrawableTickbox : CompositeDrawable {
+    public string Text {
+        get => this._textDrawable.Text;
+        set => this._textDrawable.Text = value;
+    }
 
-        private readonly TextDrawable               _textDrawable;
-        private readonly RectanglePrimitiveDrawable _rectangleDrawable;
+    public readonly Bindable<bool> Selected = new(false);
 
-        public DrawableTickbox(Vector2 position, FontSystem font, int fontSize, string text, bool initialState = false, bool managed = false) {
-            this.Position       = position;
-            this.Selected.Value = initialState;
+    private readonly TextDrawable               _textDrawable;
+    private readonly RectanglePrimitiveDrawable _rectangleDrawable;
 
-            this._textDrawable = new TextDrawable(new Vector2(30, 0), font, text, fontSize) {
-                Clickable   = false,
-                CoverClicks = false
-            };
+    public DrawableTickbox(Vector2 position, FontSystem font, int fontSize, string text, bool initialState = false, bool managed = false) {
+        this.Position       = position;
+        this.Selected.Value = initialState;
 
-            float fontHeight = this._textDrawable.Font.MeasureString("A").Y;
+        this._textDrawable = new TextDrawable(new Vector2(30, 0), font, text, fontSize) {
+            Clickable   = false,
+            CoverClicks = false
+        };
 
-            this._rectangleDrawable = new RectanglePrimitiveDrawable(Vector2.Zero, new Vector2(fontHeight - 5f), 1f, initialState) {
-                Clickable   = false,
-                CoverClicks = false
-            };
+        float fontHeight = this._textDrawable.Font.MeasureString("A").Y;
 
-            this._textDrawable.Position = new Vector2(fontHeight + 5f, -7.5f);
+        this._rectangleDrawable = new RectanglePrimitiveDrawable(Vector2.Zero, new Vector2(fontHeight - 5f), 1f, initialState) {
+            Clickable   = false,
+            CoverClicks = false
+        };
 
-            this.Drawables.Add(this._textDrawable);
-            this.Drawables.Add(this._rectangleDrawable);
+        this._textDrawable.Position = new Vector2(fontHeight + 5f, -7.5f);
 
-            this.Selected.OnChange += this.OnSelectChange;
+        this.Drawables.Add(this._textDrawable);
+        this.Drawables.Add(this._rectangleDrawable);
 
-            if (!managed)
-                this.OnClick += this.OnDrawableClick;
-        }
+        this.Selected.OnChange += this.OnSelectChange;
 
-        private void OnDrawableClick(object? sender, (MouseButton button, Point pos) valueTuple) {
-            this.Selected.Value = !this.Selected;
-        }
+        if (!managed)
+            this.OnClick += this.OnDrawableClick;
+    }
 
-        private void OnSelectChange(object sender, bool e) {
-            this._rectangleDrawable.Filled = e;
-        }
+    private void OnDrawableClick(object? sender, (MouseButton button, Point pos) valueTuple) {
+        this.Selected.Value = !this.Selected;
+    }
 
-        public override void Dispose() {
-            this.Selected.OnChange -= this.OnSelectChange;
-            this.OnClick           -= this.OnDrawableClick;
+    private void OnSelectChange(object sender, bool e) {
+        this._rectangleDrawable.Filled = e;
+    }
 
-            base.Dispose();
-        }
+    public override void Dispose() {
+        this.Selected.OnChange -= this.OnSelectChange;
+        this.OnClick           -= this.OnDrawableClick;
+
+        base.Dispose();
     }
 }
