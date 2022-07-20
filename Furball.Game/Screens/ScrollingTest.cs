@@ -6,21 +6,21 @@ using Furball.Engine.Engine.Graphics.Drawables.Tweens;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes;
 using Furball.Engine.Engine.Timing;
 
-namespace Furball.Game.Screens {
-    public class ScrollingTest : TestScreen {
-        public override void Initialize() {
-            base.Initialize();
+namespace Furball.Game.Screens; 
 
-            LoopingTimeSource source = new(FurballGame.GameTimeSource, 10000);
-            TexturedDrawable drawable = new TexturedDrawable(FurballGame.WhitePixel, Vector2.Zero) {
-                Scale = new Vector2(50, 50),
-                TimeSource = source
-            };
-            drawable.Tweens.Add(new VectorTween(TweenType.Movement, Vector2.Zero, new(1280, 720), 0, 10000) {
-                KeepAlive = true
-            });
+public class ScrollingTest : TestScreen {
+    public override void Initialize() {
+        base.Initialize();
 
-            this.Manager.Add(drawable);
-        }
+        LoopingTimeSource source = new(FurballGame.GameTimeSource, 10000);
+        TexturedDrawable drawable = new TexturedDrawable(FurballGame.WhitePixel, Vector2.Zero) {
+            Scale      = new Vector2(50, 50),
+            TimeSource = source
+        };
+        drawable.Tweens.Add(new VectorTween(TweenType.Movement, Vector2.Zero, new(1280, 720), 0, 10000) {
+            KeepAlive = true
+        });
+
+        this.Manager.Add(drawable);
     }
 }

@@ -1,14 +1,14 @@
 ﻿using Silk.NET.Windowing;
 
-namespace Furball.Game {
-    public static class Program {
-        private static void Main() {
-            WindowOptions options = WindowOptions.Default;
-            options.VSync = false;
+namespace Furball.Game; 
 
-            using FurballTestGame game = new();
+public static class Program {
+    private static void Main() {
+        WindowOptions options = WindowOptions.Default;
+        options.VSync = false;
 
-            game.Run();
-        }
+        using FurballTestGame game = new();
+
+        game.Run();
     }
 }
