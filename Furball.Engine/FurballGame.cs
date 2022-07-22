@@ -22,6 +22,7 @@ using Furball.Engine.Engine.Helpers.Logger;
 using Furball.Engine.Engine.Input;
 using Furball.Engine.Engine.Input.InputMethods;
 using Furball.Engine.Engine.Localization;
+using Furball.Engine.Engine.Localization.Languages;
 using Furball.Engine.Engine.Platform;
 using Furball.Engine.Engine.Timing;
 using Furball.Engine.Engine.Transitions;
@@ -173,14 +174,29 @@ public class FurballGame : Game {
 
         LocalizationManager.ReadTranslations();
 
-        if (Enum.TryParse(FurballConfig.Instance.Language, out ISO639_2Code code)) {
-            LocalizationManager.CurrentLanguage = LocalizationManager.GetLanguageFromCode(code);
-        } else {
-            Logger.Log($"Invalid language in config! Resetting to default: {LocalizationManager.DefaultLanguage}.", LoggerLevelLocalizationInfo.Instance);
-            LocalizationManager.CurrentLanguage = LocalizationManager.DefaultLanguage;
+        Language language = null;
+        try {
+            if (Enum.TryParse(FurballConfig.Instance.Language, out ISO639_2Code code)) {
+                language = LocalizationManager.GetLanguageFromCode(code);
+
+                if (language == null)
+                    throw new Exception("Invalid language in config, this is likely due to the language not being registered with the engine, or you mistyped.");
+            } else {
+                throw new Exception("Invalid language in config!");
+            }
+        }
+        catch (Exception ex) {
+            language = LocalizationManager.DefaultLanguage;
             Debugger.Break();
         }
-            
+        finally {
+            LocalizationManager.CurrentLanguage = language!;
+        }
+        
+        LocalizationManager.LanguageChanged += delegate {
+            this.RunningScreen?.UpdateTextStrings();
+        };
+
         TooltipDrawable = new TooltipDrawable();
         DrawableManager.Add(TooltipDrawable);
 
@@ -342,6 +358,7 @@ public class FurballGame : Game {
             this._loadingScreenChangeOffQueued = false;
                 
             this.Components.Add(screen);
+            screen.UpdateTextStrings();
             screen.Relayout(WindowWidth, WindowHeight);
             this.OnRelayout?.Invoke(this, new(WindowWidth, WindowHeight));
             this.RunningScreen = screen;

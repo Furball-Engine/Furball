@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Numerics;
 using Furball.Engine;
 using Furball.Engine.Engine;
@@ -11,7 +12,9 @@ namespace Furball.Game;
 
 public class TestScreen : Screen {
     private TexturedDrawable _background;
-        
+    private DrawableButton   _languageButton;
+    private DrawableButton   _backButton;
+
     public override void Initialize() {
         base.Initialize();
 
@@ -21,7 +24,7 @@ public class TestScreen : Screen {
         });
 
         this.Manager.Add(
-        new DrawableButton(
+        this._backButton = new DrawableButton(
         new(10, FurballGame.DEFAULT_WINDOW_HEIGHT - 10),
         FurballGame.DEFAULT_FONT,
         24,
@@ -37,6 +40,42 @@ public class TestScreen : Screen {
             OriginType = OriginType.BottomLeft
         }
         );
+
+        this.Manager.Add(
+        this._languageButton = new DrawableButton(new(10, 10), FurballGame.DEFAULT_FONT, 24, "Language: ", Color.Blue, Color.White, Color.Black, Vector2.Zero) {
+            ScreenOriginType = OriginType.BottomRight,
+            OriginType       = OriginType.BottomRight
+        }
+        );
+        
+        this._languageButton.OnClick += delegate {
+            List<ISO639_2Code> supported = LocalizationManager.GetSupportedLanguages();
+
+            for (int i = 0; i < supported.Count; i++) {
+                ISO639_2Code code = supported[i];
+                if (code == LocalizationManager.CurrentLanguage.Iso6392Code()) {
+                    if (i != supported.Count - 1)
+                        LocalizationManager.CurrentLanguage = LocalizationManager.GetLanguageFromCode(supported[i + 1])!;
+                    else
+                        LocalizationManager.CurrentLanguage = LocalizationManager.GetLanguageFromCode(supported[0])!;
+
+                    break;
+                }
+            }
+
+            this.UpdateLanguageButton();
+        };
+        
+        this.UpdateLanguageButton();
+    }
+
+    private void UpdateLanguageButton() {
+        this._languageButton.Text = $"Language: {LocalizationManager.CurrentLanguage}";
+    }
+
+    public override void UpdateTextStrings() {
+        this.UpdateLanguageButton();
+        this._backButton.Text = LocalizationManager.GetLocalizedString(LocalizationStrings.Back);
     }
 
     public override void Relayout(float newWidth, float newHeight) {

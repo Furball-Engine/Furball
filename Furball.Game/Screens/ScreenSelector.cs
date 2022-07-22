@@ -11,8 +11,10 @@ using Furball.Vixie.Backends.Shared;
 namespace Furball.Game.Screens; 
 
 public class ScreenSelector : TestScreen {
-    public  List<(string, Screen)> Screens;
-    private TextDrawable           _topText;
+    private          List<(LocalizationStrings, Screen)> _screens;
+    private readonly List<DrawableButton>                _buttons = new();
+
+    private TextDrawable _topText;
 
     public override void Relayout(float newWidth, float newHeight) {
         base.Relayout(newWidth, newHeight);
@@ -23,15 +25,15 @@ public class ScreenSelector : TestScreen {
     public override void Initialize() {
         base.Initialize();
 
-        this.Screens = new List<(string, Screen)> {
-            (LocalizationManager.GetLocalizedString(LocalizationStrings.CatmullTest), new CatmullTest()),
-            (LocalizationManager.GetLocalizedString(LocalizationStrings.TextBoxTest), new TextBoxTest()),
-            (LocalizationManager.GetLocalizedString(LocalizationStrings.CircleTest), new CircleDrawableTest()),
-            (LocalizationManager.GetLocalizedString(LocalizationStrings.ScrollingStutterTest), new ScrollingTest()),
-            (LocalizationManager.GetLocalizedString(LocalizationStrings.AudioEffectsTest), new AudioEffectTest()),
-            (LocalizationManager.GetLocalizedString(LocalizationStrings.LoadingScreenTest), new LoadingScreenTest()),
-            (LocalizationManager.GetLocalizedString(LocalizationStrings.FixedTimeStepTest), new FixedTimeStepTest()),
-            (LocalizationManager.GetLocalizedString(LocalizationStrings.LayoutingTest), new LayoutingTest())
+        this._screens = new List<(LocalizationStrings, Screen)> {
+            (LocalizationStrings.CatmullTest, new CatmullTest()),
+            (LocalizationStrings.TextBoxTest, new TextBoxTest()),
+            (LocalizationStrings.CircleTest, new CircleDrawableTest()),
+            (LocalizationStrings.ScrollingStutterTest, new ScrollingTest()),
+            (LocalizationStrings.AudioEffectsTest, new AudioEffectTest()),
+            (LocalizationStrings.LoadingScreenTest, new LoadingScreenTest()),
+            (LocalizationStrings.FixedTimeStepTest, new FixedTimeStepTest()),
+            (LocalizationStrings.LayoutingTest, new LayoutingTest())
         };
 
         this.Manager.Add(this._topText = new TextDrawable(new Vector2(1280f / 2f, 40), FurballGame.DEFAULT_FONT, LocalizationManager.GetLocalizedString(LocalizationStrings.ChooseScreen), 48) {
@@ -42,12 +44,12 @@ public class ScreenSelector : TestScreen {
         int currentX = 55;
         int i        = 0;
 
-        foreach ((string screenName, Screen screen) in this.Screens) {
+        foreach ((LocalizationStrings localizationString, Screen screen) in this._screens) {
             DrawableButton screenButton = new(
             new Vector2(currentX, currentY),
             FurballGame.DEFAULT_FONT,
             26,
-            screenName,
+            "",
             Color.White,
             Color.Black,
             Color.Black,
@@ -61,6 +63,7 @@ public class ScreenSelector : TestScreen {
             };
 
             this.Manager.Add(screenButton);
+            this._buttons.Add(screenButton);
 
             currentY += 70;
             i++;
@@ -70,5 +73,19 @@ public class ScreenSelector : TestScreen {
                 currentY =  90;
             }
         }
+        
+        this.UpdateTextStrings();
+    }
+
+    public override void UpdateTextStrings() {
+        base.UpdateTextStrings();
+
+        for (int i = 0; i < this._buttons.Count; i++) {
+            DrawableButton drawableButton = this._buttons[i];
+
+            drawableButton.Text = LocalizationManager.GetLocalizedString(this._screens[i].Item1);
+        }
+
+        this._topText.Text = LocalizationManager.GetLocalizedString(LocalizationStrings.ChooseScreen);
     }
 }

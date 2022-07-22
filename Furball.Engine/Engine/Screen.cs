@@ -62,6 +62,10 @@ public class Screen : GameComponent {
             
     }
 
+    public virtual void UpdateTextStrings() {
+        
+    }
+
     public override void Draw(double gameTime) {
         this.Manager?.Draw(gameTime, FurballGame.DrawableBatch);
 

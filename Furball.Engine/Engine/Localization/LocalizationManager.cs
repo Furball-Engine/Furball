@@ -20,6 +20,7 @@ public class LocalizationManager {
     public static  Language DefaultLanguage  = new EnglishLanguage();
     private static Language _CurrentLanguage = DefaultLanguage;
 
+    [NotNull]
     public static Language CurrentLanguage {
         get => _CurrentLanguage;
         set {
