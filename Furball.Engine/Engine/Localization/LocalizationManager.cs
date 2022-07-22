@@ -140,7 +140,7 @@ public class LocalizationManager {
             string line;
             //Iterate through all lines of file
             while ((line = stream.ReadLine()) != null) {
-                if(line.Trim().Length == 0) continue;
+                if(line.Trim().Length == 0 || line.StartsWith("#")) continue;
                     
                 string[] splitLine = line.Split('=');
 
