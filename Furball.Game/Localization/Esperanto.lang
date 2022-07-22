@@ -1,0 +1,18 @@
+LanguageCode=epo
+
+Back=Reire
+CatmullTest=Testo de Catmull
+TextBoxTest=Testo de Tekstujo
+CircleTest=Testo de Cirklo
+ScrollingStutterTest=Testo de Balbutada Movigxo
+# ScrollingStutterTest=Testo de Balbutada Moviĝo
+AudioEffectsTest=Testo de Auxdaj Efikoj
+# AudioEffectsTest=Testo de Aŭdaj Efikoj
+LoadingScreenTest=Testo de Sxargxa Ekrano
+# LoadingScreenTest=Testo de Ŝarĝa Ekrano
+FixedTimeStepTest=Testo de Fiksita Tempo-Pasxo
+# FixedTimeStepTest=Testo de Fiksita Tempo-Paŝo
+LayoutingTest=Testo de Arangxo
+# LayoutingTest=Testo de Aranĝo
+
+ChooseScreen=Elektu Ekranon

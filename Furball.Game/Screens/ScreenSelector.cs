@@ -4,6 +4,7 @@ using Furball.Engine;
 using Furball.Engine.Engine;
 using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Graphics.Drawables.UiElements;
+using Furball.Engine.Engine.Localization;
 using Furball.Vixie.Backends.Shared;
 
 
@@ -21,19 +22,19 @@ public class ScreenSelector : TestScreen {
 
     public override void Initialize() {
         base.Initialize();
-            
+
         this.Screens = new List<(string, Screen)> {
-            ("Catmull Testing", new CatmullTest()),
-            ("UI TextBox Testing", new TextBoxTest()),
-            ("Circle Test", new CircleDrawableTest()),
-            ("Scrolling Stutter Test", new ScrollingTest()),
-            ("Audio Effects Testing", new AudioEffectTest()),
-            ("Loading Screen Test", new LoadingScreenTest()),
-            ("Fixed Time Step test", new FixedTimeStepTest()),
-            ("Layouting Test", new LayoutingTest())
+            (LocalizationManager.GetLocalizedString(LocalizationStrings.CatmullTest), new CatmullTest()),
+            (LocalizationManager.GetLocalizedString(LocalizationStrings.TextBoxTest), new TextBoxTest()),
+            (LocalizationManager.GetLocalizedString(LocalizationStrings.CircleTest), new CircleDrawableTest()),
+            (LocalizationManager.GetLocalizedString(LocalizationStrings.ScrollingStutterTest), new ScrollingTest()),
+            (LocalizationManager.GetLocalizedString(LocalizationStrings.AudioEffectsTest), new AudioEffectTest()),
+            (LocalizationManager.GetLocalizedString(LocalizationStrings.LoadingScreenTest), new LoadingScreenTest()),
+            (LocalizationManager.GetLocalizedString(LocalizationStrings.FixedTimeStepTest), new FixedTimeStepTest()),
+            (LocalizationManager.GetLocalizedString(LocalizationStrings.LayoutingTest), new LayoutingTest())
         };
 
-        this.Manager.Add(this._topText = new TextDrawable(new Vector2(1280f / 2f, 40), FurballGame.DEFAULT_FONT, "Choose Screen", 48) {
+        this.Manager.Add(this._topText = new TextDrawable(new Vector2(1280f / 2f, 40), FurballGame.DEFAULT_FONT, LocalizationManager.GetLocalizedString(LocalizationStrings.ChooseScreen), 48) {
             OriginType = OriginType.Center
         });
 
@@ -50,7 +51,7 @@ public class ScreenSelector : TestScreen {
             Color.White,
             Color.Black,
             Color.Black,
-            new Vector2(250, 50)
+            new Vector2(300, 50)
             );
 
             screenButton.OnClick += delegate {

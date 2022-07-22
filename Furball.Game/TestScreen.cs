@@ -1,11 +1,10 @@
-using System.Drawing;
 using System.Numerics;
 using Furball.Engine;
 using Furball.Engine.Engine;
 using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Graphics.Drawables.UiElements;
+using Furball.Engine.Engine.Localization;
 using Furball.Game.Screens;
-using Silk.NET.Input;
 using Color=Furball.Vixie.Backends.Shared.Color;
 
 namespace Furball.Game; 
@@ -26,7 +25,7 @@ public class TestScreen : Screen {
         new(10, FurballGame.DEFAULT_WINDOW_HEIGHT - 10),
         FurballGame.DEFAULT_FONT,
         24,
-        "Back",
+        LocalizationManager.GetLocalizedString(LocalizationStrings.Back),
         Color.Red,
         Color.White,
         Color.Black,

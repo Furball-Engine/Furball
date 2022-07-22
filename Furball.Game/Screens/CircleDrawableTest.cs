@@ -1,6 +1,5 @@
 using Furball.Engine.Engine.Graphics.Drawables.Primitives;
 using Furball.Vixie.Backends.Shared;
-using Screen=Furball.Engine.Engine.Screen;
 
 namespace Furball.Game.Screens; 
 
