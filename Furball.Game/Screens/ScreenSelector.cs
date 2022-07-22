@@ -42,7 +42,7 @@ public class ScreenSelector : TestScreen {
         int i        = 0;
 
         foreach ((string screenName, Screen screen) in this.Screens) {
-            DrawableButton screenButton = new DrawableButton(
+            DrawableButton screenButton = new(
             new Vector2(currentX, currentY),
             FurballGame.DEFAULT_FONT,
             26,

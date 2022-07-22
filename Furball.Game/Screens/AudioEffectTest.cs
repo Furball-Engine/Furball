@@ -20,19 +20,19 @@ public class AudioEffectTest : TestScreen {
     public override void Initialize() {
         base.Initialize();
 
-        TextDrawable topText = new TextDrawable(new Vector2(1280f / 2f, 40), FurballGame.DEFAULT_FONT, "Audio Effects testing!!!", 48) {
+        TextDrawable topText = new(new Vector2(1280f / 2f, 40), FurballGame.DEFAULT_FONT, "Audio Effects testing!!!", 48) {
             OriginType = OriginType.Center
         };
 
         this.Manager.Add(topText);
 
-        DrawableTextBox filenameTextBox = new DrawableTextBox(new Vector2(50, 80), FurballGame.DEFAULT_FONT, 28, 350, "audio.mp3");
+        DrawableTextBox filenameTextBox = new(new Vector2(50, 80), FurballGame.DEFAULT_FONT, 28, 350, "audio.mp3");
 
         this._filenameTextBox = filenameTextBox;
 
         this.Manager.Add(filenameTextBox);
 
-        DrawableButton playButton = new DrawableButton(
+        DrawableButton playButton = new(
         new Vector2(50, 130),
         FurballGame.DEFAULT_FONT,
         28,
@@ -46,13 +46,13 @@ public class AudioEffectTest : TestScreen {
 
         this.Manager.Add(playButton);
 
-        TextDrawable effectText = new TextDrawable(new Vector2(190, 180), FurballGame.DEFAULT_FONT, "Effects", 28);
+        TextDrawable effectText = new(new Vector2(190, 180), FurballGame.DEFAULT_FONT, "Effects", 28);
 
         this.Manager.Add(effectText);
 
         int currentY = 220;
 
-        DrawableButton lowPassPlayButton = new DrawableButton(
+        DrawableButton lowPassPlayButton = new(
         new Vector2(50, currentY),
         FurballGame.DEFAULT_FONT,
         28,
@@ -84,7 +84,7 @@ public class AudioEffectTest : TestScreen {
 
         currentY += 60;
 
-        DrawableButton reverbPlayButton = new DrawableButton(
+        DrawableButton reverbPlayButton = new(
         new Vector2(50, currentY),
         FurballGame.DEFAULT_FONT,
         28,

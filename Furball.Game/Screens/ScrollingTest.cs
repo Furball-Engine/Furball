@@ -13,7 +13,7 @@ public class ScrollingTest : TestScreen {
         base.Initialize();
 
         LoopingTimeSource source = new(FurballGame.GameTimeSource, 10000);
-        TexturedDrawable drawable = new TexturedDrawable(FurballGame.WhitePixel, Vector2.Zero) {
+        TexturedDrawable drawable = new(FurballGame.WhitePixel, Vector2.Zero) {
             Scale      = new Vector2(50, 50),
             TimeSource = source
         };
