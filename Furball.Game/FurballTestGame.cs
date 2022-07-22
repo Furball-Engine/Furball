@@ -1,11 +1,29 @@
 ﻿using Furball.Engine;
 using Furball.Engine.Engine.Localization;
 using Furball.Game.Screens;
+using Furball.Vixie;
+using Silk.NET.Input;
+using SixLabors.ImageSharp;
 
 namespace Furball.Game;
 
 public class FurballTestGame : FurballGame {
     public FurballTestGame() : base(new ScreenSelector()) {}
+
+    protected override void Initialize() {
+        base.Initialize();
+        
+        GraphicsBackend.Current.ScreenshotTaken += OnScreenshot;
+        
+        InputManager.OnKeyDown += delegate(object sender, Key key) {
+            if(key == Key.F9)
+                GraphicsBackend.Current.TakeScreenshot();
+        };
+    }
+    
+    private void OnScreenshot(object sender, Image e) {
+        e.Save("test.png");
+    }
 
     protected override void InitializeLocalizations() {
         LocalizationManager.AddDefaultTranslation(LocalizationStrings.Back, "Back");

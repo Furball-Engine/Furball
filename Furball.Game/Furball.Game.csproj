@@ -7,28 +7,13 @@
         <RootNamespace>Furball.Game</RootNamespace>
         <LangVersion>10</LangVersion>
     </PropertyGroup>
-    <PropertyGroup>
-        <ApplicationManifest>app.manifest</ApplicationManifest>
-        <ApplicationIcon>Icon.ico</ApplicationIcon>
-    </PropertyGroup>
     <ItemGroup>
-        <None Remove="Icon.ico" />
-        <None Remove="Icon.bmp" />
         <None Update="Localization\Esperanto.lang">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
     </ItemGroup>
     <ItemGroup>
-        <EmbeddedResource Include="Icon.ico" />
-        <EmbeddedResource Include="Icon.bmp" />
-    </ItemGroup>
-    <ItemGroup>
-        <TrimmerRootAssembly Include="Microsoft.Xna.Framework.Content.ContentTypeReader" Visible="false" />
-    </ItemGroup>
-    <ItemGroup>
         <ProjectReference Include="..\Furball.Engine\Furball.Engine.csproj" />
         <ProjectReference Include="..\Furball.Vixie\Furball.Vixie\Furball.Vixie.csproj" />
-    </ItemGroup>
-    <ItemGroup>
     </ItemGroup>
 </Project>
