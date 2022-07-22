@@ -178,6 +178,7 @@ public class FurballGame : Game {
         } else {
             Logger.Log($"Invalid language in config! Resetting to default: {LocalizationManager.DefaultLanguage}.", LoggerLevelLocalizationInfo.Instance);
             LocalizationManager.CurrentLanguage = LocalizationManager.DefaultLanguage;
+            Debugger.Break();
         }
             
         TooltipDrawable = new TooltipDrawable();

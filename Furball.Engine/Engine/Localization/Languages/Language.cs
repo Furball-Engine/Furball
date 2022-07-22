@@ -12,7 +12,8 @@ public abstract class Language {
     public abstract string       EnglishName();
     public abstract string       NativeName();
     public abstract List<string> OtherNames();
-
+    public abstract string       IetfLanguageTag();
+    
     public override string ToString() => $"{this.EnglishName()} ({this.NativeName()})";
 
     public static bool operator ==(Language a, Language b) {

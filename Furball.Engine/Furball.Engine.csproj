@@ -55,6 +55,7 @@
         <PackageReference Include="Kettu" Version="1.4.0" />
         <PackageReference Include="ManagedBass" Version="3.1.1" />
         <PackageReference Include="ManagedBass.Fx" Version="3.1.1" />
+        <PackageReference Include="SixLabors.Fonts" Version="1.0.0-beta17" />
         <PackageReference Include="sowelipisona" Version="1.2.0" />
         <PackageReference Include="System.Drawing.Common" Version="5.0.2" />
         <PackageReference Include="GtkSharp" Version="3.24.24.38" />
@@ -63,11 +64,6 @@
         <PackageReference Include="JetBrains.Annotations" Version="2021.3.0" />
         <PackageReference Include="Eto.Forms" Version="2.7.0" />
         <PackageReference Include="Eto.Platform.Gtk" Version="2.7.0" />
-    </ItemGroup>
-    <ItemGroup>
-        <Reference Include="SixLabors.Fonts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d998eea7b14cab13">
-            <HintPath>..\Furball.SharedLibraries\SixLabors.Fonts.dll</HintPath>
-        </Reference>
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Furball.Vixie\Furball.Vixie\Furball.Vixie.csproj" />

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using Furball.Engine.Engine.Config;
 using Furball.Engine.Engine.Helpers.Logger;
@@ -24,8 +25,22 @@ public class LocalizationManager {
         set {
             FurballConfig.Instance.Values["language"] = new Value.String(value.Iso6392Code().ToString());
 
+            CultureInfo = CultureInfo.GetCultureInfoByIetfLanguageTag(value.IetfLanguageTag());
+            
+            CultureInfo.CurrentUICulture = CultureInfo;
+            CultureInfo.CurrentCulture   = CultureInfo;
+            
             _CurrentLanguage = value;
+            
+            LanguageChanged?.Invoke(null, value);
         }
+    }
+
+    public static event EventHandler<Language> LanguageChanged;
+    
+    public static CultureInfo CultureInfo {
+        get;
+        private set;
     }
 
     [Pure]
