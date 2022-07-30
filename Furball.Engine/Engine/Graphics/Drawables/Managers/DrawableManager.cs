@@ -86,7 +86,7 @@ public class DrawableManager : IDisposable {
             this._args.Rotation = drawable.Rotation;
             this._args.Scale    = drawable.RealScale = drawable.Scale;
 
-            RectangleF rect = new(drawable.RealPosition.ToPointF(), new SizeF(drawable.Size.X, drawable.Size.Y));
+            RectangleF rect = new(drawable.RealPosition.ToPointF(), new SizeF(drawable.RealSize.X, drawable.RealSize.Y));
 
             if (rect.IntersectsWith(FurballGame.DisplayRect)) {
                 drawable.Draw(time, batch, this._args);
