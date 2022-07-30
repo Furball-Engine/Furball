@@ -154,6 +154,27 @@ public class DrawableBatch : IDisposable {
         this._textureRenderer.DrawString(font, text, position, colors, rotation, scale, origin);
     }
 
+    public Rectangle ScissorRect {
+        get => new(
+        (int)(GraphicsBackend.Current.ScissorRect.X / FurballGame.VerticalRatio),
+        (int)(GraphicsBackend.Current.ScissorRect.Y / FurballGame.VerticalRatio),
+        (int)(GraphicsBackend.Current.ScissorRect.Width / FurballGame.VerticalRatio),
+        (int)(GraphicsBackend.Current.ScissorRect.Height / FurballGame.VerticalRatio)
+        );
+        set {
+            if (value == this.ScissorRect)
+                return;
+            
+            this.End();
+            this.Begin();
+            GraphicsBackend.Current.ScissorRect = new SixLabors.ImageSharp.Rectangle(
+            (int)(value.X * FurballGame.VerticalRatio),
+            (int)(value.Y * FurballGame.VerticalRatio),
+            (int)(value.Width * FurballGame.VerticalRatio),
+            (int)(value.Height * FurballGame.VerticalRatio)
+            );
+        }
+    }
 
     public void Dispose() {
         this._lineRenderer.Dispose();

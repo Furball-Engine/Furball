@@ -53,6 +53,9 @@ public class InputManager {
                 added++;
                 added += RecurseCompositeDrawables(ref drawablesToAddTo, compositeDrawable, indexToAddAt);
             } else {
+                if (compositeDrawableToIterate.ChildrenInvisibleToInput)
+                    continue;
+                
                 drawablesToAddTo.Insert(indexToAddAt, drawable);
                 indexToAddAt++;
                 added++;

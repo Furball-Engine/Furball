@@ -16,6 +16,7 @@ public class CompositeDrawable : Drawable {
     private readonly DrawableManagerArgs _drawableArgs = new();
 
     public bool InvisibleToInput = false;
+    public bool ChildrenInvisibleToInput = false;
         
     public override Vector2 Size {
         get {

@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Numerics;
 using FontStashSharp;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
+using Furball.Engine.Engine.Graphics.Drawables.Primitives;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes;
 using Silk.NET.Input;
@@ -13,7 +14,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements;
 /// <summary>
 /// Creates a Simple Button Object
 /// </summary>
-public class DrawableButton : Drawable {
+public class DrawableButton : CompositeDrawable {
     /// <summary>
     ///     The text to display on the button
     /// </summary>
@@ -21,11 +22,14 @@ public class DrawableButton : Drawable {
         get => this.TextDrawable.Text;
         set => this.TextDrawable.Text = value;
     }
+
     /// <summary>
     ///     The internal TextDrawable used to display the text
     /// </summary>
     public TextDrawable TextDrawable;
-
+    private RectanglePrimitiveDrawable BackgroundDrawable;
+    private RectanglePrimitiveDrawable OutlineDrawable;
+    
     /// <summary>
     ///     The margin between the text and the button's edge
     /// </summary>
@@ -88,29 +92,39 @@ public class DrawableButton : Drawable {
         Vector2 position, FontSystem font, int textSize, string text, Color buttonColor, Color textColor, Color outlineColor, Vector2 buttonSize,
         EventHandler<(MouseButton, Point)> onClick = null, float margin = 5f
     ) {
-        this.Position     = position;
-        this.TextDrawable = new TextDrawable(Vector2.Zero, font, text, textSize);
-        this._margin      = margin;
-        this.Text         = text;
+        this.Position           = position;
+        this.TextDrawable       = new TextDrawable(Vector2.Zero, font, text, textSize);
+        this.BackgroundDrawable = new RectanglePrimitiveDrawable(Vector2.Zero, this.ButtonSize, 0,                     true);
+        this.OutlineDrawable    = new RectanglePrimitiveDrawable(Vector2.Zero, this.ButtonSize, this.OutlineThickness, false);
+        this._margin            = margin;
+        this.Text               = text;
 
-        this.TextColor     = textColor;
-        this.OutlineColor  = outlineColor;
-        this.ButtonColor   = buttonColor;
-        this.ColorOverride = buttonColor;
-        this.ButtonSize    = buttonSize;
+        this.TextColor    = textColor;
+        this.OutlineColor = outlineColor;
+        this.ButtonColor  = buttonColor;
+        this.ButtonSize   = buttonSize;
 
+        this.BackgroundDrawable.ColorOverride = buttonColor;
+        this.OutlineDrawable.ColorOverride    = outlineColor;
+        
         this.OnClick += onClick;
 
         this.TextDrawable.OriginType = OriginType.Center;
+        
+        this.Drawables.Add(this.BackgroundDrawable);
+        this.Drawables.Add(this.OutlineDrawable);
+        this.Drawables.Add(this.TextDrawable);
+
+        this.ChildrenInvisibleToInput = true;
 
         this.OnHover += delegate {
             if (!this.Clickable) return;
                 
-            this.Tweens.Add(
+            this.BackgroundDrawable.Tweens.Add(
             new ColorTween(
             TweenType.Color,
             this.ButtonColor,
-            new Color(this.ButtonColor.R + 50, this.ButtonColor.G + 50, this.ButtonColor.B + 50),
+            new Color(this.ButtonColor.R - 50, this.ButtonColor.G - 50, this.ButtonColor.B - 50),
             this.TimeSource.GetCurrentTime(),
             this.TimeSource.GetCurrentTime() + 150
             )
@@ -119,83 +133,85 @@ public class DrawableButton : Drawable {
         this.OnHoverLost += delegate {
             if (!this.Clickable) return;
             
-            this.Tweens.Add(
+            this.BackgroundDrawable.Tweens.Add(
             new ColorTween(TweenType.Color, this.ColorOverride, this.ButtonColor, this.TimeSource.GetCurrentTime(), this.TimeSource.GetCurrentTime() + 150)
             );
         };
     }
 
-    public override void Draw(double time, DrawableBatch batch, DrawableManagerArgs args) {
-        batch.FillRectangle(args.Position, this.Size, args.Color);
-        batch.DrawRectangle(args.Position, this.Size, this.OutlineThickness, this.OutlineColor);
+    public override void Update(double time) {
+        base.Update(time);
 
-        // FIXME: this is a bit of a hack, it should definitely be done differently
-        DrawableManagerArgs tempArgs = args;
-        if(this.ButtonSize == Vector2.Zero) {
-            tempArgs.Position.X += this._margin;
-            tempArgs.Position.Y += this._margin;
+        this.BackgroundDrawable.RectSize = this.Size / this.Scale;
+        this.OutlineDrawable.RectSize = this.Size / this.Scale;
+        
+        if (this.ButtonSize == Vector2.Zero) {
+            this.TextDrawable.Position   = new Vector2(this.Margin);
+            this.TextDrawable.OriginType = OriginType.TopLeft;
         } else {
-            float textX = this.TextDrawable.Size.X;
-            float textY = this.TextDrawable.Size.Y;
-
+            Vector2 scaledMargin = new(this.Margin);
+            
             switch (this.TextDrawable.OriginType) {
                 case OriginType.Center: {
-                    tempArgs.Position.X += this.ButtonSize.X / 2 - textX / 2;
-                    tempArgs.Position.Y += this.ButtonSize.Y / 2 - textY / 2;
+                    this.TextDrawable.Position = this.ButtonSize / 2f;
                         
                     break;
                 }
                 case OriginType.TopLeft: {
-                    tempArgs.Position.X += this.Margin;
-                    tempArgs.Position.Y += this.Margin;
-                        
+                    this.TextDrawable.Position = scaledMargin;
+                    
                     break;
                 }
                 case OriginType.BottomRight: {
-                    tempArgs.Position.X += this.Size.X - this.Margin - textX;
-                    tempArgs.Position.Y += this.Size.Y - this.Margin - textY;
+                    this.TextDrawable.Position.X += this.ButtonSize.X - scaledMargin.X;
+                    this.TextDrawable.Position.Y += this.ButtonSize.Y - scaledMargin.Y;
                         
                     break;
                 }
                 case OriginType.TopRight: {
-                    tempArgs.Position.X += this.Size.X - this.Margin - textX;
-                    tempArgs.Position.Y += this.Margin;
+                    this.TextDrawable.Position.X += this.ButtonSize.X - scaledMargin.X;
+                    this.TextDrawable.Position.Y += scaledMargin.Y;
                         
                     break;
                 }
                 case OriginType.BottomLeft: {
-                    tempArgs.Position.X += this.Margin;
-                    tempArgs.Position.Y += this.Size.Y - this.Margin - textY;
+                    this.TextDrawable.Position.X += scaledMargin.X;
+                    this.TextDrawable.Position.Y += this.ButtonSize.Y - scaledMargin.Y;
                         
                     break;
                 }
                 case OriginType.TopCenter: {
-                    tempArgs.Position.X += this.ButtonSize.X / 2 - textX / 2;
-                    tempArgs.Position.Y += this.Margin;
+                    this.TextDrawable.Position.X += this.ButtonSize.X / 2;
+                    this.TextDrawable.Position.Y += scaledMargin.Y;
                         
                     break;
                 }
                 case OriginType.BottomCenter: {
-                    tempArgs.Position.X += this.ButtonSize.X / 2 - textX / 2;
-                    tempArgs.Position.Y += this.Size.Y - this.Margin - textY;
+                    this.TextDrawable.Position.X += this.ButtonSize.X / 2;
+                    this.TextDrawable.Position.Y += this.ButtonSize.Y - scaledMargin.Y;
                         
                     break;
                 }
                 case OriginType.LeftCenter: {
-                    tempArgs.Position.X += this.Margin;
-                    tempArgs.Position.Y += this.ButtonSize.Y / 2 - textY / 2;
+                    this.TextDrawable.Position.X += scaledMargin.X;
+                    this.TextDrawable.Position.Y += this.ButtonSize.Y / 2;
                         
                     break;
                 }
                 case OriginType.RightCenter: {
-                    tempArgs.Position.X += this.Size.X - this.Margin - textX;
-                    tempArgs.Position.Y += this.ButtonSize.Y / 2 - textY / 2;
+                    this.TextDrawable.Position.X += this.ButtonSize.X - scaledMargin.X;
+                    this.TextDrawable.Position.Y += this.ButtonSize.Y / 2;
                         
                     break;
                 }
             }
         }
-        tempArgs.Color = this.TextDrawable.ColorOverride;
-        this.TextDrawable.Draw(time, batch, tempArgs);
     }
+
+    // public override void Draw(double time, DrawableBatch batch, DrawableManagerArgs args) {
+    //     batch.FillRectangle(args.Position, this.RealSize, args.Color);
+    //     batch.DrawRectangle(args.Position, this.RealSize, this.OutlineThickness * args.Scale.Y, this.OutlineColor);
+    //
+    //     base.Draw(time, batch, args);
+    // }
 }

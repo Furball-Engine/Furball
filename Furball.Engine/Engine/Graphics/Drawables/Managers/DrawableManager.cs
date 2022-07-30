@@ -33,6 +33,10 @@ public class DrawableManager : IDisposable {
 
     private bool _sortDrawables = false;
 
+    public bool    EffectedByScaling = false;
+    public Vector2 Position          = Vector2.Zero;
+    public Vector2 Size              = new(FurballGame.DEFAULT_WINDOW_WIDTH, FurballGame.DEFAULT_WINDOW_HEIGHT);
+    
     public void Draw(double time, DrawableBatch batch, DrawableManagerArgs _ = null) {
         if (this._sortDrawables) {
             this._drawables = this._drawables.OrderByDescending(o => o.Depth).ToList();
@@ -47,12 +51,18 @@ public class DrawableManager : IDisposable {
 
         int tempCount = this._drawables.Count;
         this.CountManaged = tempCount;
+        
+        Rectangle currScissor = batch.ScissorRect;
 
+        if (this.EffectedByScaling)
+            batch.ScissorRect = new((int)this.Position.X, (int)this.Position.Y, (int)this.Size.X, (int)this.Size.Y);
+        
         for (int i = 0; i < tempCount; i++) {
             Drawable drawable = this._drawables[i];
 
             drawable.LastCalculatedOrigin = drawable.CalculateOrigin();
             drawable.RealPosition         = drawable.Position;
+            drawable.RealScale            = drawable.Scale;
 
             drawable.RealPosition -= drawable.ScreenOriginType switch {
                 OriginType.TopLeft     => drawable.LastCalculatedOrigin,
@@ -77,14 +87,21 @@ public class DrawableManager : IDisposable {
 
                 drawable.DrawablesLastKnownDepth = drawable.Depth;
             }
-            Vector2 origin = drawable.CalculateOrigin();
-            drawable.LastCalculatedOrigin = origin;
+
+            
+            if (this.EffectedByScaling) {
+                float scaling = this.Size.Y / FurballGame.WindowHeight;
+                
+                drawable.RealPosition *= scaling;
+                drawable.RealPosition += this.Position;
+                drawable.RealScale    *= scaling;
+            }
 
             this._args.Color    = drawable.ColorOverride;
             this._args.Effects  = drawable.SpriteEffect;
             this._args.Position = drawable.RealPosition;
             this._args.Rotation = drawable.Rotation;
-            this._args.Scale    = drawable.RealScale = drawable.Scale;
+            this._args.Scale    = drawable.RealScale;
 
             RectangleF rect = new(drawable.RealPosition.ToPointF(), new SizeF(drawable.RealSize.X, drawable.RealSize.Y));
 
@@ -111,6 +128,8 @@ public class DrawableManager : IDisposable {
                     }
             }
         }
+
+        batch.ScissorRect = currScissor;
 
         if (unmanaged)
             batch.End();
