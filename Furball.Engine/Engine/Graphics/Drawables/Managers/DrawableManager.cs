@@ -11,13 +11,12 @@ using Color=Furball.Vixie.Backends.Shared.Color;
 
 namespace Furball.Engine.Engine.Graphics.Drawables.Managers; 
 
-public class DrawableManager : Drawable {
+public class DrawableManager : IDisposable {
     private List<Drawable> _drawables = new();
 
     public IReadOnlyList<Drawable> Drawables => this._drawables.AsReadOnly();
 
     public int CountManaged { get; private set; }
-    public int CountUnmanaged { get; private set; }
 
     public static object                StatLock         = new ();
     public static List<DrawableManager> DrawableManagers = new();
@@ -30,9 +29,11 @@ public class DrawableManager : Drawable {
         }
     }
 
+    public bool Visible = true;
+
     private bool _sortDrawables = false;
 
-    public override void Draw(double time, DrawableBatch batch, DrawableManagerArgs _ = null) {
+    public void Draw(double time, DrawableBatch batch, DrawableManagerArgs _ = null) {
         if (this._sortDrawables) {
             this._drawables = this._drawables.OrderByDescending(o => o.Depth).ToList();
 
@@ -132,7 +133,7 @@ public class DrawableManager : Drawable {
         return this._target2D;
     }
 
-    public override void Update(double time) {
+    public void Update(double time) {
         int tempCount = this._drawables.Count;
         for (int i = 0; i < tempCount; i++) {
             Drawable currentDrawable = this._drawables[i];
@@ -160,7 +161,7 @@ public class DrawableManager : Drawable {
         this._drawables.Remove(drawable);
     }
 
-    public override void Dispose() {
+    public void Dispose() {
         foreach (Drawable drawable in this._drawables)
             drawable.Dispose();
 
@@ -168,8 +169,6 @@ public class DrawableManager : Drawable {
             Instances--;
             DrawableManagers.Remove(this);
         }
-
-        base.Dispose();
     }
 
     ~DrawableManager() {
