@@ -21,19 +21,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Furball.Vixie.Backends.Shar
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Furball.Vixie.Backends.Direct3D11", "Furball.Vixie\Furball.Vixie.Backends.Direct3D11\Furball.Vixie.Backends.Direct3D11.csproj", "{CB68A04E-8357-4D47-96E9-478B5947B0B7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Furball.Vixie.Backends.OpenGL.Shared", "Furball.Vixie\Furball.Vixie.Backends.OpenGL.Shared\Furball.Vixie.Backends.OpenGL.Shared.csproj", "{FB1C9422-BD34-491F-8D5F-01F1B0A6A1D0}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Furball.Vixie.Backends.OpenGL20", "Furball.Vixie\Furball.Vixie.Backends.OpenGL20\Furball.Vixie.Backends.OpenGL20.csproj", "{5383DB37-FF53-42DF-A62E-88378DFD495C}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Furball.Vixie.Backends.OpenGL41", "Furball.Vixie\Furball.Vixie.Backends.OpenGL41\Furball.Vixie.Backends.OpenGL41.csproj", "{565D3697-75D4-4761-880C-399450ED4C5C}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Furball.Vixie.Backends.OpenGLES", "Furball.Vixie\Furball.Vixie.Backends.OpenGLES\Furball.Vixie.Backends.OpenGLES.csproj", "{782E6324-70EC-424D-B1EA-C0188BF71914}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Furball.Vixie.Backends.Veldrid", "Furball.Vixie\Furball.Vixie.Backends.Veldrid\Furball.Vixie.Backends.Veldrid.csproj", "{0B76B9F2-E6DF-4918-A8F5-BC7239066125}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Furball.Vixie.OpenGLDetector", "Furball.Vixie\Furball.Vixie.OpenGLDetector\Furball.Vixie.OpenGLDetector.csproj", "{BF53008A-3351-4966-B434-CEBB6E4A1295}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Furball.Vixie.Backends.Vulkan", "Furball.Vixie\Furball.Vixie.Backends.Vulkan\Furball.Vixie.Backends.Vulkan.csproj", "{CE8D3A18-D9AA-4FEA-B04C-A9A2BA98D024}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Furball.Vixie.Backends.OpenGL", "Furball.Vixie\Furball.Vixie.Backends.OpenGL\Furball.Vixie.Backends.OpenGL.csproj", "{9FE35423-76F2-4C32-8B94-6C6F45C93688}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -73,22 +67,6 @@ Global
 		{CB68A04E-8357-4D47-96E9-478B5947B0B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CB68A04E-8357-4D47-96E9-478B5947B0B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CB68A04E-8357-4D47-96E9-478B5947B0B7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FB1C9422-BD34-491F-8D5F-01F1B0A6A1D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FB1C9422-BD34-491F-8D5F-01F1B0A6A1D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FB1C9422-BD34-491F-8D5F-01F1B0A6A1D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FB1C9422-BD34-491F-8D5F-01F1B0A6A1D0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5383DB37-FF53-42DF-A62E-88378DFD495C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5383DB37-FF53-42DF-A62E-88378DFD495C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5383DB37-FF53-42DF-A62E-88378DFD495C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5383DB37-FF53-42DF-A62E-88378DFD495C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{565D3697-75D4-4761-880C-399450ED4C5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{565D3697-75D4-4761-880C-399450ED4C5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{565D3697-75D4-4761-880C-399450ED4C5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{565D3697-75D4-4761-880C-399450ED4C5C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{782E6324-70EC-424D-B1EA-C0188BF71914}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{782E6324-70EC-424D-B1EA-C0188BF71914}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{782E6324-70EC-424D-B1EA-C0188BF71914}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{782E6324-70EC-424D-B1EA-C0188BF71914}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0B76B9F2-E6DF-4918-A8F5-BC7239066125}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0B76B9F2-E6DF-4918-A8F5-BC7239066125}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0B76B9F2-E6DF-4918-A8F5-BC7239066125}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -101,6 +79,10 @@ Global
 		{CE8D3A18-D9AA-4FEA-B04C-A9A2BA98D024}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CE8D3A18-D9AA-4FEA-B04C-A9A2BA98D024}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CE8D3A18-D9AA-4FEA-B04C-A9A2BA98D024}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9FE35423-76F2-4C32-8B94-6C6F45C93688}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9FE35423-76F2-4C32-8B94-6C6F45C93688}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9FE35423-76F2-4C32-8B94-6C6F45C93688}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9FE35423-76F2-4C32-8B94-6C6F45C93688}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -111,13 +93,10 @@ Global
 		{AD8D3C59-980D-441C-A5B1-DA76CB9FCD9D} = {7B2F29B3-1240-48F9-BF57-0047C1499644}
 		{090F85E6-55E0-4603-B01D-6AC468E97B3B} = {7B2F29B3-1240-48F9-BF57-0047C1499644}
 		{CB68A04E-8357-4D47-96E9-478B5947B0B7} = {7B2F29B3-1240-48F9-BF57-0047C1499644}
-		{FB1C9422-BD34-491F-8D5F-01F1B0A6A1D0} = {7B2F29B3-1240-48F9-BF57-0047C1499644}
-		{5383DB37-FF53-42DF-A62E-88378DFD495C} = {7B2F29B3-1240-48F9-BF57-0047C1499644}
-		{565D3697-75D4-4761-880C-399450ED4C5C} = {7B2F29B3-1240-48F9-BF57-0047C1499644}
-		{782E6324-70EC-424D-B1EA-C0188BF71914} = {7B2F29B3-1240-48F9-BF57-0047C1499644}
 		{0B76B9F2-E6DF-4918-A8F5-BC7239066125} = {7B2F29B3-1240-48F9-BF57-0047C1499644}
 		{BF53008A-3351-4966-B434-CEBB6E4A1295} = {7B2F29B3-1240-48F9-BF57-0047C1499644}
 		{CE8D3A18-D9AA-4FEA-B04C-A9A2BA98D024} = {7B2F29B3-1240-48F9-BF57-0047C1499644}
+		{9FE35423-76F2-4C32-8B94-6C6F45C93688} = {7B2F29B3-1240-48F9-BF57-0047C1499644}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F975C095-8BEA-40A5-A325-09E52C534F36}
