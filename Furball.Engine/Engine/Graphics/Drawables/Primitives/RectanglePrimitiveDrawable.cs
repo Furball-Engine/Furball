@@ -42,14 +42,14 @@ public class RectanglePrimitiveDrawable : Drawable {
         if (this.Filled)
             batch.FillRectangle(
             args.Position,
-            this.Size,
+            this.RealSize,
             args.Color
             );
 
         batch.DrawRectangle(
         args.Position,
-        this.Size,
-        this.Thickness,
+        this.RealSize,
+        this.Thickness * args.Scale.Y,
         args.Color
         );
     }
