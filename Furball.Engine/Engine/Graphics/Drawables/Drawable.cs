@@ -29,7 +29,7 @@ public enum OriginType {
 /// <summary>
 /// A Basic Drawable
 /// </summary>
-public abstract class Drawable {
+public abstract class Drawable : IDisposable {
     /// <summary>
     ///     This is the real position of a drawable, ignoring whether it is inside of a CompositeDrawable or not
     /// </summary>
