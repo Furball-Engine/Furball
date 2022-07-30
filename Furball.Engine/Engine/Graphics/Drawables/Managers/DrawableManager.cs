@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -37,7 +38,7 @@ public class DrawableManager : IDisposable {
     public Vector2 Position          = Vector2.Zero;
     public Vector2 Size              = new(FurballGame.DEFAULT_WINDOW_WIDTH, FurballGame.DEFAULT_WINDOW_HEIGHT);
     
-    public void Draw(double time, DrawableBatch batch, DrawableManagerArgs _ = null) {
+    public void Draw(double time, DrawableBatch batch) {
         if (this._sortDrawables) {
             this._drawables = this._drawables.OrderByDescending(o => o.Depth).ToList();
 
@@ -135,17 +136,19 @@ public class DrawableManager : IDisposable {
             batch.End();
     }
 
-    private          TextureRenderTarget _target2D;
-    private readonly DrawableManagerArgs _args = new();
-    public TextureRenderTarget DrawRenderTarget2D(double time, DrawableBatch batch, DrawableManagerArgs _ = null) {
-        if(this._target2D?.Size.X != FurballGame.RealWindowWidth || this._target2D?.Size.Y != FurballGame.RealWindowHeight)
-            this._target2D = Resources.CreateTextureRenderTarget((uint) FurballGame.RealWindowWidth, (uint) FurballGame.RealWindowHeight);
+    private          TextureRenderTarget? _target2D;
+    private readonly DrawableManagerArgs  _args = new();
+    public TextureRenderTarget DrawRenderTarget2D(double time, DrawableBatch batch) {
+        if((int)(this._target2D?.Size.X ?? 0) != FurballGame.RealWindowWidth || (int)(this._target2D?.Size.Y ?? 0) != FurballGame.RealWindowHeight) {
+            this._target2D?.Dispose();
+            this._target2D = Resources.CreateTextureRenderTarget((uint)FurballGame.RealWindowWidth, (uint)FurballGame.RealWindowHeight);
+        }
             
-        this._target2D.Bind();
+        this._target2D!.Bind();
 
         GraphicsBackend.Current.Clear();
 
-        this.Draw(time, batch, _);
+        this.Draw(time, batch);
 
         this._target2D.Unbind();
 

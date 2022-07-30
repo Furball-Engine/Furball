@@ -26,8 +26,8 @@ public abstract class Transition : Drawable {
     /// <param name="time"></param>
     /// <param name="drawableBatch"></param>
     /// <param name="args"></param>
-    public override void Draw(double time, DrawableBatch drawableBatch, DrawableManagerArgs args = null) {
-        this.Manager.Draw(time, drawableBatch, args);
+    public override void Draw(double time, DrawableBatch drawableBatch, DrawableManagerArgs args) {
+        this.Manager.Draw(time, drawableBatch);
     }
     /// <summary>
     /// Updates the DrawableManager of the Transition
