@@ -36,6 +36,7 @@ public class FurballTestGame : FurballGame {
         LocalizationManager.AddDefaultTranslation(LocalizationStrings.LoadingScreenTest,    "Loading Screen Test");
         LocalizationManager.AddDefaultTranslation(LocalizationStrings.FixedTimeStepTest,    "Fixed Time Step Test");
         LocalizationManager.AddDefaultTranslation(LocalizationStrings.LayoutingTest,        "Layouting Test");
+        LocalizationManager.AddDefaultTranslation(LocalizationStrings.MultiScreenTest,      "Multi Screen Test");
 
         LocalizationManager.AddDefaultTranslation(LocalizationStrings.ChooseScreen, "Choose Screen");
     }

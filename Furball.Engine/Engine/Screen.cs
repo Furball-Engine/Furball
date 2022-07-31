@@ -7,7 +7,7 @@ using Furball.Vixie;
 namespace Furball.Engine.Engine; 
 
 public class Screen : GameComponent {
-    protected DrawableManager Manager;
+    public DrawableManager Manager;
     public Screen() {
         this.Manager = new DrawableManager();
     }
