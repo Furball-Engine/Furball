@@ -1,5 +1,6 @@
 using System;
 using System.Threading;
+using Eto;
 using Eto.Forms;
 using Furball.Vixie.Backends.Shared;
 
@@ -18,7 +19,7 @@ public static class EtoHelper {
             
         _Thread = new Thread(
         () => {
-            Eto.Platform.Initialize(Eto.Platform.Detect);
+            Eto.Platform.Initialize(Platforms.Gtk);
                 
             Kettu.Logger.Log("Eto Initialized");
                 
