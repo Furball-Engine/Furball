@@ -6,52 +6,23 @@
         <Nullable>disable</Nullable>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Title>Furball.Engine</Title>
-        <Description>A Flexible Game Engine written with MonoGame which is meant to resemble the osu!b394a engine while allowing Shader development to be easy.</Description>
+        <Description>A Game Engine designed in C# using a custom made Renderer called Furball.Vixie</Description>
         <PackageProjectUrl>https://github.com/Eeveelution/Furball</PackageProjectUrl>
         <PackageLicenseUrl>https://github.com/Eeveelution/Furball/blob/master/LICENSE</PackageLicenseUrl>
         <RepositoryUrl>https://github.com/Eeveelution/Furball</RepositoryUrl>
-        <PackageTags>game_engine engine game monogame furball eeveelution beyley games osu</PackageTags>
-        <AssemblyVersion>1.0.2</AssemblyVersion>
-        <FileVersion>1.0.2</FileVersion>
-        <Version>1.0.2</Version>
-        <PackageVersion>1.0.3-develop</PackageVersion>
-        <PackageReleaseNotes>+ Added PathTweens which allow Moving of Drawables in a Bezier Curve,
-+ Added BezierCurveDrawable which allows for drawing of Bezier Curves</PackageReleaseNotes>
+        <PackageTags>game_engine engine game furball eeveelution beyley games</PackageTags>
+        <AssemblyVersion>1.1.0</AssemblyVersion>
+        <FileVersion>1.1.0</FileVersion>
+        <Version>1.1.0</Version>
+        <PackageVersion>1.1.0</PackageVersion>
+        <PackageReleaseNotes>+ we forgot to do this for like 8 months lol SO much has changed</PackageReleaseNotes>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <LangVersion>10</LangVersion>
     </PropertyGroup>
-    <PropertyGroup>
-        <ApplicationManifest>app.manifest</ApplicationManifest>
-        <ApplicationIcon>Icon.ico</ApplicationIcon>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-      <DefineConstants>TRACECOREAPP;DESKTOP</DefineConstants>
-        <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-      <DefineConstants>TRACECOREAPP;DESKTOP</DefineConstants>
-    </PropertyGroup>
-    <ItemGroup>
-        <None Remove="Icon.ico" />
-        <None Remove="Icon.bmp" />
-    </ItemGroup>
-    <ItemGroup>
-        <EmbeddedResource Include="Icon.ico" />
-        <EmbeddedResource Include="Icon.bmp" />
-    </ItemGroup>
-    <ItemGroup>
-        <MonoGameContentReference Include="Content\Content.mgcb">
-            <Link>EngineContent/%(RecursiveDir)%(Filename)%(Extension)</Link>
-        </MonoGameContentReference>
-    </ItemGroup>
-    <ItemGroup>
-        <TrimmerRootAssembly Include="Microsoft.Xna.Framework.Content.ContentTypeReader" Visible="false" />
-    </ItemGroup>
     <ItemGroup>
         <PackageReference Include="FFmpeg.AutoGen" Version="5.0.0" />
         <PackageReference Include="GtkSharp.Win32" Version="3.1.2" />
         <PackageReference Include="ImGui.NET" Version="1.87.3" />
-        <PackageReference Include="Jace" Version="1.0.0" />
         <PackageReference Include="Kettu" Version="1.4.0" />
         <PackageReference Include="ManagedBass" Version="3.1.1" />
         <PackageReference Include="ManagedBass.Fx" Version="3.1.1" />
@@ -59,9 +30,7 @@
         <PackageReference Include="sowelipisona" Version="1.2.0" />
         <PackageReference Include="System.Drawing.Common" Version="5.0.2" />
         <PackageReference Include="GtkSharp" Version="3.24.24.38" />
-        <!--        <PackageReference Include="GtkSharp.Dependencies" Version="1.1.1" />-->
-        <!--        <PackageReference Include="GtkSharp.Win32" Version="3.1.2" />-->
-        <PackageReference Include="JetBrains.Annotations" Version="2021.3.0" />
+        <PackageReference Include="JetBrains.Annotations" Version="2022.1.0" />
         <PackageReference Include="Eto.Forms" Version="2.7.0" />
         <PackageReference Include="Eto.Platform.Gtk" Version="2.7.0" />
     </ItemGroup>
