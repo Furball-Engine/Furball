@@ -27,15 +27,18 @@ public class DebugCounter : Drawable {
         new GameTimeSourceTime(),
         new BoundByDrawUpdate(),
         new ContentCacheItems(),
-#if DESKTOP
         //TODO: When Android gets implemented, add new item called MousePoints and have it display all current cursors
         new MousePosition(),
-#endif
         new KeyboardInputs()
     };
 
     public DebugCounter() {
         this.Position = new Vector2(0, 720 - this._textDrawable.Size.Y);
+
+        this.Clickable   = false;
+        this.CoverClicks = false;
+        this.Hoverable   = false;
+        this.CoverHovers = false;
     }
 
     public override void Draw(double time, DrawableBatch batch, DrawableManagerArgs args) {

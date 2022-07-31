@@ -1,7 +1,3 @@
-
-
-#if DESKTOP
-
 namespace Furball.Engine.Engine.Debug.DebugCounter.Items {
     /// <summary>
     /// Displays the Desktop Mouse Position
@@ -10,5 +6,3 @@ namespace Furball.Engine.Engine.Debug.DebugCounter.Items {
         public override string GetAsString(double time) => $"mouse: {FurballGame.InputManager.CursorStates[0].Position.ToString()}";
     }
 }
-
-#endif
