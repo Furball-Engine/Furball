@@ -24,5 +24,5 @@ public class UpdateRate : DebugCounterItem {
         base.Draw(time);
     }
 
-    public override string GetAsString(double time) => $"{this._lastUpdatedUpdateRate}ups ({Math.Round(1000.0 / this._lastUpdatedUpdateRate, 2)}ms)";
+    public override string GetAsString(double time) => $"{this._lastUpdatedUpdateRate:N0}ups ({Math.Round(1000.0 / this._lastUpdatedUpdateRate, 2):N2}ms)";
 }

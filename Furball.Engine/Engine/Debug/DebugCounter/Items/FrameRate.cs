@@ -24,5 +24,5 @@ public class FrameRate : DebugCounterItem {
         base.Draw(time);
     }
 
-    public override string GetAsString(double time) => $"{this._lastUpdatedFramerate}fps ({Math.Round(1000.0 / this._lastUpdatedFramerate, 2)}ms)";
+    public override string GetAsString(double time) => $"{this._lastUpdatedFramerate:N0}fps ({Math.Round(1000.0 / this._lastUpdatedFramerate, 2):N2}ms)";
 }

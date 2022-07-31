@@ -17,7 +17,7 @@ public class DrawableManager : IDisposable {
 
     public IReadOnlyList<Drawable> Drawables => this._drawables.AsReadOnly();
 
-    public int CountManaged { get; private set; }
+    public int Count { get; private set; }
 
     public static object                StatLock         = new ();
     public static List<DrawableManager> DrawableManagers = new();
@@ -51,7 +51,7 @@ public class DrawableManager : IDisposable {
             batch.Begin();
 
         int tempCount = this._drawables.Count;
-        this.CountManaged = tempCount;
+        this.Count = tempCount;
         
         Rectangle currScissor = batch.ScissorRect;
 

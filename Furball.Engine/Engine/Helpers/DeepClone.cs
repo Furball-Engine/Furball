@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using Furball.Engine.Engine.Helpers.ArrayExtensions;
 using JetBrains.Annotations;
@@ -7,6 +8,12 @@ using JetBrains.Annotations;
 namespace Furball.Engine.Engine.Helpers {
     public static class ObjectExtensions {
         private static readonly MethodInfo CloneMethod = typeof(object).GetMethod("MemberwiseClone", BindingFlags.NonPublic | BindingFlags.Instance);
+
+        //https://www.codeproject.com/tips/494499/implementing-dictionary-removeall
+        public static void RemoveAll <K, V>(this IDictionary<K, V> dict, Func<K, V, bool> match) {
+            foreach (K key in dict.Keys.ToArray().Where(key => match(key, dict[key])))
+                dict.Remove(key);
+        }
 
         public static bool IsPrimitive(this Type type) {
             if (type == typeof(string)) return true;

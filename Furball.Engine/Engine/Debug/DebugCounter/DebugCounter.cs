@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Numerics;
+using System.Text;
 using Furball.Engine.Engine.Debug.DebugCounter.Items;
 using Furball.Engine.Engine.Graphics;
 using Furball.Engine.Engine.Graphics.Drawables;
@@ -13,8 +14,8 @@ namespace Furball.Engine.Engine.Debug.DebugCounter;
 public class DebugCounter : Drawable {
     private TextDrawable _textDrawable = new(new Vector2(0, 700), FurballGame.DEFAULT_FONT, "a", 24);
 
-    private Vector2 _size;
-    public override Vector2 Size => this._size * this.Scale;
+    public override Vector2 Size => this._textDrawable.Size * this.Scale;
+    
     /// <summary>
     /// Items which will be displayed on the Counter
     /// </summary>
@@ -27,7 +28,7 @@ public class DebugCounter : Drawable {
         new GameTimeSourceTime(),
         new BoundByDrawUpdate(),
         new ContentCacheItems(),
-        //TODO: When Android gets implemented, add new item called MousePoints and have it display all current cursors
+        //TODO: When touch screen support gets implemented, add new item called MousePoints and have it display all current cursors
         new MousePosition(),
         new KeyboardInputs()
     };
@@ -50,7 +51,7 @@ public class DebugCounter : Drawable {
     }
 
     public override void Update(double time) {
-        string finalText = "";
+        StringBuilder builder = new();
 
         for (int i = 0; i != this.Items.Count; i++) {
             DebugCounterItem current = this.Items[i];
@@ -58,16 +59,14 @@ public class DebugCounter : Drawable {
             current.Update(time);
 
             if (i % 3 == 0 && i != 0)
-                finalText += "\n";
+                builder.AppendLine();
 
-            finalText += current.GetAsString(time) + "; ";
+            builder.Append($"{current.GetAsString(time)}; ");
 
             if (current.ForceNewLine)
-                finalText += "\n";
+                builder.AppendLine();
         }
 
-        this._textDrawable.Text = finalText;
-        this._size              = this._textDrawable.Size;
-        this.Position           = new Vector2(0, 720 - this._textDrawable.Size.Y);
+        this._textDrawable.Text = builder.ToString();
     }
 }

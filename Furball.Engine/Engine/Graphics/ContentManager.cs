@@ -22,6 +22,7 @@ public static class ContentManager {
 
     public static int ContentCacheItems => CONTENT_CACHE.Count;
     public static int FSSCacheItems => FSS_CACHE.Count;
+    public static int TextureCacheItems => TEXTURE_CACHE.Count;
 
     /// <summary>
     /// Clears the content cache, allowing changed assets to reload
@@ -31,6 +32,18 @@ public static class ContentManager {
         FSS_CACHE.Clear();
 
         Logger.Log("Content cache cleared!", LoggerLevelCacheEvent.Instance);
+    }
+
+    internal static void Initialize() {
+        FurballGame.TimeStepMethods.Add(
+        new FixedTimeStepMethod(
+        5000,
+        () => {
+            CONTENT_CACHE.RemoveAll((key, value) => !value.TryGetTarget(out _));
+            TEXTURE_CACHE.RemoveAll((key, value) => !value.TryGetTarget(out _));
+        }
+        )
+        );
     }
 
     public static FontSystem LoadSystemFont(string familyName, FontSystemSettings settings = null) {

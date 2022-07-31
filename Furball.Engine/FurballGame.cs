@@ -84,7 +84,7 @@ public class FurballGame : Game {
     public static RectangleF DisplayRect       => new(0, 0, WindowWidth, WindowHeight);
     public static Rectangle  DisplayRectActual => new(0, 0, RealWindowWidth, RealWindowHeight);
 
-    private bool _drawDebugOverlay = true;
+    private bool _drawDebugOverlay = false;
 
     private static TextDrawable    _ConsoleAutoComplete;
     public static  TooltipDrawable TooltipDrawable;
@@ -205,13 +205,18 @@ public class FurballGame : Game {
         DrawableBatch = new DrawableBatch();
 
         DebugCounter = new DebugCounter {
-            Clickable   = false,
-            CoverClicks = false
+            Position = new Vector2(5, 5),
+            OriginType = OriginType.BottomLeft,
+            ScreenOriginType = OriginType.BottomLeft
         };
         DebugOverlayDrawableManager.Add(DebugCounter);
 
+        if (RuntimeInfo.IsDebug())
+            this._drawDebugOverlay = true;
+
         DevConsole.Initialize();
         ImGuiConsole.Initialize();
+        ContentManager.Initialize();
 
         ScreenManager.SetTransition(new FadeTransition());
 
