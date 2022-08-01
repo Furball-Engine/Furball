@@ -94,16 +94,12 @@ public class TextDrawable : Drawable {
 
     public override void Draw(double time, DrawableBatch batch, DrawableManagerArgs args) {
         switch (this.ColorType) {
-            case TextColorType.Solid: {
-                batch.DrawString(this.Font, this.Text, args.Position, args.Color, args.Rotation, args.Scale, this.RotationOrigin);
+            case TextColorType.Repeating: {
+                batch.DrawString(this.Font, this.Text, args.Position, this.Colors, args.Rotation, args.Scale, this.RotationOrigin);
                 break;
             }
-            case TextColorType.Repeating: {
-                Color[] colors = this.Colors;
-                while (colors.Length < this.Text.Length)
-                    colors = colors.Concat(colors).ToArray();
-
-                batch.DrawString(this.Font, this.Text, args.Position, colors, args.Rotation, args.Scale, this.RotationOrigin);
+            case TextColorType.Solid: {
+                batch.DrawString(this.Font, this.Text, args.Position, args.Color, args.Rotation, args.Scale, this.RotationOrigin);
                 break;
             }
             case TextColorType.Stretch: {
