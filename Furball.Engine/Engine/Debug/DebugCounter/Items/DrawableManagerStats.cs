@@ -17,7 +17,7 @@ public class DrawableManagerStats : DebugCounterItem {
         if (this._deltaTime >= 1.0) {
             this._lastUpdatedDrawables   = 0;
 
-            int drawableManagerCount = DrawableManager.DrawableManagers.Count;
+            int drawableManagerCount = DrawableManager.Instances;
 
             this._lastUpdatedInstanceCount = drawableManagerCount;
 
