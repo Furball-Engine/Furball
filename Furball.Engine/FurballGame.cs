@@ -225,8 +225,12 @@ public class FurballGame : Game {
         Profiler.EndProfileAndPrint("load_content");
 
         Profiler.StartProfile("set_window_properties");
-        if (!BypassFurballFPSLimit && FurballConfig.Instance.Values["limit_fps"].ToBoolean().Value)
-            SetTargetFps((int) FurballConfig.Instance.Values["target_fps"].ToNumber().Value);
+        if (!BypassFurballFPSLimit && FurballConfig.Instance.Values["limit_fps"].ToBoolean().Value) {
+            double var = FurballConfig.Instance.Values["target_fps"].ToNumber().Value;
+
+            //If the target fps is less than or equal to 0, then send in `null`, if not, then send the var
+            SetTargetFps(var <= 0 ? null : var);
+        }
 
         ChangeScreenSize(
         (int) FurballConfig.Instance.Values["screen_width"].ToNumber().Value,
@@ -321,22 +325,23 @@ public class FurballGame : Game {
 
     public double UnfocusedFpsScale => this._unfocusedFpsScale;
 
-    public void SetTargetFps(int fps, double unfocusedScale = -1) {
-        this.WindowManager.SetTargetFramerate(fps == -1 ? 0 : fps);
+    public void SetTargetFps(double? fps, double unfocusedScale = -1) {
+        this.WindowManager.TargetFramerate = fps ?? 0;
 
         if (!BypassFurballFPSLimit)
-            FurballConfig.Instance.Values["target_fps"] = new Value.Number(fps);
+            FurballConfig.Instance.Values["target_fps"] = new Value.Number(fps ?? -1);
             
         if (unfocusedScale < 0)
             unfocusedScale = this._unfocusedFpsScale;
 
         if (unfocusedScale >= 0) {
-            this._unfocusedFpsScale = unfocusedScale;
+            //TODO: Implement this by tracking window focus state changes
+            
+            // this._unfocusedFpsScale = unfocusedScale;
+            //
+            // double newFps       = fps   * unfocusedScale;
+            // double milliseconds = 1000d / newFps;
 
-            double newFps       = fps   * unfocusedScale;
-            double milliseconds = 1000d / newFps;
-
-            //TODO post release: emulate this using OnWindowStateChange or smth
             //this.InactiveSleepTime = TimeSpan.FromMilliseconds(milliseconds);
         }
     }

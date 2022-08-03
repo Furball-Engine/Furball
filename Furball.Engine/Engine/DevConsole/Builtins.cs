@@ -83,7 +83,7 @@ public class Builtins {
                  if (parameters[0] is not Value.Number(var value))
                      throw new InvalidValueTypeException(typeof(Value.Number), parameters[0].GetType(), context.Expression.PositionInText);
                  
-                 FurballGame.Instance.SetTargetFps(FurballGame.Instance.WindowManager.GetTargetFramerate(), value);
+                 FurballGame.Instance.SetTargetFps(FurballGame.Instance.WindowManager.TargetFramerate, value);
                  DevConsole.AddMessage($"Set FPS Unfocused Scale to {value}", ExecutionResult.Success);
                  
                  return Value.DefaultVoid;
@@ -94,7 +94,7 @@ public class Builtins {
                  if (parameters[0] is not Value.Number(var value))
                      throw new InvalidValueTypeException(typeof(Value.Number), parameters[0].GetType(), context.Expression.PositionInText);
                      
-                 FurballGame.Instance.SetTargetFps((int)value);
+                 FurballGame.Instance.SetTargetFps(value);
                  DevConsole.AddMessage($"Set Target FPS to {value}", ExecutionResult.Success);
                      
                  return Value.DefaultVoid;
