@@ -155,7 +155,7 @@ public class DrawableManager : IDisposable {
         return this._target2D;
     }
 
-    public void Update(double time) {
+    public virtual void Update(double time) {
         int tempCount = this._drawables.Count;
         for (int i = 0; i < tempCount; i++) {
             Drawable currentDrawable = this._drawables[i];
