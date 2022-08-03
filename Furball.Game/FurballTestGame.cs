@@ -16,7 +16,7 @@ public class FurballTestGame : FurballGame {
         GraphicsBackend.Current.ScreenshotTaken += OnScreenshot;
         
         InputManager.OnKeyDown += delegate(object sender, Key key) {
-            if(key == Key.F9)
+            if (key == Key.F1)
                 GraphicsBackend.Current.TakeScreenshot();
         };
     }
