@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Drawing;
 using System.Numerics;
 using Furball.Engine;
 using Furball.Engine.Engine;
@@ -6,6 +7,7 @@ using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Graphics.Drawables.UiElements;
 using Furball.Engine.Engine.Localization;
 using Furball.Game.Screens;
+using Silk.NET.Input;
 using Color=Furball.Vixie.Backends.Shared.Color;
 
 namespace Furball.Game; 
@@ -48,24 +50,26 @@ public class TestScreen : Screen {
         }
         );
         
-        this._languageButton.OnClick += delegate {
-            List<ISO639_2Code> supported = LocalizationManager.GetSupportedLanguages();
-
-            for (int i = 0; i < supported.Count; i++) {
-                ISO639_2Code code = supported[i];
-                if (code == LocalizationManager.CurrentLanguage.Iso6392Code()) {
-                    if (i != supported.Count - 1)
-                        LocalizationManager.CurrentLanguage = LocalizationManager.GetLanguageFromCode(supported[i + 1])!;
-                    else
-                        LocalizationManager.CurrentLanguage = LocalizationManager.GetLanguageFromCode(supported[0])!;
-
-                    break;
-                }
-            }
-
-            this.UpdateLanguageButton();
-        };
+        this._languageButton.OnClick += OnLanguageButtonClick;
         
+        this.UpdateLanguageButton();
+    }
+    
+    private void OnLanguageButtonClick(object sender, (MouseButton button, Point pos) e) {
+        List<ISO639_2Code> supported = LocalizationManager.GetSupportedLanguages();
+
+        for (int i = 0; i < supported.Count; i++) {
+            ISO639_2Code code = supported[i];
+            if (code == LocalizationManager.CurrentLanguage.Iso6392Code()) {
+                if (i != supported.Count - 1)
+                    LocalizationManager.CurrentLanguage = LocalizationManager.GetLanguageFromCode(supported[i + 1])!;
+                else
+                    LocalizationManager.CurrentLanguage = LocalizationManager.GetLanguageFromCode(supported[0])!;
+
+                break;
+            }
+        }
+
         this.UpdateLanguageButton();
     }
 
