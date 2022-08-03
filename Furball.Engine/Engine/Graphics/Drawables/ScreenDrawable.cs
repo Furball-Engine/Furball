@@ -7,7 +7,15 @@ namespace Furball.Engine.Engine.Graphics.Drawables;
 
 public class ScreenDrawable : Drawable {
     private Screen  _screen;
-    public  Vector2 ScreenSize;
+    private Vector2 _screenSize;
+
+    public Vector2 ScreenSize {
+        get => this._screenSize;
+        set {
+            this._screenSize = value;
+            this.OnRelayout(new Vector2(value.X / value.Y * 720f));
+        }
+    }
 
     public override Vector2 Size => this.ScreenSize * this.Scale;
 
@@ -26,7 +34,6 @@ public class ScreenDrawable : Drawable {
         this.Position   = position;
         this.ScreenSize = size;
 
-        FurballGame.Instance.OnRelayout     += this.OnRelayout;
         LocalizationManager.LanguageChanged += this.LanguageChanged;
     }
     
@@ -34,7 +41,7 @@ public class ScreenDrawable : Drawable {
         this._screen.UpdateTextStrings();
     }
 
-    private void OnRelayout(object sender, Vector2 e) {
+    private void OnRelayout(Vector2 e) {
         this._screen.Relayout(e.X, e.Y);
     }
 
@@ -56,7 +63,6 @@ public class ScreenDrawable : Drawable {
     public override void Dispose() {
         base.Dispose();
 
-        FurballGame.Instance.OnRelayout     -= this.OnRelayout;
         LocalizationManager.LanguageChanged -= this.LanguageChanged;
 
         this._screen.Unload();

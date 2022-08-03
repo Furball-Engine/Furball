@@ -36,4 +36,9 @@ public abstract class Transition : Drawable {
     public override void Update(double time) {
         this.Manager.Update(time);
     }
+    public override void Dispose() {
+        base.Dispose();
+        
+        this.Manager.Dispose();
+    }
 }

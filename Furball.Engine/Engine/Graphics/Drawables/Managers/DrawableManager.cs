@@ -45,11 +45,6 @@ public class DrawableManager : IDisposable {
             this._sortDrawables = false;
         }
 
-        bool unmanaged = !batch.Begun;
-
-        if (unmanaged)
-            batch.Begin();
-
         int tempCount = this._drawables.Count;
         this.Count = tempCount;
         
@@ -73,13 +68,24 @@ public class DrawableManager : IDisposable {
                 _                      => throw new ArgumentOutOfRangeException()
             };
 
-            drawable.RealPosition = drawable.ScreenOriginType switch {
-                OriginType.TopLeft     => drawable.RealPosition,
-                OriginType.TopRight    => new(FurballGame.WindowWidth - drawable.RealPosition.X, drawable.RealPosition.Y),
-                OriginType.BottomLeft  => new(drawable.RealPosition.X, FurballGame.WindowHeight - drawable.RealPosition.Y),
-                OriginType.BottomRight => new(FurballGame.WindowWidth - drawable.RealPosition.X, FurballGame.WindowHeight - drawable.RealPosition.Y),
-                _                      => throw new ArgumentOutOfRangeException()
-            };
+            Vector2 scaledSize = this.Size / (this.Size.Y / FurballGame.WindowHeight);
+            
+            if (this.EffectedByScaling)
+                drawable.RealPosition = drawable.ScreenOriginType switch {
+                    OriginType.TopLeft     => drawable.RealPosition,
+                    OriginType.TopRight    => new(scaledSize.X - drawable.RealPosition.X, drawable.RealPosition.Y),
+                    OriginType.BottomLeft  => new(drawable.RealPosition.X, scaledSize.Y - drawable.RealPosition.Y),
+                    OriginType.BottomRight => new(scaledSize.X - drawable.RealPosition.X, scaledSize.Y - drawable.RealPosition.Y),
+                    _                      => throw new ArgumentOutOfRangeException()
+                };
+            else
+                drawable.RealPosition = drawable.ScreenOriginType switch {
+                    OriginType.TopLeft     => drawable.RealPosition,
+                    OriginType.TopRight    => new(FurballGame.WindowWidth - drawable.RealPosition.X, drawable.RealPosition.Y),
+                    OriginType.BottomLeft  => new(drawable.RealPosition.X, FurballGame.WindowHeight - drawable.RealPosition.Y),
+                    OriginType.BottomRight => new(FurballGame.WindowWidth - drawable.RealPosition.X, FurballGame.WindowHeight - drawable.RealPosition.Y),
+                    _                      => throw new ArgumentOutOfRangeException()
+                };
 
             if (!drawable.Visible) continue;
 
@@ -106,7 +112,7 @@ public class DrawableManager : IDisposable {
 
             RectangleF rect = new(drawable.RealPosition.ToPointF(), new SizeF(drawable.RealSize.X, drawable.RealSize.Y));
 
-            if (rect.IntersectsWith(FurballGame.DisplayRect)) {
+            if ((!this.EffectedByScaling && rect.IntersectsWith(FurballGame.DisplayRect)) || (this.EffectedByScaling && rect.IntersectsWith(new RectangleF(this.Position.ToPointF(), this.Size.ToSizeF())))) {
                 drawable.Draw(time, batch, this._args);
                 if (FurballGame.DrawInputOverlay)
                     switch (drawable.Clickable) {
@@ -131,9 +137,6 @@ public class DrawableManager : IDisposable {
         }
 
         batch.ScissorRect = currScissor;
-
-        if (unmanaged)
-            batch.End();
     }
 
     private          TextureRenderTarget? _target2D;
@@ -183,7 +186,13 @@ public class DrawableManager : IDisposable {
         this._drawables.Remove(drawable);
     }
 
+    private bool _isDisposed = false;
     public void Dispose() {
+        if (this._isDisposed)
+            return;
+
+        this._isDisposed = true;
+        
         foreach (Drawable drawable in this._drawables)
             drawable.Dispose();
 

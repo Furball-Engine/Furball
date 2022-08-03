@@ -11,14 +11,18 @@ public class MultiScreenTest : TestScreen {
     private ScreenDrawable _bottomLeft;
     private ScreenDrawable _bottomRight;
 
-    public MultiScreenTest(int recurseAmount = 0) {
+    public MultiScreenTest() {
+        this._recurseAmount = 0;
+    }
+
+    private MultiScreenTest(int recurseAmount) {
         this._recurseAmount = recurseAmount;
     }
     
     public override void Initialize() {
         base.Initialize();
 
-        this.Manager.Add(this._topLeft = new ScreenDrawable(this._recurseAmount < 5 ? new MultiScreenTest(this._recurseAmount + 1) : new LayoutingTest(), Vector2.Zero, Vector2.Zero));
+        this.Manager.Add(this._topLeft = new ScreenDrawable(this._recurseAmount < 150 ? new MultiScreenTest(this._recurseAmount + 1) : new LayoutingTest(), Vector2.Zero, Vector2.Zero));
         this.Manager.Add(
         this._topRight = new ScreenDrawable(new FixedTimeStepTest(), Vector2.Zero, Vector2.Zero) {
             OriginType       = OriginType.TopRight,
@@ -42,9 +46,9 @@ public class MultiScreenTest : TestScreen {
     public override void Relayout(float newWidth, float newHeight) {
         base.Relayout(newWidth, newHeight);
 
-        this._topLeft.ScreenSize     = new Vector2(newWidth / 2f, newHeight / 2f);
-        this._topRight.ScreenSize    = new Vector2(newWidth / 2f, newHeight / 2f);
-        this._bottomLeft.ScreenSize  = new Vector2(newWidth / 2f, newHeight / 2f);
-        this._bottomRight.ScreenSize = new Vector2(newWidth / 2f, newHeight / 2f);
+        this._topLeft.ScreenSize     = new Vector2(newWidth * 0.8f, newHeight * 0.8f);
+        this._topRight.ScreenSize    = new Vector2(newWidth * 0.2f, newHeight * 0.8f);
+        this._bottomLeft.ScreenSize  = new Vector2(newWidth * 0.8f, newHeight * 0.2f);
+        this._bottomRight.ScreenSize = new Vector2(newWidth * 0.2f, newHeight * 0.2f);
     }
 }

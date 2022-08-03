@@ -1,11 +1,11 @@
 using System;
+using System.Drawing;
 using System.Globalization;
 using System.Numerics;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Furball.Engine.Engine.Helpers;
 using Furball.Vixie;
 using Furball.Vixie.Helpers.Helpers;
-using SixLabors.ImageSharp;
 
 namespace Furball.Engine.Engine.Graphics.Drawables;
 
@@ -71,23 +71,11 @@ public class ScrollableContainer : CompositeDrawable {
     }
 
     public override void Draw(double time, DrawableBatch batch, DrawableManagerArgs args) {
-        batch.End();
+        Rectangle orig = batch.ScissorRect;
 
-        Rectangle rect = GraphicsBackend.Current.ScissorRect;
-
-        Rectangle newRect = new(
-        new((int)(this.RealPosition.X * FurballGame.VerticalRatio), (int)(this.RealPosition.Y * FurballGame.VerticalRatio)),
-        new((int)(this._size.X        * FurballGame.VerticalRatio), (int)(this._size.Y        * FurballGame.VerticalRatio))
-        );
-
-        GraphicsBackend.Current.ScissorRect = newRect;
-
-        batch.Begin();
+        batch.ScissorRect = new Rectangle((int)this.RealPosition.X, (int)this.RealPosition.Y, (int)this.RealSize.X, (int)this.RealSize.Y);
         base.Draw(time, batch, args);
-        batch.End();
-
-        GraphicsBackend.Current.ScissorRect = rect;
-        batch.Begin();
+        batch.ScissorRect = orig;
     }
 
     public void RecalculateMax() {

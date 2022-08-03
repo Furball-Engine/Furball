@@ -385,7 +385,7 @@ public class FurballGame : Game {
         b.Begin();
         b.DrawString(font, text, new Vector2(WindowWidth / 2f - textSize.X / 2f, WindowHeight / 2f - textSize.Y / 2f), Color.White);
         b.End();
-
+        
         fontSystem.Dispose();
 
         b.Dispose();
@@ -524,6 +524,18 @@ public class FurballGame : Game {
 
     public double    LastDrawTime { get; private set; } = 0.0;
 
+    protected override void PreDraw(double deltaTime) {
+        base.PreDraw(deltaTime);
+
+        DrawableBatch.Begin();
+    }
+
+    protected override void PostDraw(double deltaTime) {
+        base.PostDraw(deltaTime);
+        
+        DrawableBatch.End();
+    }
+
     protected override void Draw(double gameTime) {
         if (RuntimeInfo.IsDebug()) {
             this._drawWatch.Reset();
@@ -533,9 +545,6 @@ public class FurballGame : Game {
         GraphicsBackend.Current.Clear();
 
         GraphicsBackend.Current.SetFullScissorRect();
-            
-        if(DrawableBatch.Begun)
-            DrawableBatch.End();
 
         ImGuiConsole.Draw();
 
@@ -549,9 +558,6 @@ public class FurballGame : Game {
             string text = this.LoadingScreen.LoadingStatus;
 
             Vector2 textSize = f.MeasureString(text);
-                
-            if(!DrawableBatch.Begun)
-                DrawableBatch.Begin();
 
             const float gap       = DEFAULT_WINDOW_HEIGHT * 0.05f;
             const float barHeight = 30;
@@ -559,8 +565,6 @@ public class FurballGame : Game {
             DrawableBatch.DrawString(f, text, new Vector2(WindowWidth / 2f - textSize.X / 2f, WindowHeight * 0.3f), Color.White);
             DrawableBatch.FillRectangle(new Vector2(gap, WindowHeight - gap - barHeight), new((WindowWidth - gap * 2f) * this.LoadingScreen.LoadingProgress, barHeight), Vixie.Backends.Shared.Color.Grey);
             DrawableBatch.DrawRectangle(new Vector2(gap, WindowHeight - gap - barHeight), new(WindowWidth - gap * 2f, barHeight), 1, Vixie.Backends.Shared.Color.White);
-                
-            DrawableBatch.End();
         }
             
         ScreenManager.DrawTransition(gameTime, DrawableBatch);
