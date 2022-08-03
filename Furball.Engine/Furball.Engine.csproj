@@ -20,6 +20,10 @@
         <LangVersion>10</LangVersion>
     </PropertyGroup>
     <ItemGroup>
+        <PackageReference Include="aqua.tool.polyfill.IsExternalInit" Version="2.0.0">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
         <PackageReference Include="FFmpeg.AutoGen" Version="5.0.0" />
         <PackageReference Include="GtkSharp.Win32" Version="3.1.2" />
         <PackageReference Include="ImGui.NET" Version="1.87.3" />

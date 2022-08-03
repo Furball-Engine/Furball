@@ -152,24 +152,6 @@ public class FurballGame : Game {
         InputManager.RegisterInputMethod(new VixieMouseInputMethod());
         InputManager.RegisterInputMethod(new VixieKeyboardInputMethod());
 
-        InputManager.OnKeyDown += delegate(object _, Key keys) {
-            switch (keys) {
-                case Key.F11:
-                    this._drawDebugOverlay = !this._drawDebugOverlay;
-                    break;
-                case Key.F10:
-                    DrawInputOverlay = !DrawInputOverlay;
-                    break;
-                case Key.F9: {
-                    if (!this._textureDisplayFormAdded) {
-                        DebugOverlayDrawableManager.Add(this._textureDisplayForm);
-                        this._textureDisplayFormAdded = true;
-                    }
-                    break;
-                }
-            }
-        };
-
         Profiler.StartProfile("init_audio_engine");
         //TODO: Add logic to decide on what audio backend to use, and maybe write some code to help change backend on the fly
         AudioEngine = new ManagedBassAudioEngine();
@@ -262,6 +244,8 @@ public class FurballGame : Game {
         this._startScreen = null;
 
         EtoHelper.Initialize();
+        
+        this.RegisterKeybinds();
 
         if (Assembly.GetExecutingAssembly().GetType("MonoMod.WasHere") != null) {
             GameTimeScheduler.ScheduleMethod(
@@ -335,12 +319,54 @@ public class FurballGame : Game {
         }
         catch { /* */ }
 
+        this.UnregisterKeybinds();
+        
         GameTimeScheduler.Dispose(Time);
         EtoHelper.Dispose();
 
         FurballConfig.Instance.Save();
             
         base.OnClosing();
+    }
+
+    private enum EngineDebugKeybinds {
+        ToggleDebugOverlay,
+        ToggleInputOverlay,
+        DispalyDebugTextureviewer
+    }
+    
+    private Keybind _toggleDebugOverlay;
+    private Keybind _toggleInputOverlay;
+    private Keybind _displayDebugTextureViewer;
+    public virtual void RegisterKeybinds() {
+        this._toggleDebugOverlay = new Keybind(EngineDebugKeybinds.ToggleDebugOverlay, "Toggle Debug Overlay", Key.F11,
+                                               () => {
+                                                   this._drawDebugOverlay = !this._drawDebugOverlay;
+                                               }
+        );
+        this._toggleInputOverlay = new Keybind(EngineDebugKeybinds.ToggleInputOverlay, "Toggle Input Overlay", Key.F10,
+                                               () => {
+                                                   DrawInputOverlay = !DrawInputOverlay;
+                                               }
+        );
+        this._displayDebugTextureViewer = new Keybind(EngineDebugKeybinds.DispalyDebugTextureviewer, "Display Debug Texture Viewer", Key.F9,
+                                                      () => {
+                                                          if (!this._textureDisplayFormAdded) {
+                                                              DebugOverlayDrawableManager.Add(this._textureDisplayForm);
+                                                              this._textureDisplayFormAdded = true;
+                                                          }
+                                                      }
+        );
+        
+        InputManager.RegisterKeybind(this._toggleDebugOverlay);
+        InputManager.RegisterKeybind(this._toggleInputOverlay);
+        InputManager.RegisterKeybind(this._displayDebugTextureViewer);
+    }
+
+    public virtual void UnregisterKeybinds() {
+        InputManager.UnregisterKeybind(this._toggleDebugOverlay);
+        InputManager.UnregisterKeybind(this._toggleInputOverlay);
+        InputManager.UnregisterKeybind(this._displayDebugTextureViewer);
     }
 
     protected override void DrawLoadingScreen() {

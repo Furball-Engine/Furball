@@ -37,3 +37,21 @@ public class LoggerLevelEtoInfo : LoggerLevel {
 
     public static LoggerLevelEtoInfo Instance = new();
 }
+
+public class LoggerLevelInput : LoggerLevel {
+    private LoggerLevelInput(Channel channel) {
+        base.Channel = channel.ToString();
+    }
+
+    private enum Channel {
+        Info,
+        Warning,
+        Error
+    }
+    
+    public override string Name => "Input";
+
+    public static LoggerLevelInput InstanceInfo = new(Channel.Info);
+    public static LoggerLevelInput InstanceWarning = new(Channel.Warning);
+    public static LoggerLevelInput InstanceError = new(Channel.Error);
+}

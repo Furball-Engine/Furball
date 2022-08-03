@@ -1,5 +1,7 @@
+using System;
 using Furball.Engine.Engine.Localization;
 using Furball.Volpe.Evaluation;
+using Silk.NET.Input;
 
 namespace Furball.Engine.Engine.Config; 
 
@@ -17,6 +19,19 @@ public class FurballConfig : VolpeConfig {
     public bool Fullscreen => this.Values["fullscreen"].ToBoolean().Value;
     public string Language => this.Values["language"].ToStringValue().Value;
 
+    public void SetKeybind(object identifier, Key key) {
+        this.Values[$"keybind_{identifier}"] = new Value.String(key.ToString());
+    }
+
+    public bool GetKeybind(object identifier, out Key key) {
+        if (!this.Values.ContainsKey($"keybind_{identifier}")) {
+            key = 0;
+            return false;
+        }
+
+        return Enum.TryParse(this.Values[$"keybind_{identifier}"].ToStringValue().Value, out key);
+    }
+    
     public FurballConfig() {
         this.Values["screen_width"]  = new Value.Number(FurballGame.DEFAULT_WINDOW_WIDTH);
         this.Values["screen_height"] = new Value.Number(FurballGame.DEFAULT_WINDOW_HEIGHT);

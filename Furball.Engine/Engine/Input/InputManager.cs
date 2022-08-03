@@ -8,7 +8,10 @@ using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes;
 using Furball.Engine.Engine.Helpers;
+using Furball.Engine.Engine.Helpers.Logger;
+using Furball.Engine.Engine.Platform;
 using JetBrains.Annotations;
+using Kettu;
 using Silk.NET.Input;
 
 namespace Furball.Engine.Engine.Input; 
@@ -34,8 +37,18 @@ public class InputManager {
         this.OnMouseUp   += DrawableOnMouseUp;
         this.OnMouseDrag += DrawableOnMouseDrag;
         this.OnMouseMove += DrawableOnMouseMove;
+        
+        this.OnKeyDown += KeybindOnKeyDown;
     }
-      
+    
+    private void KeybindOnKeyDown(object sender, Key e) {
+        foreach (Keybind registeredKeybind in this.RegisteredKeybinds) {
+            if (registeredKeybind.Enabled && registeredKeybind.Key == e)
+                registeredKeybind.OnPressed.Invoke();
+
+        }
+    }
+
     /// <summary>
     ///     Recurses composite drawables and adds their drawables to the list
     /// </summary>
@@ -309,6 +322,19 @@ public class InputManager {
                 
             return temp;
         }
+    }
+
+    public readonly List<Keybind> RegisteredKeybinds = new();
+    
+    public void RegisterKeybind(Keybind bind) {
+        this.RegisteredKeybinds.Add(bind);
+        
+        Logger.Log($"Registered keybind for key {bind.Key} (default:{bind.DefaultKey})", LoggerLevelInput.InstanceInfo);
+    }
+
+    public void UnregisterKeybind(Keybind bind) {
+        if(!this.RegisteredKeybinds.Remove(bind))
+            Logger.Log($"Called unregister with a non-registered keybind {bind.Key} (default:{bind.DefaultKey})!", LoggerLevelInput.InstanceWarning);
     }
 
     /// <summary>
