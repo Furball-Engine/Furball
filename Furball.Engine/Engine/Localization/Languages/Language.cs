@@ -25,4 +25,25 @@ public abstract class Language {
         return a.Iso6392Code() == b.Iso6392Code();
     }
     public static bool operator !=(Language a, Language b) => !(a == b);
+
+    private bool Equals(Language other) => this == other;
+    public override bool Equals(object obj) {
+        if (ReferenceEquals(null, obj))
+            return false;
+        if (ReferenceEquals(this, obj))
+            return true;
+        if (obj.GetType() != this.GetType())
+            return false;
+        return this.Equals((Language)obj);
+    }
+
+    public override int GetHashCode() {
+        unchecked {
+            int hashcode = 7530656;
+            hashcode = (hashcode * 3567833) ^ this.EnglishName().GetHashCode();
+            hashcode = (hashcode * 3567833) ^ this.Iso6392Code().GetHashCode();
+            hashcode = (hashcode * 3567833) ^ this.Iso6391Code().GetHashCode();
+            return hashcode;
+        }
+    }
 }
