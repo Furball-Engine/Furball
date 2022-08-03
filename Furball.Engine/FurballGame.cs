@@ -32,6 +32,8 @@ using Furball.Vixie.Backends.Shared.Backends;
 using Furball.Volpe.Evaluation;
 using JetBrains.Annotations;
 using Kettu;
+using pTyping.Engine.Debug;
+using pTyping.Graphics.Drawables;
 using Silk.NET.Input;
 using Silk.NET.Maths;
 using Silk.NET.Windowing;
@@ -89,6 +91,9 @@ public class FurballGame : Game {
     private static TextDrawable    _ConsoleAutoComplete;
     public static  TooltipDrawable TooltipDrawable;
 
+    private FurballForm _textureDisplayForm;
+    private bool        _textureDisplayFormAdded;
+    
     public static byte[] DefaultFontData;
 
     public static bool BypassFurballFPSLimit = false;
@@ -159,6 +164,13 @@ public class FurballGame : Game {
                 case Key.F10:
                     DrawInputOverlay = !DrawInputOverlay;
                     break;
+                case Key.F9: {
+                    if (!this._textureDisplayFormAdded) {
+                        DebugOverlayDrawableManager.Add(this._textureDisplayForm);
+                        this._textureDisplayFormAdded = true;
+                    }
+                    break;
+                }
             }
         };
 
@@ -284,6 +296,30 @@ public class FurballGame : Game {
 
             }, 1500);
         }
+
+        #region Texture debugger
+
+        ScrollableContainer scrollable = new(new(400, 500));
+
+        scrollable.ScrollSpeed       *= 2;
+        scrollable.InfiniteScrolling =  true;
+
+        DebugTextureDisplayDrawable debug = new();
+
+        scrollable.Add(debug);
+
+        this._textureDisplayForm = new("Currently bound textures", scrollable) {
+            Depth = -10
+        };
+
+        this._textureDisplayForm.OnTryClose += delegate {
+            this._textureDisplayFormAdded = false;
+
+            DebugOverlayDrawableManager.Remove(this._textureDisplayForm);
+        };
+
+        #endregion
+        
         Profiler.EndProfileAndPrint("full_furball_initialize");
     }
 
