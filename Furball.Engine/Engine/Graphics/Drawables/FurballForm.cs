@@ -1,8 +1,6 @@
 using System;
 using System.Drawing;
 using System.Numerics;
-using Furball.Engine;
-using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Graphics.Drawables.Primitives;
 using Furball.Engine.Engine.Helpers;
 using Furball.Engine.Engine.Helpers.Logger;
@@ -10,7 +8,7 @@ using Kettu;
 using Silk.NET.Input;
 using Color=Furball.Vixie.Backends.Shared.Color;
 
-namespace pTyping.Graphics.Drawables;
+namespace Furball.Engine.Engine.Graphics.Drawables;
 
 public class FurballForm : CompositeDrawable {
     public Drawable Contents {

@@ -1,9 +1,8 @@
 using System;
 using System.Numerics;
-using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Vixie.Backends.Shared;
 
-namespace pTyping.Engine.Debug;
+namespace Furball.Engine.Engine.Graphics.Drawables;
 
 public class DebugTextureDisplayDrawable : CompositeDrawable {
     public DebugTextureDisplayDrawable() {

@@ -1,16 +1,13 @@
 using System;
 using System.Globalization;
 using System.Numerics;
-using Furball.Engine;
-using Furball.Engine.Engine.Graphics;
-using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Furball.Engine.Engine.Helpers;
 using Furball.Vixie;
 using Furball.Vixie.Helpers.Helpers;
 using SixLabors.ImageSharp;
 
-namespace pTyping.Graphics.Drawables;
+namespace Furball.Engine.Engine.Graphics.Drawables;
 
 public class ScrollableContainer : CompositeDrawable {
     private float _targetScroll;

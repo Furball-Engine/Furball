@@ -1,6 +1,6 @@
 
 
-namespace Furball.Engine.Engine.Debug.DebugCounter.Items; 
+namespace Furball.Engine.Engine.Debug.DebugCounter; 
 
 public abstract class DebugCounterItem {
     public virtual bool ForceNewLine { get; }

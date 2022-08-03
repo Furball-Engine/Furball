@@ -1,11 +1,9 @@
 using System;
 using System.Numerics;
-using Furball.Engine.Engine.Graphics;
-using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Furball.Vixie.Backends.Shared;
 
-namespace pTyping.Engine.Debug;
+namespace Furball.Engine.Engine.Graphics.Drawables;
 
 public class DebugWeakReferencedTextureDrawable : Drawable {
     private readonly WeakReference<Texture> Texture;

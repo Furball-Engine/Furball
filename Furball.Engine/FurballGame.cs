@@ -32,8 +32,6 @@ using Furball.Vixie.Backends.Shared.Backends;
 using Furball.Volpe.Evaluation;
 using JetBrains.Annotations;
 using Kettu;
-using pTyping.Engine.Debug;
-using pTyping.Graphics.Drawables;
 using Silk.NET.Input;
 using Silk.NET.Maths;
 using Silk.NET.Windowing;
