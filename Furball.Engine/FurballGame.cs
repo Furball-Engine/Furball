@@ -92,6 +92,7 @@ public class FurballGame : Game {
     public static byte[] DefaultFontData;
 
     public static bool BypassFurballFPSLimit = false;
+    public static bool BypassFurballUPSLimit = false;
         
     public static readonly FontSystem DEFAULT_FONT = new(new FontSystemSettings {
         FontResolutionFactor = 2f,
@@ -232,11 +233,20 @@ public class FurballGame : Game {
             SetTargetFps(var <= 0 ? null : var);
         }
 
+        if (!BypassFurballUPSLimit && FurballConfig.Instance.Values["limit_ups"].ToBoolean().Value) {
+            double var = FurballConfig.Instance.Values["target_ups"].ToNumber().Value;
+            
+            //If the target ups is less than or equal to 0, then send in `null`, if not, then send the var
+            SetTargetUps(var <= 0 ? null : var);
+        }
+
         ChangeScreenSize(
         (int) FurballConfig.Instance.Values["screen_width"].ToNumber().Value,
         (int) FurballConfig.Instance.Values["screen_height"].ToNumber().Value,
         FurballConfig.Instance.Values["fullscreen"].ToBoolean().Value
         );
+
+        this.WindowManager.EnableUnfocusCap = FurballConfig.Instance.UnfocusCap;
         Profiler.EndProfileAndPrint("set_window_properties");
 
         ScreenManager.ChangeScreen(this._startScreen);
@@ -323,27 +333,18 @@ public class FurballGame : Game {
         b.Dispose();
     }
 
-    public double UnfocusedFpsScale => this._unfocusedFpsScale;
-
-    public void SetTargetFps(double? fps, double unfocusedScale = -1) {
+    public void SetTargetFps(double? fps) {
         this.WindowManager.TargetFramerate = fps ?? 0;
 
         if (!BypassFurballFPSLimit)
             FurballConfig.Instance.Values["target_fps"] = new Value.Number(fps ?? -1);
-            
-        if (unfocusedScale < 0)
-            unfocusedScale = this._unfocusedFpsScale;
+    }
 
-        if (unfocusedScale >= 0) {
-            //TODO: Implement this by tracking window focus state changes
-            
-            // this._unfocusedFpsScale = unfocusedScale;
-            //
-            // double newFps       = fps   * unfocusedScale;
-            // double milliseconds = 1000d / newFps;
+    public void SetTargetUps(double? ups) {
+        this.WindowManager.TargetUpdaterate = ups ?? 0;
 
-            //this.InactiveSleepTime = TimeSpan.FromMilliseconds(milliseconds);
-        }
+        if (!BypassFurballUPSLimit)
+            FurballConfig.Instance.Values["target_ups"] = new Value.Number(ups ?? -1);
     }
 
     /// <summary>
@@ -462,7 +463,7 @@ public class FurballGame : Game {
     }
 
     private Stopwatch _drawWatch         = new ();
-    private double    _unfocusedFpsScale = 1;
+
     public double    LastDrawTime { get; private set; } = 0.0;
 
     protected override void Draw(double gameTime) {

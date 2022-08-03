@@ -77,18 +77,7 @@ public class Builtins {
         new ("cl_get_game_time", paramCount: 0,
              (_, _) => new Value.Number(FurballGame.GameTimeSource.GetCurrentTime())
         ),
-            
-        new ("cl_set_fps_unfocused_scale", paramCount: 1,
-             (context, parameters) => {
-                 if (parameters[0] is not Value.Number(var value))
-                     throw new InvalidValueTypeException(typeof(Value.Number), parameters[0].GetType(), context.Expression.PositionInText);
-                 
-                 FurballGame.Instance.SetTargetFps(FurballGame.Instance.WindowManager.TargetFramerate, value);
-                 DevConsole.AddMessage($"Set FPS Unfocused Scale to {value}", ExecutionResult.Success);
-                 
-                 return Value.DefaultVoid;
-             }),
-            
+
         new ("cl_set_target_fps", paramCount: 1,
              (context, parameters) => {
                  if (parameters[0] is not Value.Number(var value))

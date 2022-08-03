@@ -12,16 +12,20 @@ public class FurballConfig : VolpeConfig {
 
     public bool LimitFPS  => this.Values["limit_fps"].ToBoolean().Value;
     public int  TargetFPS => (int)this.Values["target_fps"].ToNumber().Value;
+    public bool UnfocusCap => this.Values["unfocus_cap"].ToBoolean().Value;
 
     public bool Fullscreen => this.Values["fullscreen"].ToBoolean().Value;
     public string Language => this.Values["language"].ToStringValue().Value;
-        
+
     public FurballConfig() {
         this.Values["screen_width"]  = new Value.Number(FurballGame.DEFAULT_WINDOW_WIDTH);
         this.Values["screen_height"] = new Value.Number(FurballGame.DEFAULT_WINDOW_HEIGHT);
 
-        this.Values["limit_fps"]  = new Value.Boolean(true);
-        this.Values["target_fps"] = new Value.Number(240);
+        this.Values["limit_fps"]   = new Value.Boolean(true);
+        this.Values["target_fps"]  = new Value.Number(240);
+        this.Values["limit_ups"]   = new Value.Boolean(false);
+        this.Values["target_ups"]  = new Value.Number(1000);
+        this.Values["unfocus_cap"] = new Value.Boolean(true);
 
         this.Values["fullscreen"] = new Value.Boolean(false);
 
