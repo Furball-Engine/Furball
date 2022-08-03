@@ -7,8 +7,6 @@ public class TweenSystem : EntitySystem {
     private EntityTweens     _entityTweens;
     private EntityTimeSource _entityTimeSource;
 
-    private bool _sortTweenScheduled;
-
     public override void Initialize(Entity entity) {
         base.Initialize(entity);
 
@@ -18,6 +16,4 @@ public class TweenSystem : EntitySystem {
         if (this._entityTweens == null || this._entityTimeSource == null)
             throw new KeyNotFoundException("To assign a TweenSystem to an Entity, the Entity must have a EntityTweens and a EntityTimeSource Component.");
     }
-
-
 }

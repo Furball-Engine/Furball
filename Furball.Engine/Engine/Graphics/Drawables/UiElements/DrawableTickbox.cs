@@ -45,7 +45,7 @@ public class DrawableTickbox : CompositeDrawable {
             this.OnClick += this.OnDrawableClick;
     }
 
-    private void OnDrawableClick(object? sender, (MouseButton button, Point pos) valueTuple) {
+    private void OnDrawableClick(object sender, (MouseButton button, Point pos) valueTuple) {
         this.Selected.Value = !this.Selected;
     }
 

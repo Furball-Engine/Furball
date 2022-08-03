@@ -29,3 +29,11 @@ public class LoggerLevelFurballFormInfo : LoggerLevel {
 
     public static LoggerLevelFurballFormInfo Instance = new();
 }
+
+public class LoggerLevelEtoInfo : LoggerLevel {
+    private LoggerLevelEtoInfo() {}
+
+    public override string Name => "EtoInfo";
+
+    public static LoggerLevelEtoInfo Instance = new();
+}

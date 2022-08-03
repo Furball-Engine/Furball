@@ -47,7 +47,7 @@ public class DrawableColorPicker : CompositeDrawable {
         this._colorDisplay.MoveTo(new Vector2(this._colorText.Size.X + 10, 0));
     }
 
-    private void OnColorDisplayClick(object? sender, (MouseButton button, Point pos) valueTuple) {
+    private void OnColorDisplayClick(object sender, (MouseButton button, Point pos) valueTuple) {
         EtoHelper.OpenColorPicker(
         (o, color) => {
             this.Color.Value = color;

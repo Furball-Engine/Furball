@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using Eto;
 using Eto.Forms;
+using Furball.Engine.Engine.Helpers.Logger;
 using Furball.Vixie.Backends.Shared;
 
 namespace Furball.Engine.Engine.Helpers; 
@@ -20,8 +21,8 @@ public static class EtoHelper {
         _Thread = new Thread(
         () => {
             Eto.Platform.Initialize(Platforms.Gtk);
-                
-            Kettu.Logger.Log("Eto Initialized");
+
+            Kettu.Logger.Log("Eto Initialized", LoggerLevelEtoInfo.Instance);
                 
             App = new Application();
             App.Run();

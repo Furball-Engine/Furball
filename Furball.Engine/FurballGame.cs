@@ -46,7 +46,6 @@ using Rectangle=System.Drawing.Rectangle;
 namespace Furball.Engine; 
 
 public class FurballGame : Game {
-    private GameComponent _running;
     [CanBeNull]
     public Screen RunningScreen;
     private Screen LoadingScreen;
@@ -88,8 +87,7 @@ public class FurballGame : Game {
 
     private bool _drawDebugOverlay = false;
 
-    private static TextDrawable    _ConsoleAutoComplete;
-    public static  TooltipDrawable TooltipDrawable;
+    public static TooltipDrawable TooltipDrawable;
 
     private FurballForm _textureDisplayForm;
     private bool        _textureDisplayFormAdded;
@@ -198,7 +196,7 @@ public class FurballGame : Game {
                 throw new Exception("Invalid language in config!");
             }
         }
-        catch (Exception ex) {
+        catch {
             language = LocalizationManager.DefaultLanguage;
             Debugger.Break();
         }

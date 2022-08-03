@@ -5,9 +5,9 @@ namespace Furball.Engine.Engine.DevConsole;
 public class ConVars {
     public static bool DebugOverlay {
         get {
-            DevConsole.VolpeEnvironment.TryGetVariableValue("cl_debug_overlay", out Value? value);
+            DevConsole.VolpeEnvironment.TryGetVariableValue("cl_debug_overlay", out Value value);
 
-            Value.Boolean? asBool = value as Value.Boolean;
+            Value.Boolean asBool = value as Value.Boolean;
 
             return asBool != null && asBool.Value;
         }
@@ -19,9 +19,9 @@ public class ConVars {
     /// </summary>
     public static bool WriteLog {
         get {
-            DevConsole.VolpeEnvironment.TryGetVariableValue("cl_console_log", out Value? value);
+            DevConsole.VolpeEnvironment.TryGetVariableValue("cl_console_log", out Value value);
 
-            Value.Boolean? asBool = value as Value.Boolean;
+            Value.Boolean asBool = value as Value.Boolean;
 
             return asBool != null && asBool.Value;
         }
@@ -34,9 +34,9 @@ public class ConVars {
     /// 
     public static bool ToolTips {
         get {
-            DevConsole.VolpeEnvironment.TryGetVariableValue("cl_tooltipping", out Value? value);
+            DevConsole.VolpeEnvironment.TryGetVariableValue("cl_tooltipping", out Value value);
 
-            Value.Boolean? asBool = value as Value.Boolean;
+            Value.Boolean asBool = value as Value.Boolean;
 
             return asBool != null && asBool.Value;
         }
