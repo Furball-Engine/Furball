@@ -5,8 +5,8 @@ using Furball.Engine.Engine;
 using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Graphics.Drawables.UiElements;
 using Furball.Engine.Engine.Localization;
+using Furball.Game.Screens.Tests;
 using Furball.Vixie.Backends.Shared;
-
 
 namespace Furball.Game.Screens; 
 
@@ -35,6 +35,7 @@ public class ScreenSelector : TestScreen {
             (LocalizationStrings.FixedTimeStepTest, new FixedTimeStepTest()),
             (LocalizationStrings.LayoutingTest, new LayoutingTest()),
             (LocalizationStrings.MultiScreenTest, new MultiScreenTest()),
+            (LocalizationStrings.FormTest, new FormTest())
         };
 
         this.Manager.Add(this._topText = new TextDrawable(new Vector2(1280f / 2f, 40), FurballGame.DEFAULT_FONT, LocalizationManager.GetLocalizedString(LocalizationStrings.ChooseScreen), 48) {
@@ -69,8 +70,8 @@ public class ScreenSelector : TestScreen {
             currentY += 70;
             i++;
 
-            if (i % 9 == 0 && i != 0) {
-                currentX += 300;
+            if (i % 8 == 0 && i != 0) {
+                currentX += 320;
                 currentY =  90;
             }
         }

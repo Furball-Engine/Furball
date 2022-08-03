@@ -5,7 +5,7 @@ using Furball.Engine.Engine.Graphics.Drawables.Tweens;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes;
 using Furball.Engine.Engine.Timing;
 
-namespace Furball.Game.Screens; 
+namespace Furball.Game.Screens.Tests; 
 
 public class ScrollingTest : TestScreen {
     public override void Initialize() {

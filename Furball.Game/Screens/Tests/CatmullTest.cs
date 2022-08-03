@@ -4,7 +4,7 @@ using Furball.Engine;
 using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Helpers;
 
-namespace Furball.Game.Screens; 
+namespace Furball.Game.Screens.Tests; 
 
 public class CatmullTest : TestScreen {
     private CurveDrawable _pathVisualization;

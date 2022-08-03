@@ -9,7 +9,7 @@ using sowelipisona;
 using sowelipisona.Effects;
 using Color=Furball.Vixie.Backends.Shared.Color;
 
-namespace Furball.Game.Screens; 
+namespace Furball.Game.Screens.Tests; 
 
 public class AudioEffectTest : TestScreen {
     private AudioStream _testingStream;
@@ -40,7 +40,7 @@ public class AudioEffectTest : TestScreen {
         Color.Black,
         Color.Black,
         new Vector2(350, 40),
-        PlayButtonOnClick
+        this.PlayButtonOnClick
         );
 
         this.Manager.Add(playButton);
@@ -91,7 +91,8 @@ public class AudioEffectTest : TestScreen {
         Color.White,
         Color.Black,
         Color.Black,
-        new Vector2(350, 40), ReverbPlayOnClick
+        new Vector2(350, 40),
+        this.ReverbPlayOnClick
         );
 
         this.Manager.Add(reverbPlayButton);

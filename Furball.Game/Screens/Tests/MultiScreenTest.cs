@@ -1,7 +1,7 @@
 using System.Numerics;
 using Furball.Engine.Engine.Graphics.Drawables;
 
-namespace Furball.Game.Screens;
+namespace Furball.Game.Screens.Tests;
 
 public class MultiScreenTest : TestScreen {
     private readonly int _recurseAmount;

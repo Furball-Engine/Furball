@@ -2,7 +2,7 @@ using System.Numerics;
 using Furball.Engine;
 using Furball.Engine.Engine.Graphics.Drawables.UiElements;
 
-namespace Furball.Game.Screens; 
+namespace Furball.Game.Screens.Tests; 
 
 public class TextBoxTest : TestScreen {
     public override void Initialize() {

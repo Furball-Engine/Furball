@@ -21,3 +21,11 @@ public class LoggerLevelSchedulerInfo : LoggerLevel {
     public override string Name => "SchedulerInfo";
     public static LoggerLevelSchedulerInfo Instance = new();
 }
+
+public class LoggerLevelFurballFormInfo : LoggerLevel {
+    private LoggerLevelFurballFormInfo() {}
+
+    public override string Name => "FurballFormInfo";
+
+    public static LoggerLevelFurballFormInfo Instance = new();
+}

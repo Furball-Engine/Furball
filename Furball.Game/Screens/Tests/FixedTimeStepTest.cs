@@ -5,7 +5,7 @@ using Furball.Engine.Engine.Graphics.Drawables.Tweens;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes;
 using Furball.Vixie.Backends.Shared;
 
-namespace Furball.Game.Screens; 
+namespace Furball.Game.Screens.Tests; 
 
 public class FixedTimeStepTest : TestScreen {
     private TexturedDrawable _1PerSecond;
@@ -18,8 +18,9 @@ public class FixedTimeStepTest : TestScreen {
         const float x    = 15; 
         float       y    = 15;
         const float size = 50;
-            
-        this.Manager.Add(_1PerSecond = new TexturedDrawable(FurballGame.WhitePixel, new(x, y)) {
+
+        this.Manager.Add(
+        this._1PerSecond = new TexturedDrawable(FurballGame.WhitePixel, new(x, y)) {
             Scale = new(size)
         });
         this.Manager.Add(new TextDrawable(new(x + this._1PerSecond.Size.X + 15, y + this._1PerSecond.Size.Y / 2f), FurballGame.DEFAULT_FONT, "Once per second", 24) {
@@ -28,7 +29,8 @@ public class FixedTimeStepTest : TestScreen {
 
         y += this._1PerSecond.Size.Y + 15;
 
-        this.Manager.Add(_2PerSecond = new TexturedDrawable(FurballGame.WhitePixel, new(x, y)) {
+        this.Manager.Add(
+        this._2PerSecond = new TexturedDrawable(FurballGame.WhitePixel, new(x, y)) {
             Scale = new(size)
         });
         this.Manager.Add(new TextDrawable(new(x + this._2PerSecond.Size.X + 15, y + this._2PerSecond.Size.Y / 2f), FurballGame.DEFAULT_FONT, "Twice per second", 24) {
@@ -37,7 +39,8 @@ public class FixedTimeStepTest : TestScreen {
             
         y += this._2PerSecond.Size.Y + 15;
 
-        this.Manager.Add(_3PerSecond = new TexturedDrawable(FurballGame.WhitePixel, new(x, y)) {
+        this.Manager.Add(
+        this._3PerSecond = new TexturedDrawable(FurballGame.WhitePixel, new(x, y)) {
             Scale = new(size)
         });
         this.Manager.Add(new TextDrawable(new(x + this._3PerSecond.Size.X + 15, y + this._3PerSecond.Size.Y / 2f), FurballGame.DEFAULT_FONT, "Thrice per second", 24) {

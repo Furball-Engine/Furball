@@ -1,7 +1,7 @@
 using Furball.Engine.Engine.Graphics.Drawables.Primitives;
 using Furball.Vixie.Backends.Shared;
 
-namespace Furball.Game.Screens; 
+namespace Furball.Game.Screens.Tests; 
 
 public class CircleDrawableTest : TestScreen {
     public override void Initialize() {

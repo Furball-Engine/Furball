@@ -2,7 +2,7 @@ using System.Numerics;
 using Furball.Engine;
 using Furball.Engine.Engine.Graphics.Drawables;
 
-namespace Furball.Game.Screens; 
+namespace Furball.Game.Screens.Tests; 
 
 public class LayoutingTest : TestScreen {
     private TexturedDrawable _topLeft;
