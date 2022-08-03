@@ -99,6 +99,6 @@ public class FurballForm : CompositeDrawable {
     private void OnTitleBarDrag(object _, Point currentDragPos) {
         Vector2 differenceFromStart = currentDragPos.ToVector2() - this._startDragMousePos;
 
-        this.MoveTo(this._startDragMousePos + differenceFromStart - this._startDiffFromPos, 3);
+        this.MoveTo(this._startDragMousePos + differenceFromStart - this._startDiffFromPos, 1);
     }
 }

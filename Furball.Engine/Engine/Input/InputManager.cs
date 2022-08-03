@@ -45,7 +45,6 @@ public class InputManager {
         foreach (Keybind registeredKeybind in this.RegisteredKeybinds) {
             if (registeredKeybind.Enabled && registeredKeybind.Key == e)
                 registeredKeybind.OnPressed.Invoke();
-
         }
     }
 
