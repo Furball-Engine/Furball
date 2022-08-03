@@ -1,4 +1,5 @@
 ﻿using Furball.Engine;
+using Furball.Engine.Engine.Input;
 using Furball.Engine.Engine.Localization;
 using Furball.Game.Screens;
 using Furball.Vixie;
@@ -10,17 +11,32 @@ namespace Furball.Game;
 public class FurballTestGame : FurballGame {
     public FurballTestGame() : base(new ScreenSelector()) {}
 
+    private enum TestKeybinds {
+        TakeScreenshot
+    }
+    
     protected override void Initialize() {
         base.Initialize();
         
         GraphicsBackend.Current.ScreenshotTaken += OnScreenshot;
-        
-        InputManager.OnKeyDown += delegate(object sender, Key key) {
-            if (key == Key.F1)
-                GraphicsBackend.Current.TakeScreenshot();
-        };
     }
-    
+
+    private Keybind _screenshotKeybind;
+    public override void RegisterKeybinds() {
+        base.RegisterKeybinds();
+        
+        InputManager.RegisterKeybind(this._screenshotKeybind = new Keybind(TestKeybinds.TakeScreenshot, "Take Screenshot", Key.F1,
+                                                 () => {
+                                                     GraphicsBackend.Current.TakeScreenshot();
+                                                 }));
+    }
+
+    public override void UnregisterKeybinds() {
+        base.UnregisterKeybinds();
+        
+        InputManager.UnregisterKeybind(this._screenshotKeybind);
+    }
+
     private void OnScreenshot(object sender, Image e) {
         e.Save("test.png");
     }
