@@ -1,7 +1,6 @@
 
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using System.Numerics;
 using FontStashSharp;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
@@ -33,14 +32,13 @@ public class TextDrawable : Drawable {
     }
 
     private Vector2 _sizeCache;
-    private void RecalculateSize() {
-        this._sizeCache = this.Font.MeasureString(this.Text, this.Scale);
-    }
+
+    private void RecalculateSize() => this._sizeCache = this.Font.MeasureString(this.Text);
 
     /// <summary>
     /// The height of the text
     /// </summary>
-    public override Vector2 Size => this._sizeCache;
+    public override Vector2 Size => this._sizeCache * this.Scale;
     public List<Rectangle> TextRectangles => this.Font.GetGlyphRects(this.Text, Vector2.Zero, Vector2.Zero, this.Scale);
 
     public string PreWrapText { get; protected set; }
