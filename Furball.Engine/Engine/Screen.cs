@@ -1,8 +1,7 @@
-using System;
+using System.Numerics;
 using System.Threading;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Furball.Vixie;
-
 
 namespace Furball.Engine.Engine; 
 
@@ -10,6 +9,12 @@ public class Screen : GameComponent {
     public DrawableManager Manager;
     public Screen() {
         this.Manager = new DrawableManager();
+
+        this.Manager.OnScalingRelayoutNeeded += this.ManagerOnOnScalingRelayoutNeeded;
+    }
+
+    public void ManagerOnOnScalingRelayoutNeeded(object _, Vector2 e) {
+        this.Relayout(e.X / e.Y * 720f, FurballGame.WindowHeight);
     }
 
     public virtual bool RequireLoadingScreen => false;

@@ -42,7 +42,8 @@ public class ScreenDrawable : Drawable {
     }
 
     private void OnRelayout(Vector2 e) {
-        this._screen.Relayout(e.X, e.Y);
+        this._screen.ManagerOnOnScalingRelayoutNeeded(this, this._screen.Manager.Size);
+        // this._screen.Relayout(e.X, e.Y);
     }
 
     public override void Update(double time) {

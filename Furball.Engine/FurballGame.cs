@@ -440,7 +440,10 @@ public class FurballGame : Game {
                 
             this.Components.Add(screen);
             screen.UpdateTextStrings();
-            screen.Relayout(WindowWidth, WindowHeight);
+            if (screen.Manager.EffectedByScaling)
+                screen.ManagerOnOnScalingRelayoutNeeded(this, screen.Manager.Size);
+            else
+                screen.Relayout(WindowWidth, WindowHeight);
             this.OnRelayout?.Invoke(this, new(WindowWidth, WindowHeight));
             this.RunningScreen = screen;
 
@@ -472,15 +475,21 @@ public class FurballGame : Game {
         this.WindowManager.SetWindowSize(width, height);
         FurballConfig.Instance.Values["screen_width"]  = new Value.Number(width);
         FurballConfig.Instance.Values["screen_height"] = new Value.Number(height);
-            
-        this.RunningScreen?.Relayout(WindowWidth, WindowHeight);
+
+        if (this.RunningScreen?.Manager.EffectedByScaling ?? false)
+            this.RunningScreen.ManagerOnOnScalingRelayoutNeeded(this, this.RunningScreen.Manager.Size);
+        else
+            this.RunningScreen?.Relayout(WindowWidth, WindowHeight);
         this.OnRelayout?.Invoke(this, new(WindowWidth, WindowHeight));
     }
 
     protected override void OnWindowResize(Vector2D<int> newSize) {
         base.OnWindowResize(newSize);
-            
-        this.RunningScreen?.Relayout(WindowWidth, WindowHeight);
+
+        if (this.RunningScreen?.Manager.EffectedByScaling ?? false)
+            this.RunningScreen.ManagerOnOnScalingRelayoutNeeded(this, this.RunningScreen.Manager.Size);
+        else
+            this.RunningScreen?.Relayout(WindowWidth, WindowHeight);
         this.OnRelayout?.Invoke(this, new(WindowWidth, WindowHeight));
 
         FurballConfig.Instance.Values["screen_width"]  = new Value.Number(newSize.X);

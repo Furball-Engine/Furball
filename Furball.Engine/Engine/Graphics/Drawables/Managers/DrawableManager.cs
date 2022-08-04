@@ -23,6 +23,8 @@ public class DrawableManager : IDisposable {
     public static List<DrawableManager> DrawableManagers = new();
     public static int                   Instances        = 0;
 
+    public event EventHandler<Vector2>? OnScalingRelayoutNeeded; 
+
     public DrawableManager() {
         lock (StatLock) {
             Instances++;
@@ -34,9 +36,28 @@ public class DrawableManager : IDisposable {
 
     private bool _sortDrawables = false;
 
-    public bool    EffectedByScaling = false;
+    private bool _effectedByScaling = false;
+    public bool EffectedByScaling {
+        get => this._effectedByScaling;
+        set {
+            this._effectedByScaling = value;
+            if (this.EffectedByScaling)
+                this.OnScalingRelayoutNeeded?.Invoke(this, this.Size);
+        }
+    }
+    
     public Vector2 Position          = Vector2.Zero;
-    public Vector2 Size              = new(FurballGame.DEFAULT_WINDOW_WIDTH, FurballGame.DEFAULT_WINDOW_HEIGHT);
+
+    private Vector2 _size = new(FurballGame.DEFAULT_WINDOW_WIDTH, FurballGame.DEFAULT_WINDOW_HEIGHT);
+    public Vector2 Size {
+        get => this._size;
+        set {
+            this._size = value;
+
+            if (this.EffectedByScaling)
+                this.OnScalingRelayoutNeeded?.Invoke(this, value);
+        }
+    }
     
     public void Draw(double time, DrawableBatch batch) {
         if (this._sortDrawables) {
