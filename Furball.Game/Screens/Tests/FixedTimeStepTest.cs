@@ -8,10 +8,13 @@ using Furball.Vixie.Backends.Shared;
 namespace Furball.Game.Screens.Tests; 
 
 public class FixedTimeStepTest : TestScreen {
-    private TexturedDrawable _1PerSecond;
-    private TexturedDrawable _2PerSecond;
-    private TexturedDrawable _3PerSecond;
-        
+    private TexturedDrawable    _1PerSecond;
+    private TexturedDrawable    _2PerSecond;
+    private TexturedDrawable    _3PerSecond;
+    private FixedTimeStepMethod _1PerSecondMethod;
+    private FixedTimeStepMethod _2PerSecondMethod;
+    private FixedTimeStepMethod _3PerSecondMethod;
+
     public override void Initialize() {
         base.Initialize();
             
@@ -50,7 +53,7 @@ public class FixedTimeStepTest : TestScreen {
         const float tweenTime = 300;
             
         FurballGame.TimeStepMethods.Add(
-        new FixedTimeStepMethod(
+        this._1PerSecondMethod = new FixedTimeStepMethod(
         1000,
         () => {
             this._1PerSecond.Tweens.Add(new ColorTween(TweenType.Color, Color.Blue, Color.White, FurballGame.Time, FurballGame.Time + tweenTime));
@@ -59,7 +62,7 @@ public class FixedTimeStepTest : TestScreen {
         );
             
         FurballGame.TimeStepMethods.Add(
-        new FixedTimeStepMethod(
+        this._2PerSecondMethod = new FixedTimeStepMethod(
         500,
         () => {
             this._2PerSecond.Tweens.Add(new ColorTween(TweenType.Color, Color.Blue, Color.White, FurballGame.Time, FurballGame.Time + tweenTime));
@@ -68,12 +71,20 @@ public class FixedTimeStepTest : TestScreen {
         );
             
         FurballGame.TimeStepMethods.Add(
-        new FixedTimeStepMethod(
+        this._3PerSecondMethod = new FixedTimeStepMethod(
         1000d / 3d,
         () => {
             this._3PerSecond.Tweens.Add(new ColorTween(TweenType.Color, Color.Blue, Color.White, FurballGame.Time, FurballGame.Time + tweenTime));
         }
         )
         );
+    }
+
+    public override void Unload() {
+        base.Unload();
+
+        FurballGame.TimeStepMethods.Remove(this._1PerSecondMethod);
+        FurballGame.TimeStepMethods.Remove(this._2PerSecondMethod);
+        FurballGame.TimeStepMethods.Remove(this._3PerSecondMethod);
     }
 }

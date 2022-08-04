@@ -15,19 +15,20 @@ public class DebugCounter : Drawable {
     private TextDrawable _textDrawable = new(new Vector2(0, 700), FurballGame.DEFAULT_FONT, "a", 24);
 
     public override Vector2 Size => this._textDrawable.Size * this.Scale;
-    
+
     /// <summary>
     /// Items which will be displayed on the Counter
     /// </summary>
     public List<DebugCounterItem> Items = new() {
         new FrameRate(),
         new UpdateRate(),
-        new DrawableManagerStats(),
+        new BoundByDrawUpdate(),
         new GraphicsBackend(),
         new TrackedVixieResources(),
-        new GameTimeSourceTime(),
-        new BoundByDrawUpdate(),
+        new DrawableManagerStats(),
         new ContentCacheItems(),
+        new GameTimeSourceTime(),
+        new MemoryUsage(),
         //TODO: When touch screen support gets implemented, add new item called MousePoints and have it display all current cursors
         new MousePosition(),
         new KeyboardInputs()
@@ -68,5 +69,12 @@ public class DebugCounter : Drawable {
         }
 
         this._textDrawable.Text = builder.ToString();
+    }
+
+    public override void Dispose() {
+        base.Dispose();
+
+        foreach (DebugCounterItem debugCounterItem in this.Items)
+            debugCounterItem.Dispose();
     }
 }

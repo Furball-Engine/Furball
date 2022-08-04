@@ -1,8 +1,10 @@
 
 
-namespace Furball.Engine.Engine.Debug.DebugCounter; 
+using System;
 
-public abstract class DebugCounterItem {
+namespace Furball.Engine.Engine.Debug.DebugCounter;
+
+public abstract class DebugCounterItem : IDisposable {
     public virtual bool ForceNewLine { get; }
         
     public virtual void Update(double time) {}
@@ -10,4 +12,5 @@ public abstract class DebugCounterItem {
 
 
     public abstract string GetAsString(double time);
+    public virtual  void   Dispose() {}
 }
