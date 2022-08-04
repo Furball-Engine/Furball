@@ -39,9 +39,6 @@ public static class ImGuiConsole {
         RefreshCache();
 
         FurballGame.InputManager.OnKeyDown += (_, key) => {
-            if (key == Key.F12 && !Visible)
-                Visible = true;
-
             if (key == Key.ControlLeft) {
                 AutoScroll = !AutoScroll;
                 UpdateTitle();

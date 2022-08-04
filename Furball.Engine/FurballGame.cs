@@ -332,12 +332,14 @@ public class FurballGame : Game {
     private enum EngineDebugKeybinds {
         ToggleDebugOverlay,
         ToggleInputOverlay,
+        ToggleConsole,
         DispalyDebugTextureviewer
     }
     
     private Keybind _toggleDebugOverlay;
     private Keybind _toggleInputOverlay;
     private Keybind _displayDebugTextureViewer;
+    private Keybind _toggleConsole;
     public virtual void RegisterKeybinds() {
         this._toggleDebugOverlay = new Keybind(EngineDebugKeybinds.ToggleDebugOverlay, "Toggle Debug Overlay", Key.F11,
                                                () => {
@@ -357,16 +359,26 @@ public class FurballGame : Game {
                                                           }
                                                       }
         );
+        this._toggleConsole = new Keybind(
+        EngineDebugKeybinds.ToggleConsole,
+        "Toggle Console",
+        Key.F12,
+        () => {
+            ImGuiConsole.Visible = !ImGuiConsole.Visible;
+        }
+        );
         
         InputManager.RegisterKeybind(this._toggleDebugOverlay);
         InputManager.RegisterKeybind(this._toggleInputOverlay);
         InputManager.RegisterKeybind(this._displayDebugTextureViewer);
+        InputManager.RegisterKeybind(this._toggleConsole);
     }
 
     public virtual void UnregisterKeybinds() {
         InputManager.UnregisterKeybind(this._toggleDebugOverlay);
         InputManager.UnregisterKeybind(this._toggleInputOverlay);
         InputManager.UnregisterKeybind(this._displayDebugTextureViewer);
+        InputManager.UnregisterKeybind(this._toggleConsole);
     }
 
     protected override void DrawLoadingScreen() {
