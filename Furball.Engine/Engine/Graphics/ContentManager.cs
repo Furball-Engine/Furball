@@ -58,7 +58,7 @@ public static class ContentManager {
             system = new FontSystem();
 
         foreach (string path in paths)
-            system.AddFont(File.OpenRead(path));
+            system.AddFont(File.ReadAllBytes(path));
 
         return system;
     }
