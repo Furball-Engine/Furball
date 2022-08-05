@@ -76,6 +76,13 @@ public class InputManager {
 
         this.CharInputHandler = null;
     }
+
+    public void ReleaseTextFocus() {
+        if (this.CharInputHandler == null)
+            return;
+        
+        this.ReleaseTextFocus(this.CharInputHandler);
+    }
     
     /// <summary>
     /// The positions of all cursors and their states
