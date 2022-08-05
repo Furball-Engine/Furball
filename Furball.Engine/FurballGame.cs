@@ -87,7 +87,7 @@ public class FurballGame : Game {
 
     public static TooltipDrawable TooltipDrawable;
 
-    private FurballForm _textureDisplayForm;
+    private DrawableForm _textureDisplayForm;
     private bool        _textureDisplayFormAdded;
     
     public static byte[] DefaultFontData;

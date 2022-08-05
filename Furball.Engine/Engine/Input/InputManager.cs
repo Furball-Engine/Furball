@@ -18,6 +18,66 @@ namespace Furball.Engine.Engine.Input;
 
 public class InputManager {
     /// <summary>
+    /// Called when a key is pressed
+    /// </summary>
+    public event EventHandler<Key> OnKeyDown;
+    /// <summary>
+    /// Called when a key is released
+    /// </summary>
+    public event EventHandler<Key> OnKeyUp;
+    /// <summary>
+    /// Called when a mouse button is pressed
+    /// </summary>
+    public event EventHandler<((MouseButton mouseButton, Vector2 position) args, string cursorName)> OnMouseDown;
+    /// <summary>
+    /// Called when a mouse button is released
+    /// </summary>
+    public event EventHandler<((MouseButton mouseButton, Vector2 position) args, string cursorName)> OnMouseUp;
+    /// <summary>
+    /// Called when a cursor moves
+    /// </summary>
+    public event EventHandler<(Vector2 position, string cursorName)> OnMouseMove;
+    /// <summary>
+    /// Called when a cursor moves
+    /// </summary>
+    public event EventHandler<((Vector2 lastPosition, Vector2 newPosition), string cursorName)> OnMouseDrag;
+    /// <summary>
+    /// Called when the cursor scrolls
+    /// </summary>
+    public event EventHandler<((int scrollWheelId, float scrollAmount) scroll, string cursorName)> OnMouseScroll;
+    public event EventHandler<(IKeyboard keyboard, char character)> OnCharInput;
+
+    [CanBeNull]
+    public ICharInputHandler CharInputHandler {
+        get;
+        private set;
+    }
+
+    public void TakeTextFocus([NotNull] ICharInputHandler handler) {
+        //If someone tries to take focus twice, ignore this call
+        if (this.CharInputHandler == handler)
+            return;
+        
+        if(this.CharInputHandler != null)
+            this.ReleaseTextFocus(this.CharInputHandler);
+
+        this.CharInputHandler = handler;
+        this.CharInputHandler.HandleFocus();
+        this.Keyboards.ForEach(x => x.BeginInput());
+    }
+
+    public void ReleaseTextFocus([NotNull] ICharInputHandler handler) {
+        //If someone is trying to release focus when they already dont have it, then ignore this call
+        if (this.CharInputHandler != handler)
+            return;
+        
+        this.CharInputHandler.HandleDefocus();
+        this.Keyboards.ForEach(x => x.EndInput());
+
+        this.CharInputHandler = null;
+    }
+    
+    /// <summary>
     /// The positions of all cursors and their states
     /// </summary>
     public List<FurballMouseState> CursorStates {
@@ -343,36 +403,6 @@ public class InputManager {
 
     public IReadOnlyList<InputMethod> RegisteredInputMethods => this.registeredInputMethods.AsReadOnly();
 
-    /// <summary>
-    /// Called when a key is pressed
-    /// </summary>
-    public event EventHandler<Key> OnKeyDown;
-    /// <summary>
-    /// Called when a key is released
-    /// </summary>
-    public event EventHandler<Key> OnKeyUp;
-    /// <summary>
-    /// Called when a mouse button is pressed
-    /// </summary>
-    public event EventHandler<((MouseButton mouseButton, Vector2 position) args, string cursorName)> OnMouseDown;
-    /// <summary>
-    /// Called when a mouse button is released
-    /// </summary>
-    public event EventHandler<((MouseButton mouseButton, Vector2 position) args, string cursorName)> OnMouseUp;
-    /// <summary>
-    /// Called when a cursor moves
-    /// </summary>
-    public event EventHandler<(Vector2 position, string cursorName)> OnMouseMove;
-    /// <summary>
-    /// Called when a cursor moves
-    /// </summary>
-    public event EventHandler<((Vector2 lastPosition, Vector2 newPosition), string cursorName)> OnMouseDrag;
-    /// <summary>
-    /// Called when the cursor scrolls
-    /// </summary>
-    public event EventHandler<((int scrollWheelId, float scrollAmount) scroll, string cursorName)> OnMouseScroll;
-    public event EventHandler<(IKeyboard keyboard, char character)> OnCharInput;
-
     private List<Key> _diffKeysPressed  = new();
     private List<Key> _diffKeysReleased = new();
 
@@ -475,6 +505,7 @@ public class InputManager {
         foreach (IKeyboard keyboard in method.Keyboards) {
             keyboard.KeyChar += delegate(IKeyboard keyboard, char c) {
                 this.OnCharInput?.Invoke(this, (keyboard, c));
+                this.CharInputHandler?.HandleChar(c);
             };
         }
         Profiler.EndProfileAndPrint($"register_input_method_{method.GetType().Name}");

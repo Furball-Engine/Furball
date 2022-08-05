@@ -6,6 +6,7 @@ using System.Numerics;
 using FontStashSharp;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Furball.Engine.Engine.Helpers;
+using Furball.Engine.Engine.Input;
 using Silk.NET.Input;
 using Color=Furball.Vixie.Backends.Shared.Color;
 
@@ -14,19 +15,18 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements;
 /// <summary>
 /// Creates a Basic Textbox
 /// </summary>
-public class DrawableTextBox : TextDrawable {
+public class DrawableTextBox : TextDrawable, ICharInputHandler {
     /// <summary>
     ///     The width of the text box
     /// </summary>
     public float TextBoxWidth;
     private bool _selected;
-    private bool _isInContainerDrawable;
     /// <summary>
     ///     Whether the text box was selected
     /// </summary>
     public bool Selected {
         get => this._selected;
-        set {
+        private set {
             if (value == this._selected) return;
 
             this._selected = value;
@@ -68,7 +68,7 @@ public class DrawableTextBox : TextDrawable {
     /// <param name="width">Width/Length of the Textbox</param>
     /// <param name="text">Initial Text</param>
     /// <param name="isInContainerDrawable"></param>
-    public DrawableTextBox(Vector2 position, FontSystem font, int fontSize, float width, string text, bool isInContainerDrawable = false) : base(
+    public DrawableTextBox(Vector2 position, FontSystem font, int fontSize, float width, string text) : base(
     Vector2.Zero,
     font,
     text,
@@ -77,9 +77,7 @@ public class DrawableTextBox : TextDrawable {
         this.Position     = position;
         this.TextBoxWidth = width;
 
-        this._isInContainerDrawable = isInContainerDrawable;
-
-        this.RegisterHandlers(this._isInContainerDrawable);
+        this.RegisterHandlers();
             
         this.SelectedRange.OnChange += OnSelectedChange;
     }
@@ -88,12 +86,9 @@ public class DrawableTextBox : TextDrawable {
         // throw new NotImplementedException();
     }
 
-    private void RegisterHandlers(bool isInContainerDrawable) {
-        FurballGame.InputManager.OnCharInput += this.OnTextInput;
-        if (!isInContainerDrawable)
-            FurballGame.InputManager.OnMouseDown += this.OnMouseDown;
-            
-        FurballGame.InputManager.OnKeyDown += this.OnKeyDown;
+    private void RegisterHandlers() {
+        FurballGame.InputManager.OnMouseDown += this.OnMouseDown;
+        FurballGame.InputManager.OnKeyDown   += this.OnKeyDown;
     }
 
     private void OnKeyDown(object sender, Key e) {
@@ -124,7 +119,7 @@ public class DrawableTextBox : TextDrawable {
                 this.OnCommit?.Invoke(this, this.Text);
 
                 if (this.DeselectOnCommit)
-                    this.Selected = false;
+                    FurballGame.InputManager.ReleaseTextFocus(this);
                 //wasSpecial    = true;
 
                 if (this.ClearOnCommit)
@@ -154,7 +149,7 @@ public class DrawableTextBox : TextDrawable {
 
     public void OnMouseDown(object sender, ((MouseButton mouseButton, Vector2 position) args, string cursorName) e) {
         if (this.RealContains(e.args.position.ToPoint()) && this.Visible && this.Clickable) {
-            this.Selected = true;
+            FurballGame.InputManager.TakeTextFocus(this);
 
             List<Rectangle> rects = this.TextRectangles;
 
@@ -177,27 +172,13 @@ public class DrawableTextBox : TextDrawable {
             }
         }
         else {
-            this.Selected = false;
+            FurballGame.InputManager.ReleaseTextFocus(this);
         }
     }
 
-    private void OnTextInput(object sender, (IKeyboard keyboard, char @char) e) {
-        if (!this.Selected) return;
-
-        if (this.SelectedRange.Value.Start > this.Text.Length)
-            this.SelectedRange.Value = new Range(0, 0);
-            
-        //If it was a control character, dont concat the character to the typed string
-        if (char.IsControl(e.@char)) return;
-
-        this.Text = this.Text.Insert(this.SelectedRange.Value.Start, e.@char.ToString());
-        this.OnLetterTyped?.Invoke(this, e.@char);
-            
-        this.SelectedRange.Value = new Range(this.SelectedRange.Value.End + 1, this.SelectedRange.Value.End + 1);
-    }
-
     private void UnregisterHandlers() {
-        FurballGame.InputManager.OnCharInput -= this.OnTextInput;
+        FurballGame.InputManager.OnMouseDown -= this.OnMouseDown;
+        FurballGame.InputManager.OnKeyDown   -= this.OnKeyDown;
     }
 
     public override void Dispose() {
@@ -247,6 +228,27 @@ public class DrawableTextBox : TextDrawable {
         }
 
         base.Draw(time, batch, args);
+    }
+    
+    public void HandleChar(char c) {
+        if (this.SelectedRange.Value.Start > this.Text.Length)
+            this.SelectedRange.Value = new Range(0, 0);
+            
+        //If it was a control character, dont concat the character to the typed string
+        if (char.IsControl(c)) return;
+
+        this.Text = this.Text.Insert(this.SelectedRange.Value.Start, c.ToString());
+        this.OnLetterTyped?.Invoke(this, c);
+            
+        this.SelectedRange.Value = new Range(this.SelectedRange.Value.End + 1, this.SelectedRange.Value.End + 1);
+    }
+    
+    public void HandleFocus() {
+        this.Selected = true;
+    }
+    
+    public void HandleDefocus() {
+        this.Selected = false;
     }
 }
 

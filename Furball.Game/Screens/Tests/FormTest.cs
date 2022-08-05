@@ -20,7 +20,7 @@ public class FormTest : TestScreen {
     private int _formCount;
     private void OnButtonClick(object sender, (MouseButton, Point) e) {
         this.Manager.Add(
-        new FurballForm(
+        new DrawableForm(
         $"Test Form {++this._formCount}",
         new BlankDrawable {
             OverrideSize = new(200, 200)

@@ -10,7 +10,7 @@ using Color=Furball.Vixie.Backends.Shared.Color;
 
 namespace Furball.Engine.Engine.Graphics.Drawables;
 
-public class FurballForm : CompositeDrawable {
+public class DrawableForm : CompositeDrawable {
     public Drawable Contents {
         get;
     }
@@ -22,7 +22,7 @@ public class FurballForm : CompositeDrawable {
 
     public event EventHandler OnTryClose;
 
-    public FurballForm(string title, Drawable contents, OriginType startPosition = OriginType.Center) {
+    public DrawableForm(string title, Drawable contents, OriginType startPosition = OriginType.Center) {
         this.Contents = contents;
 
         this._title = new TextDrawable(new Vector2(2), FurballGame.DEFAULT_FONT, title, 20) {
@@ -99,6 +99,6 @@ public class FurballForm : CompositeDrawable {
     private void OnTitleBarDrag(object _, Point currentDragPos) {
         Vector2 differenceFromStart = currentDragPos.ToVector2() - this._startDragMousePos;
 
-        this.MoveTo(this._startDragMousePos + differenceFromStart - this._startDiffFromPos, 1);
+        this.MoveTo(this._startDragMousePos + differenceFromStart - this._startDiffFromPos);
     }
 }
