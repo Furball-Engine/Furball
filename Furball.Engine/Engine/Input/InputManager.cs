@@ -48,33 +48,65 @@ public class InputManager {
     public event EventHandler<(IKeyboard keyboard, char character)> OnCharInput;
 
     [CanBeNull]
-    public ICharInputHandler CharInputHandler {
-        get;
-        private set;
-    }
+    public ICharInputHandler CharInputHandler => this._charInputHandlers.Count == 0 ? null : this._charInputHandlers.Last.Value;
+
+    //We would use a `Stack<T>` here but that doesnt have arbitrary removal of items
+    private readonly LinkedList<ICharInputHandler> _charInputHandlers = new();
 
     public void TakeTextFocus([NotNull] ICharInputHandler handler) {
         //If someone tries to take focus twice, ignore this call
         if (this.CharInputHandler == handler)
             return;
-        
-        if(this.CharInputHandler != null)
-            this.ReleaseTextFocus(this.CharInputHandler);
 
-        this.CharInputHandler = handler;
-        this.CharInputHandler.HandleFocus();
-        this.Keyboards.ForEach(x => x.BeginInput());
+        bool wasEmpty = this._charInputHandlers.Count == 0;
+
+        //If the current handler should not be saved in the stack, defocus it and drop it from the stack
+        if (!CharInputHandler?.SaveInStack ?? false) {
+            Logger.Log($"{CharInputHandler.GetType().Name} will not be saved on the stack!", LoggerLevelInput.InstanceInfo);
+            this.CharInputHandler.HandleDefocus();
+            this._charInputHandlers.RemoveLast();
+        } else if (this.CharInputHandler is {
+                       SaveInStack: true
+                   }) {
+            //Tell the current top of the stack to defocus
+            this.CharInputHandler.HandleDefocus();
+        }
+
+        //Push the new handler to the stack
+        this._charInputHandlers.AddLast(handler);
+        //Focus the new handler
+        handler.HandleFocus();
+        
+        // Tell all keyboard to begin input if we started with nothing in the stack
+        // this is to prevent us beginning the input multiple times, which might not behave well on all platform
+        if(wasEmpty)
+            this.Keyboards.ForEach(x => x.BeginInput());
+        
+        Logger.Log($"{handler.GetType().Name} has taken text focus!", LoggerLevelInput.InstanceInfo);
     }
 
     public void ReleaseTextFocus([NotNull] ICharInputHandler handler) {
-        //If someone is trying to release focus when they already dont have it, then ignore this call
-        if (this.CharInputHandler != handler)
+        LinkedListNode<ICharInputHandler> foundNode = this._charInputHandlers.FindLast(handler);
+        
+        //If we currently arent in the stack, then ignore the call
+        if (foundNode == null)
             return;
         
-        this.CharInputHandler.HandleDefocus();
-        this.Keyboards.ForEach(x => x.EndInput());
+        this._charInputHandlers.Remove(foundNode);
 
-        this.CharInputHandler = null;
+        //Tell the handler to do their logic on defocus
+        handler.HandleDefocus();
+        
+        Logger.Log($"{handler.GetType().Name} has lost text focus!", LoggerLevelInput.InstanceInfo);
+        
+        //If the stack is now empty, end text input
+        if (this._charInputHandlers.Count == 0) {
+            this.Keyboards.ForEach(x => x.EndInput());
+            Logger.Log("The text stack is now empty!", LoggerLevelInput.InstanceInfo);
+        } else {
+            //Tell the new top of the stack to focus again
+            this.CharInputHandler!.HandleFocus();
+        }
     }
 
     public void ReleaseTextFocus() {

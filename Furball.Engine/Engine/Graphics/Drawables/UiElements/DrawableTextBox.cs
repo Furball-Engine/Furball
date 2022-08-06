@@ -179,6 +179,8 @@ public class DrawableTextBox : TextDrawable, ICharInputHandler {
     private void UnregisterHandlers() {
         FurballGame.InputManager.OnMouseDown -= this.OnMouseDown;
         FurballGame.InputManager.OnKeyDown   -= this.OnKeyDown;
+        
+        FurballGame.InputManager.ReleaseTextFocus(this);
     }
 
     public override void Dispose() {
@@ -229,6 +231,11 @@ public class DrawableTextBox : TextDrawable, ICharInputHandler {
 
         base.Draw(time, batch, args);
     }
+
+    public bool SaveInStack {
+        get;
+        set;
+    } = false;
     
     public void HandleChar(char c) {
         if (this.SelectedRange.Value.Start > this.Text.Length)
