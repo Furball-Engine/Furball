@@ -5,6 +5,7 @@ using System.Linq;
 using System.Numerics;
 using FontStashSharp;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
+using Furball.Engine.Engine.Graphics.Drawables.Primitives;
 using Furball.Engine.Engine.Helpers;
 using Furball.Engine.Engine.Input;
 using Silk.NET.Input;
@@ -15,11 +16,21 @@ namespace Furball.Engine.Engine.Graphics.Drawables.UiElements;
 /// <summary>
 /// Creates a Basic Textbox
 /// </summary>
-public class DrawableTextBox : TextDrawable, ICharInputHandler {
+public partial class DrawableTextBox : CompositeDrawable, ICharInputHandler {
     /// <summary>
     ///     The width of the text box
     /// </summary>
     public float TextBoxWidth;
+
+    public string Text {
+        get => this._textDrawable.Text;
+        set => this._textDrawable.Text = value;
+    }
+
+    public DynamicSpriteFont Font => this._textDrawable.Font;
+    
+    public List<Rectangle> TextRectangles => this._textDrawable.TextRectangles;
+
     private bool _selected;
     /// <summary>
     ///     Whether the text box was selected
@@ -36,29 +47,16 @@ public class DrawableTextBox : TextDrawable, ICharInputHandler {
     public bool ClearOnCommit    = false;
     public bool DeselectOnCommit = true;
 
-    /// <summary>
-    ///     Called when a letter is typed in the text box
-    /// </summary>
-    public event EventHandler<char> OnLetterTyped;
-    /// <summary>
-    ///     Called when a letter is removed from the text box
-    /// </summary>
-    public event EventHandler<char> OnLetterRemoved;
-    /// <summary>
-    ///     Called when the user "commits" the text in the text box, aka when they press enter
-    /// </summary>
-    public event EventHandler<string> OnCommit;
-    /// <summary>
-    ///     Called when focus changes on the textbox
-    /// </summary>
-    public event EventHandler<bool> OnFocusChange;
+    private TextDrawable               _textDrawable;
+    private RectanglePrimitiveDrawable _outline;
+    private TexturedDrawable           _caret;
+
     /// <summary>
     /// The range of characters in the string that are selected
     /// </summary>
     public readonly Bindable<Range> SelectedRange = new(new Range(0, 0));
 
-
-    public override Vector2 Size => new Vector2(this.TextBoxWidth, this.Font.MeasureString("|").Y) * this.Scale;
+    public override Vector2 Size => new Vector2(this.TextBoxWidth, this._textDrawable.Font.LineHeight) * this.Scale;
     /// <summary>
     /// Creates a Textbox
     /// </summary>
@@ -67,23 +65,57 @@ public class DrawableTextBox : TextDrawable, ICharInputHandler {
     /// <param name="fontSize">Size of the text</param>
     /// <param name="width">Width/Length of the Textbox</param>
     /// <param name="text">Initial Text</param>
-    /// <param name="isInContainerDrawable"></param>
-    public DrawableTextBox(Vector2 position, FontSystem font, int fontSize, float width, string text) : base(
-    Vector2.Zero,
-    font,
-    text,
-    fontSize
-    ) {
-        this.Position     = position;
-        this.TextBoxWidth = width;
+    public DrawableTextBox(Vector2 position, FontSystem font, int fontSize, float width, string text) {
+        this.Position      = position;
+        this.TextBoxWidth  = width;
+        
+        this._textDrawable = new TextDrawable(Vector2.Zero, font, text, fontSize);
+        this._outline = new RectanglePrimitiveDrawable(Vector2.Zero, this._textDrawable.Size, 1f, false) {
+            ColorOverride = Color.DarkGray
+        };
+        this._caret = new TexturedDrawable(FurballGame.WhitePixel, Vector2.Zero) {
+            Visible       = true,
+            Scale         = new Vector2(2f, this._textDrawable.Font.LineHeight),
+            ColorOverride = new Color(1, 1, 1, 0f),
+            Clickable     = false,
+            CoverClicks   = false,
+            Hoverable     = false,
+            CoverHovers   = false
+        };
+
+        this.Drawables.Add(this._textDrawable);
+        this.Drawables.Add(this._outline);
+        this.Drawables.Add(this._caret);
 
         this.RegisterHandlers();
-            
-        this.SelectedRange.OnChange += OnSelectedChange;
+        this.RecalcOutline();
     }
         
-    private void OnSelectedChange(object sender, Range e) {
-        // throw new NotImplementedException();
+    private void UpdateCaretPosition(bool instant) {
+        List<Rectangle> rects = this.TextRectangles;
+            
+        if (this.SelectedRange.Value.Start == this.SelectedRange.Value.End) {
+            Rectangle rect;
+            Vector2   position;
+            if (this.Text.Length == 0) {
+                position = Vector2.Zero;
+            }
+            else if (this.SelectedRange.Value.End == this.Text.Length) {
+                rect     = rects[rects.Count - 1];
+                position = new Vector2(rect.Right, rect.Y);
+            } 
+            else {
+                rect     = rects[this.SelectedRange.Value.Start];
+                position = new Vector2(rect.Left, rect.Y);
+            }
+            position.Y =  0; //this will have to do for now :(
+            position.X -= 1;
+        
+            if (this.Text.EndsWith(" "))
+                position.X += this.Font.MeasureString(" ").X;
+
+            this._caret.MoveTo(position, instant ? 0 : 35);
+        }
     }
 
     private void RegisterHandlers() {
@@ -100,8 +132,10 @@ public class DrawableTextBox : TextDrawable, ICharInputHandler {
 
                 this.Text                = this.Text.Insert(this.SelectedRange.Value.End, clipboard);
                 this.SelectedRange.Value = new Range(this.SelectedRange.Value.End + clipboard.Length, this.SelectedRange.Value.End + clipboard.Length);
-                    
+                this.UpdateCaretPosition(false);
+  
                 this.OnLetterTyped?.Invoke(this, 'v');
+                this.RecalcOutline();
                 break;
             }
             case Key.Backspace: {
@@ -112,7 +146,9 @@ public class DrawableTextBox : TextDrawable, ICharInputHandler {
                     this.OnLetterRemoved?.Invoke(this, lastLetter);
 
                     this.SelectedRange.Value = new Range(this.SelectedRange.Value.End - 1, this.SelectedRange.Value.End - 1);
+                    this.UpdateCaretPosition(false);
                 }
+                this.RecalcOutline();
                 break;
             }
             case Key.Enter: {
@@ -122,8 +158,10 @@ public class DrawableTextBox : TextDrawable, ICharInputHandler {
                     FurballGame.InputManager.ReleaseTextFocus(this);
                 //wasSpecial    = true;
 
-                if (this.ClearOnCommit)
+                if (this.ClearOnCommit) {
                     this.Text = string.Empty;
+                    this.RecalcOutline();
+                }
                 break;
             }
             case Key.Left: {
@@ -133,15 +171,18 @@ public class DrawableTextBox : TextDrawable, ICharInputHandler {
                 }
                     
                 this.SelectedRange.Value = new Range(this.SelectedRange.Value.End - 1, this.SelectedRange.Value.End - 1);
+                this.UpdateCaretPosition(false);
                 break;
             }
             case Key.Right: {
                 if (this.SelectedRange.Value.End == this.Text.Length) {
                     this.SelectedRange.Value = new Range(this.Text.Length, this.Text.Length);
+                    this.UpdateCaretPosition(false);
                     break;
                 }
                     
                 this.SelectedRange.Value = new Range(this.SelectedRange.Value.End + 1, this.SelectedRange.Value.End + 1);
+                this.UpdateCaretPosition(false);
                 break;
             }
         }
@@ -152,14 +193,17 @@ public class DrawableTextBox : TextDrawable, ICharInputHandler {
             FurballGame.InputManager.TakeTextFocus(this);
 
             List<Rectangle> rects = this.TextRectangles;
+            
 
             if (rects.Count == 0) {
                 this.SelectedRange.Value = new Range(0, 0);
+                this.UpdateCaretPosition(true);
                 return;
             }
                 
             if (e.args.position.X > rects.Last().Right + this.RealPosition.X) {
                 this.SelectedRange.Value = new Range(this.Text.Length, this.Text.Length);
+                this.UpdateCaretPosition(true);
                 return;
             }
 
@@ -167,6 +211,7 @@ public class DrawableTextBox : TextDrawable, ICharInputHandler {
                 Rectangle rect = rects[i];
                 if (e.args.position.X > ((rect.Left - (rect.Width / 2f)) + this.RealPosition.X)) {
                     this.SelectedRange.Value = new Range(i, i);
+                    this.UpdateCaretPosition(true);
                     return;
                 }
             }
@@ -186,8 +231,6 @@ public class DrawableTextBox : TextDrawable, ICharInputHandler {
     public override void Dispose() {
         this.UnregisterHandlers();
 
-        this.SelectedRange.OnChange -= OnSelectedChange;
-
         this.OnLetterTyped   = null;
         this.OnLetterRemoved = null;
             
@@ -195,39 +238,16 @@ public class DrawableTextBox : TextDrawable, ICharInputHandler {
     }
 
     public override void Draw(double time, DrawableBatch batch, DrawableManagerArgs args) {
-        batch.DrawRectangle(
-        args.Position,
-        this.Size * args.Scale,
-        1f,
-        this.Selected ? Color.LightGray : Color.DarkGray
-        );
+        // batch.DrawRectangle(
+        // args.Position,
+        // this.Size * args.Scale,
+        // 1f,
+        // this.Selected ? Color.LightGray : Color.DarkGray
+        // );
 
-        if(this.Selected) {
-            List<Rectangle> rects = this.TextRectangles;
-                
-            if (this.SelectedRange.Value.Start == this.SelectedRange.Value.End) {
-                Rectangle rect;
-                Vector2   position;
-                if (this.Text.Length == 0) {
-                    position = args.Position;
-                }
-                else if (this.SelectedRange.Value.End == this.Text.Length) {
-                    rect     = rects[rects.Count - 1];
-                    position = args.Position + new Vector2(rect.Right, rect.Y);
-                } 
-                else {
-                    rect     = rects[this.SelectedRange.Value.Start];
-                    position = args.Position + new Vector2(rect.Left, rect.Y);
-                }
-                position.Y =  args.Position.Y;//this will have to do for now :(
-                position.X -= 1;
+        // if(this.Selected) {
 
-                if (this.Text.EndsWith(" "))
-                    position.X += this.Font.MeasureString(" ").X;
-
-                batch.Draw(FurballGame.WhitePixel, position, new Vector2(1.5f, this.Font.LineHeight));
-            }
-        }
+        // }
 
         base.Draw(time, batch, args);
     }
@@ -248,14 +268,29 @@ public class DrawableTextBox : TextDrawable, ICharInputHandler {
         this.OnLetterTyped?.Invoke(this, c);
             
         this.SelectedRange.Value = new Range(this.SelectedRange.Value.End + 1, this.SelectedRange.Value.End + 1);
+        this.UpdateCaretPosition(false);
+        
+        this.RecalcOutline();
+    }
+
+    private void RecalcOutline() {
+        this._outline.RectSize = new Vector2(this.TextBoxWidth, this._textDrawable.Font.LineHeight);
     }
     
     public void HandleFocus() {
         this.Selected = true;
+
+        this._caret.FadeColor(new Color(1, 1, 1, 0.5f), 100);
+        
+        this._outline.FadeColor(Color.LightGray, 100);
     }
     
     public void HandleDefocus() {
         this.Selected = false;
+        
+        this._caret.FadeColor(new Color(1, 1, 1, 0f), 100);
+
+        this._outline.FadeColor(Color.DarkGray, 100);
     }
 }
 

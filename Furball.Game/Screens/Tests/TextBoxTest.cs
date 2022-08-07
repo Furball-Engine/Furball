@@ -19,11 +19,11 @@ public class TextBoxTest : TestScreen {
         }
         public void HandleFocus() {
             //Set us to blue when focused
-            this.ColorOverride = Color.CornflowerBlue;
+            this.FadeColor(Color.CornflowerBlue, 100);
         }
         public void HandleDefocus() {
             //Set us to red when unfocused
-            this.ColorOverride = Color.LightPink;
+            this.FadeColor(Color.LightPink, 100);
         }
 
         public TextInputStackDrawableTest(Vector2 position, FontSystem font, string text, int fontSize) : base(position, font, text, fontSize) {
