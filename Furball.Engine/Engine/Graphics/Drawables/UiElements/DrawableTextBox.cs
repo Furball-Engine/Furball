@@ -27,6 +27,14 @@ public partial class DrawableTextBox : CompositeDrawable, ICharInputHandler {
         set => this._textDrawable.Text = value;
     }
 
+    public int LineCount {
+        get => this._lineCount;
+        set {
+            this._lineCount = value;
+            this.RecalcOutline();
+        }
+    }
+
     public DynamicSpriteFont Font => this._textDrawable.Font;
     
     public List<Rectangle> TextRectangles => this._textDrawable.TextRectangles;
@@ -55,8 +63,9 @@ public partial class DrawableTextBox : CompositeDrawable, ICharInputHandler {
     /// The range of characters in the string that are selected
     /// </summary>
     public readonly Bindable<Range> SelectedRange = new(new Range(0, 0));
+    private int _lineCount;
 
-    public override Vector2 Size => new Vector2(this.TextBoxWidth, this._textDrawable.Font.LineHeight) * this.Scale;
+    public override Vector2 Size => new Vector2(this.TextBoxWidth, this._textDrawable.Font.LineHeight * this.LineCount) * this.Scale;
     /// <summary>
     /// Creates a Textbox
     /// </summary>
@@ -65,7 +74,13 @@ public partial class DrawableTextBox : CompositeDrawable, ICharInputHandler {
     /// <param name="fontSize">Size of the text</param>
     /// <param name="width">Width/Length of the Textbox</param>
     /// <param name="text">Initial Text</param>
-    public DrawableTextBox(Vector2 position, FontSystem font, int fontSize, float width, string text) {
+    /// <param name="lineCount">Amount of lines that are able to fit in the text box</param>
+    public DrawableTextBox(Vector2 position, FontSystem font, int fontSize, float width, string text = "", int lineCount = 1) {
+        if (lineCount < 1)
+            throw new Exception("Invalid line count!");
+        
+        this._lineCount = lineCount;
+
         this.Position      = position;
         this.TextBoxWidth  = width;
         
@@ -80,7 +95,7 @@ public partial class DrawableTextBox : CompositeDrawable, ICharInputHandler {
             Clickable     = false,
             CoverClicks   = false,
             Hoverable     = false,
-            CoverHovers   = false
+            CoverHovers   = false,
         };
 
         this.Drawables.Add(this._textDrawable);
@@ -106,10 +121,15 @@ public partial class DrawableTextBox : CompositeDrawable, ICharInputHandler {
             } 
             else {
                 rect     = rects[this.SelectedRange.Value.Start];
-                position = new Vector2(rect.Left, rect.Y);
+                position = new Vector2(rect.Left, rect.Bottom);
             }
-            position.Y =  0; //this will have to do for now :(
-            position.X -= 1;
+            
+            position.Y = this.Text.Take(this.SelectedRange.Value.Start).Count(c => c == '\n') * this.Font.LineHeight;
+
+            if (this.SelectedRange.Value.Start != 0 && this.Text[this.SelectedRange.Value.Start - 1] == '\n')
+                position.X = 0;
+            
+            // position.X -= 2;
         
             if (this.Text.EndsWith(" "))
                 position.X += this.Font.MeasureString(" ").X;
@@ -152,15 +172,18 @@ public partial class DrawableTextBox : CompositeDrawable, ICharInputHandler {
                 break;
             }
             case Key.Enter: {
-                this.OnCommit?.Invoke(this, this.Text);
+                if (this.LineCount == 1 || (this.LineCount > 1 && FurballGame.InputManager.HeldKeys.Contains(Key.ShiftLeft))) {
+                    this.OnCommit?.Invoke(this, this.Text);
 
-                if (this.DeselectOnCommit)
-                    FurballGame.InputManager.ReleaseTextFocus(this);
-                //wasSpecial    = true;
+                    if (this.DeselectOnCommit)
+                        FurballGame.InputManager.ReleaseTextFocus(this);
 
-                if (this.ClearOnCommit) {
-                    this.Text = string.Empty;
-                    this.RecalcOutline();
+                    if (this.ClearOnCommit) {
+                        this.Text = string.Empty;
+                        this.RecalcOutline();
+                    }
+                } else {
+                    this.HandleChar('\n');
                 }
                 break;
             }
@@ -192,27 +215,52 @@ public partial class DrawableTextBox : CompositeDrawable, ICharInputHandler {
         if (this.RealContains(e.args.position.ToPoint()) && this.Visible && this.Clickable) {
             FurballGame.InputManager.TakeTextFocus(this);
 
-            List<Rectangle> rects = this.TextRectangles;
-            
-
-            if (rects.Count == 0) {
+            if (this.Text.Length == 0) {
                 this.SelectedRange.Value = new Range(0, 0);
                 this.UpdateCaretPosition(true);
                 return;
             }
-                
-            if (e.args.position.X > rects.Last().Right + this.RealPosition.X) {
-                this.SelectedRange.Value = new Range(this.Text.Length, this.Text.Length);
-                this.UpdateCaretPosition(true);
-                return;
-            }
+            
+            //Get the rectangles of all characters
+            List<Rectangle> rects = this.TextRectangles;
 
-            for (int i = rects.Count - 1; i >= 0; i--) {
-                Rectangle rect = rects[i];
-                if (e.args.position.X > ((rect.Left - (rect.Width / 2f)) + this.RealPosition.X)) {
-                    this.SelectedRange.Value = new Range(i, i);
+            List<int> newLinePoints = new();
+            for (int i = 0; i < this.Text.Length; i++) {
+                if(this.Text[i] == '\n')
+                    newLinePoints.Add(i);
+            }
+            //Fake point at end of text
+            newLinePoints.Add(this.Text.Length - 1);
+
+            //Get the real number of used lines
+            int numberOfLines = this.Text.Count(x => x == '\n') + 1;
+
+            //Iterate over the number of used lines
+            for (int lineNumber = numberOfLines - 1; lineNumber >= 0; lineNumber--) {
+                Rectangle lastRect = lineNumber == numberOfLines - 1 ? rects.Last() : rects[newLinePoints[lineNumber] - 1];
+                
+                int startOfLine = lineNumber == 0 ? 0 : newLinePoints[lineNumber - 1];
+                int endOfLine   = newLinePoints[lineNumber];
+
+                float yStart = this.Font.LineHeight * lineNumber;
+                float yEnd   = this.Font.LineHeight * (lineNumber + 1);
+
+                if (e.args.position.Y < yStart + this.RealPosition.Y || e.args.position.Y > yEnd + this.RealPosition.Y)
+                    continue;
+                
+                if (e.args.position.X > lastRect.Right + this.RealPosition.X) {
+                    this.SelectedRange.Value = new Range(endOfLine + 1, endOfLine + 1);
                     this.UpdateCaretPosition(true);
                     return;
+                }
+
+                for (int i = endOfLine; i >= startOfLine; i--) {
+                    Rectangle rect = rects[i];
+                    if (e.args.position.X > ((rect.Left - (rect.Width / 2f)) + this.RealPosition.X)) {
+                        this.SelectedRange.Value = new Range(i, i);
+                        this.UpdateCaretPosition(true);
+                        return;
+                    }
                 }
             }
         }
@@ -237,21 +285,6 @@ public partial class DrawableTextBox : CompositeDrawable, ICharInputHandler {
         base.Dispose();
     }
 
-    public override void Draw(double time, DrawableBatch batch, DrawableManagerArgs args) {
-        // batch.DrawRectangle(
-        // args.Position,
-        // this.Size * args.Scale,
-        // 1f,
-        // this.Selected ? Color.LightGray : Color.DarkGray
-        // );
-
-        // if(this.Selected) {
-
-        // }
-
-        base.Draw(time, batch, args);
-    }
-
     public bool SaveInStack {
         get;
         set;
@@ -262,7 +295,7 @@ public partial class DrawableTextBox : CompositeDrawable, ICharInputHandler {
             this.SelectedRange.Value = new Range(0, 0);
             
         //If it was a control character, dont concat the character to the typed string
-        if (char.IsControl(c)) return;
+        if (char.IsControl(c) && c != '\n') return;
 
         this.Text = this.Text.Insert(this.SelectedRange.Value.Start, c.ToString());
         this.OnLetterTyped?.Invoke(this, c);
@@ -274,7 +307,7 @@ public partial class DrawableTextBox : CompositeDrawable, ICharInputHandler {
     }
 
     private void RecalcOutline() {
-        this._outline.RectSize = new Vector2(this.TextBoxWidth, this._textDrawable.Font.LineHeight);
+        this._outline.RectSize = new Vector2(this.TextBoxWidth, this._textDrawable.Font.LineHeight * this._lineCount);
     }
     
     public void HandleFocus() {
