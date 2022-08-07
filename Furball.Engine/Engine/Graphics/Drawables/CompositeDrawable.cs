@@ -73,17 +73,16 @@ public class CompositeDrawable : Drawable {
 
 
             this._drawableArgs.Color = new Color(
-            (byte)(this.ColorOverride.R / 255f * drawable.ColorOverride.R),
-            (byte)(this.ColorOverride.G / 255f * drawable.ColorOverride.G),
-            (byte)(this.ColorOverride.B / 255f * drawable.ColorOverride.B),
-            (byte)(this.ColorOverride.A / 255f * drawable.ColorOverride.A)
+            (byte)(args.Color.Rf * this.ColorOverride.Rf * drawable.ColorOverride.R),
+            (byte)(args.Color.Gf * this.ColorOverride.Gf * drawable.ColorOverride.G),
+            (byte)(args.Color.Bf * this.ColorOverride.Bf * drawable.ColorOverride.B),
+            (byte)(args.Color.Af * this.ColorOverride.Af * drawable.ColorOverride.A)
             );
             this._drawableArgs.Effects  = args.Effects;
             this._drawableArgs.Position = drawable.RealPosition;
             this._drawableArgs.Rotation = args.Rotation + drawable.Rotation;
             this._drawableArgs.Scale    = drawable.RealScale = args.Scale * drawable.Scale;
-
-
+            
             drawable.Draw(time, batch, this._drawableArgs);
             if (FurballGame.DrawInputOverlay)
                 switch (drawable.Clickable) {
