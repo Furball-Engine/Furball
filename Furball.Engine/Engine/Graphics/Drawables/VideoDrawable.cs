@@ -25,7 +25,7 @@ public class VideoDrawable : TexturedDrawable {
         this._decoder.Load(path);
 
         //Create the texture which will store our video
-        this._texture = Resources.CreateTexture((uint)this._decoder.Width, (uint)this._decoder.Height);
+        this._texture = Resources.CreateEmptyTexture((uint)this._decoder.Width, (uint)this._decoder.Height);
 
         this.VideoTimeSource = timeSource;
 
