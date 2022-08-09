@@ -18,7 +18,8 @@ public class TextDrawable : Drawable {
     /// SpriteFont that gets used during Drawing
     /// </summary>
     public DynamicSpriteFont Font;
-    private string _text;
+    public  DynamicSpriteFont RealFont;
+    private string            _text;
 
     /// <summary>
     /// Text that gets drawn
@@ -91,6 +92,28 @@ public class TextDrawable : Drawable {
         this.SetFont(font, fontSize);
 
         this.Text = text;
+
+        FurballGame.Instance.WindowManager.OnFramebufferResize += this.OnFramebufferResize;
+    }
+
+    private float _difference = 1;
+    private void OnFramebufferResize(object sender, Vector2 e) {
+        this._difference = (int)(this.Font.FontSize * FurballGame.VerticalRatio) / (this.Font.FontSize * FurballGame.VerticalRatio);
+
+        this.RealFont = this.Font.FontSystem.GetFont((int)(this.Font.FontSize * FurballGame.VerticalRatio));
+        this.RealFont.FontSystem.Reset();
+    }
+
+    public override void Dispose() {
+        base.Dispose();
+
+        this.ClearEvents();
+    }
+
+    public override void ClearEvents() {
+        base.ClearEvents();
+
+        FurballGame.Instance.WindowManager.OnFramebufferResize -= this.OnFramebufferResize;
     }
 
     public void SetFont(FontSystem font, int fontSize) {
@@ -101,16 +124,33 @@ public class TextDrawable : Drawable {
         }
 
         this.Font = font.GetFont(fontSize);
+        this.OnFramebufferResize(this, FurballGame.Instance.WindowManager.WindowSize);
     }
 
     public override void Draw(double time, DrawableBatch batch, DrawableManagerArgs args) {
         switch (this.ColorType) {
             case TextColorType.Repeating: {
-                batch.DrawString(this.Font, this.Text, args.Position, this.Colors, args.Rotation, args.Scale, this.RotationOrigin);
+                batch.DrawString(
+                this.RealFont,
+                this.Text,
+                args.Position,
+                this.Colors,
+                args.Rotation,
+                args.Scale / FurballGame.VerticalRatio / this._difference,
+                this.RotationOrigin
+                );
                 break;
             }
             case TextColorType.Solid: {
-                batch.DrawString(this.Font, this.Text, args.Position, args.Color, args.Rotation, args.Scale, this.RotationOrigin);
+                batch.DrawString(
+                this.RealFont,
+                this.Text,
+                args.Position,
+                args.Color,
+                args.Rotation,
+                args.Scale / FurballGame.VerticalRatio / this._difference,
+                this.RotationOrigin
+                );
                 break;
             }
             case TextColorType.Stretch: {
@@ -120,7 +160,7 @@ public class TextDrawable : Drawable {
                 args.Position,
                 ArrayHelper.FitElementsInANewArray(this.Colors, this.Text.Length),
                 args.Rotation,
-                args.Scale,
+                args.Scale / FurballGame.VerticalRatio / this._difference,
                 this.RotationOrigin
                 );
                 break;
