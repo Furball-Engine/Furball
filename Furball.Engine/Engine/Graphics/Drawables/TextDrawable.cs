@@ -100,8 +100,8 @@ public class TextDrawable : Drawable {
     private void OnFramebufferResize(object sender, Vector2 e) {
         this._difference = (int)(this.Font.FontSize * FurballGame.VerticalRatio) / (this.Font.FontSize * FurballGame.VerticalRatio);
 
+        this.Font.FontSystem.Reset();
         this.RealFont = this.Font.FontSystem.GetFont((int)(this.Font.FontSize * FurballGame.VerticalRatio));
-        this.RealFont.FontSystem.Reset();
     }
 
     public override void Dispose() {

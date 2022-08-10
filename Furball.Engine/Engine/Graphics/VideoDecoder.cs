@@ -75,7 +75,8 @@ public unsafe class VideoDecoder : IDisposable {
     private          long     lastPts;
 
     public VideoDecoder(int bufferSize) {
-        this._bufferSize = bufferSize;
+        //Having too small of a buffer size causes issues
+        this._bufferSize = Math.Max(4, bufferSize);
 
         this._frameBufferTimes = new double[this._bufferSize];
         this._frameBuffer      = new byte[this._bufferSize][];
