@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Numerics;
 using System.Runtime.InteropServices;
@@ -59,9 +60,7 @@ public static class ImGuiConsole {
             if (AutoScroll)
                 _scrollDown = true;
         };
-
-        ImGuiStylePtr style = ImGui.GetStyle();
-
+        
         _consoleInputCoverDrawable = new BlankDrawable {
             CoverClicks = true,
             Clickable   = true,
@@ -70,8 +69,17 @@ public static class ImGuiConsole {
             Hoverable   = true,
             Depth       = 0
         };
-
+        
         FurballGame.DrawableManager.Add(_consoleInputCoverDrawable);
+        
+        FurballGame.Instance.WindowRecreation += OnWindowRecreate;
+        OnWindowRecreate(null, EventArgs.Empty);
+
+        Profiler.EndProfileAndPrint("init_imgui_console");
+    }
+    
+    private static void OnWindowRecreate(object sender, EventArgs e) {
+        ImGuiStylePtr style = ImGui.GetStyle();
 
         style.Colors[(int) ImGuiCol.Text]                  = new Vector4(1.00f, 1.00f, 1.00f, 1.00f);
         style.Colors[(int) ImGuiCol.TextDisabled]          = new Vector4(0.50f, 0.50f, 0.50f, 1.00f);
@@ -132,8 +140,6 @@ public static class ImGuiConsole {
         style.ScrollbarRounding = 0.0f;
         style.GrabRounding      = 0.0f;
         style.TabRounding       = 0.0f;
-
-        Profiler.EndProfileAndPrint("init_imgui_console");
     }
 
     public static unsafe void Draw() {
