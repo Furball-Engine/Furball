@@ -9,7 +9,7 @@ using Furball.Engine.Engine.Graphics.Drawables.Tweens;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes;
 using Furball.Engine.Engine.Helpers;
 using Furball.Engine.Engine.Helpers.Logger;
-using Furball.Engine.Engine.Platform;
+using Furball.Engine.Engine.Input.InputMethods;
 using JetBrains.Annotations;
 using Kettu;
 using Silk.NET.Input;
@@ -17,6 +17,9 @@ using Silk.NET.Input;
 namespace Furball.Engine.Engine.Input; 
 
 public class InputManager {
+    public VixieMouseInputMethod    VixieMouseInputMethod;
+    public VixieKeyboardInputMethod VixieKeyboardInputMethod;
+
     /// <summary>
     /// Called when a key is pressed
     /// </summary>

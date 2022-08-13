@@ -5,7 +5,6 @@ using FontStashSharp;
 using Furball.Engine.Engine.Helpers;
 using Furball.Vixie;
 using Furball.Vixie.Backends.Shared;
-using Furball.Vixie.Backends.Shared.Renderers;
 using Color=Furball.Vixie.Backends.Shared.Color;
 
 namespace Furball.Engine.Engine.Graphics; 

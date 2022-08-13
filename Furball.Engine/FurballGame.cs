@@ -27,7 +27,6 @@ using Furball.Engine.Engine.Platform;
 using Furball.Engine.Engine.Timing;
 using Furball.Engine.Engine.Transitions;
 using Furball.Vixie;
-using Furball.Vixie.Backends.Shared;
 using Furball.Vixie.Backends.Shared.Backends;
 using Furball.Volpe.Evaluation;
 using JetBrains.Annotations;
@@ -149,8 +148,8 @@ public class FurballGame : Game {
         _stopwatch.Start();
 
         InputManager = new InputManager();
-        InputManager.RegisterInputMethod(new VixieMouseInputMethod());
-        InputManager.RegisterInputMethod(new VixieKeyboardInputMethod());
+        InputManager.RegisterInputMethod(InputManager.VixieMouseInputMethod = new VixieMouseInputMethod());
+        InputManager.RegisterInputMethod(InputManager.VixieKeyboardInputMethod = new VixieKeyboardInputMethod());
 
         Profiler.StartProfile("init_audio_engine");
         //TODO: Add logic to decide on what audio backend to use, and maybe write some code to help change backend on the fly
@@ -301,6 +300,16 @@ public class FurballGame : Game {
         #endregion
         
         Profiler.EndProfileAndPrint("full_furball_initialize");
+    }
+
+    protected override void OnWindowRecreation() {
+        base.OnWindowRecreation();
+        
+        InputManager.RemoveInputMethod(InputManager.VixieMouseInputMethod);
+        InputManager.RemoveInputMethod(InputManager.VixieKeyboardInputMethod);
+        
+        InputManager.RegisterInputMethod(InputManager.VixieMouseInputMethod    = new VixieMouseInputMethod());
+        InputManager.RegisterInputMethod(InputManager.VixieKeyboardInputMethod = new VixieKeyboardInputMethod());
     }
 
     public void Run(Backend backend = Backend.None) {

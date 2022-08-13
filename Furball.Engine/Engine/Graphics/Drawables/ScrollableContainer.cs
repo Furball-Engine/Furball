@@ -4,7 +4,6 @@ using System.Globalization;
 using System.Numerics;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Furball.Engine.Engine.Helpers;
-using Furball.Vixie;
 using Furball.Vixie.Helpers.Helpers;
 
 namespace Furball.Engine.Engine.Graphics.Drawables;

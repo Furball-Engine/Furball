@@ -6,7 +6,6 @@ using System.Linq;
 using System.Numerics;
 using Furball.Engine.Engine.Helpers;
 using Furball.Vixie;
-using Furball.Vixie.Backends.Shared;
 using Furball.Vixie.Helpers;
 using Color=Furball.Vixie.Backends.Shared.Color;
 
