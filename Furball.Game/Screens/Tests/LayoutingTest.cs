@@ -45,10 +45,12 @@ public class LayoutingTest : TestScreen {
     public override void Relayout(float newWidth, float newHeight) {
         base.Relayout(newWidth, newHeight);
 
-        this._topLeft.Position     = new(10);
-        this._topRight.Position    = new(10);
-        this._bottomLeft.Position  = new(10);
-        this._bottomRight.Position = new(10);
+        if(this._topLeft != null) {
+            this._topLeft.Position     = new(10);
+            this._topRight.Position    = new(10);
+            this._bottomLeft.Position  = new(10);
+            this._bottomRight.Position = new(10);
+        }
         // this._topRight.Position    = new(newWidth - 10, 10);
         // this._bottomLeft.Position  = new(10, newHeight - 10);
         // this._bottomRight.Position = new(newWidth - 10, newHeight - 10);

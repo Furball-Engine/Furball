@@ -20,7 +20,8 @@ public class ScreenSelector : TestScreen {
     public override void Relayout(float newWidth, float newHeight) {
         base.Relayout(newWidth, newHeight);
 
-        this._topText.Position = new Vector2(newWidth / 2f, 40);
+        if(this._topText != null)
+            this._topText.Position = new Vector2(newWidth / 2f, 40);
     }
 
     public override void Initialize() {

@@ -85,6 +85,7 @@ public class TestScreen : Screen {
     public override void Relayout(float newWidth, float newHeight) {
         base.Relayout(newWidth, newHeight);
 
-        this._background.Scale = new Vector2(newWidth, newHeight);
+        if(this._background != null)
+            this._background.Scale = new Vector2(newWidth, newHeight);
     }
 }

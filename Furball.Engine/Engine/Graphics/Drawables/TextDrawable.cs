@@ -1,4 +1,5 @@
-
+ 
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Numerics;
@@ -18,8 +19,9 @@ public class TextDrawable : Drawable {
     /// SpriteFont that gets used during Drawing
     /// </summary>
     public DynamicSpriteFont Font;
-    public  DynamicSpriteFont RealFont;
-    private string            _text;
+    public DynamicSpriteFont RealFont;
+
+    private string _text;
 
     /// <summary>
     /// Text that gets drawn
@@ -100,8 +102,27 @@ public class TextDrawable : Drawable {
     private void OnFramebufferResize(object sender, Vector2 e) {
         this._difference = (int)(this.Font.FontSize * FurballGame.VerticalRatio) / (this.Font.FontSize * FurballGame.VerticalRatio);
 
+        int fontSize = (int)(this.Font.FontSize * FurballGame.VerticalRatio);
+
+        (FontSystem FontSystem, int fontSize) key = (this.Font.FontSystem, fontSize);
+        
+        ContentManager.FSS_CACHE.TryGetValue(key, out WeakReference<DynamicSpriteFont> fontRef);
+
+        DynamicSpriteFont font = null;
+
+        bool valid = fontRef?.TryGetTarget(out font) ?? false;
+
+        if (!valid)
+            ContentManager.FSS_CACHE.Remove(key);
+        
         this.Font.FontSystem.Reset();
-        this.RealFont = this.Font.FontSystem.GetFont((int)(this.Font.FontSize * FurballGame.VerticalRatio));
+        if (fontRef == null || !valid) {
+            this.RealFont = this.Font.FontSystem.GetFont(fontSize);
+            ContentManager.FSS_CACHE.Add((this.Font.FontSystem, fontSize), new(this.RealFont));
+            Logger.Log($"Caching DynamicSpriteFont of size {fontSize}", LoggerLevelCacheEvent.Instance);
+        } else {
+            this.RealFont = font;
+        }
     }
 
     public override void Dispose() {
@@ -117,13 +138,24 @@ public class TextDrawable : Drawable {
     }
 
     public void SetFont(FontSystem font, int fontSize) {
-        if (!ContentManager.FSS_CACHE.TryGetValue((font, fontSize), out this.Font)) {
-            this.Font = font.GetFont(fontSize);
-            ContentManager.FSS_CACHE.Add((font, fontSize), this.Font);
-            Logger.Log($"Caching DynamicSpriteFont of size {fontSize}", LoggerLevelCacheEvent.Instance);
-        }
+        (FontSystem FontSystem, int fontSize) key = (font, fontSize);
+        
+        ContentManager.FSS_CACHE.TryGetValue(key, out WeakReference<DynamicSpriteFont> fontRef);
 
-        this.Font = font.GetFont(fontSize);
+        DynamicSpriteFont f = null;
+
+        bool valid = fontRef?.TryGetTarget(out f) ?? false;
+
+        if (!valid)
+            ContentManager.FSS_CACHE.Remove(key);
+        
+        if (fontRef == null || !valid) {
+            this.Font = font.GetFont(fontSize);
+            ContentManager.FSS_CACHE.Add((font, fontSize), new(this.Font));
+            Logger.Log($"Caching DynamicSpriteFont of size {fontSize}", LoggerLevelCacheEvent.Instance);
+        } else {
+            this.Font = f;
+        }
         this.OnFramebufferResize(this, FurballGame.Instance.WindowManager.WindowSize);
     }
 

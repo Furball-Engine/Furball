@@ -25,7 +25,7 @@ public class VideoDrawable : TexturedDrawable {
         this._decoder.Load(path);
 
         //Create the texture which will store our video
-        this._texture = Resources.CreateEmptyTexture((uint)this._decoder.Width, (uint)this._decoder.Height);
+        this._texture = Texture.CreateEmptyTexture((uint)this._decoder.Width, (uint)this._decoder.Height);
 
         this.VideoTimeSource = timeSource;
 
@@ -52,7 +52,7 @@ public class VideoDrawable : TexturedDrawable {
 
         byte[] data = this._decoder.GetFrame((int)(this.VideoTimeSource.GetCurrentTime() - this.StartTime));
         if (data != null)
-            this.Texture.SetData(0, data);
+            this.Texture.SetData(data);
     }
 
     public override void Dispose() {

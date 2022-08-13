@@ -160,12 +160,12 @@ public class DrawableManager : IDisposable {
         batch.ScissorRect = currScissor;
     }
 
-    private          TextureRenderTarget? _target2D;
+    private          RenderTarget? _target2D;
     private readonly DrawableManagerArgs  _args = new();
-    public TextureRenderTarget DrawRenderTarget2D(double time, DrawableBatch batch) {
+    public RenderTarget DrawRenderTarget2D(double time, DrawableBatch batch) {
         if((int)(this._target2D?.Size.X ?? 0) != FurballGame.RealWindowWidth || (int)(this._target2D?.Size.Y ?? 0) != FurballGame.RealWindowHeight) {
             this._target2D?.Dispose();
-            this._target2D = Resources.CreateTextureRenderTarget((uint)FurballGame.RealWindowWidth, (uint)FurballGame.RealWindowHeight);
+            this._target2D = new RenderTarget((uint)FurballGame.RealWindowWidth, (uint)FurballGame.RealWindowHeight);
         }
             
         this._target2D!.Bind();

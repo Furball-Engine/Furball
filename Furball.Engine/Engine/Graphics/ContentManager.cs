@@ -13,10 +13,10 @@ using SixLabors.Fonts;
 namespace Furball.Engine.Engine.Graphics; 
 
 public static class ContentManager {
-    private static readonly Dictionary<string, WeakReference<byte[]>>        CONTENT_CACHE = new();
-    private static readonly Dictionary<string, WeakReference<Texture>>       TEXTURE_CACHE = new();
-    public static readonly  Dictionary<(FontSystem, int), DynamicSpriteFont> FSS_CACHE     = new();
-    public static           string                                           ContentPath   = "Content";
+    private static readonly Dictionary<string, WeakReference<byte[]>>                       CONTENT_CACHE = new();
+    private static readonly Dictionary<string, WeakReference<Texture>>                      TEXTURE_CACHE = new();
+    public static readonly  Dictionary<(FontSystem, int), WeakReference<DynamicSpriteFont>> FSS_CACHE     = new();
+    public static           string                                                          ContentPath   = "Content";
 
     public static int CacheSizeLimit = 100000000;// 8 MB
 
@@ -71,7 +71,7 @@ public static class ContentManager {
             TEXTURE_CACHE.Remove(filename);
         }
 
-        Texture tex = Resources.CreateTextureFromStream(new MemoryStream(LoadRawAsset(filename, source)));
+        Texture tex = Texture.CreateTextureFromStream(new MemoryStream(LoadRawAsset(filename, source)));
 
         TEXTURE_CACHE[filename] = new WeakReference<Texture>(tex);
 
@@ -79,7 +79,7 @@ public static class ContentManager {
     }
         
     public static Texture LoadTextureFromFile(string filename, ContentSource source = ContentSource.Game, bool bypassCache = false)
-        => Resources.CreateTextureFromStream(new MemoryStream(LoadRawAsset(filename, source, bypassCache)));
+        => Texture.CreateTextureFromStream(new MemoryStream(LoadRawAsset(filename, source, bypassCache)));
 
     public static byte[] LoadRawAsset(string filename, ContentSource source = ContentSource.Game, bool bypassCache = false) {
         if (CONTENT_CACHE.TryGetValue(filename, out WeakReference<byte[]> cacheReference) && !bypassCache) {

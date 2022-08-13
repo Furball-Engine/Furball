@@ -1,7 +1,7 @@
 using System;
 using System.Numerics;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
-using Furball.Vixie.Backends.Shared;
+using Furball.Vixie;
 
 namespace Furball.Engine.Engine.Graphics.Drawables;
 
@@ -17,7 +17,7 @@ public class DebugWeakReferencedTextureDrawable : Drawable {
                 return Vector2.Zero;
             }
 
-            return tex.Size * this.Scale;
+            return new Vector2(tex.Size.X, tex.Size.Y) * this.Scale;
         }
     }
 

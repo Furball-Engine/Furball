@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Numerics;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
+using Furball.Vixie;
 using Furball.Vixie.Backends.Shared;
 
 namespace Furball.Engine.Engine.Graphics.Drawables; 
@@ -27,7 +28,7 @@ public class TexturedDrawable : Drawable {
     /// Unprocessed Size of the Drawable in Pixels
     /// <remarks>This variable does not get changed as the DrawableManager translates the Drawable to be Scaled to be properly visible on all resolutions</remarks>
     /// </summary>
-    public override Vector2 Size => this._cropping == null ? this._texture.Size * this.Scale : new Vector2(this._cropping.Value.Width, this._cropping.Value.Height) * this.Scale;
+    public override Vector2 Size => this._cropping == null ? new Vector2(this._texture.Size.X, this._texture.Size.Y) * this.Scale : new Vector2(this._cropping.Value.Width, this._cropping.Value.Height) * this.Scale;
 
     /// <summary>
     /// TexturedDrawable Constructor

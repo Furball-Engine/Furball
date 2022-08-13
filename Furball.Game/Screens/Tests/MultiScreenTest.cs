@@ -46,9 +46,11 @@ public class MultiScreenTest : TestScreen {
     public override void Relayout(float newWidth, float newHeight) {
         base.Relayout(newWidth, newHeight);
 
-        this._topLeft.ScreenSize     = new Vector2(newWidth * 0.8f, newHeight * 0.8f);
-        this._topRight.ScreenSize    = new Vector2(newWidth * 0.2f, newHeight * 0.8f);
-        this._bottomLeft.ScreenSize  = new Vector2(newWidth * 0.8f, newHeight * 0.2f);
-        this._bottomRight.ScreenSize = new Vector2(newWidth * 0.2f, newHeight * 0.2f);
+        if(this._topLeft != null) {
+            this._topLeft.ScreenSize     = new Vector2(newWidth * 0.8f, newHeight * 0.8f);
+            this._topRight.ScreenSize    = new Vector2(newWidth * 0.2f, newHeight * 0.8f);
+            this._bottomLeft.ScreenSize  = new Vector2(newWidth * 0.8f, newHeight * 0.2f);
+            this._bottomRight.ScreenSize = new Vector2(newWidth * 0.2f, newHeight * 0.2f);
+        }
     }
 }

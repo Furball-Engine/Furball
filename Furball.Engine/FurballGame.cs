@@ -161,7 +161,7 @@ public class FurballGame : Game {
         DrawableManager             = new DrawableManager();
         DebugOverlayDrawableManager = new DrawableManager();
 
-        WhitePixel = Resources.CreateWhitePixelTexture();
+        WhitePixel = Texture.CreateWhitePixelTexture();
 
         LocalizationManager.ReadTranslations();
 
