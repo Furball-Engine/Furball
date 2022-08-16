@@ -42,7 +42,7 @@ public class SmartTextDrawable : TexturedDrawable {
 
             FontRectangle bounds = TextMeasurer.Measure(this.Text, options);
 
-            this._size = new Vector2((float)(Math.Ceiling(bounds.Width) + Math.Ceiling(bounds.X)), (float)(Math.Ceiling(bounds.Height) + Math.Ceiling(bounds.Y)));
+            this._size = new Vector2(bounds.Width + bounds.X, bounds.Height + bounds.Y);
             
             Image<Rgba32> image = new((int)Math.Ceiling(bounds.Width) + (int)Math.Ceiling(bounds.X), (int)Math.Ceiling(bounds.Height) + (int)Math.Ceiling(bounds.Y), new Rgba32(0f, 0f, 0f, 0f));
 
