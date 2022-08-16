@@ -24,28 +24,29 @@
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="FFmpeg.AutoGen" Version="5.1.1"/>
-        <PackageReference Include="GtkSharp.Win32" Version="3.1.2"/>
-        <PackageReference Include="ImGui.NET" Version="1.87.3"/>
-        <PackageReference Include="Kettu" Version="1.4.0"/>
-        <PackageReference Include="ManagedBass" Version="3.1.1"/>
-        <PackageReference Include="ManagedBass.Fx" Version="3.1.1"/>
-        <PackageReference Include="SixLabors.Fonts" Version="1.0.0-beta17"/>
-        <PackageReference Include="sowelipisona" Version="1.2.0"/>
-        <PackageReference Include="System.Drawing.Common" Version="5.0.2"/>
-        <PackageReference Include="GtkSharp" Version="3.24.24.38"/>
-        <PackageReference Include="JetBrains.Annotations" Version="2022.1.0"/>
-        <PackageReference Include="Eto.Forms" Version="2.7.1"/>
-        <PackageReference Include="Eto.Platform.Gtk" Version="2.7.1"/>
+        <PackageReference Include="FFmpeg.AutoGen" Version="5.1.1" />
+        <PackageReference Include="GtkSharp.Win32" Version="3.1.2" />
+        <PackageReference Include="ImGui.NET" Version="1.87.3" />
+        <PackageReference Include="Kettu" Version="1.4.0" />
+        <PackageReference Include="ManagedBass" Version="3.1.1" />
+        <PackageReference Include="ManagedBass.Fx" Version="3.1.1" />
+        <PackageReference Include="SixLabors.Fonts" Version="1.0.0-beta18" />
+        <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta15" />
+        <PackageReference Include="sowelipisona" Version="1.2.0" />
+        <PackageReference Include="System.Drawing.Common" Version="5.0.2" />
+        <PackageReference Include="GtkSharp" Version="3.24.24.38" />
+        <PackageReference Include="JetBrains.Annotations" Version="2022.1.0" />
+        <PackageReference Include="Eto.Forms" Version="2.7.1" />
+        <PackageReference Include="Eto.Platform.Gtk" Version="2.7.1" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Furball.Vixie\Furball.Vixie\Furball.Vixie.csproj"/>
-        <ProjectReference Include="..\Furball.Volpe\Furball.Volpe\Furball.Volpe.csproj"/>
+        <ProjectReference Include="..\Furball.Vixie\Furball.Vixie\Furball.Vixie.csproj" />
+        <ProjectReference Include="..\Furball.Volpe\Furball.Volpe\Furball.Volpe.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <None Update="EngineContent/*.ttf" CopyToOutputDirectory="Always"/>
+        <None Update="EngineContent/*.ttf" CopyToOutputDirectory="Always" />
     </ItemGroup>
 
     <ItemGroup>

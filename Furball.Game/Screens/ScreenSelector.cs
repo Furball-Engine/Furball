@@ -28,16 +28,17 @@ public class ScreenSelector : TestScreen {
         base.Initialize();
 
         this._screens = new List<(LocalizationStrings FormTest, Type type)> {
-            (LocalizationStrings.CatmullTest,           typeof(CatmullTest)),
-            (LocalizationStrings.TextBoxTest,           typeof(TextBoxTest)),
-            (LocalizationStrings.CircleTest,            typeof(CircleDrawableTest)),
-            (LocalizationStrings.ScrollingStutterTest,  typeof(ScrollingTest)),
-            (LocalizationStrings.AudioEffectsTest,      typeof(AudioEffectTest)),
-            (LocalizationStrings.LoadingScreenTest,     typeof(LoadingScreenTest)),
-            (LocalizationStrings.FixedTimeStepTest,     typeof(FixedTimeStepTest)),
-            (LocalizationStrings.LayoutingTest,         typeof(LayoutingTest)),
-            (LocalizationStrings.MultiScreenTest,       typeof(MultiScreenTest)),
-            (LocalizationStrings.FormTest,              typeof(FormTest))
+            (LocalizationStrings.CatmullTest, typeof(CatmullTest)),
+            (LocalizationStrings.TextBoxTest, typeof(TextBoxTest)),
+            (LocalizationStrings.CircleTest, typeof(CircleDrawableTest)),
+            (LocalizationStrings.ScrollingStutterTest, typeof(ScrollingTest)),
+            (LocalizationStrings.AudioEffectsTest, typeof(AudioEffectTest)),
+            (LocalizationStrings.LoadingScreenTest, typeof(LoadingScreenTest)),
+            (LocalizationStrings.FixedTimeStepTest, typeof(FixedTimeStepTest)),
+            (LocalizationStrings.LayoutingTest, typeof(LayoutingTest)),
+            (LocalizationStrings.MultiScreenTest, typeof(MultiScreenTest)),
+            (LocalizationStrings.FormTest, typeof(FormTest)),
+            (LocalizationStrings.SmartTextTest, typeof(SmartTextTest))
         };
 
         this.Manager.Add(this._topText = new TextDrawable(new Vector2(1280f / 2f, 40), FurballGame.DEFAULT_FONT, LocalizationManager.GetLocalizedString(LocalizationStrings.ChooseScreen), 48) {
