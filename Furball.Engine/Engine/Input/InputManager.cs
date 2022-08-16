@@ -181,13 +181,12 @@ public class InputManager {
 
     private static readonly List<Drawable> _knownHovers = new();
     private static void DrawableOnMouseMove(object sender, (Vector2 position, string cursorName) e) {
-
         List<Drawable> drawables = new();
         DrawableManager.DrawableManagers.Where(x => x.Visible).ToList().ForEach(
         x => drawables.AddRange(x.Drawables.Where(y => y is Drawable && y.Hoverable))
         );
 
-        drawables = drawables.OrderBy(o => o.Depth).ToList();
+        drawables.Sort(DrawableInputComparer.Instance);
 
         List<Drawable> drawablesTempIterate = new(drawables);
 
@@ -353,8 +352,8 @@ public class InputManager {
         DrawableManager.DrawableManagers.Where(x => x.Visible).ToList().ForEach(
         x => drawables.AddRange(x.Drawables.Where(y => y is Drawable && (y.Clickable || y is CompositeDrawable) && y.Visible))
         );
-
-        drawables = drawables.OrderBy(o => o.Depth).ToList();
+        
+        drawables.Sort(DrawableInputComparer.Instance);
 
         List<Drawable> drawablesTempIterate = new(drawables);
 

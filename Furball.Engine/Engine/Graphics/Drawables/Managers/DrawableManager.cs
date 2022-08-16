@@ -60,7 +60,7 @@ public class DrawableManager : IDisposable {
     
     public void Draw(double time, DrawableBatch batch) {
         if (this._sortDrawables) {
-            this._drawables.Sort((x, y) => y.Depth.CompareTo(x.Depth));
+            this._drawables.Sort(DrawableDrawComparer.Instance);
 
             this._sortDrawables = false;
         }
