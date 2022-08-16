@@ -513,6 +513,8 @@ public class FurballGame : Game {
         
     private bool _loadingScreenChangeOffQueued = false;
     protected override void Update(double deltaTime) {
+        Time = _stopwatch.Elapsed.TotalMilliseconds;
+        
         if (RuntimeInfo.IsDebug()) {
             this._updateWatch.Reset();
             this._updateWatch.Start();
@@ -611,7 +613,11 @@ public class FurballGame : Game {
     #region Timing
 
     private static Stopwatch _stopwatch = new();
-    public static  double    Time => _stopwatch.Elapsed.TotalMilliseconds;
+
+    public static double Time {
+        get;
+        private set;
+    }
 
     #endregion
 
