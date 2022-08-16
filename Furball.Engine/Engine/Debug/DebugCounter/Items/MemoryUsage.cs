@@ -18,6 +18,8 @@ public class MemoryUsage : DebugCounterItem {
         this._updateTimeStep = new FixedTimeStepMethod(
         1000,
         () => {
+            this._process.Refresh();
+            
             this._managedMemory   = GC.GetTotalMemory(true);
             this._unmanagedMemory = this._process.PrivateMemorySize64 - this._managedMemory;
         }
@@ -28,6 +30,8 @@ public class MemoryUsage : DebugCounterItem {
     public override void Dispose() {
         base.Dispose();
 
+        this._process.Dispose();
+        
         FurballGame.TimeStepMethods.Remove(this._updateTimeStep);
     }
 
