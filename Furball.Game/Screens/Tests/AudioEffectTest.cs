@@ -111,7 +111,8 @@ public class AudioEffectTest : TestScreen {
     public override void Relayout(float newWidth, float newHeight) {
         base.Relayout(newWidth, newHeight);
 
-        this._topText.Position.X = newWidth / 2f;
+        if(this._topText != null)
+            this._topText.Position.X = newWidth / 2f;
     }
 
     private void LowPassPlayOnClick(object sender, (MouseButton, Point) e) {

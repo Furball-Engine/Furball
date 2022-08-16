@@ -1,4 +1,5 @@
 #nullable enable
+using System;
 using Furball.Engine.Engine.Graphics;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
 
@@ -47,6 +48,8 @@ public class ScreenManager {
                 CurrentFadeState = FadeState.FadeIn;
 
                 FurballGame.GameTimeScheduler.ScheduleMethod(delegate {
+                    GC.Collect();
+                    
                     FurballGame.Instance.ChangeScreen(newScreen);
 
                     double fadeOutTime = t.TransitionEnd();
