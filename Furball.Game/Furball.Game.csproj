@@ -16,4 +16,8 @@
         <ProjectReference Include="..\Furball.Engine\Furball.Engine.csproj" />
         <ProjectReference Include="..\Furball.Vixie\Furball.Vixie\Furball.Vixie.csproj" />
     </ItemGroup>
+    
+    <ItemGroup>
+        <None Update="Content/test.mp4" CopyToOutputDirectory="PreserveNewest" />
+    </ItemGroup>
 </Project>
