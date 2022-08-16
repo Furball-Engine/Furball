@@ -188,7 +188,9 @@ public class FurballGame : Game {
             this.RunningScreen?.UpdateTextStrings();
         };
 
-        TooltipDrawable = new TooltipDrawable();
+        TooltipDrawable = new TooltipDrawable {
+            Depth = double.NegativeInfinity
+        };
         DrawableManager.Add(TooltipDrawable);
 
         TooltipDrawable.Visible = false;
@@ -295,7 +297,7 @@ public class FurballGame : Game {
         this._textureDisplayForm.OnTryClose += delegate {
             this._textureDisplayFormAdded = false;
 
-            DebugOverlayDrawableManager.Remove(this._textureDisplayForm);
+            DrawableManager.Remove(this._textureDisplayForm);
         };
 
         #endregion
@@ -364,7 +366,7 @@ public class FurballGame : Game {
         this._displayDebugTextureViewer = new Keybind(EngineDebugKeybinds.DispalyDebugTextureviewer, "Display Debug Texture Viewer", Key.F9,
                                                       () => {
                                                           if (!this._textureDisplayFormAdded) {
-                                                              DebugOverlayDrawableManager.Add(this._textureDisplayForm);
+                                                              DrawableManager.Add(this._textureDisplayForm);
                                                               this._textureDisplayFormAdded = true;
                                                           }
                                                       }

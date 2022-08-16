@@ -58,7 +58,7 @@ public class SmartTextDrawable : TexturedDrawable {
                 }
                 
                 this._texture      = Vixie.Texture.CreateTextureFromImage(image);
-                this._texture.Name = $"smarttext:{this.Text}";
+                this._texture.Name = "SmartText";
                 
                 image.Dispose();
             }, 0);
