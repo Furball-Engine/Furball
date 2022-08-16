@@ -560,12 +560,16 @@ public class FurballGame : Game {
     protected override void PreDraw(double deltaTime) {
         base.PreDraw(deltaTime);
 
+        Debug.Assert(DrawableBatch.ScissorStackItemCount == 0, "Scissor Stack not empty at start of frame!");
+        
         DrawableBatch.Begin();
     }
 
     protected override void PostDraw(double deltaTime) {
         base.PostDraw(deltaTime);
-        
+
+        Debug.Assert(DrawableBatch.ScissorStackItemCount == 0, "Scissor Stack not empty at end of frame!");
+
         DrawableBatch.End();
     }
 

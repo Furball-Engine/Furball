@@ -70,11 +70,9 @@ public class ScrollableContainer : CompositeDrawable {
     }
 
     public override void Draw(double time, DrawableBatch batch, DrawableManagerArgs args) {
-        Rectangle orig = batch.ScissorRect;
-
-        batch.ScissorRect = new Rectangle((int)this.RealPosition.X, (int)this.RealPosition.Y, (int)this.RealSize.X, (int)this.RealSize.Y);
+        batch.ScissorPush(this, new Rectangle((int)this.RealPosition.X, (int)this.RealPosition.Y, (int)this.RealSize.X, (int)this.RealSize.Y)); 
         base.Draw(time, batch, args);
-        batch.ScissorRect = orig;
+        batch.ScissorPop(this);
     }
 
     public void RecalculateMax() {

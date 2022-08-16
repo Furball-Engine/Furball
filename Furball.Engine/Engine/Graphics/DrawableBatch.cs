@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Numerics;
 using FontStashSharp;
@@ -29,7 +30,7 @@ public class DrawableBatch : IDisposable {
     public void Begin() {
         if (this.Begun)
             throw new Exception("DrawableBatch already begun!");
-            
+        
         this._renderer.Begin();
         this.Begun = true;
     }
@@ -101,7 +102,36 @@ public class DrawableBatch : IDisposable {
         this._renderer.DrawString(font, text, position, colors, rotation, scale, origin);
     }
 
-    public Rectangle ScissorRect {
+    private readonly Stack<(object badge, Rectangle rect)> _scissorStack = new();
+
+    public int ScissorStackItemCount => this._scissorStack.Count;
+
+    private void UpdateScissorFromStack() {
+        if (this._scissorStack.Count == 0) {
+            this.ScissorRect = new Rectangle(0, 0, (int)FurballGame.WindowWidth, (int)FurballGame.WindowHeight);
+            return;
+        }
+
+        this.ScissorRect = this._scissorStack.Peek().rect;
+    }
+    
+    public void ScissorPush(object badge, Rectangle rect) {
+        this._scissorStack.Push((badge, rect));
+        
+        this.UpdateScissorFromStack();
+    }
+
+    public void ScissorPop(object badge) {
+        System.Diagnostics.Debug.Assert(this._scissorStack.Count != 0, "this._scissorStack.Count != 0");
+
+        (object o, Rectangle rect) = this._scissorStack.Pop();
+        
+        System.Diagnostics.Debug.Assert(o == badge, $"{nameof(badge)} != popped item!");
+        
+        this.UpdateScissorFromStack();
+    }
+    
+    private Rectangle ScissorRect {
         get => new(
         (int)(GraphicsBackend.Current.ScissorRect.X / FurballGame.VerticalRatio),
         (int)(GraphicsBackend.Current.ScissorRect.Y / FurballGame.VerticalRatio),

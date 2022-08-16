@@ -67,11 +67,9 @@ public class DrawableManager : IDisposable {
 
         int tempCount = this._drawables.Count;
         this.Count = tempCount;
-        
-        Rectangle currScissor = batch.ScissorRect;
 
         if (this.EffectedByScaling)
-            batch.ScissorRect = new Rectangle((int)this.Position.X, (int)this.Position.Y, (int)this.Size.X, (int)this.Size.Y);
+            batch.ScissorPush(this, new Rectangle((int)this.Position.X, (int)this.Position.Y, (int)this.Size.X, (int)this.Size.Y));
         
         for (int i = 0; i < tempCount; i++) {
             Drawable drawable = this._drawables[i];
@@ -133,7 +131,11 @@ public class DrawableManager : IDisposable {
             RectangleF rect = new(drawable.RealPosition.ToPointF(), new SizeF(drawable.RealSize.X, drawable.RealSize.Y));
 
             if ((!this.EffectedByScaling && rect.IntersectsWith(FurballGame.DisplayRect)) || (this.EffectedByScaling && rect.IntersectsWith(new RectangleF(this.Position.ToPointF(), this.Size.ToSizeF())))) {
+                int scissorStackItems = batch.ScissorStackItemCount;
+                
                 drawable.Draw(time, batch, this._args);
+ 
+                System.Diagnostics.Debug.Assert(scissorStackItems == batch.ScissorStackItemCount, $"Scissor stack is unbalanced after {drawable}.Draw was called!");
                 if (FurballGame.DrawInputOverlay)
                     switch (drawable.Clickable) {
                         case false when drawable.CoverClicks:
@@ -156,7 +158,8 @@ public class DrawableManager : IDisposable {
             }
         }
 
-        batch.ScissorRect = currScissor;
+        if(this.EffectedByScaling)
+            batch.ScissorPop(this);
     }
 
     private          RenderTarget? _target2D;
