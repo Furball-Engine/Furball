@@ -60,7 +60,7 @@ public class DrawableManager : IDisposable {
     
     public void Draw(double time, DrawableBatch batch) {
         if (this._sortDrawables) {
-            this._drawables = this._drawables.OrderByDescending(o => o.Depth).ToList();
+            this._drawables.Sort((x, y) => y.Depth.CompareTo(x.Depth));
 
             this._sortDrawables = false;
         }
@@ -190,17 +190,17 @@ public class DrawableManager : IDisposable {
 
     public void Add(Drawable drawable) {
         this._drawables.Add(drawable);
-        this._drawables = this._drawables.OrderByDescending(o => o.Depth).ToList();
+        this._sortDrawables = true;
     }
 
     public void Add(List<Drawable> drawables) {
         this._drawables.AddRange(drawables);
-        this._drawables = this._drawables.OrderByDescending(o => o.Depth).ToList();
+        this._sortDrawables = true;
     }
 
     public void Add(params Drawable[] drawables) {
         this._drawables.AddRange(drawables);
-        this._drawables = this._drawables.OrderByDescending(o => o.Depth).ToList();
+        this._sortDrawables = true;
     }
     public void Remove(Drawable drawable) {
         this._drawables.Remove(drawable);
