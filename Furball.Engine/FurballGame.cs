@@ -442,7 +442,6 @@ public class FurballGame : Game {
         if (this.RunningScreen != null) {
             this.Components.Remove(this.RunningScreen);
 
-            this.RunningScreen.Dispose();
             this.RunningScreen = null;
         }
 

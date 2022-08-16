@@ -21,7 +21,7 @@ public class MemoryUsage : DebugCounterItem {
             this._process.Refresh();
             
             this._managedMemory   = GC.GetTotalMemory(true);
-            this._unmanagedMemory = this._process.PrivateMemorySize64 - this._managedMemory;
+            this._unmanagedMemory = this._process.WorkingSet64 - this._managedMemory;
         }
         )
         );

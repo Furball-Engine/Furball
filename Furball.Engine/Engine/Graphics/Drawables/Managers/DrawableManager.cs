@@ -219,6 +219,8 @@ public class DrawableManager : IDisposable {
         foreach (Drawable drawable in this._drawables)
             drawable.Dispose();
 
+        this._drawables.Clear();
+        
         lock (StatLock) {
             Instances--;
             DrawableManagers.Remove(this);
