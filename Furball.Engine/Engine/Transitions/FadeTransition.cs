@@ -41,8 +41,8 @@ public class FadeTransition : Transition {
     public override double TransitionBegin() {
         double currentTime = this._fadeScreen.DrawableTime;
 
-        ColorTween fadeInTween  = new ColorTween(TweenType.Color, Color.Transparent, Color.Black,       currentTime,       currentTime + 500);
-        ColorTween fadeOutTween = new ColorTween(TweenType.Color, Color.Black,       Color.Transparent, currentTime + 600, currentTime + 1100);
+        ColorTween fadeInTween  = new(TweenType.Color, Color.Transparent, Color.Black,       currentTime,       currentTime + 500);
+        ColorTween fadeOutTween = new(TweenType.Color, Color.Black, Color.Transparent, currentTime + 600, currentTime + 1100);
 
         this._fadeScreen.Tweens.Add(fadeInTween);
         this._fadeScreen.Tweens.Add(fadeOutTween);

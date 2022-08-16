@@ -118,7 +118,7 @@ public class TextDrawable : Drawable {
         this.Font.FontSystem.Reset();
         if (fontRef == null || !valid) {
             this.RealFont = this.Font.FontSystem.GetFont(fontSize);
-            ContentManager.FSS_CACHE.Add((this.Font.FontSystem, fontSize), new(this.RealFont));
+            ContentManager.FSS_CACHE.Add((this.Font.FontSystem, fontSize), new WeakReference<DynamicSpriteFont>(this.RealFont));
             Logger.Log($"Caching DynamicSpriteFont of size {fontSize}", LoggerLevelCacheEvent.Instance);
         } else {
             this.RealFont = font;
@@ -151,7 +151,7 @@ public class TextDrawable : Drawable {
         
         if (fontRef == null || !valid) {
             this.Font = font.GetFont(fontSize);
-            ContentManager.FSS_CACHE.Add((font, fontSize), new(this.Font));
+            ContentManager.FSS_CACHE.Add((font, fontSize), new WeakReference<DynamicSpriteFont>(this.Font));
             Logger.Log($"Caching DynamicSpriteFont of size {fontSize}", LoggerLevelCacheEvent.Instance);
         } else {
             this.Font = f;

@@ -56,7 +56,7 @@ public class DevConsole {
         AddMessage("] " + input, ExecutionResult.Message);
             
         IEnumerable<Token> tokenStream = new Lexer(input).GetTokenEnumerator();
-        Parser             parser      = new Parser(tokenStream);
+        Parser             parser      = new(tokenStream);
 
         try {
             while (parser.TryParseNextExpression(out Expression expression)) {
@@ -80,7 +80,7 @@ public class DevConsole {
     #endregion
 
     public static string[] GetLog() {
-        List<string> lines = new List<string>();
+        List<string> lines = new();
 
         foreach ((string input, ConsoleResult result) action in ConsoleLog) {
             lines.AddRange(FormatActionLine(action));
@@ -90,7 +90,7 @@ public class DevConsole {
     }
 
     public static List<string> FormatActionLine((string input, ConsoleResult result) action) {
-        List<string> lines = new List<string>();
+        List<string> lines = new();
 
         if(action.input != string.Empty)
             lines.Add($"] {action.input}");

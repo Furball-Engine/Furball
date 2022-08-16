@@ -33,7 +33,7 @@ public class DrawableManager : IDisposable {
 
     public bool Visible = true;
 
-    private bool _sortDrawables = false;
+    private bool _sortDrawables = true;
 
     private bool _effectedByScaling = false;
     public bool EffectedByScaling {
@@ -71,7 +71,7 @@ public class DrawableManager : IDisposable {
         Rectangle currScissor = batch.ScissorRect;
 
         if (this.EffectedByScaling)
-            batch.ScissorRect = new((int)this.Position.X, (int)this.Position.Y, (int)this.Size.X, (int)this.Size.Y);
+            batch.ScissorRect = new Rectangle((int)this.Position.X, (int)this.Position.Y, (int)this.Size.X, (int)this.Size.Y);
         
         for (int i = 0; i < tempCount; i++) {
             Drawable drawable = this._drawables[i];
@@ -82,9 +82,9 @@ public class DrawableManager : IDisposable {
 
             drawable.RealPosition -= drawable.ScreenOriginType switch {
                 OriginType.TopLeft     => drawable.LastCalculatedOrigin,
-                OriginType.TopRight    => new(-drawable.LastCalculatedOrigin.X, drawable.LastCalculatedOrigin.Y),
-                OriginType.BottomLeft  => new(drawable.LastCalculatedOrigin.X, -drawable.LastCalculatedOrigin.Y),
-                OriginType.BottomRight => new(-drawable.LastCalculatedOrigin.X, -drawable.LastCalculatedOrigin.Y),
+                OriginType.TopRight    => new Vector2(-drawable.LastCalculatedOrigin.X, drawable.LastCalculatedOrigin.Y),
+                OriginType.BottomLeft  => new Vector2(drawable.LastCalculatedOrigin.X,  -drawable.LastCalculatedOrigin.Y),
+                OriginType.BottomRight => new Vector2(-drawable.LastCalculatedOrigin.X, -drawable.LastCalculatedOrigin.Y),
                 _                      => throw new ArgumentOutOfRangeException()
             };
 
@@ -93,17 +93,17 @@ public class DrawableManager : IDisposable {
             if (this.EffectedByScaling)
                 drawable.RealPosition = drawable.ScreenOriginType switch {
                     OriginType.TopLeft     => drawable.RealPosition,
-                    OriginType.TopRight    => new(scaledSize.X - drawable.RealPosition.X, drawable.RealPosition.Y),
-                    OriginType.BottomLeft  => new(drawable.RealPosition.X, scaledSize.Y - drawable.RealPosition.Y),
-                    OriginType.BottomRight => new(scaledSize.X - drawable.RealPosition.X, scaledSize.Y - drawable.RealPosition.Y),
+                    OriginType.TopRight    => new Vector2(scaledSize.X - drawable.RealPosition.X, drawable.RealPosition.Y),
+                    OriginType.BottomLeft  => new Vector2(drawable.RealPosition.X,                scaledSize.Y - drawable.RealPosition.Y),
+                    OriginType.BottomRight => new Vector2(scaledSize.X - drawable.RealPosition.X, scaledSize.Y - drawable.RealPosition.Y),
                     _                      => throw new ArgumentOutOfRangeException()
                 };
             else
                 drawable.RealPosition = drawable.ScreenOriginType switch {
                     OriginType.TopLeft     => drawable.RealPosition,
-                    OriginType.TopRight    => new(FurballGame.WindowWidth - drawable.RealPosition.X, drawable.RealPosition.Y),
-                    OriginType.BottomLeft  => new(drawable.RealPosition.X, FurballGame.WindowHeight - drawable.RealPosition.Y),
-                    OriginType.BottomRight => new(FurballGame.WindowWidth - drawable.RealPosition.X, FurballGame.WindowHeight - drawable.RealPosition.Y),
+                    OriginType.TopRight    => new Vector2(FurballGame.WindowWidth - drawable.RealPosition.X, drawable.RealPosition.Y),
+                    OriginType.BottomLeft  => new Vector2(drawable.RealPosition.X,                           FurballGame.WindowHeight - drawable.RealPosition.Y),
+                    OriginType.BottomRight => new Vector2(FurballGame.WindowWidth - drawable.RealPosition.X, FurballGame.WindowHeight - drawable.RealPosition.Y),
                     _                      => throw new ArgumentOutOfRangeException()
                 };
 
@@ -138,16 +138,16 @@ public class DrawableManager : IDisposable {
                     switch (drawable.Clickable) {
                         case false when drawable.CoverClicks:
                             batch.DrawRectangle(
-                            new(drawable.RealRectangle.X, drawable.RealRectangle.Y),
-                            new(drawable.RealRectangle.Width, drawable.RealRectangle.Height),
+                            new Vector2(drawable.RealRectangle.X,     drawable.RealRectangle.Y),
+                            new Vector2(drawable.RealRectangle.Width, drawable.RealRectangle.Height),
                             1,
                             Color.Red
                             );
                             break;
                         case true when drawable.CoverClicks:
                             batch.DrawRectangle(
-                            new(drawable.RealRectangle.X, drawable.RealRectangle.Y),
-                            new(drawable.RealRectangle.Width, drawable.RealRectangle.Height),
+                            new Vector2(drawable.RealRectangle.X,     drawable.RealRectangle.Y),
+                            new Vector2(drawable.RealRectangle.Width, drawable.RealRectangle.Height),
                             1,
                             Color.Green
                             );

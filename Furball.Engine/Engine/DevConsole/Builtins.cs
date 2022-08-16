@@ -190,7 +190,7 @@ public class Builtins {
             
         new ("im_input_methods", paramCount: 0,
              (_, _) => {
-                 List<CellSwap<Value>> arrayList = new List<CellSwap<Value>>();
+                 List<CellSwap<Value>> arrayList = new();
                      
                  for (int i = 0; i != FurballGame.InputManager.RegisteredInputMethods.Count; i++) {
                      InputMethod currentMethod = FurballGame.InputManager.RegisteredInputMethods[i];

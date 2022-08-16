@@ -69,9 +69,9 @@ public class DrawableBatch : IDisposable {
     //TODO: add rotations
     public void DrawRectangle(Vector2 position, Vector2 size, float thickness, Color color) {
         Vector2 p0 = position;                                             //TL
-        Vector2 p1 = new Vector2(position.X + size.X, position.Y);         //TR
-        Vector2 p2 = new Vector2(position.X + size.X, position.Y + size.Y);//BR
-        Vector2 p3 = new Vector2(position.X,          position.Y + size.Y);//BL
+        Vector2 p1 = new(position.X + size.X, position.Y);         //TR
+        Vector2 p2 = new(position.X + size.X, position.Y + size.Y);//BR
+        Vector2 p3 = new(position.X, position.Y + size.Y);//BL
 
         this.DrawLine(p0, p1, thickness, color);
         this.DrawLine(p1, p2, thickness, color);

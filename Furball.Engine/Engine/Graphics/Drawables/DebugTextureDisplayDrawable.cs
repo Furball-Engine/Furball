@@ -31,11 +31,12 @@ public class DebugTextureDisplayDrawable : CompositeDrawable {
         for (int i = 0; i < Global.TRACKED_TEXTURES.Count; i++) {
             WeakReference<Texture> reference = Global.TRACKED_TEXTURES[i];
 
-            if (!reference.TryGetTarget(out _))
+            if (!reference.TryGetTarget(out Texture tex))
                 continue;//if the reference is invalid, then skip it
 
             DebugWeakReferencedTextureDrawable drawable = new(reference) {
-                Position = new Vector2(x, y)
+                Position = new Vector2(x, y),
+                ToolTip  = tex.Name
             };
 
             drawable.Scale = new Vector2(200f / drawable.Size.X);

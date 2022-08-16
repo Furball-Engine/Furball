@@ -71,14 +71,19 @@ public static class ContentManager {
         }
 
         Texture tex = Texture.CreateTextureFromStream(new MemoryStream(LoadRawAsset(filename, source)));
-
+        tex.Name = filename;
+        
         TEXTURE_CACHE[filename] = new WeakReference<Texture>(tex);
 
         return tex;
     }
         
-    public static Texture LoadTextureFromFile(string filename, ContentSource source = ContentSource.Game, bool bypassCache = false)
-        => Texture.CreateTextureFromStream(new MemoryStream(LoadRawAsset(filename, source, bypassCache)));
+    public static Texture LoadTextureFromFile(string filename, ContentSource source = ContentSource.Game, bool bypassCache = false) {
+        Texture tex = Texture.CreateTextureFromStream(new MemoryStream(LoadRawAsset(filename, source, bypassCache)));
+        tex.Name = filename;
+        
+        return tex;
+    }
 
     public static byte[] LoadRawAsset(string filename, ContentSource source = ContentSource.Game, bool bypassCache = false) {
         if (CONTENT_CACHE.TryGetValue(filename, out WeakReference<byte[]> cacheReference) && !bypassCache) {

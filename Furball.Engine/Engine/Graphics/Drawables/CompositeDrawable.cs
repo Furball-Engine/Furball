@@ -88,16 +88,16 @@ public class CompositeDrawable : Drawable {
                 switch (drawable.Clickable) {
                     case false when drawable.CoverClicks:
                         batch.DrawRectangle(
-                        new(drawable.RealRectangle.X, drawable.RealRectangle.Y),
-                        new(drawable.RealRectangle.Width, drawable.RealRectangle.Height),
+                        new Vector2(drawable.RealRectangle.X,     drawable.RealRectangle.Y),
+                        new Vector2(drawable.RealRectangle.Width, drawable.RealRectangle.Height),
                         1,
                         Color.Red
                         );
                         break;
                     case true when drawable.CoverClicks:
                         batch.DrawRectangle(
-                        new(drawable.RealRectangle.X, drawable.RealRectangle.Y),
-                        new(drawable.RealRectangle.Width, drawable.RealRectangle.Height),
+                        new Vector2(drawable.RealRectangle.X,     drawable.RealRectangle.Y),
+                        new Vector2(drawable.RealRectangle.Width, drawable.RealRectangle.Height),
                         1,
                         Color.Green
                         );

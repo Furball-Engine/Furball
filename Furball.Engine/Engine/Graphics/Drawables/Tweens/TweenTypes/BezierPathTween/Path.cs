@@ -30,7 +30,7 @@ public class Path {
             double begin = current;
             double end   = current + segmentLength;
 
-            PathRange assignedRange = new PathRange(begin, end);
+            PathRange assignedRange = new(begin, end);
 
             ranges.Add(assignedRange);
             currentSegment.PathProgressRange = assignedRange;

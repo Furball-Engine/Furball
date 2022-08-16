@@ -160,8 +160,9 @@ public class FurballGame : Game {
         DrawableManager             = new DrawableManager();
         DebugOverlayDrawableManager = new DrawableManager();
 
-        WhitePixel = Texture.CreateWhitePixelTexture();
-
+        WhitePixel      = Texture.CreateWhitePixelTexture();
+        WhitePixel.Name = "FurballGame.WhitePixel";
+        
         LocalizationManager.ReadTranslations();
 
         Language language = null;
@@ -249,7 +250,7 @@ public class FurballGame : Game {
         if (Assembly.GetExecutingAssembly().GetType("MonoMod.WasHere") != null) {
             GameTimeScheduler.ScheduleMethod(
             delegate {
-                TextDrawable easterEggText = new TextDrawable(
+                TextDrawable easterEggText = new(
                 new Vector2(5, 5),
                 DEFAULT_FONT_STROKED,
                 "Hello MonoMod user! :3c",
@@ -278,7 +279,7 @@ public class FurballGame : Game {
 
         #region Texture debugger
 
-        ScrollableContainer scrollable = new(new(400, 500));
+        ScrollableContainer scrollable = new(new Vector2(400, 500));
 
         scrollable.ScrollSpeed       *= 2;
         scrollable.InfiniteScrolling =  true;
@@ -287,7 +288,7 @@ public class FurballGame : Game {
 
         scrollable.Add(debug);
 
-        this._textureDisplayForm = new("Currently bound textures", scrollable) {
+        this._textureDisplayForm = new DrawableForm("Currently bound textures", scrollable) {
             Depth = -10
         };
 
@@ -453,7 +454,7 @@ public class FurballGame : Game {
                 screen.ManagerOnOnScalingRelayoutNeeded(this, screen.Manager.Size);
             else
                 screen.Relayout(WindowWidth, WindowHeight);
-            this.OnRelayout?.Invoke(this, new(WindowWidth, WindowHeight));
+            this.OnRelayout?.Invoke(this, new Vector2(WindowWidth, WindowHeight));
             this.RunningScreen = screen;
 
             this.AfterScreenChange?.Invoke(this, screen);
@@ -489,7 +490,7 @@ public class FurballGame : Game {
             this.RunningScreen.ManagerOnOnScalingRelayoutNeeded(this, this.RunningScreen.Manager.Size);
         else
             this.RunningScreen?.Relayout(WindowWidth, WindowHeight);
-        this.OnRelayout?.Invoke(this, new(WindowWidth, WindowHeight));
+        this.OnRelayout?.Invoke(this, new Vector2(WindowWidth, WindowHeight));
     }
 
     protected override void OnWindowResize(Vector2D<int> newSize) {
@@ -499,7 +500,7 @@ public class FurballGame : Game {
             this.RunningScreen.ManagerOnOnScalingRelayoutNeeded(this, this.RunningScreen.Manager.Size);
         else
             this.RunningScreen?.Relayout(WindowWidth, WindowHeight);
-        this.OnRelayout?.Invoke(this, new(WindowWidth, WindowHeight));
+        this.OnRelayout?.Invoke(this, new Vector2(WindowWidth, WindowHeight));
 
         FurballConfig.Instance.Values["screen_width"]  = new Value.Number(newSize.X);
         FurballConfig.Instance.Values["screen_height"] = new Value.Number(newSize.Y);
@@ -595,8 +596,8 @@ public class FurballGame : Game {
             const float barHeight = 30;
                 
             DrawableBatch.DrawString(f, text, new Vector2(WindowWidth / 2f - textSize.X / 2f, WindowHeight * 0.3f), Color.White);
-            DrawableBatch.FillRectangle(new Vector2(gap, WindowHeight - gap - barHeight), new((WindowWidth - gap * 2f) * this.LoadingScreen.LoadingProgress, barHeight), Vixie.Backends.Shared.Color.Grey);
-            DrawableBatch.DrawRectangle(new Vector2(gap, WindowHeight - gap - barHeight), new(WindowWidth - gap * 2f, barHeight), 1, Vixie.Backends.Shared.Color.White);
+            DrawableBatch.FillRectangle(new Vector2(gap,                                      WindowHeight - gap - barHeight), new Vector2((WindowWidth - gap * 2f) * this.LoadingScreen.LoadingProgress, barHeight), Vixie.Backends.Shared.Color.Grey);
+            DrawableBatch.DrawRectangle(new Vector2(gap,                                      WindowHeight - gap - barHeight), new Vector2(WindowWidth - gap * 2f, barHeight), 1, Vixie.Backends.Shared.Color.White);
         }
             
         ScreenManager.DrawTransition(gameTime, DrawableBatch);
