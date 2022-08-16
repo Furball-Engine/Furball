@@ -16,6 +16,11 @@ public class SmartTextDrawable : TexturedDrawable {
 
     public override Vector2 Size => this._size;
 
+    //TODO: recalc size on user window resize
+    //this can be done transparently, as we can continue to scale up the old one (with slightly poorer quality) until the new image is generated
+    //problems will occur if the user resizes while the text is still generating, so the only solution i can think of is to begin one, 
+    //then if a request to resize it happens, keep the latest request, then once the first request finishes, start the latest request
+    //this prevents there being 80 threads when the user resizes the window by hand, and prevents it *not* happening
     public SmartTextDrawable(Vector2 position, string text, FontFamily fontFamily, float textSize, Vector2 scale, Vixie.Backends.Shared.Color color) : base(FurballGame.WhitePixel, position) {
         this.ColorOverride = new Vixie.Backends.Shared.Color(color.Rf, color.Gf, color.Bf, 0f);
         this.Scale         = scale;
