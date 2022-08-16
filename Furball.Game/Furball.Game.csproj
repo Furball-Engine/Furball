@@ -19,5 +19,6 @@
     
     <ItemGroup>
         <None Update="Content/test.mp4" CopyToOutputDirectory="PreserveNewest" />
+        <None Update="Content/lulkanto.mp3" CopyToOutputDirectory="PreserveNewest" />
     </ItemGroup>
 </Project>

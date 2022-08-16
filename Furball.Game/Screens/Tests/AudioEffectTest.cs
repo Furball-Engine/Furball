@@ -1,6 +1,7 @@
 using System.Drawing;
 using System.Numerics;
 using Furball.Engine;
+using Furball.Engine.Engine.Graphics;
 using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Graphics.Drawables.UiElements;
 using ManagedBass;
@@ -14,25 +15,19 @@ namespace Furball.Game.Screens.Tests;
 public class AudioEffectTest : TestScreen {
     private AudioStream _testingStream;
 
-    private DrawableTextBox _filenameTextBox;
+    private TextDrawable _topText;
 
     public override void Initialize() {
         base.Initialize();
 
-        TextDrawable topText = new(new Vector2(1280f / 2f, 40), FurballGame.DEFAULT_FONT, "Audio Effects testing!!!", 48) {
+        this._topText = new TextDrawable(new Vector2(1280f / 2f, 40), FurballGame.DEFAULT_FONT, "Audio Effects testing!!!", 48) {
             OriginType = OriginType.Center
         };
 
-        this.Manager.Add(topText);
-
-        DrawableTextBox filenameTextBox = new(new Vector2(50, 80), FurballGame.DEFAULT_FONT, 28, 350, "audio.mp3");
-
-        this._filenameTextBox = filenameTextBox;
-
-        this.Manager.Add(filenameTextBox);
+        this.Manager.Add(this._topText);
 
         DrawableButton playButton = new(
-        new Vector2(50, 130),
+        new Vector2(50, 50),
         FurballGame.DEFAULT_FONT,
         28,
         "Play Audio normally",
@@ -45,11 +40,11 @@ public class AudioEffectTest : TestScreen {
 
         this.Manager.Add(playButton);
 
-        TextDrawable effectText = new(new Vector2(190, 180), FurballGame.DEFAULT_FONT, "Effects", 28);
+        TextDrawable effectText = new(new Vector2(190, 100), FurballGame.DEFAULT_FONT, "Effects:", 28);
 
         this.Manager.Add(effectText);
 
-        int currentY = 220;
+        int currentY = 130;
 
         DrawableButton lowPassPlayButton = new(
         new Vector2(50, currentY),
@@ -103,7 +98,7 @@ public class AudioEffectTest : TestScreen {
             this._testingStream.Stop();
         }
 
-        this._testingStream = FurballGame.AudioEngine.CreateStream(this._filenameTextBox.Text);
+        this._testingStream = FurballGame.AudioEngine.CreateStream(ContentManager.LoadRawAsset("lulkanto.mp3"));
 
         ReverbAudioEffect effect = FurballGame.AudioEngine.CreateReverbEffect(this._testingStream);
 
@@ -113,12 +108,18 @@ public class AudioEffectTest : TestScreen {
         this._testingStream.Play();
     }
 
+    public override void Relayout(float newWidth, float newHeight) {
+        base.Relayout(newWidth, newHeight);
+
+        this._topText.Position.X = newWidth / 2f;
+    }
+
     private void LowPassPlayOnClick(object sender, (MouseButton, Point) e) {
         if (this._testingStream?.PlaybackState == PlaybackState.Playing) {
             this._testingStream.Stop();
         }
 
-        this._testingStream = FurballGame.AudioEngine.CreateStream(this._filenameTextBox.Text);
+        this._testingStream = FurballGame.AudioEngine.CreateStream(ContentManager.LoadRawAsset("lulkanto.mp3"));
 
         LowPassFilterAudioEffect effect = FurballGame.AudioEngine.CreateLowPassFilterEffect(this._testingStream);
 
@@ -134,7 +135,7 @@ public class AudioEffectTest : TestScreen {
         if (this._testingStream?.PlaybackState == PlaybackState.Playing)
             this._testingStream.Stop();
 
-        this._testingStream = FurballGame.AudioEngine.CreateStream(this._filenameTextBox.Text);
+        this._testingStream = FurballGame.AudioEngine.CreateStream(ContentManager.LoadRawAsset("lulkanto.mp3"));
 
         HighPassFilterAudioEffect effect = FurballGame.AudioEngine.CreateHighPassFilterEffect(this._testingStream);
 
@@ -149,7 +150,7 @@ public class AudioEffectTest : TestScreen {
             this._testingStream.Stop();
         }
 
-        this._testingStream        = FurballGame.AudioEngine.CreateStream(this._filenameTextBox.Text);
+        this._testingStream        = FurballGame.AudioEngine.CreateStream(ContentManager.LoadRawAsset("lulkanto.mp3"));
         this._testingStream.Volume = 0.4;
         this._testingStream.Play();
     }
