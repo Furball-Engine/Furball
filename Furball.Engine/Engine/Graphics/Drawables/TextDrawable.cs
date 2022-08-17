@@ -125,10 +125,16 @@ public class TextDrawable : Drawable {
         }
     }
 
+    private bool _isDisposed;
     public override void Dispose() {
-        base.Dispose();
+        if (this._isDisposed)
+            return;
 
+        this._isDisposed = true;
+        
         this.ClearEvents();
+        
+        base.Dispose();
     }
 
     public override void ClearEvents() {
@@ -156,7 +162,7 @@ public class TextDrawable : Drawable {
         } else {
             this.Font = f;
         }
-        this.OnFramebufferResize(this, FurballGame.Instance.WindowManager.WindowSize);
+        this.OnFramebufferResize(null, FurballGame.Instance.WindowManager.WindowSize);
     }
 
     public override void Draw(double time, DrawableBatch batch, DrawableManagerArgs args) {

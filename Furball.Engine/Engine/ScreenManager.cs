@@ -54,8 +54,10 @@ public class ScreenManager {
 
                     double fadeOutTime = t.TransitionEnd();
                         
+                    CurrentFadeState = FadeState.FadeOut;
+                    
                     FurballGame.GameTimeScheduler.ScheduleMethod(delegate {
-                        CurrentFadeState = FadeState.FadeOut;
+                        CurrentFadeState = FadeState.None;
                     }, FurballGame.Time + fadeOutTime);
                 }, FurballGame.Time + fadeInTime);
             }

@@ -45,7 +45,11 @@ public class CompositeDrawable : Drawable {
     }
 
     public override void Dispose() {
-        //this.OnClick -= this.OnDrawableClick;
+        foreach (Drawable drawable in this.Drawables) {
+            drawable.Dispose();
+        }
+        
+        this.Drawables.Clear();
 
         base.Dispose();
     }
