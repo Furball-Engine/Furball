@@ -9,11 +9,6 @@ namespace Furball.Engine.Engine.ECS;
 
 public class Entity : GameComponent {
     /// <summary>
-    /// Transform of the Entity
-    /// </summary>
-    public EntityTransform Transform;
-
-    /// <summary>
     /// All the Entities Systems
     /// </summary>
     private List<EntitySystem> _systems;
@@ -57,9 +52,8 @@ public class Entity : GameComponent {
     /// <typeparam name="pComponentType">Type of Component to Get</typeparam>
     /// <returns>Assuming it exists, the Component you're looking for</returns>
     public pComponentType GetComponent<pComponentType>() where pComponentType : class, IEntityComponent, new() {
-        if (this._components.TryGetValue(typeof(pComponentType), out IEntityComponent component)) {
-            return (pComponentType) component;
-        }
+        if (this._components.TryGetValue(typeof(pComponentType), out IEntityComponent component))
+            return (pComponentType)component;
 
         return null;
     }
@@ -82,11 +76,13 @@ public class Entity : GameComponent {
     /// </summary>
     /// <typeparam name="pComponentType">Type of Component</typeparam>
     /// <exception cref="Exception">Throws if the Type of Component already exists</exception>
-    public void AddComponent<pComponentType>() where pComponentType : class, IEntityComponent, new() {
+    public pComponentType AddComponent<pComponentType>() where pComponentType : class, IEntityComponent, new() {
         if (this._components.ContainsKey(typeof(pComponentType)))
             throw new Exception("Component of this Type already added.");
 
-        this._components.TryAdd(typeof(pComponentType), new pComponentType());
+        pComponentType component = new pComponentType();
+        this._components.TryAdd(typeof(pComponentType), component);
+        return component;
     }
     /// <summary>
     /// Checks whether or not a Component of the specified type exists
@@ -117,8 +113,6 @@ public class Entity : GameComponent {
     private void DefaultInitialize() {
         this._systems    = new List<EntitySystem>();
         this._components = new ConcurrentDictionary<Type, IEntityComponent>();
-
-        this.AddComponent(this.Transform);
     }
 
     /// <summary>

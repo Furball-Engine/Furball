@@ -3,10 +3,10 @@ using Furball.Engine.Engine.Graphics.Drawables.Tweens;
 
 namespace Furball.Engine.Engine.ECS.Components; 
 
-public class EntityTweens : IEntityComponent {
+public class EntityTweensComponent : IEntityComponent {
     public List<Tween> Tweens;
 
-    public EntityTweens() {
+    public EntityTweensComponent() {
         this.Tweens = new List<Tween>();
     }
 }
