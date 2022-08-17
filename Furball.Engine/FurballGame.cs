@@ -249,35 +249,7 @@ public class FurballGame : Game {
         
         this.RegisterKeybinds();
 
-        if (Assembly.GetExecutingAssembly().GetType("MonoMod.WasHere") != null) {
-            GameTimeScheduler.ScheduleMethod(
-            delegate {
-                TextDrawable easterEggText = new(
-                new Vector2(5, 5),
-                DEFAULT_FONT_STROKED,
-                "Hello MonoMod user! :3c",
-                36
-                );
-
-                easterEggText.Hoverable = true;
-                easterEggText.ToolTip   = "Enjoy Modding!";
-
-                double drawableTime = easterEggText.DrawableTime;
-
-                easterEggText.Depth = 1.0;
-
-                easterEggText.Tweens.Add(new FloatTween(TweenType.Fade, 0.0f, 1.0f, drawableTime,        drawableTime + 250));
-                easterEggText.Tweens.Add(new FloatTween(TweenType.Fade, 1.0f, 0.0f, drawableTime + 2250, easterEggText.DrawableTime + 2500));
-
-                DrawableManager.Add(easterEggText);
-
-                GameTimeScheduler.ScheduleMethod(
-                delegate {
-                    DrawableManager.Remove(easterEggText);
-                }, easterEggText.DrawableTime + 2500);
-
-            }, 1500);
-        }
+        MonoModCheck();
 
         #region Texture debugger
 
@@ -303,6 +275,37 @@ public class FurballGame : Game {
         #endregion
         
         Profiler.EndProfileAndPrint("full_furball_initialize");
+    }
+    
+    private static void MonoModCheck() {
+        if (Assembly.GetExecutingAssembly().GetType("MonoMod.WasHere") != null) {
+            GameTimeScheduler.ScheduleMethod(
+            delegate {
+                TextDrawable easterEggText = new(new Vector2(5, 5), DEFAULT_FONT_STROKED, "Hello MonoMod user! :3c", 36);
+
+                easterEggText.Hoverable = true;
+                easterEggText.ToolTip   = "Enjoy Modding!";
+
+                double drawableTime = easterEggText.DrawableTime;
+
+                easterEggText.Depth = 1.0;
+
+                easterEggText.Tweens.Add(new FloatTween(TweenType.Fade, 0.0f, 1.0f, drawableTime,        drawableTime + 250));
+                easterEggText.Tweens.Add(new FloatTween(TweenType.Fade, 1.0f, 0.0f, drawableTime + 2250, easterEggText.DrawableTime + 2500));
+
+                DrawableManager.Add(easterEggText);
+
+                GameTimeScheduler.ScheduleMethod(
+                delegate {
+                    DrawableManager.Remove(easterEggText);
+                },
+                easterEggText.DrawableTime + 2500
+                );
+
+            },
+            1500
+            );
+        }
     }
 
     protected override void OnWindowRecreation() {
