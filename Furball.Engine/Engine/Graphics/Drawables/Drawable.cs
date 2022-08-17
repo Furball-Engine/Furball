@@ -9,6 +9,7 @@ using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes.BezierPathTween
 using Furball.Engine.Engine.Helpers;
 using Furball.Engine.Engine.Timing;
 using Furball.Vixie.Backends.Shared;
+using Furball.Vixie.Helpers;
 using Silk.NET.Input;
 using Color=Furball.Vixie.Backends.Shared.Color;
 
@@ -552,4 +553,8 @@ public abstract class Drawable : IDisposable {
     /// </summary>
     /// <param name="time">How much time has passed since last Update</param>
     public virtual void Update(double time) {}
+
+    ~Drawable() {
+        DisposeQueue.Enqueue(this);
+    }
 }
