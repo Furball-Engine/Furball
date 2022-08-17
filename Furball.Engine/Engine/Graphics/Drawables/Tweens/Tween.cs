@@ -1,5 +1,6 @@
 using System;
 using Furball.Engine.Engine.Helpers;
+using Furball.Vixie.Helpers.Helpers;
 
 namespace Furball.Engine.Engine.Graphics.Drawables.Tweens; 
 
@@ -65,17 +66,32 @@ public class Tween {
     /// <param name="end">End Value</param>
     /// <returns>Interpolated Value with Easing</returns>
     protected double CalculateCurrent(double start, double end) {
-        double progress = (this.TimeNow - (double)this.StartTime) / this.Duration;
+        double x = (this.TimeNow - this.StartTime) / this.Duration;
 
+        x = x.Clamp(0d, 1d);
+        
+        //Most implementations taken from https://easings.net/
         return this.Easing switch {
-            Easing.In        => MathHelper.Lerp(end,   start, (1 - progress) * (1 - progress)),
-            Easing.Out       => MathHelper.Lerp(start, end,   progress * progress),
-            Easing.InDouble  => MathHelper.Lerp(end,   start, Math.Pow(1 - progress, 4)),
-            Easing.OutDouble => MathHelper.Lerp(start, end,   Math.Pow(progress,     4)),
-            Easing.InHalf    => MathHelper.Lerp(end,   start, Math.Pow(1 - progress, 1.5)),
-            Easing.OutHalf   => MathHelper.Lerp(start, end,   Math.Pow(progress,     1.5)),
-            Easing.InOut     => start + (-2 * Math.Pow(progress, 3) + 3 * (progress * progress)) * (end - start),
-            _                => MathHelper.Lerp(start, end, progress)
+            Easing.In             => MathHelper.Lerp(end, start, (1 - x) * (1 - x)),
+            Easing.InSine         => 1 - Math.Cos(x * Math.PI / 2d),
+            Easing.OutSine        => Math.Sin(x * Math.PI / 2d),
+            Easing.InOutSine  => -(Math.Cos(Math.PI * x) - 1) / 2,
+            Easing.InOutQuad  => x < 0.5 ? 2 * x * x : 1 - Math.Pow(-2 * x + 2, 2) / 2,
+            Easing.InQuad     => x * x,
+            Easing.OutQuad    => 1 - (1 - x) * (1 - x),
+            Easing.InCubic    => x * x * x,
+            Easing.OutCubic   => 1 - Math.Pow(1 - x, 3),
+            Easing.InOutCubic => x < 0.5 ? 4 * x * x * x : 1 - Math.Pow(-2 * x + 2, 3) / 2,
+            Easing.InQuart    => x * x * x * x,
+            Easing.OutQuart   => 1 - Math.Pow(1 - x, 4),
+            Easing.InOutQuart => x < 0.5 ? 8 * x * x * x * x : 1 - Math.Pow(-2 * x + 2, 4) / 2,
+            Easing.Out            => MathHelper.Lerp(start, end,   x * x),
+            Easing.InDouble       => MathHelper.Lerp(end,   start, Math.Pow(1 - x, 4)),
+            Easing.OutDouble      => MathHelper.Lerp(start, end,   Math.Pow(x,     4)),
+            Easing.InHalf         => MathHelper.Lerp(end,   start, Math.Pow(1 - x, 1.5)),
+            Easing.OutHalf        => MathHelper.Lerp(start, end,   Math.Pow(x,     1.5)),
+            Easing.InOut          => start + (-2 * Math.Pow(x, 3) + 3 * (x * x)) * (end - start),
+            _                     => MathHelper.Lerp(start, end, x)
         };
     }
     /// <summary>

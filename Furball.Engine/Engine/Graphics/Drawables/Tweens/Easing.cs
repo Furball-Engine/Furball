@@ -8,5 +8,17 @@ public enum Easing {
     OutHalf,
     InDouble,
     OutDouble,
-    InOut
+    InOut,
+    InSine,
+    OutSine,
+    InOutSine,
+    InQuad,
+    OutQuad,
+    InOutQuad,
+    InCubic,
+    OutCubic,
+    InOutCubic,
+    InQuart,
+    OutQuart,
+    InOutQuart
 }
