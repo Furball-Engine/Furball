@@ -60,10 +60,17 @@ public class DrawableForm : CompositeDrawable {
 
         Vector2 size = base.Size;
 
-        //TODO: account of the rest of the members of `OriginType`
         this.Position = startPosition switch {
-            OriginType.Center => new Vector2(FurballGame.DEFAULT_WINDOW_WIDTH / 2f - size.X / 2, FurballGame.DEFAULT_WINDOW_HEIGHT / 2f - size.Y / 2f),
-            _                 => this.Position
+            OriginType.Center       => new Vector2(FurballGame.WindowWidth / 2f - size.X / 2, FurballGame.WindowHeight / 2f - size.Y / 2f),
+            OriginType.TopLeft      => Vector2.Zero,
+            OriginType.TopRight     => new Vector2(FurballGame.WindowWidth - size.X, 0),
+            OriginType.BottomLeft   => new Vector2(0,                                FurballGame.WindowHeight - size.Y),
+            OriginType.BottomRight  => new Vector2(FurballGame.WindowWidth, FurballGame.WindowHeight) - size,
+            OriginType.TopCenter    => new Vector2(FurballGame.WindowWidth / 2f - size.X / 2, 0),
+            OriginType.BottomCenter => new Vector2(FurballGame.WindowWidth / 2f - size.X / 2, FurballGame.WindowHeight - size.Y),
+            OriginType.LeftCenter   => new Vector2(0,                                         FurballGame.WindowHeight / 2f - size.Y / 2f),
+            OriginType.RightCenter  => new Vector2(FurballGame.WindowWidth - size.X,          FurballGame.WindowHeight / 2f - size.Y / 2f),
+            _                       => throw new ArgumentOutOfRangeException(nameof (startPosition), startPosition, null)
         };
 
         #region Events

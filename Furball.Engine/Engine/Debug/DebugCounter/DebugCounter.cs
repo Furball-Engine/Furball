@@ -29,7 +29,6 @@ public class DebugCounter : Drawable {
         new ContentCacheItems(),
         new GameTimeSourceTime(),
         new MemoryUsage(),
-        //TODO: When touch screen support gets implemented, add new item called MousePoints and have it display all current cursors
         new MousePosition(),
         new KeyboardInputs()
     };
