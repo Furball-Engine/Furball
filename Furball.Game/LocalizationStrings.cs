@@ -19,5 +19,6 @@ public enum LocalizationStrings {
     MultiScreenTest,
     FormTest,
     SmartTextTest,
-    VideoDrawableTest
+    VideoDrawableTest,
+    EcsTest
 }
