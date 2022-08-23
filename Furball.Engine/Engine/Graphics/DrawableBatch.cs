@@ -6,6 +6,7 @@ using FontStashSharp;
 using Furball.Engine.Engine.Helpers;
 using Furball.Vixie;
 using Furball.Vixie.Backends.Shared;
+using Furball.Vixie.Backends.Shared.Renderers;
 using Color=Furball.Vixie.Backends.Shared.Color;
 
 namespace Furball.Engine.Engine.Graphics; 
@@ -23,7 +24,7 @@ public class DrawableBatch : IDisposable {
 
     public DrawableBatch() {
         Profiler.StartProfile("create_drawable_batch");
-        this._renderer = new Renderer();
+        this._renderer = GraphicsBackend.Current.CreateRenderer(); 
         Profiler.EndProfileAndPrint("create_drawable_batch");
     }
 
@@ -35,32 +36,41 @@ public class DrawableBatch : IDisposable {
         this.Begun = true;
     }
 
-    public void End() {
+    public void SoftEnd() {
         this._renderer.End();
         this.Begun = false;
     }
 
+    public void Draw() {
+        this._renderer.Draw();
+    }
+    
+    public void End() {
+        this._renderer.End();
+        this._renderer.Draw();
+        this.Begun = false;
+    }
+
     public void Draw(Texture texture, Vector2 position, Vector2 scale, float rotation, Color colorOverride, TextureFlip texFlip = TextureFlip.None, Vector2 rotOrigin = default) {
-        this._renderer.Draw(texture, position, scale, rotation, colorOverride, texFlip, rotOrigin);
+        this._renderer.AllocateRotatedTexturedQuad(texture, position, scale, rotation, rotOrigin, colorOverride, texFlip);
     }
 
     public void Draw(Texture texture, Vector2 position, Vector2 scale, float rotation, Color colorOverride, Rectangle sourceRect, TextureFlip texFlip = TextureFlip.None, Vector2 rotOrigin = default) {
-        this._renderer.Draw(texture, position, scale, rotation, colorOverride, sourceRect, texFlip, rotOrigin);
+        this._renderer.AllocateRotatedTexturedQuadWithSourceRect(texture, position, scale, rotation, rotOrigin, sourceRect, colorOverride, texFlip);
     }
     public void Draw(Texture texture, Vector2 position, float rotation = 0, TextureFlip flip = TextureFlip.None, Vector2 rotOrigin = default) {
-        this._renderer.Draw(texture, position, rotation, flip, rotOrigin);
+        this._renderer.AllocateRotatedTexturedQuad(texture, position, Vector2.One, rotation, rotOrigin, Color.White, flip);
     }
     public void Draw(Texture texture, Vector2 position, Vector2 scale, float rotation = 0, TextureFlip flip = TextureFlip.None, Vector2 rotOrigin = default) {
-        this._renderer.Draw(texture, position, scale, rotation, Color.White, flip, rotOrigin);
+        this._renderer.AllocateRotatedTexturedQuad(texture, position, scale, rotation, rotOrigin, Color.White, flip);
     }
 
     public void Draw(Texture texture, Vector2 position, Vector2 scale, Color colorOverride, float rotation = 0, TextureFlip texFlip = TextureFlip.None, Vector2 rotOrigin = default) {
-        this._renderer.Draw(texture, position, scale, rotation, colorOverride, texFlip, rotOrigin);
+        this._renderer.AllocateRotatedTexturedQuad(texture, position, scale, rotation, rotOrigin, Color.White, texFlip);
     }
 
-
     public void DrawLine(Vector2 begin, Vector2 end, float thickness, Color color) {
-        this._renderer.Draw(FurballGame.WhitePixel, begin, new Vector2((end - begin).Length(), thickness), (float)Math.Atan2(end.Y - begin.Y, end.X - begin.X), color, TextureFlip.None, new Vector2(0, thickness / 2f));
+        this._renderer.AllocateRotatedTexturedQuad(FurballGame.WhitePixel, begin, new Vector2((end - begin).Length(), thickness), (float)Math.Atan2(end.Y - begin.Y, end.X - begin.X), new Vector2(0, thickness / 2f), color);
     }
 
     public void DrawLine(float x0, float y0, float x1, float y1, float thickness, Color color) {
@@ -91,11 +101,13 @@ public class DrawableBatch : IDisposable {
     }
 
     public void DrawString(DynamicSpriteFont font, string text, Vector2 position, Color color, float rotation = 0f, Vector2? scale = null, Vector2 origin = default) {
-        this._renderer.DrawString(font, text, position, color, rotation, scale, origin);
+        scale ??= Vector2.One;
+        this._renderer.DrawString(font, text, position, color, rotation, scale.Value, origin);
     }
 
     public void DrawString(DynamicSpriteFont font, string text, Vector2 position, System.Drawing.Color color, float rotation = 0f, Vector2? scale = null, Vector2 origin = default) {
-        this._renderer.DrawString(font, text, position, color, rotation, scale, origin);
+        scale ??= Vector2.One;
+        this._renderer.DrawString(font, text, position, new Color(color), rotation, scale.Value, origin);
     }
 
     public void DrawString(DynamicSpriteFont font, string text, Vector2 position, System.Drawing.Color[] colors, float rotation = 0f, Vector2? scale = null, Vector2 origin = default ) {
