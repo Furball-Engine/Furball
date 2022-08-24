@@ -6,6 +6,7 @@
         <TieredCompilation>false</TieredCompilation>
         <RootNamespace>Furball.Game</RootNamespace>
         <LangVersion>10</LangVersion>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
     <ItemGroup>
         <None Update="Localization\Esperanto.lang">
