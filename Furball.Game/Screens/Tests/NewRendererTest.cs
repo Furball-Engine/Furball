@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Drawing;
 using System.Numerics;
 using Furball.Engine;
@@ -10,101 +12,171 @@ using Furball.Engine.Engine.Helpers;
 using Furball.Vixie;
 using Furball.Vixie.Backends.Shared;
 using Furball.Vixie.Backends.Shared.Renderers;
+using Silk.NET.Input;
 using Color=Furball.Vixie.Backends.Shared.Color;
 
-namespace Furball.Game.Screens.Tests; 
+namespace Furball.Game.Screens.Tests;
 
 public class NewRendererTest : TestScreen {
     private MeshDrawable _mesh;
 
     private class MeshDrawable : Drawable {
         private readonly Renderer _renderer;
-        
+
         public readonly List<Vertex> Vertices = new();
         public readonly List<ushort> Indices  = new();
 
-        public override Vector2 Size => new(100, 100); 
+        public override Vector2 Size => new(100, 100);
 
         public MeshDrawable() {
             this._renderer = GraphicsBackend.Current.CreateRenderer();
 
             this.Vertices.Add(
             new Vertex {
-                Color    = Color.White,
-                Position = new Vector2(100) 
+                Color    = Color.Green,
+                Position = new Vector2(100)
             }
             );
             this.Vertices.Add(
             new Vertex {
                 Color    = Color.Red,
-                Position = new Vector2(200, 100),
+                Position = new Vector2(200, 100)
             }
-            ); 
+            );
             this.Vertices.Add(
             new Vertex {
                 Color    = Color.Blue,
-                Position = new Vector2(100, 200),
+                Position = new Vector2(100, 200)
             }
             );
-        
+
             this.Indices.Add(0);
             this.Indices.Add(2);
             this.Indices.Add(1);
-            
+
             this.RecalcRender();
         }
 
         public unsafe void RecalcRender() {
             this._renderer.Begin();
 
-            Vertex[] vertices = this.Vertices.ToArray();
-            ushort[] indices  = this.Indices.ToArray();
+            if (this.Vertices.Count != 0 && this.Indices.Count != 0) {
+                Vertex[] vertices = this.Vertices.ToArray();
+                ushort[] indices  = this.Indices.ToArray();
 
-            long texid = this._renderer.GetTextureId(FurballGame.WhitePixel);
+                long texid = this._renderer.GetTextureId(FurballGame.WhitePixel);
 
-            for (int i = 0; i < vertices.Length; i++)
-                vertices[i].TexId = texid;
+                for (int i = 0; i < vertices.Length; i++)
+                    vertices[i].TexId = texid;
 
-            MappedData map = this._renderer.Reserve((ushort)vertices.Length, (uint)indices.Length);
-        
-            //Copy the vertex data
-            fixed (void* ptr = vertices) {
-                Buffer.MemoryCopy(ptr, map.VertexPtr, vertices.Length * sizeof(Vertex), vertices.Length * sizeof(Vertex));
+                MappedData map = this._renderer.Reserve((ushort)vertices.Length, (uint)indices.Length);
+
+                //Copy the vertex data
+                fixed (void* ptr = vertices) {
+                    Buffer.MemoryCopy(ptr, map.VertexPtr, vertices.Length * sizeof(Vertex), vertices.Length * sizeof(Vertex));
+                }
+
+                //Copy the index data
+                fixed (ushort* ptr = indices) {
+                    for (int i = 0; i < map.IndexCount; i++)
+                        ptr[i] += (ushort)map.IndexOffset;
+
+                    Buffer.MemoryCopy(ptr, map.IndexPtr, indices.Length * sizeof(ushort), indices.Length * sizeof(ushort));
+                }
             }
-        
-            //Copy the index data
-            fixed (ushort* ptr = indices) {
-                for (int i = 0; i < map.IndexCount; i++)
-                    ptr[i] += (ushort)map.IndexOffset;
 
-                Buffer.MemoryCopy(ptr, map.IndexPtr, indices.Length * sizeof(ushort), indices.Length * sizeof(ushort));
-            }
-        
             this._renderer.End();
         }
-        
-        public override void Draw(double time, DrawableBatch batch, DrawableManagerArgs args) { 
+
+        public override void Draw(double time, DrawableBatch batch, DrawableManagerArgs args) {
             batch.End();
             this._renderer.Draw();
             batch.Begin();
         }
     }
 
-    private List<VertexHandle> _vertexPoints = new();
-    
+    private readonly List<VertexHandle> _vertexPoints = new();
+
+    private readonly ObservableCollection<VertexHandle> _selectedVertices = new();
+
     public override void Initialize() {
         base.Initialize();
-        
+
         this.Manager.Add(this._mesh = new MeshDrawable());
-        
+
+        FurballGame.InputManager.OnMouseDown += this.OnMouseDown;
+        FurballGame.InputManager.OnKeyDown   += this.OnKeyDown;
+
+        this._selectedVertices.CollectionChanged += this.OnSelectedChange;
+
         this.Recalc();
+    }
+
+    private void OnKeyDown(object sender, Key e) {
+        switch (e) {
+            case Key.A: {
+                if (this._selectedVertices.Count != 3)
+                    break;
+
+                if (this._mesh.Indices.RemoveAll(
+                    x => x == this._vertexPoints.IndexOf(this._selectedVertices[0]) || x == this._vertexPoints.IndexOf(this._selectedVertices[1]) ||
+                         x == this._vertexPoints.IndexOf(this._selectedVertices[2])
+                    ) > 0) {
+                    this._mesh.RecalcRender();
+                    return;
+                }
+
+                if (FurballGame.InputManager.ControlHeld) {
+                    this._mesh.Indices.Add((ushort)this._vertexPoints.IndexOf(this._selectedVertices[0]));
+                    this._mesh.Indices.Add((ushort)this._vertexPoints.IndexOf(this._selectedVertices[2]));
+                    this._mesh.Indices.Add((ushort)this._vertexPoints.IndexOf(this._selectedVertices[1]));
+                } else {
+                    for (int i = 0; i < 3; i++)
+                        //Add the indices for the selected vertices
+                        this._mesh.Indices.Add((ushort)this._vertexPoints.IndexOf(this._selectedVertices[i]));
+                }
+
+                this._mesh.RecalcRender();
+
+                break;
+            }
+        }
+    }
+
+    public override void Unload() {
+        base.Dispose();
+
+        FurballGame.InputManager.OnMouseDown -= this.OnMouseDown;
+    }
+
+    private void OnMouseDown(object sender, ((MouseButton mouseButton, Vector2 position) args, string cursorName) e) {
+        if (e.args.mouseButton != MouseButton.Left || !FurballGame.InputManager.ControlHeld)
+            return;
+
+        this._mesh.Vertices.Add(
+        new Vertex {
+            Color    = Color.White,
+            Position = e.args.position
+        }
+        );
+
+        this._mesh.RecalcRender();
+        this.Recalc();
+    }
+
+    private void OnSelectedChange(object sender, NotifyCollectionChangedEventArgs e) {
+        foreach (VertexHandle vert in this._vertexPoints)
+            vert.FadeColor(this._selectedVertices.Contains(vert) ? Color.LightBlue : Color.White, 100);
     }
 
     private class VertexHandle : TexturedDrawable {
         public VertexHandle(Vector2 position) : base(FurballGame.WhitePixel, position) {}
     }
-    
+
     private void Recalc() {
+        //Clear the selected vertices
+        this._selectedVertices.Clear();
+
         //Remove all the vertex points from the manager
         this._vertexPoints.ForEach(x => this.Manager.Remove(x));
         this._vertexPoints.Clear();
@@ -112,6 +184,7 @@ public class NewRendererTest : TestScreen {
         for (int i = 0; i < this._mesh.Vertices.Count; i++) {
             Vertex       vert    = this._mesh.Vertices[i];
             VertexHandle vertTex = new(vert.Position);
+            vertTex.Depth      = -1;
             vertTex.Scale      = new Vector2(10);
             vertTex.OriginType = OriginType.Center;
 
@@ -120,11 +193,39 @@ public class NewRendererTest : TestScreen {
                 Vertex meshVertex = this._mesh.Vertices[i1];
                 meshVertex.Position     = e.ToVector2();
                 this._mesh.Vertices[i1] = meshVertex;
-                
+
                 this._mesh.RecalcRender();
                 vertTex.Position = e.ToVector2();
             };
-            
+
+            vertTex.OnDragBegin += delegate {
+                if (!this._selectedVertices.Contains(vertTex))
+                    this._selectedVertices.Add(vertTex);
+                else
+                    this._selectedVertices.Remove(vertTex);
+            };
+
+            vertTex.OnClick += delegate(object _, (MouseButton button, Point pos) tuple) {
+                switch (tuple.button) {
+                    case MouseButton.Right: {
+                        this._mesh.Vertices.RemoveAt(i1);
+                        this._mesh.RecalcRender();
+                        this.Recalc();
+
+                        break;
+                    }
+                    case MouseButton.Left: {
+                        //If we are already selecting the vertex, deselect it, else select it
+                        if (!this._selectedVertices.Contains(vertTex))
+                            this._selectedVertices.Add(vertTex);
+                        else
+                            this._selectedVertices.Remove(vertTex);
+
+                        break;
+                    }
+                }
+            };
+
             this._vertexPoints.Add(vertTex);
         }
 
