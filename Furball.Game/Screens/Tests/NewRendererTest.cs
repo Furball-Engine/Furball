@@ -1,17 +1,21 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Numerics;
 using Furball.Engine;
 using Furball.Engine.Engine.Graphics;
 using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
+using Furball.Engine.Engine.Helpers;
 using Furball.Vixie;
 using Furball.Vixie.Backends.Shared;
 using Furball.Vixie.Backends.Shared.Renderers;
+using Color=Furball.Vixie.Backends.Shared.Color;
 
 namespace Furball.Game.Screens.Tests; 
 
 public class NewRendererTest : TestScreen {
+    private MeshDrawable _mesh;
 
     private class MeshDrawable : Drawable {
         private readonly Renderer _renderer;
@@ -27,19 +31,19 @@ public class NewRendererTest : TestScreen {
             this.Vertices.Add(
             new Vertex {
                 Color    = Color.White,
-                Position = Vector2.Zero
+                Position = new Vector2(100) 
             }
             );
             this.Vertices.Add(
             new Vertex {
                 Color    = Color.Red,
-                Position = new Vector2(100, 0),
+                Position = new Vector2(200, 100),
             }
             ); 
             this.Vertices.Add(
             new Vertex {
                 Color    = Color.Blue,
-                Position = new Vector2(0, 100),
+                Position = new Vector2(100, 200),
             }
             );
         
@@ -80,15 +84,50 @@ public class NewRendererTest : TestScreen {
         }
         
         public override void Draw(double time, DrawableBatch batch, DrawableManagerArgs args) { 
-            FurballGame.DrawableBatch.End();
+            batch.End();
             this._renderer.Draw();
-            FurballGame.DrawableBatch.Begin();
+            batch.Begin();
         }
     }
 
+    private List<VertexHandle> _vertexPoints = new();
+    
     public override void Initialize() {
         base.Initialize();
         
-        this.Manager.Add(new MeshDrawable());
+        this.Manager.Add(this._mesh = new MeshDrawable());
+        
+        this.Recalc();
+    }
+
+    private class VertexHandle : TexturedDrawable {
+        public VertexHandle(Vector2 position) : base(FurballGame.WhitePixel, position) {}
+    }
+    
+    private void Recalc() {
+        //Remove all the vertex points from the manager
+        this._vertexPoints.ForEach(x => this.Manager.Remove(x));
+        this._vertexPoints.Clear();
+
+        for (int i = 0; i < this._mesh.Vertices.Count; i++) {
+            Vertex       vert    = this._mesh.Vertices[i];
+            VertexHandle vertTex = new(vert.Position);
+            vertTex.Scale      = new Vector2(10);
+            vertTex.OriginType = OriginType.Center;
+
+            int i1 = i;
+            vertTex.OnDrag += (_, e) => {
+                Vertex meshVertex = this._mesh.Vertices[i1];
+                meshVertex.Position     = e.ToVector2();
+                this._mesh.Vertices[i1] = meshVertex;
+                
+                this._mesh.RecalcRender();
+                vertTex.Position = e.ToVector2();
+            };
+            
+            this._vertexPoints.Add(vertTex);
+        }
+
+        this._vertexPoints.ForEach(x => this.Manager.Add(x));
     }
 }
