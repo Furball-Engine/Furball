@@ -8,6 +8,7 @@ using Furball.Engine;
 using Furball.Engine.Engine.Graphics;
 using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
+using Furball.Engine.Engine.Graphics.Drawables.UiElements;
 using Furball.Engine.Engine.Helpers;
 using Furball.Vixie;
 using Furball.Vixie.Backends.Shared;
@@ -99,6 +100,8 @@ public class NewRendererTest : TestScreen {
 
     private readonly ObservableCollection<VertexHandle> _selectedVertices = new();
 
+    private DrawableColorPicker _colorPicker;
+
     public override void Initialize() {
         base.Initialize();
 
@@ -109,7 +112,26 @@ public class NewRendererTest : TestScreen {
 
         this._selectedVertices.CollectionChanged += this.OnSelectedChange;
 
+        this.Manager.Add(this._colorPicker = new DrawableColorPicker(new Vector2(5), FurballGame.DEFAULT_FONT, 30, Color.White));
+        this._colorPicker.Color.OnChange += this.OnColorChange;
+
         this.Recalc();
+    }
+
+    private void OnColorChange(object sender, Color e) {
+        FurballGame.GameTimeScheduler.ScheduleMethod(
+        _ => {
+            foreach (VertexHandle vertex in this._selectedVertices) {
+                Vertex meshVertex = this._mesh.Vertices[this._vertexPoints.IndexOf(vertex)];
+
+                meshVertex.Color = e;
+
+                this._mesh.Vertices[this._vertexPoints.IndexOf(vertex)] = meshVertex;
+            }
+            this._mesh.RecalcRender();
+        },
+        0
+        );
     }
 
     private void OnKeyDown(object sender, Key e) {
