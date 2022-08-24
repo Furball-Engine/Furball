@@ -119,6 +119,24 @@ public class NewRendererTest : TestScreen {
         this.Recalc();
     }
 
+    private List<int> GetIndexOfIndicesForVertex(VertexHandle handle) {
+        int vertexIndex = this._vertexPoints.IndexOf(handle);
+
+        List<int> found = new();
+        //We want to iterate backwards so its easier to delete
+        for (int i = this._mesh.Indices.Count - 3; i >= 0; i -= 3) {
+            ushort index1 = this._mesh.Indices[i];
+            ushort index2 = this._mesh.Indices[i + 1];
+            ushort index3 = this._mesh.Indices[i + 2];
+
+            //If we found a tri that uses our vertex, then add it to the list
+            if (index1 == vertexIndex || index2 == vertexIndex || index3 == vertexIndex) {
+                found.Add(i);
+            }
+        }
+        return found;
+    }
+
     private void OnColorChange(object sender, Color e) {
         FurballGame.GameTimeScheduler.ScheduleMethod(
         _ => {
@@ -141,10 +159,10 @@ public class NewRendererTest : TestScreen {
                 if (this._selectedVertices.Count != 3)
                     break;
 
-                bool Match(ushort x) => x == this._vertexPoints.IndexOf(this._selectedVertices[0]) || x == this._vertexPoints.IndexOf(this._selectedVertices[1]) || x == this._vertexPoints.IndexOf(this._selectedVertices[2]);
-                if (this._mesh.Indices.Count(
-                    Match
-                    ) == 3) {
+                bool Match(ushort x) => x == this._vertexPoints.IndexOf(this._selectedVertices[0]) || x == this._vertexPoints.IndexOf(this._selectedVertices[1]) ||
+                                        x == this._vertexPoints.IndexOf(this._selectedVertices[2]);
+
+                if (this._mesh.Indices.Count(Match) == 3) {
                     this._mesh.Indices.RemoveAll(Match);
                     this._mesh.RecalcRender();
                     return;
@@ -231,19 +249,35 @@ public class NewRendererTest : TestScreen {
 
             vertTex.OnClick += delegate(object _, (MouseButton button, Point pos) tuple) {
                 switch (tuple.button) {
-                    case MouseButton.Right: {
-                        this._mesh.Vertices.RemoveAt(i1);
-                        this._mesh.RecalcRender();
-                        this.Recalc();
-
-                        break;
-                    }
                     case MouseButton.Left: {
                         //If we are already selecting the vertex, deselect it, else select it
                         if (!this._selectedVertices.Contains(vertTex))
                             this._selectedVertices.Add(vertTex);
                         else
                             this._selectedVertices.Remove(vertTex);
+
+                        break;
+                    }
+                    case MouseButton.Right: {
+                        List<int> foundIndexes = this.GetIndexOfIndicesForVertex(vertTex);
+
+                        foreach (int foundIndex in foundIndexes) {
+                            for (int j = 2; j >= 0; j--) {
+                                //Remove all the indices
+                                this._mesh.Indices.RemoveAt(foundIndex + j);
+                            }
+                        }
+
+                        for (int j = 0; j < this._mesh.Indices.Count; j++) {
+                            ushort meshIndex = this._mesh.Indices[j];
+
+                            if (meshIndex >= this._vertexPoints.IndexOf(vertTex))
+                                this._mesh.Indices[j]--;
+                        }
+
+                        this._mesh.Vertices.RemoveAt(i1);
+                        this._mesh.RecalcRender();
+                        this.Recalc();
 
                         break;
                     }
