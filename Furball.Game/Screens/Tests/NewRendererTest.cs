@@ -276,6 +276,7 @@ public class NewRendererTest : TestScreen {
                         }
 
                         this._mesh.Vertices.RemoveAt(i1);
+
                         this._mesh.RecalcRender();
                         this.Recalc();
 
