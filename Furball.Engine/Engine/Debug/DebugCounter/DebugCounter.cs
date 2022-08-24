@@ -6,16 +6,12 @@ using Furball.Engine.Engine.Graphics;
 using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
 
-namespace Furball.Engine.Engine.Debug.DebugCounter; 
+namespace Furball.Engine.Engine.Debug.DebugCounter;
 
 /// <summary>
 /// Debug Counter which is displayed on the bottom left corner
 /// </summary>
-public class DebugCounter : Drawable {
-    private TextDrawable _textDrawable = new(new Vector2(0, 700), FurballGame.DEFAULT_FONT, "a", 24);
-
-    public override Vector2 Size => this._textDrawable.Size * this.Scale;
-
+public class DebugCounter : TextDrawable {
     /// <summary>
     /// Items which will be displayed on the Counter
     /// </summary>
@@ -33,9 +29,7 @@ public class DebugCounter : Drawable {
         new KeyboardInputs()
     };
 
-    public DebugCounter() {
-        this.Position = new Vector2(0, 720 - this._textDrawable.Size.Y);
-
+    public DebugCounter() : base(Vector2.Zero, FurballGame.DEFAULT_FONT, "", 24) {
         this.Clickable   = false;
         this.CoverClicks = false;
         this.Hoverable   = false;
@@ -47,7 +41,7 @@ public class DebugCounter : Drawable {
             this.Items[i].Draw(time);
         }
 
-        this._textDrawable.Draw(time, batch, args);
+        base.Draw(time, batch, args);
     }
 
     public override void Update(double time) {
@@ -67,7 +61,7 @@ public class DebugCounter : Drawable {
                 builder.AppendLine();
         }
 
-        this._textDrawable.Text = builder.ToString();
+        this.Text = builder.ToString();
     }
 
     public override void Dispose() {

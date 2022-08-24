@@ -1,4 +1,3 @@
- 
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -7,9 +6,11 @@ using FontStashSharp;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Furball.Engine.Engine.Helpers;
 using Furball.Engine.Engine.Helpers.Logger;
+using Furball.Vixie;
+using Furball.Vixie.Backends.Shared.Renderers;
 using Kettu;
 
-namespace Furball.Engine.Engine.Graphics.Drawables; 
+namespace Furball.Engine.Engine.Graphics.Drawables;
 
 /// <summary>
 /// Simple way to Draw Text
@@ -21,7 +22,7 @@ public class TextDrawable : Drawable {
     public DynamicSpriteFont Font;
     public DynamicSpriteFont RealFont;
 
-    private string _text;
+    private string _text = "";
 
     /// <summary>
     /// Text that gets drawn
@@ -31,12 +32,79 @@ public class TextDrawable : Drawable {
         set {
             this._text = value;
             this.RecalculateSize();
+            this.RedrawRenderer();
         }
+    }
+
+    private int _fontSize;
+
+    /// <summary>
+    /// The size of the font
+    /// </summary>
+    public int FontSize {
+        get => this._fontSize;
+        set => this.SetFont(this.Font.FontSystem, value);
     }
 
     private Vector2 _sizeCache;
 
     private void RecalculateSize() => this._sizeCache = this.Font.MeasureString(this.Text);
+
+    private bool NeedsRenderer {
+        get => this.Text.Length > 10;
+    }
+
+    private Renderer _renderer;
+    private void RedrawRenderer() {
+        //If this text object doesnt need a renderer, dont try to draw to it
+        if (!this.NeedsRenderer)
+            return;
+
+        this._renderer ??= GraphicsBackend.Current.CreateRenderer();
+
+        this._renderer.Begin();
+
+        switch (this.ColorType) {
+            case TextColorType.Repeating: {
+                this._renderer.DrawString(
+                this.RealFont,
+                this.Text,
+                this.RealPosition,
+                this.Colors,
+                this.Rotation,
+                this.RealScale / FurballGame.VerticalRatio / this._difference,
+                this.RotationOrigin
+                );
+                break;
+            }
+            case TextColorType.Solid: {
+                this._renderer.DrawString(
+                this.RealFont,
+                this.Text,
+                this.RealPosition,
+                this.ColorOverride,
+                this.Rotation,
+                this.RealScale / FurballGame.VerticalRatio / this._difference,
+                this.RotationOrigin
+                );
+                break;
+            }
+            case TextColorType.Stretch: {
+                this._renderer.DrawString(
+                this.Font,
+                this.Text,
+                this.RealPosition,
+                ArrayHelper.FitElementsInANewArray(this.Colors, this.Text.Length),
+                this.Rotation,
+                this.RealScale / FurballGame.VerticalRatio / this._difference,
+                this.RotationOrigin
+                );
+                break;
+            }
+        }
+
+        this._renderer.End();
+    }
 
     /// <summary>
     /// The height of the text
@@ -47,7 +115,7 @@ public class TextDrawable : Drawable {
     public string PreWrapText { get; protected set; }
 
     public void Wrap(float width, bool setPrewrap = true) {
-        if(setPrewrap)
+        if (setPrewrap)
             this.PreWrapText = this.Text;
 
         List<Rectangle> rects = this.TextRectangles;
@@ -64,7 +132,7 @@ public class TextDrawable : Drawable {
             }
         }
     }
-        
+
     /// <summary>
     ///     The color type of the text, Solid means a single color, Repeating means the pattern in Colors repeats, and Stretch
     ///     means the colours stretch to fit
@@ -74,13 +142,9 @@ public class TextDrawable : Drawable {
     ///     An array of colours for the text drawable to use depending on the TextColorType
     /// </summary>
     public Color[] Colors = {
-        Color.Cyan,
-        Color.Pink,
-        Color.White,
-        Color.Pink,
-        Color.Cyan
+        Color.Cyan, Color.Pink, Color.White, Color.Pink, Color.Cyan
     };
-        
+
     /// <summary>
     /// Creates a new TextDrawable
     /// </summary>
@@ -105,7 +169,7 @@ public class TextDrawable : Drawable {
         int fontSize = (int)(this.Font.FontSize * FurballGame.VerticalRatio);
 
         (FontSystem FontSystem, int fontSize) key = (this.Font.FontSystem, fontSize);
-        
+
         ContentManager.FSS_CACHE.TryGetValue(key, out WeakReference<DynamicSpriteFont> fontRef);
 
         DynamicSpriteFont font = null;
@@ -114,7 +178,7 @@ public class TextDrawable : Drawable {
 
         if (!valid)
             ContentManager.FSS_CACHE.Remove(key);
-        
+
         this.Font.FontSystem.Reset();
         if (fontRef == null || !valid) {
             this.RealFont = this.Font.FontSystem.GetFont(fontSize);
@@ -123,6 +187,8 @@ public class TextDrawable : Drawable {
         } else {
             this.RealFont = font;
         }
+
+        this.RedrawRenderer();
     }
 
     private bool _isDisposed;
@@ -131,9 +197,11 @@ public class TextDrawable : Drawable {
             return;
 
         this._isDisposed = true;
-        
+
         this.ClearEvents();
-        
+
+        this._renderer?.Dispose();
+
         base.Dispose();
     }
 
@@ -145,7 +213,7 @@ public class TextDrawable : Drawable {
 
     public void SetFont(FontSystem font, int fontSize) {
         (FontSystem FontSystem, int fontSize) key = (font, fontSize);
-        
+
         ContentManager.FSS_CACHE.TryGetValue(key, out WeakReference<DynamicSpriteFont> fontRef);
 
         DynamicSpriteFont f = null;
@@ -154,7 +222,7 @@ public class TextDrawable : Drawable {
 
         if (!valid)
             ContentManager.FSS_CACHE.Remove(key);
-        
+
         if (fontRef == null || !valid) {
             this.Font = font.GetFont(fontSize);
             ContentManager.FSS_CACHE.Add((font, fontSize), new WeakReference<DynamicSpriteFont>(this.Font));
@@ -162,46 +230,85 @@ public class TextDrawable : Drawable {
         } else {
             this.Font = f;
         }
+        this._fontSize = fontSize;
         this.OnFramebufferResize(null, FurballGame.Instance.WindowManager.WindowSize);
     }
 
+    private Vector2 _posCache;
+    private Vector2 _realSizeCache;
+    private float   _rotationCache;
+    public override void Update(double time) {
+        base.Update(time);
+
+        bool needRedraw = false;
+        if (this._posCache != this.RealPosition) {
+            this._posCache = this.RealPosition;
+            needRedraw     = true;
+        }
+        if (this._realSizeCache != this.RealSize) {
+            this._realSizeCache = this.RealSize;
+            needRedraw          = true;
+        }
+        // ReSharper disable once CompareOfFloatsByEqualityOperator
+        if (this._rotationCache != this.Rotation) {
+            this._rotationCache = this.Rotation;
+            needRedraw          = true;
+        }
+
+        if (needRedraw)
+            this.RedrawRenderer();
+    }
+
     public override void Draw(double time, DrawableBatch batch, DrawableManagerArgs args) {
-        switch (this.ColorType) {
-            case TextColorType.Repeating: {
-                batch.DrawString(
-                this.RealFont,
-                this.Text,
-                args.Position,
-                this.Colors,
-                args.Rotation,
-                args.Scale / FurballGame.VerticalRatio / this._difference,
-                this.RotationOrigin
-                );
-                break;
-            }
-            case TextColorType.Solid: {
-                batch.DrawString(
-                this.RealFont,
-                this.Text,
-                args.Position,
-                args.Color,
-                args.Rotation,
-                args.Scale / FurballGame.VerticalRatio / this._difference,
-                this.RotationOrigin
-                );
-                break;
-            }
-            case TextColorType.Stretch: {
-                batch.DrawString(
-                this.Font,
-                this.Text,
-                args.Position,
-                ArrayHelper.FitElementsInANewArray(this.Colors, this.Text.Length),
-                args.Rotation,
-                args.Scale / FurballGame.VerticalRatio / this._difference,
-                this.RotationOrigin
-                );
-                break;
+        //If we should be using a renderer here to cache the quad positions, then draw with said renderer
+        if (this.NeedsRenderer) {
+            //If the renderer is null, we should probably redraw here
+            if (this._renderer == null)
+                this.RedrawRenderer();
+
+            batch.End();
+            this._renderer!.Draw();
+            batch.Begin();
+        } else {
+            this._renderer?.Dispose();
+
+            switch (this.ColorType) {
+                case TextColorType.Repeating: {
+                    batch.DrawString(
+                    this.RealFont,
+                    this.Text,
+                    args.Position,
+                    this.Colors,
+                    args.Rotation,
+                    args.Scale / FurballGame.VerticalRatio / this._difference,
+                    this.RotationOrigin
+                    );
+                    break;
+                }
+                case TextColorType.Solid: {
+                    batch.DrawString(
+                    this.RealFont,
+                    this.Text,
+                    args.Position,
+                    args.Color,
+                    args.Rotation,
+                    args.Scale / FurballGame.VerticalRatio / this._difference,
+                    this.RotationOrigin
+                    );
+                    break;
+                }
+                case TextColorType.Stretch: {
+                    batch.DrawString(
+                    this.Font,
+                    this.Text,
+                    args.Position,
+                    ArrayHelper.FitElementsInANewArray(this.Colors, this.Text.Length),
+                    args.Rotation,
+                    args.Scale / FurballGame.VerticalRatio / this._difference,
+                    this.RotationOrigin
+                    );
+                    break;
+                }
             }
         }
     }
