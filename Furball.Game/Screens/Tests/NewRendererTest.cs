@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Drawing;
+using System.Linq;
 using System.Numerics;
 using Furball.Engine;
 using Furball.Engine.Engine.Graphics;
@@ -140,10 +141,11 @@ public class NewRendererTest : TestScreen {
                 if (this._selectedVertices.Count != 3)
                     break;
 
-                if (this._mesh.Indices.RemoveAll(
-                    x => x == this._vertexPoints.IndexOf(this._selectedVertices[0]) || x == this._vertexPoints.IndexOf(this._selectedVertices[1]) ||
-                         x == this._vertexPoints.IndexOf(this._selectedVertices[2])
-                    ) > 0) {
+                bool Match(ushort x) => x == this._vertexPoints.IndexOf(this._selectedVertices[0]) || x == this._vertexPoints.IndexOf(this._selectedVertices[1]) || x == this._vertexPoints.IndexOf(this._selectedVertices[2]);
+                if (this._mesh.Indices.Count(
+                    Match
+                    ) == 3) {
+                    this._mesh.Indices.RemoveAll(Match);
                     this._mesh.RecalcRender();
                     return;
                 }
