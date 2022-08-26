@@ -39,7 +39,9 @@ public static class EtoHelper {
             Thread.Sleep(150);
         }
 
-        App?.Invoke(() => App?.Quit());
+        App?.Invoke(() => {
+            App?.Quit();
+        });
     }
 
     public static DialogResult MessageDialog(string message, MessageBoxButtons buttons) {
