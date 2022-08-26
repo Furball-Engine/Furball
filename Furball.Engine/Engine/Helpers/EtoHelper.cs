@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using Eto;
 using Eto.Forms;
@@ -44,16 +45,13 @@ public static class EtoHelper {
         });
     }
 
-    public static DialogResult MessageDialog(string message, MessageBoxButtons buttons) {
-        DialogResult response = DialogResult.Cancel;
-
+    public static void MessageDialog(EventHandler<DialogResult> callback, string message, MessageBoxButtons buttons) {
         App?.InvokeAsync(
         () => {
-            response = MessageBox.Show(message, buttons);
+            DialogResult response = MessageBox.Show(message, buttons);
+            callback.Invoke(App, response);
         }
-        ).Wait();
-
-        return response;
+        );
     }
 
     public static void OpenColorPicker(EventHandler<Color> callback, Color existingColor, string title = "Color Picker", bool allowAlpha = true) {
@@ -87,7 +85,7 @@ public static class EtoHelper {
         );
     }
 
-    public class ColorPickerForm : Form {
+    private class ColorPickerForm : Form {
         public ColorPicker ColorPicker;
 
         public ColorPickerForm(string title = "Color Picker", bool allowAlpha = true) {
