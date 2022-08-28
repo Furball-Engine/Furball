@@ -21,7 +21,7 @@ public class Scheduler {
         }
     }
 
-    public void ScheduleMethod(ScheduledMethod.Method method, double time, bool runOnDispose = false) {
+    public void ScheduleMethod(ScheduledMethod.Method method, double time = 0, bool runOnDispose = false) {
         Kettu.Logger.Log($"ScheduledMethod scheduled at {time}, {(runOnDispose ? "does" : "does not")} run on dispose", LoggerLevelSchedulerInfo.Instance);
 
         this._scheduledMethods.Add(new ScheduledMethod(method, time, runOnDispose));
