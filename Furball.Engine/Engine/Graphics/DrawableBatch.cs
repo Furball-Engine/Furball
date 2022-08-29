@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Numerics;
 using FontStashSharp;
+using FontStashSharp.RichText;
 using Furball.Engine.Engine.Helpers;
 using Furball.Vixie;
 using Furball.Vixie.Backends.Shared;
@@ -167,5 +168,9 @@ public class DrawableBatch : IDisposable {
 
     public void Dispose() {
         this._renderer.Dispose();
+    }
+    public void DrawRichString(RichTextLayout layout) {
+        //TODO: blocked on FSS
+        // layout.Draw(this._renderer.FontRenderer, position, color, sourceScale, rotation, origin, 0f, horizontalAlignment);
     }
 }
