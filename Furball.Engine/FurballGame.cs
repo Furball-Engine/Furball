@@ -93,21 +93,29 @@ public class FurballGame : Game {
 
     public static bool BypassFurballFPSLimit = false;
     public static bool BypassFurballUPSLimit = false;
-        
-    public static readonly FontSystem DEFAULT_FONT = new(new FontSystemSettings {
+
+    public static readonly FontSystem DEFAULT_FONT = new(
+    new FontSystemSettings {
         FontResolutionFactor = 2f,
         KernelWidth          = 2,
         KernelHeight         = 2,
         Effect               = FontSystemEffect.None
-    });
+    }
+    ) {
+        EraseTextureOnCreation = true
+    };
 
-    public static readonly FontSystem DEFAULT_FONT_STROKED = new(new FontSystemSettings {
+    public static readonly FontSystem DEFAULT_FONT_STROKED = new(
+    new FontSystemSettings {
         FontResolutionFactor = 2f,
         KernelWidth          = 2,
         KernelHeight         = 2,
         Effect               = FontSystemEffect.Stroked,
         EffectAmount         = 2
-    });
+    }
+    ) {
+        EraseTextureOnCreation = true
+    };
 
     public static Texture WhitePixel;
 
