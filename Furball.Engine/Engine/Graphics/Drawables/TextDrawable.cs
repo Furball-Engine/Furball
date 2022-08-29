@@ -50,10 +50,12 @@ public class TextDrawable : Drawable {
 
     private void RecalculateSize() => this._sizeCache = this.Font.MeasureString(this.Text);
 
-    private bool NeedsRenderer {
-        get => this.Text.Length > 10;
-    }
+    // private bool NeedsRenderer => this.Text is {
+    // Length: > 10
+    // };
 
+    private bool NeedsRenderer => false;
+    
     private Renderer _renderer;
     private void RedrawRenderer() {
         //If this text object doesnt need a renderer, dont try to draw to it
