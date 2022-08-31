@@ -101,9 +101,7 @@ public class FurballGame : Game {
         KernelHeight         = 2,
         Effect               = FontSystemEffect.None
     }
-    ) {
-        EraseTextureOnCreation = true
-    };
+    );
 
     public static readonly FontSystem DEFAULT_FONT_STROKED = new(
     new FontSystemSettings {
@@ -113,9 +111,7 @@ public class FurballGame : Game {
         Effect               = FontSystemEffect.Stroked,
         EffectAmount         = 2
     }
-    ) {
-        EraseTextureOnCreation = true
-    };
+    );
 
     public static Texture WhitePixel;
 
