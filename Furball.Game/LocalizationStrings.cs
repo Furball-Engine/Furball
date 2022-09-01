@@ -22,5 +22,6 @@ public enum LocalizationStrings {
     VideoDrawableTest,
     EcsTest,
     NewRendererTest,
-    EtoTest
+    EtoTest,
+    RichTextDrawableTest
 }

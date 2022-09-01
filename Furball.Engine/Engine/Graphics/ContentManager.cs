@@ -45,19 +45,25 @@ public static class ContentManager {
         );
     }
 
-    public static FontSystem LoadSystemFont(string familyName, FontSystemSettings settings = null) {
-        SystemFonts.TryGet(familyName, out FontFamily font);
+    private static readonly Dictionary<string, FontSystem> SystemFontCache = new();
+    public static FontSystem LoadSystemFont(string familyName, FontSystemSettings settings = null, bool disableCache = false) {
+        if (!disableCache && SystemFontCache.TryGetValue(familyName, out FontSystem sys))
+            return sys;
+
+        //If we cant find the font, just give them the default one, ittl work
+        if (!SystemFonts.TryGet(familyName, out FontFamily font))
+            return FurballGame.DEFAULT_FONT;
 
         font.TryGetPaths(out IEnumerable<string> paths);
 
-        FontSystem system;
-        if (settings != null)
-            system = new FontSystem(settings);
-        else
-            system = new FontSystem();
+        FontSystem system = settings != null 
+                                ? new FontSystem(settings) 
+                                : new FontSystem();
 
         foreach (string path in paths)
             system.AddFont(File.ReadAllBytes(path));
+        
+        SystemFontCache.Add(familyName, system);
 
         return system;
     }

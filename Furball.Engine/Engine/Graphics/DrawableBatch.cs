@@ -169,8 +169,7 @@ public class DrawableBatch : IDisposable {
     public void Dispose() {
         this._renderer.Dispose();
     }
-    public void DrawRichString(RichTextLayout layout) {
-        //TODO: blocked on FSS
-        // layout.Draw(this._renderer.FontRenderer, position, color, sourceScale, rotation, origin, 0f, horizontalAlignment);
+    public void DrawRichString(RichTextLayout layout, Vector2 position, Color color, Vector2? sourceScale, float rotation, Vector2 origin) {
+        layout.Draw(this._renderer.FontRenderer, position, color, sourceScale, rotation, origin);
     }
 }
