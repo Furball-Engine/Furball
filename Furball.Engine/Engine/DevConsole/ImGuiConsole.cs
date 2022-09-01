@@ -6,7 +6,9 @@ using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Helpers;
 using Furball.Engine.Engine.Platform;
 using Furball.Vixie.Backends.Shared;
+#if USE_IMGUI
 using ImGuiNET;
+#endif
 using Silk.NET.Input;
 
 namespace Furball.Engine.Engine.DevConsole; 
@@ -79,6 +81,7 @@ public static class ImGuiConsole {
     }
     
     private static void OnWindowRecreate(object sender, EventArgs e) {
+#if USE_IMGUI
         ImGuiStylePtr style = ImGui.GetStyle();
 
         style.Colors[(int) ImGuiCol.Text]                  = new Vector4(1.00f, 1.00f, 1.00f, 1.00f);
@@ -140,9 +143,11 @@ public static class ImGuiConsole {
         style.ScrollbarRounding = 0.0f;
         style.GrabRounding      = 0.0f;
         style.TabRounding       = 0.0f;
+#endif
     }
 
     public static unsafe void Draw() {
+#if USE_IMGUI
         _consoleInputCoverDrawable.Clickable   = Visible;
         _consoleInputCoverDrawable.CoverClicks = Visible;
         _consoleInputCoverDrawable.Hoverable   = Visible;
@@ -210,8 +215,10 @@ public static class ImGuiConsole {
             ImGui.SetItemDefaultFocus();
             ImGui.End();
         }
+#endif
     }
 
+#if USE_IMGUI
     private static unsafe int OnTextEdit(ImGuiInputTextCallbackData* data) {
         //Potentially maybe add some sort of autocomplete? i wont add it right now because volpe is gonna make us redo this entire thing anyway, but something for later
         //if (data->EventKey == ImGuiKey.Tab) {
@@ -224,7 +231,8 @@ public static class ImGuiConsole {
 
         return 0;
     }
-
+#endif
+    
     private static void RefreshCache() {
         lock (_devConsoleCache) {
             _devConsoleCache.Clear();

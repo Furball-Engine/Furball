@@ -1,0 +1,9 @@
+<Project>
+    <PropertyGroup>
+        <UseImGui>true</UseImGui>
+    </PropertyGroup>
+    
+    <PropertyGroup Condition="'$(UseImGui)'=='true'">
+        <DefineConstants>$(DefineConstants);USE_IMGUI</DefineConstants>
+    </PropertyGroup>
+</Project>

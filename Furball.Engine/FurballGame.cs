@@ -152,13 +152,16 @@ public class FurballGame : Game {
         _stopwatch.Start();
 
         InputManager = new InputManager();
-        InputManager.RegisterInputMethod(InputManager.VixieMouseInputMethod = new VixieMouseInputMethod());
-        InputManager.RegisterInputMethod(InputManager.VixieKeyboardInputMethod = new VixieKeyboardInputMethod());
+        //Only use the silk input methods if we are using the `View` event loop!
+        if (this.EventLoop is ViewEventLoop) {
+            InputManager.RegisterInputMethod(InputManager.VixieMouseInputMethod    = new VixieMouseInputMethod());
+            InputManager.RegisterInputMethod(InputManager.VixieKeyboardInputMethod = new VixieKeyboardInputMethod());
+        }
 
         Profiler.StartProfile("init_audio_engine");
         //TODO: Add logic to decide on what audio backend to use, and maybe write some code to help change backend on the fly
         AudioEngine = new ManagedBassAudioEngine();
-        AudioEngine.Initialize(this.WindowManager.GetWindowHandle());
+        AudioEngine.Initialize(this.EventLoop is ViewEventLoop ? this.WindowManager.GetWindowHandle() : IntPtr.Zero);
         Profiler.EndProfileAndPrint("init_audio_engine");
 
         DrawableManager             = new DrawableManager();
@@ -322,6 +325,10 @@ public class FurballGame : Game {
         InputManager.RegisterInputMethod(InputManager.VixieKeyboardInputMethod = new VixieKeyboardInputMethod());
     }
 
+    public new void RunHeadless() {
+        base.RunHeadless();
+    }
+    
     public void Run(Backend backend = Backend.None) {
         WindowOptions options = WindowOptions.Default;
 
@@ -423,6 +430,9 @@ public class FurballGame : Game {
     }
 
     public void SetTargetFps(double? fps) {
+        if (this.EventLoop is not ViewEventLoop)
+            return;
+        
         this.WindowManager.TargetFramerate = fps ?? 0;
 
         if (!BypassFurballFPSLimit)
@@ -430,6 +440,9 @@ public class FurballGame : Game {
     }
 
     public void SetTargetUps(double? ups) {
+        if (this.EventLoop is not ViewEventLoop)
+            return;
+        
         this.WindowManager.TargetUpdaterate = ups ?? 0;
 
         if (!BypassFurballUPSLimit)
