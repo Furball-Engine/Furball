@@ -495,8 +495,10 @@ public class FurballGame : Game {
                 _ => {
                     screen.BackgroundInitialize();
                 }
-                );
-                    
+                ) {
+                    IsBackground = true
+                };
+
                 screen.BackgroundThread.Start();
             }
         }
