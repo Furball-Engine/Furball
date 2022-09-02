@@ -52,13 +52,10 @@ public class DebugCounter : TextDrawable {
 
             current.Update(time);
 
-            if (i % 3 == 0 && i != 0)
+            if (current.ForceNewLine || i % 3 == 0 && i != 0)
                 builder.AppendLine();
 
             builder.Append($"{current.GetAsString(time)}; ");
-
-            if (current.ForceNewLine)
-                builder.AppendLine();
         }
 
         this.Text = builder.ToString();

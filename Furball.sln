@@ -31,6 +31,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Furball.Vixie.Backends.Open
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Furball.Vixie.Backends.Dummy", "Furball.Vixie\Furball.Vixie.Backends.Dummy\Furball.Vixie.Backends.Dummy.csproj", "{D8493C59-063A-4581-84C7-4CC27D7C012C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EvDevSharp", "..\evdev-sharp\EvDevSharp\EvDevSharp.csproj", "{A0F5C051-EA56-4BAB-88D9-461E0772BB6A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -89,6 +91,10 @@ Global
 		{D8493C59-063A-4581-84C7-4CC27D7C012C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D8493C59-063A-4581-84C7-4CC27D7C012C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D8493C59-063A-4581-84C7-4CC27D7C012C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A0F5C051-EA56-4BAB-88D9-461E0772BB6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0F5C051-EA56-4BAB-88D9-461E0772BB6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0F5C051-EA56-4BAB-88D9-461E0772BB6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0F5C051-EA56-4BAB-88D9-461E0772BB6A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -104,6 +110,7 @@ Global
 		{CE8D3A18-D9AA-4FEA-B04C-A9A2BA98D024} = {7B2F29B3-1240-48F9-BF57-0047C1499644}
 		{9FE35423-76F2-4C32-8B94-6C6F45C93688} = {7B2F29B3-1240-48F9-BF57-0047C1499644}
 		{D8493C59-063A-4581-84C7-4CC27D7C012C} = {7B2F29B3-1240-48F9-BF57-0047C1499644}
+		{A0F5C051-EA56-4BAB-88D9-461E0772BB6A} = {7B2F29B3-1240-48F9-BF57-0047C1499644}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F975C095-8BEA-40A5-A325-09E52C534F36}

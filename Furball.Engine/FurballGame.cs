@@ -5,6 +5,7 @@ using System.Drawing;
 using System.IO;
 using System.Numerics;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Threading;
 using FontStashSharp;
 using Furball.Engine.Engine;
@@ -121,7 +122,7 @@ public class FurballGame : Game {
     public event EventHandler<Vector2> OnRelayout; 
 
     private Screen _startScreen;
-    public FurballGame(Screen startScreen) : base()  {
+    public FurballGame(Screen startScreen) {
         FurballConfig.Instance = new FurballConfig();
         FurballConfig.Instance.Load();
 
@@ -155,7 +156,18 @@ public class FurballGame : Game {
         //Only use the silk input methods if we are using the `View` event loop!
         if (this.EventLoop is ViewEventLoop) {
             InputManager.RegisterInputMethod(InputManager.SilkWindowingMouseInputMethod    = new SilkWindowingMouseInputMethod());
-            InputManager.RegisterInputMethod(InputManager.SilkWindowingKeyboardInputMethod = new SilkWindowingKeyboardInputMethod());
+
+            bool useSilkKeyboardInput = true;
+
+            if (RuntimeInfo.CurrentPlatform() == OSPlatform.Linux) {
+                if (UnixEnvironment.IsRoot()) {
+                    useSilkKeyboardInput = false;
+                    InputManager.RegisterInputMethod(new EvDevKeyboardInputMethod());
+                }
+            }
+            
+            if(useSilkKeyboardInput)
+                InputManager.RegisterInputMethod(InputManager.SilkWindowingKeyboardInputMethod = new SilkWindowingKeyboardInputMethod());
         }
 
         Profiler.StartProfile("init_audio_engine");

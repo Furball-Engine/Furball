@@ -4,3 +4,6 @@
 [submodule "Furball.Volpe"]
 	path = Furball.Volpe
 	url = https://github.com/Furball-Engine/Furball.Volpe
+[submodule "evdev-sharp"]
+	path = evdev-sharp
+	url = https://github.com/Furball-Engine/evdev-sharp
