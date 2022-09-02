@@ -1,8 +1,11 @@
+using System.Drawing;
 using System.Numerics;
 using FontStashSharp;
 using FontStashSharp.RichText;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Furball.Engine.Engine.Helpers;
+using Furball.Vixie;
+using Furball.Vixie.Backends.Shared;
 
 namespace Furball.Engine.Engine.Graphics.Drawables; 
 
@@ -17,8 +20,10 @@ public class RichTextDrawable : Drawable {
 
             return ContentManager.LoadSystemFont(fontName).GetFont(fontSize);
         };
-        // TODO
-        // RichTextDefaults.ImageResolver = s => ContentManager.LoadTextureFromFileCached(s, ContentSource.User);
+        RichTextDefaults.ImageResolver = s => {
+            Texture tex = ContentManager.LoadTextureFromFileCached(s, ContentSource.User);
+            return new TextureFragment((VixieTexture)tex, new Rectangle(0, 0, tex.Width, tex.Height));
+        };
     }
 
     public override Vector2 Size {
