@@ -66,6 +66,8 @@ public class ScreenSelector : TestScreen {
             new Vector2(300, 50)
             );
 
+            screenButton.ToolTip = localizationString.ToString();
+
             screenButton.OnClick += delegate {
                 ScreenManager.ChangeScreen((Screen)Activator.CreateInstance(screen)!);
                     

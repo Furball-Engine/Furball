@@ -245,16 +245,7 @@ public class InputManager {
                 if (drawable.Hoverable && !tooltipSet/* && doHover */) {
                     if (drawable.ToolTip != string.Empty && ConVars.ToolTips) {
                         FurballGame.TooltipDrawable.SetTooltip(drawable.ToolTip);
-                        FurballGame.TooltipDrawable.Tweens.Clear();
-                        FurballGame.TooltipDrawable.Tweens.Add(
-                        new VectorTween(
-                        TweenType.Movement,
-                        FurballGame.TooltipDrawable.Position,
-                        e.Position + new Vector2(10f),
-                        FurballGame.Time,
-                        FurballGame.Time + 1
-                        )
-                        );
+                        FurballGame.TooltipDrawable.MoveTo(e.Position + new Vector2(10f));
                         FurballGame.TooltipDrawable.Visible = true;
 
                         tooltipSet = true;

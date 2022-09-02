@@ -86,7 +86,7 @@ public class FurballGame : Game {
 
     private bool _drawDebugOverlay = false;
 
-    public static TooltipDrawable TooltipDrawable;
+    internal static TooltipDrawable TooltipDrawable;
 
     private DrawableForm _textureDisplayForm;
     private bool        _textureDisplayFormAdded;
@@ -212,7 +212,7 @@ public class FurballGame : Game {
         TooltipDrawable = new TooltipDrawable {
             Depth = double.NegativeInfinity
         };
-        DrawableManager.Add(TooltipDrawable);
+        OverlayDrawableManager.Add(TooltipDrawable);
 
         TooltipDrawable.Visible = false;
 
