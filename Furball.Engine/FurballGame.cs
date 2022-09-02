@@ -490,7 +490,6 @@ public class FurballGame : Game {
             if (screen.BackgroundThread == null) {
                 Logger.Log($"Starting background thread for {screen.GetType().Name}", LoggerLevelEngineInfo.Instance);
 
-                //TODO: track if this thread dies/exits early
                 screen.BackgroundThread = new Thread(
                 _ => {
                     screen.BackgroundInitialize();
@@ -551,6 +550,11 @@ public class FurballGame : Game {
             this._updateWatch.Start();
         }
 
+        if (this.LoadingScreen is {
+                LoadingComplete: false
+            } && !this.LoadingScreen.BackgroundThread.IsAlive) {
+            throw new Exception("The background loading thread has died!");
+        }       
         if (this.LoadingScreen is {
                 LoadingComplete: true
             } && !this._loadingScreenChangeOffQueued) {
