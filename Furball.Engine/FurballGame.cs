@@ -457,6 +457,8 @@ public class FurballGame : Game {
     }
 
     public void ChangeScreen(Screen screen) {
+        Logger.Log($"Immediately changing screen to {screen.GetType().Name}", LoggerLevelEngineInfo.Instance);
+
         this.BeforeScreenChange?.Invoke(this, screen);
 
         if (this.RunningScreen != null) {
@@ -480,10 +482,15 @@ public class FurballGame : Game {
 
             this.AfterScreenChange?.Invoke(this, screen);
             TooltipDrawable.Visible = false;
+            
+            Logger.Log($"Change to {screen.GetType().Name} finished!", LoggerLevelEngineInfo.Instance);
         } else {
             this.LoadingScreen = screen;
 
             if (screen.BackgroundThread == null) {
+                Logger.Log($"Starting background thread for {screen.GetType().Name}", LoggerLevelEngineInfo.Instance);
+
+                //TODO: track if this thread dies/exits early
                 screen.BackgroundThread = new Thread(
                 _ => {
                     screen.BackgroundInitialize();

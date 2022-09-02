@@ -2,6 +2,8 @@
 using System;
 using Furball.Engine.Engine.Graphics;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
+using Furball.Engine.Engine.Helpers.Logger;
+using Kettu;
 
 namespace Furball.Engine.Engine; 
 
@@ -39,11 +41,14 @@ public class ScreenManager {
     /// </summary>
     /// <param name="newScreen">Screen to Switch to</param>
     public static void ChangeScreen(Screen newScreen, bool skipTransition = false) {
+        Logger.Log($"Screen change to {newScreen.GetType().Name} requested!", LoggerLevelEngineInfo.Instance);
+        
         if (Transition != null && !skipTransition) {
             lock (_fadeLock) {
                 Transition t = Transition;
                     
                 double fadeInTime = Transition.TransitionBegin();
+                Logger.Log($"Transition for screen change to {newScreen.GetType().Name} begun!", LoggerLevelEngineInfo.Instance);
 
                 CurrentFadeState = FadeState.FadeIn;
 
@@ -53,7 +58,8 @@ public class ScreenManager {
                     FurballGame.Instance.ChangeScreen(newScreen);
 
                     double fadeOutTime = t.TransitionEnd();
-                        
+                    Logger.Log($"Transition for screen change to {newScreen.GetType().Name} end!", LoggerLevelEngineInfo.Instance);
+
                     CurrentFadeState = FadeState.FadeOut;
                     
                     FurballGame.GameTimeScheduler.ScheduleMethod(delegate {
