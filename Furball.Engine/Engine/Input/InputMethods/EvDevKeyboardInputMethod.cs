@@ -10,7 +10,7 @@ using Silk.NET.Input;
 namespace Furball.Engine.Engine.Input.InputMethods;
 
 public class EvDevKeyboardInputMethod : InputMethod {
-    private List<EvDevDevice> _trackedDevices = new();
+    private readonly List<EvDevDevice> _trackedDevices = new();
 
     public override void Initialize() {
         List<EvDevDevice> devices = EvDevDevice.GetDevices().Where(x => x.GuessedDeviceType == EvDevGuessedDeviceType.Keyboard).ToList();

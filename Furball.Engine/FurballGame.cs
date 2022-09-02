@@ -61,6 +61,7 @@ public class FurballGame : Game {
 
     public static DrawableManager DrawableManager;
     public static DrawableManager DebugOverlayDrawableManager;
+    public static DrawableManager OverlayDrawableManager;
 
     public static bool DrawInputOverlay;
 
@@ -178,7 +179,8 @@ public class FurballGame : Game {
 
         DrawableManager             = new DrawableManager();
         DebugOverlayDrawableManager = new DrawableManager();
-
+        OverlayDrawableManager      = new DrawableManager();
+        
         WhitePixel      = Texture.CreateWhitePixelTexture();
         WhitePixel.Name = "FurballGame.WhitePixel";
         
@@ -583,6 +585,7 @@ public class FurballGame : Game {
         }
             
         DrawableManager.Update(deltaTime);
+        OverlayDrawableManager.Update(deltaTime);
 
         if (this._drawDebugOverlay)
             DebugOverlayDrawableManager.Update(deltaTime);
@@ -599,9 +602,8 @@ public class FurballGame : Game {
         }
     }
 
-    private Stopwatch _drawWatch         = new ();
-
-    public double    LastDrawTime { get; private set; } = 0.0;
+    private Stopwatch _drawWatch = new();
+    public double LastDrawTime { get; private set; } = 0.0;
 
     protected override void PreDraw(double deltaTime) {
         base.PreDraw(deltaTime);
@@ -649,7 +651,9 @@ public class FurballGame : Game {
             DrawableBatch.FillRectangle(new Vector2(gap,                                      WindowHeight - gap - barHeight), new Vector2((WindowWidth - gap * 2f) * this.LoadingScreen.LoadingProgress, barHeight), Vixie.Backends.Shared.Color.Grey);
             DrawableBatch.DrawRectangle(new Vector2(gap,                                      WindowHeight - gap - barHeight), new Vector2(WindowWidth - gap * 2f, barHeight), 1, Vixie.Backends.Shared.Color.White);
         }
-            
+
+        OverlayDrawableManager.Draw(gameTime, DrawableBatch);
+
         ScreenManager.DrawTransition(gameTime, DrawableBatch);
 
         if (this._drawDebugOverlay)
@@ -664,7 +668,6 @@ public class FurballGame : Game {
     #region Timing
 
     private static Stopwatch _stopwatch = new();
-
     public static double Time {
         get;
         private set;
