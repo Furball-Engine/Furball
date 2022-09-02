@@ -41,17 +41,17 @@ public static class ImGuiConsole {
 
         RefreshCache();
 
-        FurballGame.InputManager.OnKeyDown += (_, key) => {
-            if (key == Key.ControlLeft) {
+        FurballGame.InputManager.OnKeyDown += (_, args) => {
+            if (args.Key == Key.ControlLeft) {
                 AutoScroll = !AutoScroll;
                 UpdateTitle();
             }
             if (Visible) {
-                if (key == Key.V && FurballGame.InputManager.ControlHeld && RuntimeInfo.CurrentPlatform() == OSPlatform.Linux) {
+                if (args.Key == Key.V && FurballGame.InputManager.ControlHeld && RuntimeInfo.CurrentPlatform() == OSPlatform.Linux) {
                     _consoleBuffer = _consoleBuffer.Insert(_cursorPosition, FurballGame.InputManager.Clipboard ?? string.Empty);
                 }
 
-                if (key == Key.C && FurballGame.InputManager.ControlHeld && RuntimeInfo.CurrentPlatform() == OSPlatform.Linux) {
+                if (args.Key == Key.C && FurballGame.InputManager.ControlHeld && RuntimeInfo.CurrentPlatform() == OSPlatform.Linux) {
                     FurballGame.InputManager.Clipboard = _consoleBuffer.Substring(_selectionStart, _selectionEnd);
                 }
             }

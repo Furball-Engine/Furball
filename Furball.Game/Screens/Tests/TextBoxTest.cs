@@ -4,18 +4,20 @@ using Furball.Engine;
 using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Graphics.Drawables.UiElements;
 using Furball.Engine.Engine.Input;
+using Furball.Engine.Engine.Input.Events;
 using Furball.Vixie.Backends.Shared;
 
 namespace Furball.Game.Screens.Tests; 
 
 public class TextBoxTest : TestScreen {
     public class TextInputStackDrawableTest : TextDrawable, ICharInputHandler {
+        private ICharInputHandler _charInputHandlerImplementation;
         public bool SaveInStack {
             get;
             set;
         } = true;
-        public void HandleChar(char c) {
-            this.Text += c;
+        public void HandleChar(CharInputEvent ev) {
+            this.Text += ev.Char;
         }
         public void HandleFocus() {
             //Set us to blue when focused

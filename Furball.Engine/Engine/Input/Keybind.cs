@@ -4,7 +4,7 @@ using Silk.NET.Input;
 namespace Furball.Engine.Engine.Input; 
 
 public class Keybind {
-    public delegate void Pressed();
+    public delegate void Pressed(FurballKeyboard keyboard);
 
     public Keybind(object identifier, string name, Key @default, Pressed onPressed) {
         if (!FurballConfig.Instance.GetKeybind(identifier, out Key key)) {

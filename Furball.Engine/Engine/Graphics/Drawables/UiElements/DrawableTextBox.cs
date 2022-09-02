@@ -7,6 +7,7 @@ using FontStashSharp;
 using Furball.Engine.Engine.Graphics.Drawables.Primitives;
 using Furball.Engine.Engine.Helpers;
 using Furball.Engine.Engine.Input;
+using Furball.Engine.Engine.Input.Events;
 using Silk.NET.Input;
 using Color=Furball.Vixie.Backends.Shared.Color;
 
@@ -62,7 +63,8 @@ public partial class DrawableTextBox : CompositeDrawable, ICharInputHandler {
     /// The range of characters in the string that are selected
     /// </summary>
     public readonly Bindable<Range> SelectedRange = new(new Range(0, 0));
-    private int _lineCount;
+    private int               _lineCount;
+    private ICharInputHandler _charInputHandlerImplementation;
 
     public override Vector2 Size => new Vector2(this.TextBoxWidth, this._textDrawable.Font.LineHeight * this.LineCount) * this.Scale;
     /// <summary>
@@ -142,10 +144,10 @@ public partial class DrawableTextBox : CompositeDrawable, ICharInputHandler {
         FurballGame.InputManager.OnKeyDown   += this.OnKeyDown;
     }
 
-    private void OnKeyDown(object sender, Key e) {
+    private void OnKeyDown(object sender, KeyEventArgs e) {
         if (!this.Selected || !this.Visible) return;
             
-        switch(e) {
+        switch(e.Key) {
             case Key.V when FurballGame.InputManager.HeldKeys.Contains(Key.ControlLeft): {
                 string clipboard = FurballGame.InputManager.Clipboard;
 
@@ -182,7 +184,7 @@ public partial class DrawableTextBox : CompositeDrawable, ICharInputHandler {
                         this.RecalcOutline();
                     }
                 } else {
-                    this.HandleChar('\n');
+                    this.HandleChar(new CharInputEvent('\n', e.Keyboard));
                 }
                 break;
             }
@@ -210,8 +212,8 @@ public partial class DrawableTextBox : CompositeDrawable, ICharInputHandler {
         }
     }
 
-    public void OnMouseDown(object sender, ((MouseButton mouseButton, Vector2 position) args, string cursorName) e) {
-        if (this.RealContains(e.args.position.ToPoint()) && this.Visible && this.Clickable) {
+    public void OnMouseDown(object sender, MouseButtonEventArgs e) {
+        if (this.RealContains(e.Mouse.Position) && this.Visible && this.Clickable) {
             FurballGame.InputManager.TakeTextFocus(this);
 
             if (this.Text.Length == 0) {
@@ -244,10 +246,10 @@ public partial class DrawableTextBox : CompositeDrawable, ICharInputHandler {
                 float yStart = this.Font.LineHeight * lineNumber;
                 float yEnd   = this.Font.LineHeight * (lineNumber + 1);
 
-                if (e.args.position.Y < yStart + this.RealPosition.Y || e.args.position.Y > yEnd + this.RealPosition.Y)
+                if (e.Mouse.Position.Y < yStart + this.RealPosition.Y || e.Mouse.Position.Y > yEnd + this.RealPosition.Y)
                     continue;
                 
-                if (e.args.position.X > lastRect.Right + this.RealPosition.X) {
+                if (e.Mouse.Position.X > lastRect.Right + this.RealPosition.X) {
                     this.SelectedRange.Value = new Range(endOfLine + 1, endOfLine + 1);
                     this.UpdateCaretPosition(true);
                     return;
@@ -255,7 +257,7 @@ public partial class DrawableTextBox : CompositeDrawable, ICharInputHandler {
 
                 for (int i = endOfLine; i >= startOfLine; i--) {
                     Rectangle rect = rects[i];
-                    if (e.args.position.X > ((rect.Left - (rect.Width / 2f)) + this.RealPosition.X)) {
+                    if (e.Mouse.Position.X > rect.Left - rect.Width / 2f + this.RealPosition.X) {
                         this.SelectedRange.Value = new Range(i, i);
                         this.UpdateCaretPosition(true);
                         return;
@@ -289,15 +291,15 @@ public partial class DrawableTextBox : CompositeDrawable, ICharInputHandler {
         set;
     } = false;
     
-    public void HandleChar(char c) {
+    public void HandleChar(CharInputEvent ev) {
         if (this.SelectedRange.Value.Start > this.Text.Length)
             this.SelectedRange.Value = new Range(0, 0);
             
         //If it was a control character, dont concat the character to the typed string
-        if (char.IsControl(c) && c != '\n') return;
+        if (char.IsControl(ev.Char) && ev.Char != '\n') return;
 
-        this.Text = this.Text.Insert(this.SelectedRange.Value.Start, c.ToString());
-        this.OnLetterTyped?.Invoke(this, c);
+        this.Text = this.Text.Insert(this.SelectedRange.Value.Start, ev.Char.ToString());
+        this.OnLetterTyped?.Invoke(this, ev.Char);
             
         this.SelectedRange.Value = new Range(this.SelectedRange.Value.End + 1, this.SelectedRange.Value.End + 1);
         this.UpdateCaretPosition(false);
@@ -308,7 +310,7 @@ public partial class DrawableTextBox : CompositeDrawable, ICharInputHandler {
     private void RecalcOutline() {
         this._outline.RectSize = new Vector2(this.TextBoxWidth, this._textDrawable.Font.LineHeight * this._lineCount);
     }
-    
+
     public void HandleFocus() {
         this.Selected = true;
 

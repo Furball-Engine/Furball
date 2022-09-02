@@ -4,6 +4,7 @@ using System.Numerics;
 using Furball.Engine.Engine.Graphics.Drawables.Primitives;
 using Furball.Engine.Engine.Helpers;
 using Furball.Engine.Engine.Helpers.Logger;
+using Furball.Engine.Engine.Input.Events;
 using Kettu;
 using Silk.NET.Input;
 using Color=Furball.Vixie.Backends.Shared.Color;
@@ -85,7 +86,7 @@ public class DrawableForm : CompositeDrawable {
         Logger.Log($"Created form with title {title}", LoggerLevelFurballFormInfo.Instance);
     }
 
-    private void OnCloseButtonClick(object _, (MouseButton button, Point pos) valueTuple) {
+    private void OnCloseButtonClick(object _, MouseButtonEventArgs mouseButtonEventArgs) {
         if (this.OnTryClose == null) {
             Logger.Log("Unhandled FurballForm close!", LoggerLevelFurballFormInfo.Instance);
             return;
@@ -95,17 +96,14 @@ public class DrawableForm : CompositeDrawable {
     }
 
     private Vector2 _startDiffFromPos;
-    private Vector2 _startDragMousePos;
 
-    private void OnTitleBarDragBegin(object _, Point startDragPos) {
-        this._startDragMousePos = startDragPos.ToVector2();
-
-        this._startDiffFromPos = this._startDragMousePos - this.Position;
+    private void OnTitleBarDragBegin(object _, MouseDragEventArgs e) {
+        this._startDiffFromPos = e.StartPosition - this.Position;
     }
 
-    private void OnTitleBarDrag(object _, Point currentDragPos) {
-        Vector2 differenceFromStart = currentDragPos.ToVector2() - this._startDragMousePos;
+    private void OnTitleBarDrag(object _, MouseDragEventArgs e) {
+        Vector2 differenceFromStart = e.Position - e.StartPosition;
 
-        this.MoveTo(this._startDragMousePos + differenceFromStart - this._startDiffFromPos);
+        this.MoveTo(e.StartPosition + differenceFromStart - this._startDiffFromPos);
     }
 }

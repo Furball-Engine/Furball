@@ -3,6 +3,7 @@ using System.Numerics;
 using FontStashSharp;
 using Furball.Engine.Engine.Graphics.Drawables.Primitives;
 using Furball.Engine.Engine.Helpers;
+using Furball.Engine.Engine.Input.Events;
 using Silk.NET.Input;
 
 namespace Furball.Engine.Engine.Graphics.Drawables.UiElements; 
@@ -45,7 +46,7 @@ public class DrawableTickbox : CompositeDrawable {
             this.OnClick += this.OnDrawableClick;
     }
 
-    private void OnDrawableClick(object sender, (MouseButton button, Point pos) valueTuple) {
+    private void OnDrawableClick(object sender, MouseButtonEventArgs mouseButtonEventArgs) {
         this.Selected.Value = !this.Selected;
     }
 

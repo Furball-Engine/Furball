@@ -5,6 +5,7 @@ using Furball.Engine;
 using Furball.Engine.Engine;
 using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Graphics.Drawables.UiElements;
+using Furball.Engine.Engine.Input.Events;
 using Furball.Engine.Engine.Localization;
 using Furball.Game.Screens;
 using Silk.NET.Input;
@@ -55,7 +56,7 @@ public class TestScreen : Screen {
         this.UpdateLanguageButton();
     }
     
-    private void OnLanguageButtonClick(object sender, (MouseButton button, Point pos) e) {
+    private void OnLanguageButtonClick(object sender, MouseButtonEventArgs mouseButtonEventArgs) {
         List<ISO639_2Code> supported = LocalizationManager.GetSupportedLanguages();
 
         for (int i = 0; i < supported.Count; i++) {

@@ -6,14 +6,14 @@ namespace Furball.Engine.Engine.Input;
 public abstract class InputMethod {
     /// <summary>
     /// The registered mice
-    /// </summary>
-    public List<IMouse> Mice = new();
-    public List<FurballMouseState> MouseStates = new();
+    /// </summary>B
+    // public List<IMouse> Mice = new();
+    public List<FurballMouse> Mice = new();
     /// <summary>
     /// The registered keyboards
     /// </summary>
-    public List<IKeyboard> Keyboards = new();
-    public List<Key> HeldKeys = new();
+    // public List<IKeyboard> Keyboards = new();
+    public List<FurballKeyboard> Keyboards = new();
 
     /// <summary>
     /// Used if the InputMethod needs to constantly poll a source

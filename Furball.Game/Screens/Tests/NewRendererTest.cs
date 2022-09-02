@@ -11,6 +11,7 @@ using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Furball.Engine.Engine.Graphics.Drawables.UiElements;
 using Furball.Engine.Engine.Helpers;
+using Furball.Engine.Engine.Input.Events;
 using Furball.Vixie;
 using Furball.Vixie.Backends.Shared;
 using Furball.Vixie.Backends.Shared.Renderers;
@@ -153,8 +154,8 @@ public class NewRendererTest : TestScreen {
         );
     }
 
-    private void OnKeyDown(object sender, Key e) {
-        switch (e) {
+    private void OnKeyDown(object sender, KeyEventArgs keyEventArgs) {
+        switch (keyEventArgs.Key) {
             case Key.A: {
                 if (this._selectedVertices.Count != 3)
                     break;
@@ -191,14 +192,14 @@ public class NewRendererTest : TestScreen {
         FurballGame.InputManager.OnMouseDown -= this.OnMouseDown;
     }
 
-    private void OnMouseDown(object sender, ((MouseButton mouseButton, Vector2 position) args, string cursorName) e) {
-        if (e.args.mouseButton != MouseButton.Left || !FurballGame.InputManager.ControlHeld)
+    private void OnMouseDown(object sender, MouseButtonEventArgs e) {
+        if (e.Button != MouseButton.Left || !FurballGame.InputManager.ControlHeld)
             return;
 
         this._mesh.Vertices.Add(
         new Vertex {
             Color    = Color.White,
-            Position = e.args.position
+            Position = e.Mouse.Position
         }
         );
 
@@ -233,11 +234,11 @@ public class NewRendererTest : TestScreen {
             int i1 = i;
             vertTex.OnDrag += (_, e) => {
                 Vertex meshVertex = this._mesh.Vertices[i1];
-                meshVertex.Position     = e.ToVector2();
+                meshVertex.Position     = e.Position;
                 this._mesh.Vertices[i1] = meshVertex;
 
                 this._mesh.RecalcRender();
-                vertTex.Position = e.ToVector2();
+                vertTex.Position = e.Position;
             };
 
             vertTex.OnDragBegin += delegate {
@@ -247,8 +248,8 @@ public class NewRendererTest : TestScreen {
                     this._selectedVertices.Remove(vertTex);
             };
 
-            vertTex.OnClick += delegate(object _, (MouseButton button, Point pos) tuple) {
-                switch (tuple.button) {
+            vertTex.OnClick += delegate(object _, MouseButtonEventArgs e) {
+                switch (e.Button) {
                     case MouseButton.Left: {
                         //If we are already selecting the vertex, deselect it, else select it
                         if (!this._selectedVertices.Contains(vertTex))

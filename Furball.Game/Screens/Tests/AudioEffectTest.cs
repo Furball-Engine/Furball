@@ -4,6 +4,7 @@ using Furball.Engine;
 using Furball.Engine.Engine.Graphics;
 using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Graphics.Drawables.UiElements;
+using Furball.Engine.Engine.Input.Events;
 using ManagedBass;
 using Silk.NET.Input;
 using sowelipisona;
@@ -93,7 +94,7 @@ public class AudioEffectTest : TestScreen {
         this.Manager.Add(reverbPlayButton);
     }
 
-    private void ReverbPlayOnClick(object sender, (MouseButton, Point) e) {
+    private void ReverbPlayOnClick(object sender, MouseButtonEventArgs mouseButtonEventArgs) {
         if (this._testingStream?.PlaybackState == PlaybackState.Playing) {
             this._testingStream.Stop();
         }
@@ -115,7 +116,7 @@ public class AudioEffectTest : TestScreen {
             this._topText.Position.X = newWidth / 2f;
     }
 
-    private void LowPassPlayOnClick(object sender, (MouseButton, Point) e) {
+    private void LowPassPlayOnClick(object sender, MouseButtonEventArgs mouseButtonEventArgs) {
         if (this._testingStream?.PlaybackState == PlaybackState.Playing) {
             this._testingStream.Stop();
         }
@@ -132,7 +133,7 @@ public class AudioEffectTest : TestScreen {
         this._testingStream.Play();
     }
 
-    private void HighPassPlayOnClick(object sender, (MouseButton, Point) e) {
+    private void HighPassPlayOnClick(object sender, MouseButtonEventArgs mouseButtonEventArgs) {
         if (this._testingStream?.PlaybackState == PlaybackState.Playing)
             this._testingStream.Stop();
 
@@ -146,7 +147,7 @@ public class AudioEffectTest : TestScreen {
         this._testingStream.Play();
     }
 
-    private void PlayButtonOnClick(object sender, (MouseButton, Point) e) {
+    private void PlayButtonOnClick(object sender, MouseButtonEventArgs mouseButtonEventArgs) {
         if (this._testingStream?.PlaybackState == PlaybackState.Playing) {
             this._testingStream.Stop();
         }

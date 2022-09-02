@@ -11,9 +11,9 @@ public class RichTextDrawable : Drawable {
 
     static RichTextDrawable() {
         RichTextDefaults.FontResolver = s => {
-            var args     = s.Split(',');
-            var fontName = args[0].Trim();
-            var fontSize = int.Parse(args[1].Trim());
+            string[] args     = s.Split(',');
+            string fontName = args[0].Trim();
+            int fontSize = int.Parse(args[1].Trim());
 
             return ContentManager.LoadSystemFont(fontName).GetFont(fontSize);
         };

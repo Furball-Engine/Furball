@@ -1,5 +1,6 @@
 using System.Text;
 using Furball.Engine.Engine.Input;
+using Silk.NET.Input;
 
 namespace Furball.Engine.Engine.Debug.DebugCounter.Items; 
 
@@ -11,8 +12,10 @@ public class MousePosition : DebugCounterItem {
         StringBuilder builder = new("mouse: ");
 
         for (int i = 0; i < FurballGame.InputManager.CursorStates.Count; i++) {
-            FurballMouseState cursor = FurballGame.InputManager.CursorStates[i];
-            builder.Append($"[{i}]({cursor.Position.X}x{cursor.Position.Y}, {cursor.Name}, {string.Join(",", cursor.PressedButtons)}, {cursor.ScrollWheel.X}x{cursor.ScrollWheel.Y}) ");
+            FurballMouse cursor = FurballGame.InputManager.CursorStates[i];
+            builder.Append($"[{i}]({cursor.Position.X}x{cursor.Position.Y}, {cursor.Name}, (");
+            builder.Append($"{string.Join(",", cursor.PressedButtons)}");
+            builder.Append($"), {cursor.ScrollWheel.X}x{cursor.ScrollWheel.Y}) ");
         }
 
         return builder.ToString().Trim();

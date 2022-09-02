@@ -2,6 +2,7 @@ using System.Drawing;
 using System.Numerics;
 using FontStashSharp;
 using Furball.Engine.Engine.Helpers;
+using Furball.Engine.Engine.Input.Events;
 using Silk.NET.Input;
 using Color=Furball.Vixie.Backends.Shared.Color;
 
@@ -47,7 +48,7 @@ public class DrawableColorPicker : CompositeDrawable {
         this._colorDisplay.MoveTo(new Vector2(this._colorText.Size.X + 10, 0));
     }
 
-    private void OnColorDisplayClick(object sender, (MouseButton button, Point pos) valueTuple) {
+    private void OnColorDisplayClick(object sender, MouseButtonEventArgs mouseButtonEventArgs) {
         EtoHelper.OpenColorPicker(
         (o, color) => {
             this.Color.Value = color;

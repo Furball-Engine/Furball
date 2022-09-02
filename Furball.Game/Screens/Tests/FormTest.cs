@@ -3,6 +3,7 @@ using System.Numerics;
 using Furball.Engine;
 using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Graphics.Drawables.UiElements;
+using Furball.Engine.Engine.Input.Events;
 using Silk.NET.Input;
 using Color=Furball.Vixie.Backends.Shared.Color;
 
@@ -18,7 +19,7 @@ public class FormTest : TestScreen {
     }
 
     private int _formCount;
-    private void OnButtonClick(object sender, (MouseButton, Point) e) {
+    private void OnButtonClick(object sender, MouseButtonEventArgs mouseButtonEventArgs) {
         this.Manager.Add(
         new DrawableForm(
         $"Test Form {++this._formCount}",

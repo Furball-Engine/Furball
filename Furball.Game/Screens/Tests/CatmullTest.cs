@@ -3,6 +3,7 @@ using System.Numerics;
 using Furball.Engine;
 using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Helpers;
+using Furball.Engine.Engine.Input.Events;
 
 namespace Furball.Game.Screens.Tests; 
 
@@ -40,27 +41,27 @@ public class CatmullTest : TestScreen {
             Clickable  = true,
         };
 
-        a1.OnDrag += delegate(object _, Point point) {
-            this._points[0] = point.ToVector2();
-            a1.Position     = point.ToVector2();
+        a1.OnDrag += delegate(object _, MouseDragEventArgs e) {
+            this._points[0] = e.Position;
+            a1.Position     = e.Position;
         
             this.UpdatePath();
         };
-        a2.OnDrag += delegate(object _, Point point) {
-            this._points[1] = point.ToVector2();
-            a2.Position     = point.ToVector2();
+        a2.OnDrag += delegate(object _, MouseDragEventArgs e) {
+            this._points[1] = e.Position;
+            a2.Position     = e.Position;
         
             this.UpdatePath();
         };
-        a3.OnDrag += delegate(object _, Point point) {
-            this._points[2] = point.ToVector2();
-            a3.Position     = point.ToVector2();
+        a3.OnDrag += delegate(object _, MouseDragEventArgs e) {
+            this._points[2] = e.Position;
+            a3.Position     = e.Position;
             
             this.UpdatePath();
         };
-        a4.OnDrag += delegate(object _, Point point) {
-            this._points[3] = point.ToVector2();
-            a4.Position     = point.ToVector2();
+        a4.OnDrag += delegate(object _, MouseDragEventArgs e) {
+            this._points[3] = e.Position;
+            a4.Position     = e.Position;
             
             this.UpdatePath();
         };

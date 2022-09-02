@@ -154,8 +154,8 @@ public class FurballGame : Game {
         InputManager = new InputManager();
         //Only use the silk input methods if we are using the `View` event loop!
         if (this.EventLoop is ViewEventLoop) {
-            InputManager.RegisterInputMethod(InputManager.VixieMouseInputMethod    = new VixieMouseInputMethod());
-            InputManager.RegisterInputMethod(InputManager.VixieKeyboardInputMethod = new VixieKeyboardInputMethod());
+            InputManager.RegisterInputMethod(InputManager.SilkWindowingMouseInputMethod    = new SilkWindowingMouseInputMethod());
+            InputManager.RegisterInputMethod(InputManager.SilkWindowingKeyboardInputMethod = new SilkWindowingKeyboardInputMethod());
         }
 
         Profiler.StartProfile("init_audio_engine");
@@ -318,11 +318,11 @@ public class FurballGame : Game {
     protected override void OnWindowRecreation() {
         base.OnWindowRecreation();
         
-        InputManager.RemoveInputMethod(InputManager.VixieMouseInputMethod);
-        InputManager.RemoveInputMethod(InputManager.VixieKeyboardInputMethod);
+        InputManager.RemoveInputMethod(InputManager.SilkWindowingMouseInputMethod);
+        InputManager.RemoveInputMethod(InputManager.SilkWindowingKeyboardInputMethod);
         
-        InputManager.RegisterInputMethod(InputManager.VixieMouseInputMethod    = new VixieMouseInputMethod());
-        InputManager.RegisterInputMethod(InputManager.VixieKeyboardInputMethod = new VixieKeyboardInputMethod());
+        InputManager.RegisterInputMethod(InputManager.SilkWindowingMouseInputMethod    = new SilkWindowingMouseInputMethod());
+        InputManager.RegisterInputMethod(InputManager.SilkWindowingKeyboardInputMethod = new SilkWindowingKeyboardInputMethod());
     }
 
     public new void RunHeadless() {
@@ -368,17 +368,17 @@ public class FurballGame : Game {
     private Keybind _toggleConsole;
     public virtual void RegisterKeybinds() {
         this._toggleDebugOverlay = new Keybind(EngineDebugKeybinds.ToggleDebugOverlay, "Toggle Debug Overlay", Key.F11,
-                                               () => {
+                                               _ => {
                                                    this._drawDebugOverlay = !this._drawDebugOverlay;
                                                }
         );
         this._toggleInputOverlay = new Keybind(EngineDebugKeybinds.ToggleInputOverlay, "Toggle Input Overlay", Key.F10,
-                                               () => {
+                                               _ => {
                                                    DrawInputOverlay = !DrawInputOverlay;
                                                }
         );
         this._displayDebugTextureViewer = new Keybind(EngineDebugKeybinds.DispalyDebugTextureviewer, "Display Debug Texture Viewer", Key.F9,
-                                                      () => {
+                                                      _ => {
                                                           if (!this._textureDisplayFormAdded) {
                                                               DrawableManager.Add(this._textureDisplayForm);
                                                               this._textureDisplayFormAdded = true;
@@ -389,7 +389,7 @@ public class FurballGame : Game {
         EngineDebugKeybinds.ToggleConsole,
         "Toggle Console",
         Key.F12,
-        () => {
+        _ => {
             ImGuiConsole.Visible = !ImGuiConsole.Visible;
         }
         );

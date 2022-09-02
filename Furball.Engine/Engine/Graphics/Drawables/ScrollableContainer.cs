@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Numerics;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Furball.Engine.Engine.Helpers;
+using Furball.Engine.Engine.Input.Events;
 using Furball.Vixie.Helpers.Helpers;
 
 namespace Furball.Engine.Engine.Graphics.Drawables;
@@ -20,8 +21,8 @@ public class ScrollableContainer : CompositeDrawable {
 
         this._size = size;
     }
-    private void OnMouseMove(object sender, (Vector2 position, string cursorName) e) {
-        this._realHovered = this.RealContains(e.position.ToPoint());
+    private void OnMouseMove(object sender, MouseMoveEventArgs e) {
+        this._realHovered = this.RealContains(e.Position);
     }
 
     public void Add(Drawable drawable) {
@@ -36,9 +37,9 @@ public class ScrollableContainer : CompositeDrawable {
 
     private bool _realHovered;
 
-    private void OnMouseScroll(object sender, ((int scrollWheelId, float scrollAmount) scroll, string cursorName) e) {
+    private void OnMouseScroll(object sender, MouseScrollEventArgs e) {
         if (this._realHovered) {
-            this._targetScroll -= e.scroll.scrollAmount * this.ScrollSpeed;
+            this._targetScroll -= e.ScrollAmount.Y * this.ScrollSpeed;
             if (!this.InfiniteScrolling)
                 this._targetScroll = this._targetScroll.Clamp(0, this._lastMax);
         }

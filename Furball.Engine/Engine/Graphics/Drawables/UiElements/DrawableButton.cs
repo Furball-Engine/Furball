@@ -5,6 +5,7 @@ using FontStashSharp;
 using Furball.Engine.Engine.Graphics.Drawables.Primitives;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes;
+using Furball.Engine.Engine.Input.Events;
 using Silk.NET.Input;
 using Color=Furball.Vixie.Backends.Shared.Color;
 
@@ -89,7 +90,7 @@ public class DrawableButton : CompositeDrawable {
     /// <param name="margin">The margin between the text and the side of the button</param>
     public DrawableButton(
         Vector2 position, FontSystem font, int textSize, string text, Color buttonColor, Color textColor, Color outlineColor, Vector2 buttonSize,
-        EventHandler<(MouseButton, Point)> onClick = null, float margin = 5f
+        EventHandler<MouseButtonEventArgs> onClick = null, float margin = 5f
     ) {
         this.Position           = position;
         this.TextDrawable       = new TextDrawable(Vector2.Zero, font, text, textSize);

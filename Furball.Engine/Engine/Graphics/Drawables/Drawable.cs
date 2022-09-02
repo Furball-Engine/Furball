@@ -7,6 +7,7 @@ using Furball.Engine.Engine.Graphics.Drawables.Tweens;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes.BezierPathTween;
 using Furball.Engine.Engine.Helpers;
+using Furball.Engine.Engine.Input.Events;
 using Furball.Engine.Engine.Timing;
 using Furball.Vixie.Backends.Shared;
 using Furball.Vixie.Helpers;
@@ -182,23 +183,6 @@ public abstract class Drawable : IDisposable {
     /// </summary>
     /// <param name="point">The point to check</param>
     /// <returns>Whether the point is inside the drawable</returns>
-    public bool Contains(Point point) {
-        if (this.Circular)
-            return Vector2.Distance(point.ToVector2(), this.Position - this.RotationOrigin) < this.CircleRadius;
-
-        return this.Rectangle.Contains(point);
-    }
-    public bool RealContains(Point point) {
-        if (this.Circular)
-            return Vector2.Distance(point.ToVector2(), this.RealPosition - this.RotationOrigin) < this.CircleRadius;
-
-        return this.RealRectangle.Contains(point);
-    }
-    /// <summary>
-    ///     Checks whether a point is inside of the drawable
-    /// </summary>
-    /// <param name="point">The point to check</param>
-    /// <returns>Whether the point is inside the drawable</returns>
     public bool Contains(Vector2 point) {
         if (this.Circular)
             return Vector2.Distance(point, this.Position - this.RotationOrigin) < this.CircleRadius;
@@ -221,17 +205,17 @@ public abstract class Drawable : IDisposable {
 
         this.IsHovered = value;
     }
-    public void Click(bool value, Point point, MouseButton button) {
+    public void Click(bool value, MouseButtonEventArgs e) {
         if (value == this.IsClicked) return;
 
         if (value)
-            this.OnClick?.Invoke(this, (button, point));
+            this.OnClick?.Invoke(this, e);
         else
-            this.OnClickUp?.Invoke(this, (button, point));
+            this.OnClickUp?.Invoke(this, e);
 
         this.IsClicked = value;
     }
-    public void DragState(bool value, Point point) {
+    public void DragState(bool value, MouseDragEventArgs point) {
         if (value == this.IsDragging) return;
 
         if (value)
@@ -241,7 +225,7 @@ public abstract class Drawable : IDisposable {
 
         this.IsDragging = value;
     }
-    public void Drag(Point point) {
+    public void Drag(MouseDragEventArgs point) {
         if (!this.IsDragging) return;
 
         this.OnDrag?.Invoke(this, point);
@@ -257,23 +241,23 @@ public abstract class Drawable : IDisposable {
     /// <summary>
     ///     Called when the drawable is clicked
     /// </summary>
-    public event EventHandler<(MouseButton button, Point pos)> OnClick;
+    public event EventHandler<MouseButtonEventArgs> OnClick;
     /// <summary>
     ///     Called when the drawable is no longer being clicked
     /// </summary>
-    public event EventHandler<(MouseButton button, Point pos)> OnClickUp;
+    public event EventHandler<MouseButtonEventArgs> OnClickUp;
     /// <summary>
     ///     Gets fired when the Drawable is first getting started to Drag
     /// </summary>
-    public event EventHandler<Point> OnDragBegin;
+    public event EventHandler<MouseDragEventArgs> OnDragBegin;
     /// <summary>
     ///     Gets fired every Input Frame for the duration of the drag
     /// </summary>
-    public event EventHandler<Point> OnDrag;
+    public event EventHandler<MouseDragEventArgs> OnDrag;
     /// <summary>
     ///     Gets Fired when the Dragging stops
     /// </summary>
-    public event EventHandler<Point> OnDragEnd;
+    public event EventHandler<MouseDragEventArgs> OnDragEnd;
 
     public virtual void ClearEvents() {
         this.OnClick     = null;
