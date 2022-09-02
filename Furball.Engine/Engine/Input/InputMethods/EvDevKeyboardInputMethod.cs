@@ -42,6 +42,9 @@ public class EvDevKeyboardInputMethod : InputMethod {
             Key k = e.Key.ToSilk();
             switch (e.Type) {
                 case EvDevKeyValue.KeyDown:
+                    if (!FurballGame.Instance.WindowManager.Focused)
+                        break;
+                        
                     this.Keyboards[i].PressedKeys.Add(k);
                     this.Keyboards[i].QueuedKeyPresses.Add(k);
 
