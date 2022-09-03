@@ -47,7 +47,7 @@ public class DrawableManager : IDisposable {
     
     public Vector2 Position          = Vector2.Zero;
 
-    private Vector2 _size = new(FurballGame.DEFAULT_WINDOW_WIDTH, FurballGame.DEFAULT_WINDOW_HEIGHT);
+    private Vector2 _size = new(FurballGame.WindowWidth, FurballGame.DEFAULT_WINDOW_HEIGHT);
     public Vector2 Size {
         get => this._size;
         set {

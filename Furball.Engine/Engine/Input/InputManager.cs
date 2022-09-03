@@ -252,12 +252,12 @@ public class InputManager {
 
                         if (FurballGame.TooltipDrawable.Position.Y + FurballGame.TooltipDrawable.Size.Y < FurballGame.DEFAULT_WINDOW_HEIGHT)
                             FurballGame.TooltipDrawable.OriginType =
-                                FurballGame.TooltipDrawable.Position.X + FurballGame.TooltipDrawable.Size.X > FurballGame.DEFAULT_WINDOW_WIDTH
+                                FurballGame.TooltipDrawable.Position.X + FurballGame.TooltipDrawable.Size.X > FurballGame.WindowWidth
                                     ? OriginType.TopRight
                                     : OriginType.TopLeft;
                         else
                             FurballGame.TooltipDrawable.OriginType =
-                                FurballGame.TooltipDrawable.Position.X + FurballGame.TooltipDrawable.Size.X > FurballGame.DEFAULT_WINDOW_WIDTH
+                                FurballGame.TooltipDrawable.Position.X + FurballGame.TooltipDrawable.Size.X > FurballGame.WindowWidth
                                     ? OriginType.BottomRight
                                     : OriginType.BottomLeft;
 
