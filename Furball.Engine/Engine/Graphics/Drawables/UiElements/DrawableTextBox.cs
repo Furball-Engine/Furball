@@ -37,7 +37,7 @@ public partial class DrawableTextBox : CompositeDrawable, ICharInputHandler {
 
     public DynamicSpriteFont Font => this._textDrawable.Font;
     
-    public List<Rectangle> TextRectangles => this._textDrawable.TextRectangles;
+    public List<Glyph> TextRectangles => this._textDrawable.TextRectangles;
 
     private bool _selected;
     /// <summary>
@@ -108,7 +108,7 @@ public partial class DrawableTextBox : CompositeDrawable, ICharInputHandler {
     }
         
     private void UpdateCaretPosition(bool instant) {
-        List<Rectangle> rects = this.TextRectangles;
+        List<Glyph> rects = this.TextRectangles;
             
         if (this.SelectedRange.Value.Start == this.SelectedRange.Value.End) {
             Rectangle rect;
@@ -117,11 +117,11 @@ public partial class DrawableTextBox : CompositeDrawable, ICharInputHandler {
                 position = Vector2.Zero;
             }
             else if (this.SelectedRange.Value.End == this.Text.Length) {
-                rect     = rects[rects.Count - 1];
+                rect     = rects[rects.Count - 1].Bounds;
                 position = new Vector2(rect.Right, rect.Y);
             } 
             else {
-                rect     = rects[this.SelectedRange.Value.Start];
+                rect     = rects[this.SelectedRange.Value.Start].Bounds;
                 position = new Vector2(rect.Left, rect.Bottom);
             }
             
@@ -223,7 +223,7 @@ public partial class DrawableTextBox : CompositeDrawable, ICharInputHandler {
             }
             
             //Get the rectangles of all characters
-            List<Rectangle> rects = this.TextRectangles;
+            List<Glyph> glyphs = this.TextRectangles;
 
             List<int> newLinePoints = new();
             for (int i = 0; i < this.Text.Length; i++) {
@@ -238,7 +238,7 @@ public partial class DrawableTextBox : CompositeDrawable, ICharInputHandler {
 
             //Iterate over the number of used lines
             for (int lineNumber = numberOfLines - 1; lineNumber >= 0; lineNumber--) {
-                Rectangle lastRect = lineNumber == numberOfLines - 1 ? rects.Last() : rects[newLinePoints[lineNumber] - 1];
+                Rectangle lastRect = lineNumber == numberOfLines - 1 ? glyphs.Last().Bounds : glyphs[newLinePoints[lineNumber] - 1].Bounds;
                 
                 int startOfLine = lineNumber == 0 ? 0 : newLinePoints[lineNumber - 1];
                 int endOfLine   = newLinePoints[lineNumber];
@@ -256,7 +256,7 @@ public partial class DrawableTextBox : CompositeDrawable, ICharInputHandler {
                 }
 
                 for (int i = endOfLine; i >= startOfLine; i--) {
-                    Rectangle rect = rects[i];
+                    Rectangle rect = glyphs[i].Bounds;
                     if (e.Mouse.Position.X > rect.Left - rect.Width / 2f + this.RealPosition.X) {
                         this.SelectedRange.Value = new Range(i, i);
                         this.UpdateCaretPosition(true);

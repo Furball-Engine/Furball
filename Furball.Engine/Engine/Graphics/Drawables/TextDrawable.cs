@@ -112,7 +112,7 @@ public class TextDrawable : Drawable {
     /// The height of the text
     /// </summary>
     public override Vector2 Size => this._sizeCache * this.Scale;
-    public List<Rectangle> TextRectangles => this.Font.GetGlyphRects(this.Text, Vector2.Zero, Vector2.Zero, this.Scale);
+    public List<Glyph> TextRectangles => this.Font.GetGlyphs(this.Text, Vector2.Zero, Vector2.Zero, this.Scale);
 
     public string PreWrapText { get; protected set; }
 
@@ -120,15 +120,15 @@ public class TextDrawable : Drawable {
         if (setPrewrap)
             this.PreWrapText = this.Text;
 
-        List<Rectangle> rects = this.TextRectangles;
+        List<Glyph> glyphs = this.TextRectangles;
 
-        for (int i = 0; i < rects.Count; i++) {
-            Rectangle rectangle = rects[i];
+        for (int i = 0; i < glyphs.Count; i++) {
+            Rectangle rectangle = glyphs[i].Bounds;
 
             if (rectangle.Right > width) {
                 this.Text = this.Text.Insert(i, "\n");
 
-                rects = this.TextRectangles;
+                glyphs = this.TextRectangles;
 
                 i -= 1;
             }

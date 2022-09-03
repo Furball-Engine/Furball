@@ -15,6 +15,7 @@ using FFmpeg.AutoGen;
 using Kettu;
 using Silk.NET.Core.Native;
 using static FFmpeg.AutoGen.ffmpeg;
+// ReSharper disable UnusedMember.Local
 
 namespace Furball.Engine.Engine.Graphics; 
 

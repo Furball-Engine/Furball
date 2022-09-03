@@ -1,10 +1,8 @@
-using System.Drawing;
 using System.Numerics;
 using FontStashSharp;
 using Furball.Engine.Engine.Graphics.Drawables.Primitives;
 using Furball.Engine.Engine.Helpers;
 using Furball.Engine.Engine.Input.Events;
-using Silk.NET.Input;
 
 namespace Furball.Engine.Engine.Graphics.Drawables.UiElements; 
 

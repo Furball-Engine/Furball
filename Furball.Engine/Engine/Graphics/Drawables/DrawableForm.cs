@@ -1,12 +1,9 @@
 using System;
-using System.Drawing;
 using System.Numerics;
 using Furball.Engine.Engine.Graphics.Drawables.Primitives;
-using Furball.Engine.Engine.Helpers;
 using Furball.Engine.Engine.Helpers.Logger;
 using Furball.Engine.Engine.Input.Events;
 using Kettu;
-using Silk.NET.Input;
 using Color=Furball.Vixie.Backends.Shared.Color;
 
 namespace Furball.Engine.Engine.Graphics.Drawables;

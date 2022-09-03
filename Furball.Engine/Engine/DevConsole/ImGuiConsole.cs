@@ -57,7 +57,7 @@ public static class ImGuiConsole {
             }
         };
 
-        DevConsole.ConsoleLog.CollectionChanged += (sender, args) => {
+        DevConsole.ConsoleLog.CollectionChanged += (_, _) => {
             RefreshCache();
             if (AutoScroll)
                 _scrollDown = true;

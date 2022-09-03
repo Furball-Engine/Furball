@@ -2,7 +2,6 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using Furball.Engine.Engine.ECS.Components;
 using Furball.Vixie;
 
 namespace Furball.Engine.Engine.ECS; 

@@ -1,6 +1,5 @@
 using System.Text;
 using Furball.Engine.Engine.Input;
-using Silk.NET.Input;
 
 namespace Furball.Engine.Engine.Debug.DebugCounter.Items; 
 

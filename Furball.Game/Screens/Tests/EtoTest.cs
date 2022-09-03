@@ -1,11 +1,9 @@
-using System.Drawing;
 using System.Numerics;
 using Eto.Forms;
 using Furball.Engine;
 using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Graphics.Drawables.UiElements;
 using Furball.Engine.Engine.Helpers;
-using Silk.NET.Input;
 using Color=Furball.Vixie.Backends.Shared.Color;
 
 namespace Furball.Game.Screens.Tests; 

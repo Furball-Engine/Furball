@@ -5,8 +5,6 @@ using System.Numerics;
 using Furball.Engine.Engine.DevConsole;
 using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
-using Furball.Engine.Engine.Graphics.Drawables.Tweens;
-using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes;
 using Furball.Engine.Engine.Helpers;
 using Furball.Engine.Engine.Helpers.Logger;
 using Furball.Engine.Engine.Input.Events;

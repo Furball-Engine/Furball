@@ -3,7 +3,6 @@ using System.Drawing;
 using System.Globalization;
 using System.Numerics;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
-using Furball.Engine.Engine.Helpers;
 using Furball.Engine.Engine.Input.Events;
 using Furball.Vixie.Helpers.Helpers;
 

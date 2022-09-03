@@ -1,8 +1,6 @@
-using System.Drawing;
 using System.Numerics;
 using Furball.Engine;
 using Furball.Engine.Engine.Graphics.Drawables;
-using Furball.Engine.Engine.Helpers;
 using Furball.Engine.Engine.Input.Events;
 
 namespace Furball.Game.Screens.Tests; 

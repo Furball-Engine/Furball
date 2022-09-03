@@ -1,4 +1,3 @@
-using System.Drawing;
 using System.Numerics;
 using Furball.Engine;
 using Furball.Engine.Engine.Graphics;
@@ -6,7 +5,6 @@ using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Graphics.Drawables.UiElements;
 using Furball.Engine.Engine.Input.Events;
 using ManagedBass;
-using Silk.NET.Input;
 using sowelipisona;
 using sowelipisona.Effects;
 using Color=Furball.Vixie.Backends.Shared.Color;

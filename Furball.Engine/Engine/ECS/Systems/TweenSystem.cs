@@ -1,6 +1,6 @@
-using System.Collections.Generic;
 using Furball.Engine.Engine.ECS.Components;
 using Furball.Engine.Engine.ECS.Systems.Helpers;
+using Furball.Engine.Engine.Graphics.Drawables.Tweens;
 
 namespace Furball.Engine.Engine.ECS.Systems; 
 
@@ -13,5 +13,14 @@ public class TweenSystem : EntitySystem {
 
         this._entityTweensComponent     = ComponentGuard.EnsureNonNull<EntityTweensComponent>(this, entity);
         this._entityTimeSourceComponent = ComponentGuard.EnsureNonNull<EntityTimeSourceComponent>(this, entity);
+    }
+
+    public override void Update(double deltaTime) {
+        base.Update(deltaTime);
+
+        double time = this._entityTimeSourceComponent.TimeSource.GetCurrentTime();
+        foreach (Tween tween in this._entityTweensComponent.Tweens) {
+            tween.Update(time);
+        }
     }
 }

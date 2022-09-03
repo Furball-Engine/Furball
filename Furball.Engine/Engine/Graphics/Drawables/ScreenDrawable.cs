@@ -13,7 +13,7 @@ public class ScreenDrawable : Drawable {
         get => this._screenSize;
         set {
             this._screenSize = value;
-            this.OnRelayout(new Vector2(value.X / value.Y * 720f));
+            this.OnRelayout();
         }
     }
 
@@ -41,9 +41,8 @@ public class ScreenDrawable : Drawable {
         this._screen.UpdateTextStrings();
     }
 
-    private void OnRelayout(Vector2 e) {
+    private void OnRelayout() {
         this._screen.ManagerOnOnScalingRelayoutNeeded(this, this._screen.Manager.Size);
-        // this._screen.Relayout(e.X, e.Y);
     }
 
     public override void Update(double time) {

@@ -11,7 +11,6 @@ using Furball.Engine.Engine.Input.Events;
 using Furball.Engine.Engine.Timing;
 using Furball.Vixie.Backends.Shared;
 using Furball.Vixie.Helpers;
-using Silk.NET.Input;
 using Color=Furball.Vixie.Backends.Shared.Color;
 
 namespace Furball.Engine.Engine.Graphics.Drawables; 
@@ -307,6 +306,7 @@ public abstract class Drawable : IDisposable {
         for (int i = 0; i != this.Tweens.Count; i++) {
             Tween currentTween = this.Tweens[i];
 
+            // ReSharper disable twice CompareOfFloatsByEqualityOperator
             if (currentTween.LastKnownStartTime != currentTween.StartTime || currentTween.LastKnownEndTime != currentTween.EndTime)
                 this._sortTweenScheduled = true;
 

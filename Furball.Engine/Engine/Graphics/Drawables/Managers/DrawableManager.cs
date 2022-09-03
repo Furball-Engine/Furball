@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using System.Numerics;
 using Furball.Engine.Engine.Helpers;
 using Furball.Vixie;
@@ -165,7 +164,7 @@ public class DrawableManager : IDisposable {
     private          RenderTarget? _target2D;
     private readonly DrawableManagerArgs  _args = new();
     public RenderTarget DrawRenderTarget2D(double time, DrawableBatch batch) {
-        if((int)(this._target2D?.Size.X ?? 0) != FurballGame.RealWindowWidth || (int)(this._target2D?.Size.Y ?? 0) != FurballGame.RealWindowHeight) {
+        if((this._target2D?.Size.X ?? 0) != FurballGame.RealWindowWidth || (this._target2D?.Size.Y ?? 0) != FurballGame.RealWindowHeight) {
             this._target2D?.Dispose();
             this._target2D = new RenderTarget((uint)FurballGame.RealWindowWidth, (uint)FurballGame.RealWindowHeight);
         }
