@@ -3,7 +3,7 @@ using System.Security.Cryptography;
 
 namespace Furball.Engine.Engine.Helpers; 
 
-public class CryptoHelper {
+public static class CryptoHelper {
     private static readonly MD5    _md5    = new MD5CryptoServiceProvider();
     private static          SHA256 _sha256 = new SHA256CryptoServiceProvider();
     private static readonly SHA384 _sha384 = new SHA384CryptoServiceProvider();

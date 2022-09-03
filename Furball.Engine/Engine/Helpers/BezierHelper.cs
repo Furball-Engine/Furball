@@ -9,7 +9,7 @@ public enum BezierCurveType {
     Cubic
 }
 
-public class BezierHelper {
+public static class BezierHelper {
     public static Vector2 QuadraticBezier(Vector2 p0, Vector2 p1, Vector2 p2, float t) {
         Vector2 a = MathHelper.Lerp(p0, p1, t);
         Vector2 b = MathHelper.Lerp(p1, p2, t);

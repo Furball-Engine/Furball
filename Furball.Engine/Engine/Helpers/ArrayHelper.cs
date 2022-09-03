@@ -1,6 +1,6 @@
 namespace Furball.Engine.Engine.Helpers; 
 
-public class ArrayHelper {
+public static class ArrayHelper {
     public static T[] FitElementsInANewArray <T>(T[] source, int targetLength) {
         int sourceLength        = source.Length;
         int baseSteps           = targetLength / sourceLength;

@@ -5,9 +5,7 @@ using System.Reflection;
 
 namespace Furball.Engine.Engine.Helpers;
 
-internal static class IsExternalInit {}
-
-public class ObjectHelper {
+public static class ObjectHelper {
     public static IEnumerable<T> GetEnumerableOfType <T>(params object[] constructorArgs) where T : class, IComparable<T> {
         List<T> objects = Assembly.GetAssembly(typeof(T)).GetTypes().Where(myType => myType.IsClass && !myType.IsAbstract && myType.IsSubclassOf(typeof(T)))
                                   .Select(type => (T)Activator.CreateInstance(type, constructorArgs)).ToList();

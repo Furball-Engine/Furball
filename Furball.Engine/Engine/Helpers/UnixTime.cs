@@ -2,7 +2,7 @@ using System;
 
 namespace Furball.Engine.Engine.Helpers; 
 
-public class UnixTime {
+public static class UnixTime {
     /// <summary>
     /// Easier Way to Get the Unix Time Quickly
     /// </summary>

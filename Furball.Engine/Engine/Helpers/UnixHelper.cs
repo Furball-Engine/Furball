@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 namespace Furball.Engine.Engine.Helpers; 
 
 public static class UnixEnvironment {
-    public const long ROOT_USER_ID = 0;
+    private const long ROOT_USER_ID = 0;
     
     [DllImport("libc")]
     private static extern uint getuid();
