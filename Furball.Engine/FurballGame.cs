@@ -160,11 +160,10 @@ public class FurballGame : Game {
 
             bool useSilkKeyboardInput = true;
 
-            if (RuntimeInfo.CurrentPlatform() == OSPlatform.Linux) {
-                if (UnixEnvironment.IsRoot()) {
-                    useSilkKeyboardInput = false;
-                    InputManager.RegisterInputMethod(new EvDevKeyboardInputMethod());
-                }
+            //If we are on linux and we are the root user, we can use the EvDev input instead, which can detect multiple keyboards separately
+            if (RuntimeInfo.CurrentPlatform() == OSPlatform.Linux && UnixEnvironment.IsRoot()) {
+                useSilkKeyboardInput = false;
+                InputManager.RegisterInputMethod(new EvDevKeyboardInputMethod());
             }
             
             if(useSilkKeyboardInput)

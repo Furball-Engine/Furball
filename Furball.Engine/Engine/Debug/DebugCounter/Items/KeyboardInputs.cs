@@ -1,9 +1,8 @@
-
-
+using System.Collections.Generic;
 using System.Text;
 using Furball.Engine.Engine.Input;
 
-namespace Furball.Engine.Engine.Debug.DebugCounter.Items; 
+namespace Furball.Engine.Engine.Debug.DebugCounter.Items;
 
 public class KeyboardInputs : DebugCounterItem {
     public override bool ForceNewLine {
@@ -11,13 +10,17 @@ public class KeyboardInputs : DebugCounterItem {
     }
 
     public override string GetAsString(double time) {
-        StringBuilder builder = new(FurballGame.InputManager.HeldKeys.Count + 2);
+        StringBuilder builder = new();
 
         builder.Append("keyboard: {");
 
-        for (int i = 0; i < FurballGame.InputManager.Keyboards.Count; i++) {
-            FurballKeyboard keyboard = FurballGame.InputManager.Keyboards[i];
-            builder.AppendLine($"[{i}]({keyboard.Name}, {string.Join(",", keyboard.PressedKeys)})");
+        List<FurballKeyboard> keyboards = FurballGame.InputManager.Keyboards;
+        for (int i = 0; i < keyboards.Count; i++) {
+            FurballKeyboard keyboard = keyboards[i];
+            builder.Append($"[{i}]({keyboard.Name}, {string.Join(",", keyboard.PressedKeys)})");
+            if (i != keyboards.Count - 1) {
+                builder.Append('\n');
+            }
         }
 
         builder.Append("}");

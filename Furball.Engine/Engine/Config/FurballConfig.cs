@@ -33,7 +33,7 @@ public class FurballConfig : VolpeConfig {
     }
     
     public FurballConfig() {
-        this.Values["screen_width"]  = new Value.Number(FurballGame.WindowWidth);
+        this.Values["screen_width"]  = new Value.Number(FurballGame.DEFAULT_WINDOW_WIDTH);
         this.Values["screen_height"] = new Value.Number(FurballGame.DEFAULT_WINDOW_HEIGHT);
 
         this.Values["limit_fps"]   = new Value.Boolean(true);
