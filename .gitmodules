@@ -6,4 +6,4 @@
 	url = https://github.com/Furball-Engine/Furball.Volpe
 [submodule "evdev-sharp"]
 	path = evdev-sharp
-	url = https://github.com/Furball-Engine/evdev-sharp
+	url = https://github.com/Beyley/evdev-sharp
