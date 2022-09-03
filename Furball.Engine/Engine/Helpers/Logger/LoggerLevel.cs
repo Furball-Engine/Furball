@@ -43,7 +43,7 @@ public class LoggerLevelInput : LoggerLevel {
         base.Channel = channel.ToString();
     }
 
-    private enum Channel {
+    private new enum Channel {
         Info,
         Warning,
         Error

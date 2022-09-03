@@ -4,29 +4,29 @@ using Xunit;
 
 namespace Furball.Tests.Helpers {
     public class ArrayHelperTests {
-        private static readonly string[] BEGIN_ARRAY = new[] {
+        private static readonly string[] BeginArray = new[] {
             "A", "B"
         };
-        private static readonly string[] END_ARRAY = new[] {
+        private static readonly string[] EndArray = new[] {
             "A", "A", "B", "B"
         };
 
-        private static readonly string[] END_ARRAY_SURPLUS_TEST = new[] {
+        private static readonly string[] EndArraySurplusTest = new[] {
             "A", "A", "A", "B", "B"
         };
 
         [Fact]
         public void FitElementsInANewArray() {
-            string[] final = ArrayHelper.FitElementsInANewArray(BEGIN_ARRAY, END_ARRAY.Length);
+            string[] final = ArrayHelper.FitElementsInANewArray(BeginArray, EndArray.Length);
 
-            Assert.True(final.SequenceEqual(END_ARRAY), "FitElementsInANewArray produced a wrong array!");
+            Assert.True(final.SequenceEqual(EndArray), "FitElementsInANewArray produced a wrong array!");
         }
 
         [Fact]
         public void FitElementsInANewArraySurplusTest() {
-            string[] final = ArrayHelper.FitElementsInANewArray(BEGIN_ARRAY, END_ARRAY_SURPLUS_TEST.Length);
+            string[] final = ArrayHelper.FitElementsInANewArray(BeginArray, EndArraySurplusTest.Length);
 
-            Assert.True(final.SequenceEqual(END_ARRAY_SURPLUS_TEST), "FitElementsInANewArray produced a wrong array!");
+            Assert.True(final.SequenceEqual(EndArraySurplusTest), "FitElementsInANewArray produced a wrong array!");
         }
     }
 }

@@ -39,6 +39,7 @@ using sowelipisona;
 using sowelipisona.ManagedBass;
 using Color=System.Drawing.Color;
 using Environment=System.Environment;
+using GraphicsBackend=Furball.Vixie.GraphicsBackend;
 using Rectangle=System.Drawing.Rectangle;
 
 namespace Furball.Engine; 
@@ -46,7 +47,7 @@ namespace Furball.Engine;
 public class FurballGame : Game {
     [CanBeNull]
     public Screen RunningScreen;
-    private Screen LoadingScreen;
+    private Screen _loadingScreen;
 
     public static Random Random = new();
 
@@ -93,10 +94,10 @@ public class FurballGame : Game {
     
     public static byte[] DefaultFontData;
 
-    public static bool BypassFurballFPSLimit = false;
-    public static bool BypassFurballUPSLimit = false;
+    public static bool BypassFurballFpsLimit = false;
+    public static bool BypassFurballUpsLimit = false;
 
-    public static readonly FontSystem DEFAULT_FONT = new(
+    public static readonly FontSystem DefaultFont = new(
     new FontSystemSettings {
         FontResolutionFactor = 2f,
         KernelWidth          = 2,
@@ -105,7 +106,7 @@ public class FurballGame : Game {
     }
     );
 
-    public static readonly FontSystem DEFAULT_FONT_STROKED = new(
+    public static readonly FontSystem DefaultFontStroked = new(
     new FontSystemSettings {
         FontResolutionFactor = 2f,
         KernelWidth          = 2,
@@ -148,8 +149,8 @@ public class FurballGame : Game {
         );
 
         DefaultFontData = ContentManager.LoadRawAsset("default-font.ttf");
-        DEFAULT_FONT.AddFont(DefaultFontData);
-        DEFAULT_FONT_STROKED.AddFont(DefaultFontData);
+        DefaultFont.AddFont(DefaultFontData);
+        DefaultFontStroked.AddFont(DefaultFontData);
 
         _stopwatch.Start();
 
@@ -238,14 +239,14 @@ public class FurballGame : Game {
         Profiler.EndProfileAndPrint("load_content");
 
         Profiler.StartProfile("set_window_properties");
-        if (!BypassFurballFPSLimit && FurballConfig.Instance.Values["limit_fps"].ToBoolean().Value) {
+        if (!BypassFurballFpsLimit && FurballConfig.Instance.Values["limit_fps"].ToBoolean().Value) {
             double var = FurballConfig.Instance.Values["target_fps"].ToNumber().Value;
 
             //If the target fps is less than or equal to 0, then send in `null`, if not, then send the var
             SetTargetFps(var <= 0 ? null : var);
         }
 
-        if (!BypassFurballUPSLimit && FurballConfig.Instance.Values["limit_ups"].ToBoolean().Value) {
+        if (!BypassFurballUpsLimit && FurballConfig.Instance.Values["limit_ups"].ToBoolean().Value) {
             double var = FurballConfig.Instance.Values["target_ups"].ToNumber().Value;
             
             //If the target ups is less than or equal to 0, then send in `null`, if not, then send the var
@@ -301,7 +302,7 @@ public class FurballGame : Game {
         if (Assembly.GetExecutingAssembly().GetType("MonoMod.WasHere") != null) {
             GameTimeScheduler.ScheduleMethod(
             delegate {
-                TextDrawable easterEggText = new(new Vector2(5, 5), DEFAULT_FONT_STROKED, "Hello MonoMod user! :3c", 36);
+                TextDrawable easterEggText = new(new Vector2(5, 5), DefaultFontStroked, "Hello MonoMod user! :3c", 36);
 
                 easterEggText.Hoverable = true;
                 easterEggText.ToolTip   = "Enjoy Modding!";
@@ -448,7 +449,7 @@ public class FurballGame : Game {
         
         this.WindowManager.TargetFramerate = fps ?? 0;
 
-        if (!BypassFurballFPSLimit)
+        if (!BypassFurballFpsLimit)
             FurballConfig.Instance.Values["target_fps"] = new Value.Number(fps ?? -1);
     }
 
@@ -458,7 +459,7 @@ public class FurballGame : Game {
         
         this.WindowManager.TargetUpdaterate = ups ?? 0;
 
-        if (!BypassFurballUPSLimit)
+        if (!BypassFurballUpsLimit)
             FurballConfig.Instance.Values["target_ups"] = new Value.Number(ups ?? -1);
     }
 
@@ -481,7 +482,7 @@ public class FurballGame : Game {
         }
 
         if((!screen.RequireLoadingScreen) || (screen.RequireLoadingScreen && screen.LoadingComplete)) {
-            this.LoadingScreen                 = null;
+            this._loadingScreen                 = null;
             this._loadingScreenChangeOffQueued = false;
                 
             this.Components.Add(screen);
@@ -498,7 +499,7 @@ public class FurballGame : Game {
             
             Logger.Log($"Change to {screen.GetType().Name} finished!", LoggerLevelEngineInfo.Instance);
         } else {
-            this.LoadingScreen = screen;
+            this._loadingScreen = screen;
 
             if (screen.BackgroundThread == null) {
                 Logger.Log($"Starting background thread for {screen.GetType().Name}", LoggerLevelEngineInfo.Instance);
@@ -563,16 +564,16 @@ public class FurballGame : Game {
             this._updateWatch.Start();
         }
 
-        if (this.LoadingScreen is {
+        if (this._loadingScreen is {
                 LoadingComplete: false
-            } && !this.LoadingScreen.BackgroundThread.IsAlive) {
+            } && !this._loadingScreen.BackgroundThread.IsAlive) {
             throw new Exception("The background loading thread has died!");
         }       
-        if (this.LoadingScreen is {
+        if (this._loadingScreen is {
                 LoadingComplete: true
             } && !this._loadingScreenChangeOffQueued) {
             this._loadingScreenChangeOffQueued = true;
-            ScreenManager.ChangeScreen(this.LoadingScreen);
+            ScreenManager.ChangeScreen(this._loadingScreen);
         }
 
         InputManager.Update();
@@ -636,10 +637,10 @@ public class FurballGame : Game {
 
         DrawableManager.Draw(gameTime, DrawableBatch);
 
-        if (this.LoadingScreen != null) {
-            DynamicSpriteFont f = DEFAULT_FONT.GetFont(40);
+        if (this._loadingScreen != null) {
+            DynamicSpriteFont f = DefaultFont.GetFont(40);
 
-            string text = this.LoadingScreen.LoadingStatus;
+            string text = this._loadingScreen.LoadingStatus;
 
             Vector2 textSize = f.MeasureString(text);
 
@@ -647,7 +648,7 @@ public class FurballGame : Game {
             const float barHeight = 30;
                 
             DrawableBatch.DrawString(f, text, new Vector2(WindowWidth / 2f - textSize.X / 2f, WindowHeight * 0.3f), Color.White);
-            DrawableBatch.FillRectangle(new Vector2(gap,                                      WindowHeight - gap - barHeight), new Vector2((WindowWidth - gap * 2f) * this.LoadingScreen.LoadingProgress, barHeight), Vixie.Backends.Shared.Color.Grey);
+            DrawableBatch.FillRectangle(new Vector2(gap,                                      WindowHeight - gap - barHeight), new Vector2((WindowWidth - gap * 2f) * this._loadingScreen.LoadingProgress, barHeight), Vixie.Backends.Shared.Color.Grey);
             DrawableBatch.DrawRectangle(new Vector2(gap,                                      WindowHeight - gap - barHeight), new Vector2(WindowWidth - gap * 2f, barHeight), 1, Vixie.Backends.Shared.Color.White);
         }
 

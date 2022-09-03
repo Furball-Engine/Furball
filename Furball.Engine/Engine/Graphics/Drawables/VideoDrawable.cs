@@ -8,7 +8,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables;
 public class VideoDrawable : TexturedDrawable {
     public double StartTime;
 
-    private readonly ITimeSource VideoTimeSource;
+    private readonly ITimeSource _videoTimeSource;
 
     private readonly VideoDecoder _decoder;
 
@@ -25,12 +25,12 @@ public class VideoDrawable : TexturedDrawable {
         this._decoder.Load(path);
 
         //Create the texture which will store our video
-        this._texture      = Texture.CreateEmptyTexture((uint)this._decoder.Width, (uint)this._decoder.Height);
-        this._texture.Name = $"video:{path}";
+        this.Texture      = Vixie.Texture.CreateEmptyTexture((uint)this._decoder.Width, (uint)this._decoder.Height);
+        this.Texture.Name = $"video:{path}";
         
-        this.VideoTimeSource = timeSource;
+        this._videoTimeSource = timeSource;
 
-        this.StartTime = this.VideoTimeSource.GetCurrentTime();
+        this.StartTime = this._videoTimeSource.GetCurrentTime();
     }
 
     private double _lastSeek = -1;
@@ -51,7 +51,7 @@ public class VideoDrawable : TexturedDrawable {
     public override void Update(double time) {
         base.Update(time);
 
-        byte[] data = this._decoder.GetFrame((int)(this.VideoTimeSource.GetCurrentTime() - this.StartTime));
+        byte[] data = this._decoder.GetFrame((int)(this._videoTimeSource.GetCurrentTime() - this.StartTime));
         if (data != null)
             this.Texture.SetData(data);
     }

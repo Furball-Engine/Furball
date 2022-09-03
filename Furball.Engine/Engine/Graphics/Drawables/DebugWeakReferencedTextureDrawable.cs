@@ -6,13 +6,13 @@ using Furball.Vixie;
 namespace Furball.Engine.Engine.Graphics.Drawables;
 
 public class DebugWeakReferencedTextureDrawable : Drawable {
-    private readonly WeakReference<Texture> Texture;
+    private readonly WeakReference<Texture> _texture;
 
     public event EventHandler TextureReferenceCleared;
 
     public override Vector2 Size {
         get {
-            if (!this.Texture.TryGetTarget(out Texture tex)) {
+            if (!this._texture.TryGetTarget(out Texture tex)) {
                 this.TextureReferenceCleared?.Invoke(this, EventArgs.Empty);
                 return Vector2.Zero;
             }
@@ -21,10 +21,10 @@ public class DebugWeakReferencedTextureDrawable : Drawable {
         }
     }
 
-    public DebugWeakReferencedTextureDrawable(WeakReference<Texture> texture) => this.Texture = texture;
+    public DebugWeakReferencedTextureDrawable(WeakReference<Texture> texture) => this._texture = texture;
 
     public override void Draw(double time, DrawableBatch batch, DrawableManagerArgs args) {
-        if (!this.Texture.TryGetTarget(out Texture tex)) {
+        if (!this._texture.TryGetTarget(out Texture tex)) {
             this.TextureReferenceCleared?.Invoke(this, EventArgs.Empty);
             return;
         }

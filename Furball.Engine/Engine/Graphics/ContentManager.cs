@@ -12,23 +12,23 @@ using SixLabors.Fonts;
 namespace Furball.Engine.Engine.Graphics; 
 
 public static class ContentManager {
-    private static readonly Dictionary<string, WeakReference<byte[]>>                       CONTENT_CACHE = new();
-    private static readonly Dictionary<string, WeakReference<Texture>>                      TEXTURE_CACHE = new();
-    public static readonly  Dictionary<(FontSystem, int), WeakReference<DynamicSpriteFont>> FSS_CACHE     = new();
+    private static readonly Dictionary<string, WeakReference<byte[]>>                       ContentCache = new();
+    private static readonly Dictionary<string, WeakReference<Texture>>                      TextureCache = new();
+    public static readonly  Dictionary<(FontSystem, int), WeakReference<DynamicSpriteFont>> FssCache     = new();
     public static           string                                                          ContentPath   = "Content";
 
     public static int CacheSizeLimit = 100000000;// 8 MB
 
-    public static int ContentCacheItems => CONTENT_CACHE.Count;
-    public static int FSSCacheItems => FSS_CACHE.Count;
-    public static int TextureCacheItems => TEXTURE_CACHE.Count;
+    public static int ContentCacheItems => ContentCache.Count;
+    public static int FssCacheItems => FssCache.Count;
+    public static int TextureCacheItems => TextureCache.Count;
 
     /// <summary>
     /// Clears the content cache, allowing changed assets to reload
     /// </summary>
     public static void ClearCache() {
-        CONTENT_CACHE.Clear();
-        FSS_CACHE.Clear();
+        ContentCache.Clear();
+        FssCache.Clear();
 
         Logger.Log("Content cache cleared!", LoggerLevelCacheEvent.Instance);
     }
@@ -38,8 +38,8 @@ public static class ContentManager {
         new FixedTimeStepMethod(
         5000,
         () => {
-            CONTENT_CACHE.RemoveAll((key, value) => !value.TryGetTarget(out _));
-            TEXTURE_CACHE.RemoveAll((key, value) => !value.TryGetTarget(out _));
+            ContentCache.RemoveAll((key, value) => !value.TryGetTarget(out _));
+            TextureCache.RemoveAll((key, value) => !value.TryGetTarget(out _));
         }
         )
         );
@@ -52,7 +52,7 @@ public static class ContentManager {
 
         //If we cant find the font, just give them the default one, ittl work
         if (!SystemFonts.TryGet(familyName, out FontFamily font))
-            return FurballGame.DEFAULT_FONT;
+            return FurballGame.DefaultFont;
 
         font.TryGetPaths(out IEnumerable<string> paths);
 
@@ -69,17 +69,17 @@ public static class ContentManager {
     }
 
     public static Texture LoadTextureFromFileCached(string filename, ContentSource source = ContentSource.Game) {
-        if (TEXTURE_CACHE.TryGetValue(filename, out WeakReference<Texture> reference)) {
+        if (TextureCache.TryGetValue(filename, out WeakReference<Texture> reference)) {
             if (reference.TryGetTarget(out Texture refTex))
                 return refTex;
 
-            TEXTURE_CACHE.Remove(filename);
+            TextureCache.Remove(filename);
         }
 
         Texture tex = Texture.CreateTextureFromStream(new MemoryStream(LoadRawAsset(filename, source)));
         tex.Name = filename;
         
-        TEXTURE_CACHE[filename] = new WeakReference<Texture>(tex);
+        TextureCache[filename] = new WeakReference<Texture>(tex);
 
         return tex;
     }
@@ -92,12 +92,12 @@ public static class ContentManager {
     }
 
     public static byte[] LoadRawAsset(string filename, ContentSource source = ContentSource.Game, bool bypassCache = false) {
-        if (CONTENT_CACHE.TryGetValue(filename, out WeakReference<byte[]> cacheReference) && !bypassCache) {
+        if (ContentCache.TryGetValue(filename, out WeakReference<byte[]> cacheReference) && !bypassCache) {
             if (cacheReference.TryGetTarget(out byte[] cacheData))
                 return cacheData;
 
             //If we fail to get the data from the weak reference, then remove the reference from the cache
-            CONTENT_CACHE.Remove(filename);
+            ContentCache.Remove(filename);
         }
 
         byte[] data = Array.Empty<byte>();
@@ -132,7 +132,7 @@ public static class ContentManager {
         //We dont want to be caching anything huge as that could cause unnessesarily high memory usage
         if (data.Length < CacheSizeLimit && !bypassCache) {
             Logger.Log($"Caching content with filepath: {filename}, hash:{CryptoHelper.GetMd5(data)}, dataSize:{data.LongLength}", LoggerLevelCacheEvent.Instance);
-            CONTENT_CACHE.Add(filename, new WeakReference<byte[]>(data));
+            ContentCache.Add(filename, new WeakReference<byte[]>(data));
         }
 
         return data;

@@ -29,6 +29,6 @@ public class LoadingScreenTest : TestScreen {
     public override void Initialize() {
         base.Initialize();
 
-        this.Manager.Add(new TextDrawable(new Vector2(10), FurballGame.DEFAULT_FONT_STROKED, "Loading Complete!", 30));
+        this.Manager.Add(new TextDrawable(new Vector2(10), FurballGame.DefaultFontStroked, "Loading Complete!", 30));
     }
 }

@@ -41,14 +41,14 @@ public class TextBoxTest : TestScreen {
     public override void Initialize() {
         base.Initialize();
             
-        this.Manager.Add(new TextInputStackDrawableTest(new Vector2(10), FurballGame.DEFAULT_FONT, "Global input grabber: ", 40) {
+        this.Manager.Add(new TextInputStackDrawableTest(new Vector2(10), FurballGame.DefaultFont, "Global input grabber: ", 40) {
             ScreenOriginType = OriginType.TopRight,
             OriginType = OriginType.TopRight
         });
         
-        this.Manager.Add(new DrawableTextBox(new Vector2(10, 10), FurballGame.DEFAULT_FONT, 24, 300, "Text Box 1"));
-        this.Manager.Add(new DrawableTextBox(new Vector2(10, 40), FurballGame.DEFAULT_FONT, 24, 300, "Text Box 2"));
-        this.Manager.Add(new DrawableTextBox(new Vector2(10, 70), FurballGame.DEFAULT_FONT, 24, 300, "Text Box 3", 2));
-        this.Manager.Add(new DrawableForm("Test Textbox *IN* FORM!", new DrawableTextBox(Vector2.Zero, FurballGame.DEFAULT_FONT, 24, 300, "I am in a form!")));
+        this.Manager.Add(new DrawableTextBox(new Vector2(10, 10), FurballGame.DefaultFont, 24, 300, "Text Box 1"));
+        this.Manager.Add(new DrawableTextBox(new Vector2(10, 40), FurballGame.DefaultFont, 24, 300, "Text Box 2"));
+        this.Manager.Add(new DrawableTextBox(new Vector2(10, 70), FurballGame.DefaultFont, 24, 300, "Text Box 3", 2));
+        this.Manager.Add(new DrawableForm("Test Textbox *IN* FORM!", new DrawableTextBox(Vector2.Zero, FurballGame.DefaultFont, 24, 300, "I am in a form!")));
     }
 }

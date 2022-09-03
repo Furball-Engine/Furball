@@ -12,8 +12,8 @@ public class FurballConfig : VolpeConfig {
     public int ScreenHeight => (int)this.Values["screen_height"].ToNumber().Value;
 
 
-    public bool LimitFPS  => this.Values["limit_fps"].ToBoolean().Value;
-    public int  TargetFPS => (int)this.Values["target_fps"].ToNumber().Value;
+    public bool LimitFps  => this.Values["limit_fps"].ToBoolean().Value;
+    public int  TargetFps => (int)this.Values["target_fps"].ToNumber().Value;
     public bool UnfocusCap => this.Values["unfocus_cap"].ToBoolean().Value;
 
     public bool Fullscreen => this.Values["fullscreen"].ToBoolean().Value;

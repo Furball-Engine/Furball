@@ -29,7 +29,7 @@ public class DebugCounter : TextDrawable {
         new KeyboardInputs()
     };
 
-    public DebugCounter() : base(Vector2.Zero, FurballGame.DEFAULT_FONT, "", 24) {
+    public DebugCounter() : base(Vector2.Zero, FurballGame.DefaultFont, "", 24) {
         this.Clickable   = false;
         this.CoverClicks = false;
         this.Hoverable   = false;

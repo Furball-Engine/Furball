@@ -29,7 +29,7 @@ public class TestScreen : Screen {
         this.Manager.Add(
         this._backButton = new DrawableButton(
         new(10, FurballGame.DEFAULT_WINDOW_HEIGHT - 10),
-        FurballGame.DEFAULT_FONT,
+        FurballGame.DefaultFont,
         24,
         LocalizationManager.GetLocalizedString(LocalizationStrings.Back),
         Color.Red,
@@ -45,7 +45,7 @@ public class TestScreen : Screen {
         );
 
         this.Manager.Add(
-        this._languageButton = new DrawableButton(new(10, 10), FurballGame.DEFAULT_FONT, 24, "Language: ", Color.Blue, Color.White, Color.Black, Vector2.Zero) {
+        this._languageButton = new DrawableButton(new(10, 10), FurballGame.DefaultFont, 24, "Language: ", Color.Blue, Color.White, Color.Black, Vector2.Zero) {
             ScreenOriginType = OriginType.BottomRight,
             OriginType       = OriginType.BottomRight
         }

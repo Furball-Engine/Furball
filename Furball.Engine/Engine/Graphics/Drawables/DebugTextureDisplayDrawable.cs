@@ -28,8 +28,8 @@ public class DebugTextureDisplayDrawable : CompositeDrawable {
 
         float x      = 0, y = 0;
         float higher = 0;
-        for (int i = 0; i < Global.TRACKED_TEXTURES.Count; i++) {
-            WeakReference<Texture> reference = Global.TRACKED_TEXTURES[i];
+        for (int i = 0; i < Global.TrackedTextures.Count; i++) {
+            WeakReference<Texture> reference = Global.TrackedTextures[i];
 
             if (!reference.TryGetTarget(out Texture tex))
                 continue;//if the reference is invalid, then skip it

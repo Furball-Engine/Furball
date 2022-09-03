@@ -26,7 +26,7 @@ public class FixedTimeStepTest : TestScreen {
         this._1PerSecond = new TexturedDrawable(FurballGame.WhitePixel, new(x, y)) {
             Scale = new(size)
         });
-        this.Manager.Add(new TextDrawable(new(x + this._1PerSecond.Size.X + 15, y + this._1PerSecond.Size.Y / 2f), FurballGame.DEFAULT_FONT, "Once per second", 24) {
+        this.Manager.Add(new TextDrawable(new(x + this._1PerSecond.Size.X + 15, y + this._1PerSecond.Size.Y / 2f), FurballGame.DefaultFont, "Once per second", 24) {
             OriginType = OriginType.LeftCenter
         });
 
@@ -36,7 +36,7 @@ public class FixedTimeStepTest : TestScreen {
         this._2PerSecond = new TexturedDrawable(FurballGame.WhitePixel, new(x, y)) {
             Scale = new(size)
         });
-        this.Manager.Add(new TextDrawable(new(x + this._2PerSecond.Size.X + 15, y + this._2PerSecond.Size.Y / 2f), FurballGame.DEFAULT_FONT, "Twice per second", 24) {
+        this.Manager.Add(new TextDrawable(new(x + this._2PerSecond.Size.X + 15, y + this._2PerSecond.Size.Y / 2f), FurballGame.DefaultFont, "Twice per second", 24) {
             OriginType = OriginType.LeftCenter
         });
             
@@ -46,7 +46,7 @@ public class FixedTimeStepTest : TestScreen {
         this._3PerSecond = new TexturedDrawable(FurballGame.WhitePixel, new(x, y)) {
             Scale = new(size)
         });
-        this.Manager.Add(new TextDrawable(new(x + this._3PerSecond.Size.X + 15, y + this._3PerSecond.Size.Y / 2f), FurballGame.DEFAULT_FONT, "Thrice per second", 24) {
+        this.Manager.Add(new TextDrawable(new(x + this._3PerSecond.Size.X + 15, y + this._3PerSecond.Size.Y / 2f), FurballGame.DefaultFont, "Thrice per second", 24) {
             OriginType = OriginType.LeftCenter
         });
             

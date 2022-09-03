@@ -4,13 +4,13 @@ using System.Security.Cryptography;
 namespace Furball.Engine.Engine.Helpers; 
 
 public static class CryptoHelper {
-    private static readonly MD5    _md5    = new MD5CryptoServiceProvider();
+    private static readonly MD5    Md5    = new MD5CryptoServiceProvider();
     private static          SHA256 _sha256 = new SHA256CryptoServiceProvider();
-    private static readonly SHA384 _sha384 = new SHA384CryptoServiceProvider();
-    private static readonly SHA512 _sha512 = new SHA512CryptoServiceProvider();
+    private static readonly SHA384 Sha384 = new SHA384CryptoServiceProvider();
+    private static readonly SHA512 Sha512 = new SHA512CryptoServiceProvider();
 
     public static string GetMd5(byte[] bytes) {
-        byte[] hash = _md5.ComputeHash(bytes);
+        byte[] hash = Md5.ComputeHash(bytes);
 
         string hashString = string.Empty;
         for (int index = 0; index < hash.Length; index++) {
@@ -34,7 +34,7 @@ public static class CryptoHelper {
     }
 
     public static string GetSha384(byte[] bytes) {
-        byte[] hash = _sha384.ComputeHash(bytes);
+        byte[] hash = Sha384.ComputeHash(bytes);
 
         string hashString = string.Empty;
         for (int index = 0; index < hash.Length; index++) {
@@ -46,7 +46,7 @@ public static class CryptoHelper {
     }
 
     public static string GetSha512(byte[] bytes) {
-        byte[] hash = _sha512.ComputeHash(bytes);
+        byte[] hash = Sha512.ComputeHash(bytes);
 
         string hashString = string.Empty;
         for (int index = 0; index < hash.Length; index++) {

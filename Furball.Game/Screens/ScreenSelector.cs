@@ -46,7 +46,7 @@ public class ScreenSelector : TestScreen {
             (LocalizationStrings.RichTextDrawableTest, typeof(RichTextDrawableTest))
         };
 
-        this.Manager.Add(this._topText = new TextDrawable(new Vector2(1280f / 2f, 40), FurballGame.DEFAULT_FONT, LocalizationManager.GetLocalizedString(LocalizationStrings.ChooseScreen), 48) {
+        this.Manager.Add(this._topText = new TextDrawable(new Vector2(1280f / 2f, 40), FurballGame.DefaultFont, LocalizationManager.GetLocalizedString(LocalizationStrings.ChooseScreen), 48) {
             OriginType = OriginType.Center
         });
 
@@ -57,7 +57,7 @@ public class ScreenSelector : TestScreen {
         foreach ((LocalizationStrings localizationString, Type screen) in this._screens) {
             DrawableButton screenButton = new(
             new Vector2(currentX, currentY),
-            FurballGame.DEFAULT_FONT,
+            FurballGame.DefaultFont,
             26,
             "",
             Color.White,

@@ -11,7 +11,7 @@ public class CompositeDrawable : Drawable {
     /// </summary>
     public List<Drawable> Drawables = new();
 
-    protected bool _sortDrawables;
+    protected bool SortDrawables;
 
     private readonly DrawableManagerArgs _drawableArgs = new();
 
@@ -55,10 +55,10 @@ public class CompositeDrawable : Drawable {
     }
 
     public override void Draw(double time, DrawableBatch batch, DrawableManagerArgs args) {
-        if (this._sortDrawables) {
+        if (this.SortDrawables) {
             this.Drawables.Sort((x, y) => x.Depth.CompareTo(y.Depth));
 
-            this._sortDrawables = false;
+            this.SortDrawables = false;
         }
 
         for (int i = 0; i < this.Drawables.Count; i++) {
@@ -66,7 +66,7 @@ public class CompositeDrawable : Drawable {
 
             // ReSharper disable once CompareOfFloatsByEqualityOperator
             if (drawable.Depth != drawable.DrawablesLastKnownDepth)
-                this._sortDrawables = true;
+                this.SortDrawables = true;
 
             drawable.DrawablesLastKnownDepth = drawable.Depth;
                 

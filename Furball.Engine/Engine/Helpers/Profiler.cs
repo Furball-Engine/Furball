@@ -5,11 +5,11 @@ using Kettu;
 namespace Furball.Engine.Engine.Helpers; 
 
 public static class Profiler {
-    private static readonly Dictionary<string, double> _Profiles = new();
+    private static readonly Dictionary<string, double> Profiles = new();
 
     [Conditional("DEBUG")]
     public static void StartProfile(string name) {
-        _Profiles[name] = (double)Stopwatch.GetTimestamp() / Stopwatch.Frequency;
+        Profiles[name] = (double)Stopwatch.GetTimestamp() / Stopwatch.Frequency;
     }
 
     [Conditional("DEBUG")]
@@ -19,7 +19,7 @@ public static class Profiler {
         Kettu.Logger.Log($"Profile {name} took {time}ms!", LoggerLevelProfiler.Instance);
     }
 
-    public static double EndProfile(string name) => ((double)Stopwatch.GetTimestamp() / Stopwatch.Frequency - _Profiles[name]) * 1000d;
+    public static double EndProfile(string name) => ((double)Stopwatch.GetTimestamp() / Stopwatch.Frequency - Profiles[name]) * 1000d;
 }
 
 internal class LoggerLevelProfiler : LoggerLevel {

@@ -172,19 +172,19 @@ public class TextDrawable : Drawable {
 
         (FontSystem FontSystem, int fontSize) key = (this.Font.FontSystem, fontSize);
 
-        ContentManager.FSS_CACHE.TryGetValue(key, out WeakReference<DynamicSpriteFont> fontRef);
+        ContentManager.FssCache.TryGetValue(key, out WeakReference<DynamicSpriteFont> fontRef);
 
         DynamicSpriteFont font = null;
 
         bool valid = fontRef?.TryGetTarget(out font) ?? false;
 
         if (!valid)
-            ContentManager.FSS_CACHE.Remove(key);
+            ContentManager.FssCache.Remove(key);
 
         this.Font.FontSystem.Reset();
         if (fontRef == null || !valid) {
             this.RealFont = this.Font.FontSystem.GetFont(fontSize);
-            ContentManager.FSS_CACHE.Add((this.Font.FontSystem, fontSize), new WeakReference<DynamicSpriteFont>(this.RealFont));
+            ContentManager.FssCache.Add((this.Font.FontSystem, fontSize), new WeakReference<DynamicSpriteFont>(this.RealFont));
             Logger.Log($"Caching DynamicSpriteFont of size {fontSize}", LoggerLevelCacheEvent.Instance);
         } else {
             this.RealFont = font;
@@ -216,18 +216,18 @@ public class TextDrawable : Drawable {
     public void SetFont(FontSystem font, int fontSize) {
         (FontSystem FontSystem, int fontSize) key = (font, fontSize);
 
-        ContentManager.FSS_CACHE.TryGetValue(key, out WeakReference<DynamicSpriteFont> fontRef);
+        ContentManager.FssCache.TryGetValue(key, out WeakReference<DynamicSpriteFont> fontRef);
 
         DynamicSpriteFont f = null;
 
         bool valid = fontRef?.TryGetTarget(out f) ?? false;
 
         if (!valid)
-            ContentManager.FSS_CACHE.Remove(key);
+            ContentManager.FssCache.Remove(key);
 
         if (fontRef == null || !valid) {
             this.Font = font.GetFont(fontSize);
-            ContentManager.FSS_CACHE.Add((font, fontSize), new WeakReference<DynamicSpriteFont>(this.Font));
+            ContentManager.FssCache.Add((font, fontSize), new WeakReference<DynamicSpriteFont>(this.Font));
             Logger.Log($"Caching DynamicSpriteFont of size {fontSize}", LoggerLevelCacheEvent.Instance);
         } else {
             this.Font = f;

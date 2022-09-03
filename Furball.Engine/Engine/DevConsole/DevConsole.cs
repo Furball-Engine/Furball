@@ -53,7 +53,7 @@ public class DevConsole {
         
     public static void Run(string input, bool userRun = true, bool disableLog = false) {
         input = input.Trim('\0');
-        AddMessage("] " + input, ExecutionResult.Message);
+        AddMessage("] " + input);
             
         IEnumerable<Token> tokenStream = new Lexer(input).GetTokenEnumerator();
         Parser             parser      = new(tokenStream);

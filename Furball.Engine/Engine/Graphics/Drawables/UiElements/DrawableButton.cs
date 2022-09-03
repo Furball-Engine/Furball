@@ -27,8 +27,8 @@ public class DrawableButton : CompositeDrawable {
     ///     The internal TextDrawable used to display the text
     /// </summary>
     public TextDrawable TextDrawable;
-    private RectanglePrimitiveDrawable BackgroundDrawable;
-    private RectanglePrimitiveDrawable OutlineDrawable;
+    private RectanglePrimitiveDrawable _backgroundDrawable;
+    private RectanglePrimitiveDrawable _outlineDrawable;
     
     /// <summary>
     ///     The margin between the text and the button's edge
@@ -94,8 +94,8 @@ public class DrawableButton : CompositeDrawable {
     ) {
         this.Position           = position;
         this.TextDrawable       = new TextDrawable(Vector2.Zero, font, text, textSize);
-        this.BackgroundDrawable = new RectanglePrimitiveDrawable(Vector2.Zero, this.ButtonSize, 0,                     true);
-        this.OutlineDrawable    = new RectanglePrimitiveDrawable(Vector2.Zero, this.ButtonSize, this.OutlineThickness, false);
+        this._backgroundDrawable = new RectanglePrimitiveDrawable(Vector2.Zero, this.ButtonSize, 0,                     true);
+        this._outlineDrawable    = new RectanglePrimitiveDrawable(Vector2.Zero, this.ButtonSize, this.OutlineThickness, false);
         this._margin            = margin;
         this.Text               = text;
 
@@ -104,15 +104,15 @@ public class DrawableButton : CompositeDrawable {
         this.ButtonColor  = buttonColor;
         this.ButtonSize   = buttonSize;
 
-        this.BackgroundDrawable.ColorOverride = buttonColor;
-        this.OutlineDrawable.ColorOverride    = outlineColor;
+        this._backgroundDrawable.ColorOverride = buttonColor;
+        this._outlineDrawable.ColorOverride    = outlineColor;
         
         this.OnClick += onClick;
 
         this.TextDrawable.OriginType = OriginType.Center;
         
-        this.Drawables.Add(this.BackgroundDrawable);
-        this.Drawables.Add(this.OutlineDrawable);
+        this.Drawables.Add(this._backgroundDrawable);
+        this.Drawables.Add(this._outlineDrawable);
         this.Drawables.Add(this.TextDrawable);
 
         this.ChildrenInvisibleToInput = true;
@@ -120,7 +120,7 @@ public class DrawableButton : CompositeDrawable {
         this.OnHover += delegate {
             if (!this.Clickable) return;
                 
-            this.BackgroundDrawable.Tweens.Add(
+            this._backgroundDrawable.Tweens.Add(
             new ColorTween(
             TweenType.Color,
             this.ButtonColor,
@@ -133,7 +133,7 @@ public class DrawableButton : CompositeDrawable {
         this.OnHoverLost += delegate {
             if (!this.Clickable) return;
             
-            this.BackgroundDrawable.Tweens.Add(
+            this._backgroundDrawable.Tweens.Add(
             new ColorTween(TweenType.Color, this.ColorOverride, this.ButtonColor, this.TimeSource.GetCurrentTime(), this.TimeSource.GetCurrentTime() + 150)
             );
         };
@@ -142,8 +142,8 @@ public class DrawableButton : CompositeDrawable {
     public override void Update(double time) {
         base.Update(time);
 
-        this.BackgroundDrawable.RectSize = this.Size / this.Scale;
-        this.OutlineDrawable.RectSize = this.Size / this.Scale;
+        this._backgroundDrawable.RectSize = this.Size / this.Scale;
+        this._outlineDrawable.RectSize = this.Size / this.Scale;
         
         if (this.ButtonSize == Vector2.Zero) {
             this.TextDrawable.Position   = new Vector2(this.Margin);

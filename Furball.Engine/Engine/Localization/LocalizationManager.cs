@@ -13,16 +13,16 @@ using Kettu;
 namespace Furball.Engine.Engine.Localization; 
 
 public class LocalizationManager {
-    private static readonly Dictionary<(string translationKey, ISO639_2Code code), string> TRANSLATIONS = new();
+    private static readonly Dictionary<(string translationKey, ISO639_2Code code), string> Translations = new();
 
     public static Dictionary<ISO639_2Code, Type> Languages = new();
 
     public static  Language DefaultLanguage  = new EnglishLanguage();
-    private static Language _CurrentLanguage = DefaultLanguage;
+    private static Language _currentLanguage = DefaultLanguage;
 
     [NotNull]
     public static Language CurrentLanguage {
-        get => _CurrentLanguage;
+        get => _currentLanguage;
         set {
             FurballConfig.Instance.Values["language"] = new Value.String(value.Iso6392Code().ToString());
 
@@ -31,7 +31,7 @@ public class LocalizationManager {
             CultureInfo.CurrentUICulture = CultureInfo;
             CultureInfo.CurrentCulture   = CultureInfo;
             
-            _CurrentLanguage = value;
+            _currentLanguage = value;
             
             LanguageChanged?.Invoke(null, value);
         }
@@ -60,10 +60,10 @@ public class LocalizationManager {
         if (code == ISO639_2Code.und)
             code = CurrentLanguage.Iso6392Code();
 
-        if (TRANSLATIONS.TryGetValue((key.ToString(), code), out string localization))
+        if (Translations.TryGetValue((key.ToString(), code), out string localization))
             return localization;
 
-        if (TRANSLATIONS.TryGetValue((key.ToString(), DefaultLanguage.Iso6392Code()), out localization))
+        if (Translations.TryGetValue((key.ToString(), DefaultLanguage.Iso6392Code()), out localization))
             return localization;
 
         throw new NoTranslationException();
@@ -73,7 +73,7 @@ public class LocalizationManager {
         int total    = 0;
         int complete = 0;
 
-        foreach (KeyValuePair<(string translationKey, ISO639_2Code code),string> pair in TRANSLATIONS) {
+        foreach (KeyValuePair<(string translationKey, ISO639_2Code code),string> pair in Translations) {
             if (pair.Key.code == DefaultLanguage.Iso6392Code())
                 total++;
             if (pair.Key.code == code)
@@ -87,7 +87,7 @@ public class LocalizationManager {
     public static List<ISO639_2Code> GetSupportedLanguages() {
         List<ISO639_2Code> languages = new();
 
-        foreach (KeyValuePair<(string translationKey, ISO639_2Code code), string> translation in TRANSLATIONS) {
+        foreach (KeyValuePair<(string translationKey, ISO639_2Code code), string> translation in Translations) {
             if (languages.Contains(translation.Key.code)) continue;
                 
             languages.Add(translation.Key.code);
@@ -107,7 +107,7 @@ public class LocalizationManager {
     }
 
     public static void AddDefaultTranslation(object key, string contents) {
-        TRANSLATIONS.Add((key.ToString(), DefaultLanguage.Iso6392Code()), contents);
+        Translations.Add((key.ToString(), DefaultLanguage.Iso6392Code()), contents);
     }
         
     public static void ReadTranslations() {
@@ -157,7 +157,7 @@ public class LocalizationManager {
                 } else {
                     (string translationKey, ISO639_2Code languageCode) key = (splitLine[0], code);
 
-                    TRANSLATIONS.Add(key, splitLine[1].Trim().Replace("\\n", "\n"));
+                    Translations.Add(key, splitLine[1].Trim().Replace("\\n", "\n"));
                 }
             }
 

@@ -21,7 +21,7 @@ public class AudioEffectTest : TestScreen {
     public override void Initialize() {
         base.Initialize();
 
-        this._topText = new TextDrawable(new Vector2(1280f / 2f, 40), FurballGame.DEFAULT_FONT, "Audio Effects testing!!!", 48) {
+        this._topText = new TextDrawable(new Vector2(1280f / 2f, 40), FurballGame.DefaultFont, "Audio Effects testing!!!", 48) {
             OriginType = OriginType.Center
         };
 
@@ -29,7 +29,7 @@ public class AudioEffectTest : TestScreen {
 
         DrawableButton playButton = new(
         new Vector2(50, 50),
-        FurballGame.DEFAULT_FONT,
+        FurballGame.DefaultFont,
         28,
         "Play Audio normally",
         Color.White,
@@ -41,7 +41,7 @@ public class AudioEffectTest : TestScreen {
 
         this.Manager.Add(playButton);
 
-        TextDrawable effectText = new(new Vector2(190, 100), FurballGame.DEFAULT_FONT, "Effects:", 28);
+        TextDrawable effectText = new(new Vector2(190, 100), FurballGame.DefaultFont, "Effects:", 28);
 
         this.Manager.Add(effectText);
 
@@ -49,7 +49,7 @@ public class AudioEffectTest : TestScreen {
 
         DrawableButton lowPassPlayButton = new(
         new Vector2(50, currentY),
-        FurballGame.DEFAULT_FONT,
+        FurballGame.DefaultFont,
         28,
         "Play Audio with Low Pass filter",
         Color.White,
@@ -65,7 +65,7 @@ public class AudioEffectTest : TestScreen {
 
         DrawableButton highPassPlayButton = new(
         new Vector2(50, currentY),
-        FurballGame.DEFAULT_FONT,
+        FurballGame.DefaultFont,
         28,
         "Play Audio with High Pass filter",
         Color.White,
@@ -81,7 +81,7 @@ public class AudioEffectTest : TestScreen {
 
         DrawableButton reverbPlayButton = new(
         new Vector2(50, currentY),
-        FurballGame.DEFAULT_FONT,
+        FurballGame.DefaultFont,
         28,
         "Play Audio with Reverb",
         Color.White,

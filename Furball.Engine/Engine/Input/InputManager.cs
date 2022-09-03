@@ -180,7 +180,7 @@ public class InputManager {
         return added;
     }
 
-    private static readonly List<Drawable> _knownHovers = new();
+    private static readonly List<Drawable> KnownHovers = new();
     private static void DrawableOnMouseMove(object sender, MouseMoveEventArgs e) {
         List<Drawable> drawables = new();
         DrawableManager.DrawableManagers.Where(x => x.Visible).ToList().ForEach(x => drawables.AddRange(x.Drawables.Where(y => y is Drawable && y.Hoverable)));
@@ -223,12 +223,12 @@ public class InputManager {
 
                 if (!drawable.IsHovered && drawable.Hoverable) {
                     if (doHover) {
-                        _knownHovers.Remove(drawable);
+                        KnownHovers.Remove(drawable);
 
-                        _knownHovers.ForEach(x => x.Hover(false));
-                        _knownHovers.Clear();
+                        KnownHovers.ForEach(x => x.Hover(false));
+                        KnownHovers.Clear();
 
-                        _knownHovers.Add(drawable);
+                        KnownHovers.Add(drawable);
                         drawable.Hover(true);
                     }
 
@@ -266,7 +266,7 @@ public class InputManager {
                     }
                 }
             } else {
-                _knownHovers.Remove(drawable);
+                KnownHovers.Remove(drawable);
                 drawable.Hover(false);
             }
         }

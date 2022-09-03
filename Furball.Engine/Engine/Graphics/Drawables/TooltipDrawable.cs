@@ -13,7 +13,7 @@ public class TooltipDrawable : CompositeDrawable {
         this._backgroundRect = new RectanglePrimitiveDrawable(new Vector2(0), new Vector2(100, 20), 2, true) {
             ColorOverride = new Color(0, 0, 0, 155)
         };
-        this.TextDrawable = new TextDrawable(new Vector2(0), FurballGame.DEFAULT_FONT, "", 20) {
+        this.TextDrawable = new TextDrawable(new Vector2(0), FurballGame.DefaultFont, "", 20) {
             ColorOverride = Color.White
         };
 

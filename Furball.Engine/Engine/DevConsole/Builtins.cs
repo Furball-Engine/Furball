@@ -20,7 +20,7 @@ public class Builtins {
                     var v            => v.Representation
                 };
                         
-                DevConsole.AddMessage(output, ExecutionResult.Message);
+                DevConsole.AddMessage(output);
                         
                 return Value.DefaultVoid;
             }),

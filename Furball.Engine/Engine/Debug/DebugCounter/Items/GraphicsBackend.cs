@@ -5,26 +5,27 @@ using Furball.Vixie.Backends.Veldrid;
 namespace Furball.Engine.Engine.Debug.DebugCounter.Items; 
 
 public class GraphicsBackend : DebugCounterItem {
-    private string str;
+    private readonly string _stringCache;
         
+    //TODO: handle backend changing
     public GraphicsBackend() {
         if (Vixie.GraphicsBackend.Current is VeldridBackend veldridBackend) {
-            str = $"Backend: Veldrid ({veldridBackend.ChosenBackend})";
+            this._stringCache = $"Backend: Veldrid ({veldridBackend.ChosenBackend})";
             return;
         }
 
         if (Vixie.GraphicsBackend.Current is OpenGLBackend openGlBackend) {
             if(openGlBackend.CreationBackend == Backend.OpenGL)
-                str = $"Backend: OpenGL ({Vixie.Backends.Shared.Global.LatestSupportedGL.GL.MajorVersion}.{Vixie.Backends.Shared.Global.LatestSupportedGL.GL.MinorVersion})";
+                this._stringCache = $"Backend: OpenGL ({Vixie.Backends.Shared.Global.LatestSupportedGl.GL.MajorVersion}.{Vixie.Backends.Shared.Global.LatestSupportedGl.GL.MinorVersion})";
             else
-                str = $"Backend: OpenGLES ({Vixie.Backends.Shared.Global.LatestSupportedGL.GLES.MajorVersion}.{Vixie.Backends.Shared.Global.LatestSupportedGL.GLES.MinorVersion})";
+                this._stringCache = $"Backend: OpenGLES ({Vixie.Backends.Shared.Global.LatestSupportedGl.GLES.MajorVersion}.{Vixie.Backends.Shared.Global.LatestSupportedGl.GLES.MinorVersion})";
             return;
         }
 
-        str = $"Backend: {FurballGame.Instance.WindowManager.Backend}";
+        this._stringCache = $"Backend: {FurballGame.Instance.WindowManager.Backend}";
     }
         
     public override string GetAsString(double time) {
-        return str;
+        return this._stringCache;
     }
 }

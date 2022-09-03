@@ -15,16 +15,16 @@ public class CirclePrimitiveDrawable : Drawable {
     /// </summary>
     public Bindable<int> Detail;
 
-    public Vector2[] _calculatedPoints;
+    public Vector2[] CalculatedPoints;
 
     public float Thickness;
 
     public void Recalculate() {
-        this._calculatedPoints = new Vector2[this.Detail];
+        this.CalculatedPoints = new Vector2[this.Detail];
             
         for (int i = 0; i < this.Detail; i++) {    
             double angle = 2 * Math.PI *i / this.Detail; 
-            this._calculatedPoints[i] = new Vector2((float)(Math.Cos(angle) * this.CircleRadius), (float)(Math.Sin(angle) * this.CircleRadius)); 
+            this.CalculatedPoints[i] = new Vector2((float)(Math.Cos(angle) * this.CircleRadius), (float)(Math.Sin(angle) * this.CircleRadius)); 
         } 
     }
 
@@ -51,10 +51,10 @@ public class CirclePrimitiveDrawable : Drawable {
     }
 
     public override void Draw(double time, DrawableBatch batch, DrawableManagerArgs args) {
-        for (int i = 0; i < this._calculatedPoints.Length; i++) {
+        for (int i = 0; i < this.CalculatedPoints.Length; i++) {
             batch.DrawLine(
-            this._calculatedPoints[i] + this.Position,
-            (i == this._calculatedPoints.Length - 1 ? this._calculatedPoints[0] : this._calculatedPoints[i + 1]) + this.Position,
+            this.CalculatedPoints[i] + this.Position,
+            (i == this.CalculatedPoints.Length - 1 ? this.CalculatedPoints[0] : this.CalculatedPoints[i + 1]) + this.Position,
             this.Thickness,
             this.ColorOverride
             );

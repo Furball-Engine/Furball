@@ -54,14 +54,14 @@ public class SmartTextDrawable : TexturedDrawable {
                     this.FadeColor(this._finalColor, 100);
                     this._first = false;
                 } else {
-                    this._texture.Dispose();
+                    this.Texture.Dispose();
                 }
                 
-                this._texture      = Vixie.Texture.CreateTextureFromImage(image);
-                this._texture.Name = "SmartText";
+                this.Texture      = Vixie.Texture.CreateTextureFromImage(image);
+                this.Texture.Name = "SmartText";
                 
                 image.Dispose();
-            }, 0);
+            });
         });
     }
 

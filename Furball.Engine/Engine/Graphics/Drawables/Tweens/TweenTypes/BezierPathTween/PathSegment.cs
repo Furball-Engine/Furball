@@ -9,26 +9,26 @@ public class PathSegment {
     internal int       Index;
     internal PathRange PathProgressRange;
 
-    private Vector2 Point1;
-    private Vector2 Point2;
-    private Vector2 Point3;
-    private Vector2 Point4;
+    private Vector2 _point1;
+    private Vector2 _point2;
+    private Vector2 _point3;
+    private Vector2 _point4;
 
     public PathSegment(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4) {
         this.CurveType = BezierCurveType.Cubic;
 
-        this.Point1 = p1;
-        this.Point2 = p2;
-        this.Point3 = p3;
-        this.Point4 = p4;
+        this._point1 = p1;
+        this._point2 = p2;
+        this._point3 = p3;
+        this._point4 = p4;
     }
 
     public PathSegment(Vector2 p1, Vector2 p2, Vector2 p3) {
         this.CurveType = BezierCurveType.Quadratic;
 
-        this.Point1 = p1;
-        this.Point2 = p2;
-        this.Point3 = p3;
+        this._point1 = p1;
+        this._point2 = p2;
+        this._point3 = p3;
     }
 
     internal double GetLocalProgress(double progress, int totalSegments) {
@@ -42,12 +42,12 @@ public class PathSegment {
 
         switch (this.CurveType) {
             case BezierCurveType.Cubic: {
-                Vector2 bezier = BezierHelper.CubicBezier(this.Point1, this.Point2, this.Point3, this.Point4, localProgress);
+                Vector2 bezier = BezierHelper.CubicBezier(this._point1, this._point2, this._point3, this._point4, localProgress);
 
                 return new Vector2(bezier.X, bezier.Y);
             }
             case BezierCurveType.Quadratic: {
-                Vector2 bezier = BezierHelper.QuadraticBezier(this.Point1, this.Point2, this.Point3, localProgress);
+                Vector2 bezier = BezierHelper.QuadraticBezier(this._point1, this._point2, this._point3, localProgress);
 
                 return new Vector2(bezier.X, bezier.Y);
             }

@@ -114,7 +114,7 @@ public class NewRendererTest : TestScreen {
 
         this._selectedVertices.CollectionChanged += this.OnSelectedChange;
 
-        this.Manager.Add(this._colorPicker = new DrawableColorPicker(new Vector2(5), FurballGame.DEFAULT_FONT, 30, Color.White));
+        this.Manager.Add(this._colorPicker = new DrawableColorPicker(new Vector2(5), FurballGame.DefaultFont, 30, Color.White));
         this._colorPicker.Color.OnChange += this.OnColorChange;
 
         this.Recalc();
@@ -149,8 +149,7 @@ public class NewRendererTest : TestScreen {
                 this._mesh.Vertices[this._vertexPoints.IndexOf(vertex)] = meshVertex;
             }
             this._mesh.RecalcRender();
-        },
-        0
+        }
         );
     }
 

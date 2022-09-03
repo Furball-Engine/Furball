@@ -10,8 +10,8 @@ namespace Furball.Engine.Engine.Helpers {
         private static readonly MethodInfo CloneMethod = typeof(object).GetMethod("MemberwiseClone", BindingFlags.NonPublic | BindingFlags.Instance);
 
         //https://www.codeproject.com/tips/494499/implementing-dictionary-removeall
-        public static void RemoveAll <K, V>(this IDictionary<K, V> dict, Func<K, V, bool> match) {
-            foreach (K key in dict.Keys.ToArray().Where(key => match(key, dict[key])))
+        public static void RemoveAll <pK, pV>(this IDictionary<pK, pV> dict, Func<pK, pV, bool> match) {
+            foreach (pK key in dict.Keys.ToArray().Where(key => match(key, dict[key])))
                 dict.Remove(key);
         }
 
@@ -81,7 +81,7 @@ namespace Furball.Engine.Engine.Helpers {
                 fieldInfo.SetValue(cloneObject, clonedFieldValue);
             }
         }
-        public static T Copy <T>(this T original) => (T)Copy((object)original);
+        public static pT Copy <pT>(this pT original) => (pT)Copy((object)original);
     }
 
     public class ReferenceEqualityComparer : EqualityComparer<object> {
@@ -107,20 +107,20 @@ namespace Furball.Engine.Engine.Helpers {
 
         internal class ArrayTraverse {
             public  int[] Position;
-            private int[] maxLengths;
+            private int[] _maxLengths;
 
             public ArrayTraverse(Array array) {
-                this.maxLengths = new int[array.Rank];
+                this._maxLengths = new int[array.Rank];
 
                 for (int i = 0; i < array.Rank; ++i)
-                    this.maxLengths[i] = array.GetLength(i) - 1;
+                    this._maxLengths[i] = array.GetLength(i) - 1;
 
                 this.Position = new int[array.Rank];
             }
 
             public bool Step() {
                 for (int i = 0; i < this.Position.Length; ++i)
-                    if (this.Position[i] < this.maxLengths[i]) {
+                    if (this.Position[i] < this._maxLengths[i]) {
                         this.Position[i]++;
 
                         for (int j = 0; j < i; j++)

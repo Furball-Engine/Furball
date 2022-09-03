@@ -25,7 +25,7 @@ public unsafe class VideoDecoder : IDisposable {
         public AVStream*        VideoStream;
         public AVCodecContext*  CodecContext;
         public AVCodec*         Decoder;
-        public AVFrame*         AVFrame;
+        public AVFrame*         AvFrame;
         public AVFrame*         RenderFrame;
         public byte*            InternalBuffer;
         public AVPacket*        Packet;
@@ -37,7 +37,7 @@ public unsafe class VideoDecoder : IDisposable {
             this.VideoStream      = null;
             this.CodecContext     = null;
             this.Decoder          = null;
-            this.AVFrame          = null;
+            this.AvFrame          = null;
             this.RenderFrame      = null;
             this.InternalBuffer   = null;
             this.Packet           = null;
@@ -45,22 +45,22 @@ public unsafe class VideoDecoder : IDisposable {
         }
     }
 
-    private AppData Data;
+    private AppData _data;
 
     public double FrameDelay;
     public double CurrentDisplayTime { get; private set; } = 0d;
 
     public double Length {
         get {
-            long duration = this.Data.VideoStream->duration;
+            long duration = this._data.VideoStream->duration;
             if (duration < 0) return 36000000;
             return duration * this.FrameDelay;
         }
     }
 
-    public  int    Width       => this.Data.CodecContext->width;
-    public  int    Height      => this.Data.CodecContext->height;
-    private double StartTimeMs => 1000 * this.Data.VideoStream->start_time * this.FrameDelay;
+    public  int    Width       => this._data.CodecContext->width;
+    public  int    Height      => this._data.CodecContext->height;
+    private double StartTimeMs => 1000 * this._data.VideoStream->start_time * this.FrameDelay;
 
     private readonly Thread _decodingThread;
     private          bool   _isDisposed = false;
@@ -70,9 +70,9 @@ public unsafe class VideoDecoder : IDisposable {
     private readonly int      _bufferSize;
     private          bool     _videoLoaded = false;
     private          bool     _runDecoding = true;
-    private          int      writeCursor;
-    private          int      readCursor;
-    private          long     lastPts;
+    private          int      _writeCursor;
+    private          int      _readCursor;
+    private          long     _lastPts;
 
     public VideoDecoder(int bufferSize) {
         //Having too small of a buffer size causes issues
@@ -155,30 +155,30 @@ public unsafe class VideoDecoder : IDisposable {
         }
 
         // allocate the video frames
-        data.AVFrame     = av_frame_alloc();
+        data.AvFrame     = av_frame_alloc();
         data.RenderFrame = av_frame_alloc();
         //Get buffer size
         int size = av_image_get_buffer_size(AVPixelFormat.AV_PIX_FMT_RGBA, data.CodecContext->width, data.CodecContext->height, 1);
         //Allocate internal buffer
         data.InternalBuffer = (byte*)av_malloc((ulong)(size * sizeof(byte)));
 
-        byte_ptrArray4 data_array4     = new();
-        int_array4     lineSize_array4 = new();
-        data_array4.UpdateFrom(data.RenderFrame->data);
-        lineSize_array4.UpdateFrom(data.RenderFrame->linesize);
+        byte_ptrArray4 dataArray4     = new();
+        int_array4     lineSizeArray4 = new();
+        dataArray4.UpdateFrom(data.RenderFrame->data);
+        lineSizeArray4.UpdateFrom(data.RenderFrame->linesize);
 
         //Fill the internal buffer
         av_image_fill_arrays(
-        ref data_array4,
-        ref lineSize_array4,
+        ref dataArray4,
+        ref lineSizeArray4,
         data.InternalBuffer,
         AVPixelFormat.AV_PIX_FMT_RGBA,
         data.CodecContext->width,
         data.CodecContext->height,
         1
         );
-        data.RenderFrame->data.UpdateFrom(data_array4);
-        data.RenderFrame->linesize.UpdateFrom(lineSize_array4);
+        data.RenderFrame->data.UpdateFrom(dataArray4);
+        data.RenderFrame->linesize.UpdateFrom(lineSizeArray4);
 
         //Allocate the packet
         data.Packet = av_packet_alloc();
@@ -191,7 +191,7 @@ public unsafe class VideoDecoder : IDisposable {
 
         this.FrameDelay = av_q2d(data.VideoStream->time_base);
 
-        this.Data = data;
+        this._data = data;
 
         for (int i = 0; i < this._bufferSize; i++)
             this._frameBuffer[i] = new byte[this.Width * this.Height * 4];
@@ -219,21 +219,21 @@ public unsafe class VideoDecoder : IDisposable {
                 gotNewFrame = false;
 
                 lock (this) {
-                    while (this.writeCursor - this.readCursor < this._bufferSize && av_read_frame(this.Data.FormatContext, this.Data.Packet) >= 0) {
+                    while (this._writeCursor - this._readCursor < this._bufferSize && av_read_frame(this._data.FormatContext, this._data.Packet) >= 0) {
                         if (!this._runDecoding)
                             return;
 
-                        if (this.Data.Packet->stream_index == this.Data.VideoStreamIndex) {
+                        if (this._data.Packet->stream_index == this._data.VideoStreamIndex) {
                             bool frameFinished = false;
 
                             int response;
-                            if (this.Data.CodecContext->codec_type == AVMediaType.AVMEDIA_TYPE_VIDEO ||
-                                this.Data.CodecContext->codec_type == AVMediaType.AVMEDIA_TYPE_AUDIO) {
-                                response = avcodec_send_packet(this.Data.CodecContext, this.Data.Packet);
+                            if (this._data.CodecContext->codec_type == AVMediaType.AVMEDIA_TYPE_VIDEO ||
+                                this._data.CodecContext->codec_type == AVMediaType.AVMEDIA_TYPE_AUDIO) {
+                                response = avcodec_send_packet(this._data.CodecContext, this._data.Packet);
                                 if (response < 0 && response != AVERROR(EAGAIN) && response != AVERROR(AVERROR_EOF)) {} else {
                                     if (response >= 0)
-                                        this.Data.Packet->size = 0;
-                                    response = avcodec_receive_frame(this.Data.CodecContext, this.Data.AVFrame);
+                                        this._data.Packet->size = 0;
+                                    response = avcodec_receive_frame(this._data.CodecContext, this._data.AvFrame);
                                     if (response == AVERROR(EAGAIN) || response == AVERROR(AVERROR_EOF))
                                         response = 0;
                                     if (response >= 0)
@@ -241,19 +241,19 @@ public unsafe class VideoDecoder : IDisposable {
                                 }
                             }
 
-                            if (this.Data.Packet->dts < this._seekingTo)
+                            if (this._data.Packet->dts < this._seekingTo)
                                 continue;
 
                             this._seekingTo = 0;
 
-                            if (frameFinished && this.Data.Packet->data != null) {
-                                if (this.Data.ConvertContext == null)
-                                    this.Data.ConvertContext = sws_getContext(
-                                    this.Data.CodecContext->width,
-                                    this.Data.CodecContext->height,
-                                    this.Data.CodecContext->pix_fmt,
-                                    this.Data.CodecContext->width,
-                                    this.Data.CodecContext->height,
+                            if (frameFinished && this._data.Packet->data != null) {
+                                if (this._data.ConvertContext == null)
+                                    this._data.ConvertContext = sws_getContext(
+                                    this._data.CodecContext->width,
+                                    this._data.CodecContext->height,
+                                    this._data.CodecContext->pix_fmt,
+                                    this._data.CodecContext->width,
+                                    this._data.CodecContext->height,
                                     AVPixelFormat.AV_PIX_FMT_RGBA,
                                     0,
                                     null,
@@ -262,28 +262,28 @@ public unsafe class VideoDecoder : IDisposable {
                                     );
 
                                 sws_scale(
-                                this.Data.ConvertContext,
-                                this.Data.AVFrame->data,
-                                this.Data.AVFrame->linesize,
+                                this._data.ConvertContext,
+                                this._data.AvFrame->data,
+                                this._data.AvFrame->linesize,
                                 0,
-                                this.Data.CodecContext->height,
-                                this.Data.RenderFrame->data,
-                                this.Data.RenderFrame->linesize
+                                this._data.CodecContext->height,
+                                this._data.RenderFrame->data,
+                                this._data.RenderFrame->linesize
                                 );
 
                                 Marshal.Copy(
-                                (IntPtr)this.Data.RenderFrame->data[0],
-                                this._frameBuffer[this.writeCursor % this._bufferSize],
+                                (IntPtr)this._data.RenderFrame->data[0],
+                                this._frameBuffer[this._writeCursor % this._bufferSize],
                                 0,
-                                this._frameBuffer[this.writeCursor % this._bufferSize].Length
+                                this._frameBuffer[this._writeCursor % this._bufferSize].Length
                                 );
 
-                                this._frameBufferTimes[this.writeCursor % this._bufferSize] =
-                                    (this.Data.Packet->dts - this.Data.VideoStream->start_time) * this.FrameDelay * 1000;
+                                this._frameBufferTimes[this._writeCursor % this._bufferSize] =
+                                    (this._data.Packet->dts - this._data.VideoStream->start_time) * this.FrameDelay * 1000;
 
-                                this.writeCursor++;
+                                this._writeCursor++;
 
-                                this.lastPts = this.Data.Packet->dts;
+                                this._lastPts = this._data.Packet->dts;
 
                                 gotNewFrame = true;
                             }
@@ -306,12 +306,12 @@ public unsafe class VideoDecoder : IDisposable {
     /// </summary>
     /// <returns></returns>
     public byte[] GetFrame(int time) {
-        while (this.readCursor < this.writeCursor - 1 && this._frameBufferTimes[(this.readCursor + 1) % this._bufferSize] <= time)
-            this.readCursor++;
+        while (this._readCursor < this._writeCursor - 1 && this._frameBufferTimes[(this._readCursor + 1) % this._bufferSize] <= time)
+            this._readCursor++;
 
-        if (this.readCursor < this.writeCursor) {
-            this.CurrentDisplayTime = this._frameBufferTimes[this.readCursor % this._bufferSize];
-            return this._frameBuffer[this.readCursor % this._bufferSize];
+        if (this._readCursor < this._writeCursor) {
+            this.CurrentDisplayTime = this._frameBufferTimes[this._readCursor % this._bufferSize];
+            return this._frameBuffer[this._readCursor % this._bufferSize];
         }
 
         return null;
@@ -323,14 +323,14 @@ public unsafe class VideoDecoder : IDisposable {
             Logger.Log($"Seeking to {time}ms", VideoDecoderLoggerLevel.InstanceInfo);
                 
             int    flags     = 0;
-            double timestamp = time / 1000 / this.FrameDelay + this.Data.VideoStream->start_time;
+            double timestamp = time / 1000 / this.FrameDelay + this._data.VideoStream->start_time;
 
-            if (timestamp < this.lastPts)
+            if (timestamp < this._lastPts)
                 flags = AVSEEK_FLAG_BACKWARD;
-            av_seek_frame(this.Data.FormatContext, this.Data.VideoStreamIndex, (long)timestamp, flags);
+            av_seek_frame(this._data.FormatContext, this._data.VideoStreamIndex, (long)timestamp, flags);
             this._seekingTo  = (long)timestamp;
-            this.readCursor  = 0;
-            this.writeCursor = 0;
+            this._readCursor  = 0;
+            this._writeCursor = 0;
         }
     }
 
@@ -348,12 +348,12 @@ public unsafe class VideoDecoder : IDisposable {
         if (this._decodingThread.IsAlive)
             this._decodingThread.Join();
 
-        AppData data = this.Data;
+        AppData data = this._data;
 
         //Clean up after ourselves
         avformat_close_input(&data.FormatContext);
 
-        if (data.AVFrame        != null) av_free(data.AVFrame);
+        if (data.AvFrame        != null) av_free(data.AvFrame);
         if (data.RenderFrame    != null) av_free(data.RenderFrame);
         if (data.Packet         != null) av_free(data.Packet);
         if (data.CodecContext   != null) avcodec_close(data.CodecContext);

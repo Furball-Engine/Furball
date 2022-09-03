@@ -14,7 +14,7 @@ public class FormTest : TestScreen {
         base.Initialize();
 
         this.Manager.Add(
-        new DrawableButton(new(10), FurballGame.DEFAULT_FONT, 26, "Create Form", Color.White, Color.Black, Color.Black, new Vector2(300, 50), this.OnButtonClick)
+        new DrawableButton(new(10), FurballGame.DefaultFont, 26, "Create Form", Color.White, Color.Black, Color.Black, new Vector2(300, 50), this.OnButtonClick)
         );
     }
 

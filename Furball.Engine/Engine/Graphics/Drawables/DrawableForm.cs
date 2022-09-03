@@ -26,13 +26,13 @@ public class DrawableForm : CompositeDrawable {
     public DrawableForm(string title, Drawable contents, OriginType startPosition = OriginType.Center) {
         this.Contents = contents;
 
-        this._title = new TextDrawable(new Vector2(2), FurballGame.DEFAULT_FONT, title, 20) {
+        this._title = new TextDrawable(new Vector2(2), FurballGame.DefaultFont, title, 20) {
             Clickable   = false,
             CoverClicks = false,
             Hoverable   = false,
             CoverHovers = false
         };
-        this._closeButton = new TextDrawable(new Vector2(this.Contents.Size.X + 8, 2), FurballGame.DEFAULT_FONT, "x", 20) {
+        this._closeButton = new TextDrawable(new Vector2(this.Contents.Size.X + 8, 2), FurballGame.DefaultFont, "x", 20) {
             OriginType = OriginType.TopRight,
             Depth      = 2f
         };

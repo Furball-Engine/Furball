@@ -9,53 +9,53 @@ using Furball.Vixie.Backends.Shared;
 namespace Furball.Engine.Engine.Helpers; 
 
 public static class EtoHelper {
-    private static Thread      _Thread;
-    private static Application App;
+    private static Thread      _thread;
+    private static Application _app;
 
-    private static bool InitCalled = false;
+    private static bool _initCalled = false;
 
     public static void Initialize() {
         Profiler.StartProfile("init_eto");
 
-        InitCalled = true;
+        _initCalled = true;
             
-        _Thread = new Thread(
+        _thread = new Thread(
         () => {
             Eto.Platform.Initialize(Platforms.Gtk);
 
             Kettu.Logger.Log("Eto Initialized", LoggerLevelEtoInfo.Instance);
                 
-            App = new Application();
-            App.Run();
+            _app = new Application();
+            _app.Run();
         }
         );
 
-        _Thread.Start();
+        _thread.Start();
 
         Profiler.EndProfileAndPrint("init_eto");
     }
 
     public static void Dispose() {
-        while (InitCalled && App == null) {
+        while (_initCalled && _app == null) {
             Thread.Sleep(150);
         }
 
-        App?.Invoke(() => {
-            App?.Quit();
+        _app?.Invoke(() => {
+            _app?.Quit();
         });
     }
 
     public static void MessageDialog(EventHandler<DialogResult> callback, string message, MessageBoxButtons buttons) {
-        App?.InvokeAsync(
+        _app?.InvokeAsync(
         () => {
             DialogResult response = MessageBox.Show(message, buttons);
-            callback.Invoke(App, response);
+            callback.Invoke(_app, response);
         }
         );
     }
 
     public static void OpenColorPicker(EventHandler<Color> callback, Color existingColor, string title = "Color Picker", bool allowAlpha = true) {
-        App?.Invoke(
+        _app?.Invoke(
         () => {
             ColorPickerForm form = new(title, allowAlpha);
 
@@ -68,10 +68,10 @@ public static class EtoHelper {
             form.ColorPicker.ValueChanged += (_, _) => {
                 Eto.Drawing.Color color = form.ColorPicker.Value;
 
-                callback.Invoke(App, new Color(color.Rb, color.Gb, color.Bb, color.Ab));
+                callback.Invoke(_app, new Color(color.Rb, color.Gb, color.Bb, color.Ab));
 
                 preventClosure = false;
-                App.Invoke(
+                _app.Invoke(
                 () => {
                     form.Close();
                 }
@@ -89,7 +89,7 @@ public static class EtoHelper {
         public ColorPicker ColorPicker;
 
         public ColorPickerForm(string title = "Color Picker", bool allowAlpha = true) {
-            App.Invoke(
+            _app.Invoke(
             () => {
                 this.Title = title;
                 // ClientSize = new Size(200, 200);
