@@ -143,8 +143,8 @@ public class TextDrawable : Drawable {
     /// <summary>
     ///     An array of colours for the text drawable to use depending on the TextColorType
     /// </summary>
-    public Color[] Colors = {
-        Color.Cyan, Color.Pink, Color.White, Color.Pink, Color.Cyan
+    public FSColor[] Colors = {
+        FSColor.Cyan, FSColor.Pink, FSColor.White, FSColor.Pink, FSColor.Cyan
     };
 
     /// <summary>

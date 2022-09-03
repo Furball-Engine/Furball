@@ -106,12 +106,7 @@ public class DrawableBatch : IDisposable {
         this._renderer.DrawString(font, text, position, color, rotation, scale.Value, origin);
     }
 
-    public void DrawString(DynamicSpriteFont font, string text, Vector2 position, System.Drawing.Color color, float rotation = 0f, Vector2? scale = null, Vector2 origin = default) {
-        scale ??= Vector2.One;
-        this._renderer.DrawString(font, text, position, new Color(color), rotation, scale.Value, origin);
-    }
-
-    public void DrawString(DynamicSpriteFont font, string text, Vector2 position, System.Drawing.Color[] colors, float rotation = 0f, Vector2? scale = null, Vector2 origin = default ) {
+    public void DrawString(DynamicSpriteFont font, string text, Vector2 position, FSColor[] colors, float rotation = 0f, Vector2? scale = null, Vector2 origin = default ) {
         this._renderer.DrawString(font, text, position, colors, rotation, scale, origin);
     }
 

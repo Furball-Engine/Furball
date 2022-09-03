@@ -11,7 +11,6 @@ namespace Furball.Game.Screens.Tests;
 
 public class TextBoxTest : TestScreen {
     public class TextInputStackDrawableTest : TextDrawable, ICharInputHandler {
-        private ICharInputHandler _charInputHandlerImplementation;
         public bool SaveInStack {
             get;
             set;
