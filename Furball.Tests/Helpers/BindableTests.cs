@@ -34,7 +34,10 @@ public class BindableTests {
         Bindable<string> bindable = this.CreateStringBindable();
 
         // ReSharper disable once ParameterOnlyUsedForPreconditionCheck.Local
-        bindable.OnChange += delegate(object _, string s) { Assert.True(s == STRING_END_VALUE, "The value in the OnChange event is not what it should be!"); };
+        bindable.OnChange += delegate(object sender, string args) {
+            Assert.True(sender == bindable,       "sender == bindable");
+            Assert.True(args == STRING_END_VALUE,    "The value in the OnChange event is not what it should be!");
+        };
 
         bindable.Value = STRING_END_VALUE;
 
@@ -45,7 +48,11 @@ public class BindableTests {
     public void BindableTestSameValueCheck() {
         Bindable<string> bindable = this.CreateStringBindable();
 
-        bindable.OnChange += delegate { Assert.True(false, "This should not be called the bindable does not change value!"); };
+        bindable.OnChange += (sender, args) => {
+            Assert.True(sender == bindable,       "sender == bindable");
+            Assert.True(args == STRING_END_VALUE, "args == STRING_END_VALUE");
+            Assert.True(false, "This should not be called the bindable does not change value!");
+        };
 
         bindable.Value = STRING_START_VALUE;
     }
@@ -54,7 +61,9 @@ public class BindableTests {
     public void BindableTestDispose() {
         Bindable<string> bindable = this.CreateStringBindable();
 
-        bindable.OnChange += delegate { Assert.True(false, "Bindable.OnChange should not be called after its disposed!"); };
+        bindable.OnChange += (_, _) => {
+            Assert.True(false, "Bindable.OnChange should not be called after its disposed!");
+        };
 
         bindable.Dispose();
 
