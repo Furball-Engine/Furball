@@ -153,6 +153,8 @@ public class InputManager {
     ///     Recurses composite drawables and adds their drawables to the list
     /// </summary>
     /// <param name="drawablesToAddTo">A pre sorted list of drawables</param>
+    /// <param name="compositeDrawableToIterate">The composite drawable to iterate and add</param>
+    /// <param name="indexToAddAt">The index to add them to</param>
     public static int RecurseCompositeDrawables(ref List<Drawable> drawablesToAddTo, CompositeDrawable compositeDrawableToIterate, int indexToAddAt) {
         int added = 0;
 
@@ -181,7 +183,7 @@ public class InputManager {
     private static readonly List<Drawable> KnownHovers = new();
     private static void DrawableOnMouseMove(object sender, MouseMoveEventArgs e) {
         List<Drawable> drawables = new();
-        DrawableManager.DrawableManagers.Where(x => x.Visible).ToList().ForEach(x => drawables.AddRange(x.Drawables.Where(y => y is Drawable && y.Hoverable)));
+        DrawableManager.DrawableManagers.Where(x => x.Visible).ToList().ForEach(x => drawables.AddRange(x.Drawables.Where(y => y.Hoverable)));
 
         drawables.Sort(DrawableInputComparer.Instance);
 
@@ -274,7 +276,7 @@ public class InputManager {
 
     private static void DrawableOnMouseDrag(object sender, MouseDragEventArgs e) {
         List<Drawable> drawables = new();
-        DrawableManager.DrawableManagers.Where(x => x.Visible).ToList().ForEach(x => drawables.AddRange(x.Drawables.Where(y => y is Drawable)));
+        DrawableManager.DrawableManagers.Where(x => x.Visible).ToList().ForEach(x => drawables.AddRange(x.Drawables));
 
         List<Drawable> drawablesTempIterate = new(drawables);
 
@@ -307,7 +309,7 @@ public class InputManager {
 
     private static void DrawableOnMouseUp(object _, MouseButtonEventArgs e) {
         List<Drawable> drawables = new();
-        DrawableManager.DrawableManagers.Where(x => x.Visible).ToList().ForEach(x => drawables.AddRange(x.Drawables.Where(y => y is Drawable)));
+        DrawableManager.DrawableManagers.Where(x => x.Visible).ToList().ForEach(x => drawables.AddRange(x.Drawables));
 
         List<Drawable> drawablesTempIterate = new(drawables);
 
@@ -340,7 +342,7 @@ public class InputManager {
     private static void DrawableOnMouseDown(object _, MouseButtonEventArgs e) {
         List<Drawable> drawables = new();
         DrawableManager.DrawableManagers.Where(x => x.Visible).ToList().ForEach(
-        x => drawables.AddRange(x.Drawables.Where(y => y is Drawable && (y.Clickable || y is CompositeDrawable) && y.Visible))
+        x => drawables.AddRange(x.Drawables.Where(y => (y.Clickable || y is CompositeDrawable) && y.Visible))
         );
 
         drawables.Sort(DrawableInputComparer.Instance);

@@ -1,6 +1,5 @@
 using Furball.Engine.Engine.Graphics;
 
-
 namespace Furball.Engine.Engine.Debug.DebugCounter.Items; 
 
 /// <summary>

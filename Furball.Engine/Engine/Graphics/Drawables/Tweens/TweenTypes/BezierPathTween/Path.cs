@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Numerics;
+using Furball.Vixie.Helpers;
 using JetBrains.Annotations;
 
 namespace Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes.BezierPathTween; 
@@ -10,6 +11,7 @@ internal record PathRange(double Begin, double End);
 public class Path {
     public readonly PathSegment[] PathSegments;
 
+    // ReSharper disable twice NotAccessedField.Local
     private List<PathRange> _pathRanges;
     private double          _segmentLength;
 
@@ -59,6 +61,9 @@ public class Path {
 
     public Vector2 GetCurrent(double progress) {
         PathSegment segment = this.SegmentFromProgress(progress);
+        
+        Guard.EnsureNonNull(segment, "segment");
+        
         return segment.GetPosition(progress, this.PathSegments.Length);
     }
 }

@@ -6,10 +6,10 @@ using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Helpers;
 using Furball.Engine.Engine.Platform;
 using Furball.Vixie.Backends.Shared;
+using Silk.NET.Input;
 #if USE_IMGUI
 using ImGuiNET;
 #endif
-using Silk.NET.Input;
 
 namespace Furball.Engine.Engine.DevConsole; 
 
@@ -31,7 +31,7 @@ public static class ImGuiConsole {
 
     public static void UpdateTitle() {
         //TODO: Figure out how to make this change without breaking the window
-        Title = $"Console (Press CTRL to toggle auto-scroll!)";
+        Title = "Console (Press CTRL to toggle auto-scroll!)";
     }
 
     public static void Initialize() {

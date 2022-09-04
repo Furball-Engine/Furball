@@ -37,7 +37,7 @@ public static class StringExtensions {
     /// <returns>a substring based on the search</returns>
     public static string SubstringWithEnds(this string @this, string from, string until, StringComparison comparison = StringComparison.InvariantCulture) {
         int fromLength = 0;
-        int startIndex = !string.IsNullOrEmpty(from) ? @this.IndexOf(from, comparison) + fromLength : 0;
+        int startIndex = !string.IsNullOrEmpty(from) ? @this.IndexOf(from, comparison) : 0;
 
         if (startIndex < fromLength)
             throw new ArgumentException("from: Failed to find an instance of the first anchor");
@@ -47,7 +47,7 @@ public static class StringExtensions {
         if (endIndex < 0)
             throw new ArgumentException("until: Failed to find an instance of the last anchor");
 
-        string subString = @this.Substring(startIndex, (endIndex - startIndex) + until.Length);
+        string subString = @this.Substring(startIndex, (endIndex - startIndex) + until!.Length);
         return subString;
     }
 }

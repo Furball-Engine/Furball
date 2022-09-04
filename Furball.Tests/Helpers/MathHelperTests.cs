@@ -1,7 +1,7 @@
 using System;
 using System.Numerics;
+using Furball.Engine.Engine.Helpers;
 using Xunit;
-using MathHelper=Furball.Engine.Engine.Helpers.MathHelper;
 
 namespace Furball.Tests.Helpers {
     public class MathHelperTests {
@@ -13,6 +13,7 @@ namespace Furball.Tests.Helpers {
 
         [Fact]
         public void LerpDoubleTest() {
+            // ReSharper disable CompareOfFloatsByEqualityOperator
             Assert.True(MathHelper.Lerp(START_VALUE, END_VALUE, MIDDLE_VALUE) == MIDDLE_VALUE,               "Middle lerp returned wrong value!");
             Assert.True(MathHelper.Lerp(START_VALUE, END_VALUE, THREE_FOURTHS_VALUE) == THREE_FOURTHS_VALUE, "3/4th lerp returned wrong value!");
             Assert.True(MathHelper.Lerp(START_VALUE, END_VALUE, ONE_FOURTHS_VALUE) == ONE_FOURTHS_VALUE,     "1/4th lerp returned wrong value!");

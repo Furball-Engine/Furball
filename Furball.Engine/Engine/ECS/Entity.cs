@@ -79,7 +79,7 @@ public class Entity : GameComponent {
         if (this._components.ContainsKey(typeof(pComponentType)))
             throw new Exception("Component of this Type already added.");
 
-        pComponentType component = new pComponentType();
+        pComponentType component = new();
         this._components.TryAdd(typeof(pComponentType), component);
         return component;
     }

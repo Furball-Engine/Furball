@@ -14,7 +14,6 @@ using Furball.Vixie;
 using Furball.Vixie.Backends.Shared;
 using Furball.Vixie.Backends.Shared.Renderers;
 using Silk.NET.Input;
-using Color=Furball.Vixie.Backends.Shared.Color;
 
 namespace Furball.Game.Screens.Tests;
 

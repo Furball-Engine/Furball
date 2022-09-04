@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using Furball.Engine.Engine.Graphics;
 using Furball.Engine.Engine.Input;
 using Furball.Vixie.Backends.Shared.Backends;
 using Furball.Volpe.Evaluation;
@@ -35,7 +36,7 @@ public class Builtins {
                 }
 
                 if (output == Backend.None) {
-                    DevConsole.AddMessage($"Unknown backend!", ExecutionResult.Error);
+                    DevConsole.AddMessage("Unknown backend!", ExecutionResult.Error);
                     return Value.DefaultFalse;
                 }
 
@@ -174,7 +175,7 @@ public class Builtins {
             
         new ("quit", paramCount: 0, 
              (_, _) => {
-                 DevConsole.AddMessage($"Bye!", ExecutionResult.Success);
+                 DevConsole.AddMessage("Bye!", ExecutionResult.Success);
                  FurballGame.Instance.WindowManager.Close();
                      
                  return Value.DefaultVoid;
@@ -182,9 +183,9 @@ public class Builtins {
             
         new ("cmr_clear_cache", paramCount: 0,
              (_, _) => {
-                 Graphics.ContentManager.ClearCache();
+                 ContentManager.ClearCache();
 
-                 DevConsole.AddMessage($"ContentManager cache has been cleared.", ExecutionResult.Success);
+                 DevConsole.AddMessage("ContentManager cache has been cleared.", ExecutionResult.Success);
                  return Value.DefaultVoid;
              }),
             

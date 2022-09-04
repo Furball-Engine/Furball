@@ -8,6 +8,7 @@ using Furball.Engine.Engine.Helpers;
 using Furball.Vixie;
 using Furball.Vixie.Backends.Shared;
 using Furball.Vixie.Backends.Shared.Renderers;
+using Furball.Vixie.Helpers;
 using Color=Furball.Vixie.Backends.Shared.Color;
 
 namespace Furball.Engine.Engine.Graphics; 
@@ -130,11 +131,11 @@ public class DrawableBatch : IDisposable {
     }
 
     public void ScissorPop(object badge) {
-        System.Diagnostics.Debug.Assert(this._scissorStack.Count != 0, "this._scissorStack.Count != 0");
+        Guard.Assert(this._scissorStack.Count != 0, "this._scissorStack.Count != 0");
 
-        (object o, Rectangle rect) = this._scissorStack.Pop();
+        (object o, Rectangle _) = this._scissorStack.Pop();
         
-        System.Diagnostics.Debug.Assert(o == badge, $"{nameof(badge)} != popped item!");
+        Guard.Assert(o == badge, $"{nameof(badge)} != popped item!");
         
         this.UpdateScissorFromStack();
     }

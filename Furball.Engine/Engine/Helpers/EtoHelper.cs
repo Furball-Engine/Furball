@@ -93,7 +93,7 @@ public static class EtoHelper {
                 this.Title = title;
                 // ClientSize = new Size(200, 200);
                 this.Content = this.ColorPicker = new ColorPicker {
-                    AllowAlpha = true
+                    AllowAlpha = allowAlpha
                 };
                 this.Resizable = false;
             }

@@ -40,6 +40,7 @@ public class ScreenManager {
     /// Changes the Screen to a new Screen
     /// </summary>
     /// <param name="newScreen">Screen to Switch to</param>
+    /// <param name="skipTransition">Whether to skip the transition and immediately go to the new screen</param>
     public static void ChangeScreen(Screen newScreen, bool skipTransition = false) {
         Logger.Log($"Screen change to {newScreen.GetType().Name} requested!", LoggerLevelEngineInfo.Instance);
         

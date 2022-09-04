@@ -45,7 +45,7 @@ public class LocalizationManager {
     }
 
     [Pure]
-    public static string GetLocalizedString(object key, Language language = null) {
+    public static string GetLocalizedString(object key, Language language) {
         if (language == null)
             language = DefaultLanguage;
 
@@ -56,7 +56,7 @@ public class LocalizationManager {
     public static string GetLocalizedString(object key) => GetLocalizedString(key, ISO639_2Code.und);
 
     [Pure]
-    public static string GetLocalizedString(object key, ISO639_2Code code = ISO639_2Code.und) {
+    public static string GetLocalizedString(object key, ISO639_2Code code) {
         if (code == ISO639_2Code.und)
             code = CurrentLanguage.Iso6392Code();
 

@@ -69,7 +69,6 @@ public class EvDevKeyboardInputMethod : InputMethod {
                     if (kStr.Length == "NumberX".Length && kStr.StartsWith("Number")) {
                         this.Keyboards[i].QueuedTextInputs.Add(Convert.ToChar(kStr.TrimStart("Number".ToCharArray()).Substring(0, 1)));
 
-                        break;
                     }
                     break;
                 case EvDevKeyValue.KeyUp:

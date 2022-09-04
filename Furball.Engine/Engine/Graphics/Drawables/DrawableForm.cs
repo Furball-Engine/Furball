@@ -3,8 +3,8 @@ using System.Numerics;
 using Furball.Engine.Engine.Graphics.Drawables.Primitives;
 using Furball.Engine.Engine.Helpers.Logger;
 using Furball.Engine.Engine.Input.Events;
+using Furball.Vixie.Backends.Shared;
 using Kettu;
-using Color=Furball.Vixie.Backends.Shared.Color;
 
 namespace Furball.Engine.Engine.Graphics.Drawables;
 

@@ -37,7 +37,6 @@ using Silk.NET.Maths;
 using Silk.NET.Windowing;
 using sowelipisona;
 using sowelipisona.ManagedBass;
-using Color=System.Drawing.Color;
 using Environment=System.Environment;
 using GraphicsBackend=Furball.Vixie.GraphicsBackend;
 using Rectangle=System.Drawing.Rectangle;

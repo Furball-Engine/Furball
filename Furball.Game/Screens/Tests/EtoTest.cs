@@ -4,7 +4,7 @@ using Furball.Engine;
 using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Graphics.Drawables.UiElements;
 using Furball.Engine.Engine.Helpers;
-using Color=Furball.Vixie.Backends.Shared.Color;
+using Furball.Vixie.Backends.Shared;
 
 namespace Furball.Game.Screens.Tests; 
 

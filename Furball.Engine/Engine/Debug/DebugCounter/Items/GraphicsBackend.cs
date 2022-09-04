@@ -1,4 +1,5 @@
 using Furball.Vixie.Backends.OpenGL;
+using Furball.Vixie.Backends.Shared;
 using Furball.Vixie.Backends.Shared.Backends;
 using Furball.Vixie.Backends.Veldrid;
 
@@ -16,9 +17,9 @@ public class GraphicsBackend : DebugCounterItem {
 
         if (Vixie.GraphicsBackend.Current is OpenGLBackend openGlBackend) {
             if(openGlBackend.CreationBackend == Backend.OpenGL)
-                this._stringCache = $"Backend: OpenGL ({Vixie.Backends.Shared.Global.LatestSupportedGl.GL.MajorVersion}.{Vixie.Backends.Shared.Global.LatestSupportedGl.GL.MinorVersion})";
+                this._stringCache = $"Backend: OpenGL ({Global.LatestSupportedGl.GL.MajorVersion}.{Global.LatestSupportedGl.GL.MinorVersion})";
             else
-                this._stringCache = $"Backend: OpenGLES ({Vixie.Backends.Shared.Global.LatestSupportedGl.GLES.MajorVersion}.{Vixie.Backends.Shared.Global.LatestSupportedGl.GLES.MinorVersion})";
+                this._stringCache = $"Backend: OpenGLES ({Global.LatestSupportedGl.GLES.MajorVersion}.{Global.LatestSupportedGl.GLES.MinorVersion})";
             return;
         }
 

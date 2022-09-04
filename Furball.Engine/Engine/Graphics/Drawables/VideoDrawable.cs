@@ -1,6 +1,7 @@
 using System;
 using System.Numerics;
 using Furball.Engine.Engine.Timing;
+using Furball.Vixie;
 
 namespace Furball.Engine.Engine.Graphics.Drawables; 
 
@@ -24,7 +25,7 @@ public class VideoDrawable : TexturedDrawable {
         this._decoder.Load(path);
 
         //Create the texture which will store our video
-        this.Texture      = Vixie.Texture.CreateEmptyTexture((uint)this._decoder.Width, (uint)this._decoder.Height);
+        this.Texture      = Texture.CreateEmptyTexture((uint)this._decoder.Width, (uint)this._decoder.Height);
         this.Texture.Name = $"video:{path}";
         
         this._videoTimeSource = timeSource;
@@ -33,11 +34,12 @@ public class VideoDrawable : TexturedDrawable {
     }
 
     private double _lastSeek = -1;
-        
+
     /// <summary>
     ///     Seems the video decoder to the specified time (prevents speedup and such)
     /// </summary>
     /// <param name="milis">The time in miliseconds</param>
+    /// <param name="force">Force the seek</param>
     public void Seek(double milis, bool force = false) {
         // ReSharper disable once CompareOfFloatsByEqualityOperator
         if (this._lastSeek != -1 && Math.Abs(milis - this._lastSeek) < 2000 && !force) return;

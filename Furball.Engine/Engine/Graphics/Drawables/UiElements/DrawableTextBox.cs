@@ -63,8 +63,7 @@ public partial class DrawableTextBox : CompositeDrawable, ICharInputHandler {
     /// The range of characters in the string that are selected
     /// </summary>
     public readonly Bindable<Range> SelectedRange = new(new Range(0, 0));
-    private int               _lineCount;
-    private ICharInputHandler _charInputHandlerImplementation;
+    private int _lineCount;
 
     public override Vector2 Size => new Vector2(this.TextBoxWidth, this._textDrawable.Font.LineHeight * this.LineCount) * this.Scale;
     /// <summary>
