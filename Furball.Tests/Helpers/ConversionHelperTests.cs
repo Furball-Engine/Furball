@@ -1,10 +1,12 @@
+using System.Drawing;
+using System.Numerics;
 using Furball.Engine.Engine.Helpers;
-using Furball.Vixie.Backends.Shared;
 using Xunit;
+using Color=Furball.Vixie.Backends.Shared.Color;
 
 namespace Furball.Tests.Helpers; 
 
-public class ColorConverterTests {
+public class ConversionHelperTests {
     private readonly Color  _color1 = new(255, 255, 255);
     private readonly Color  _color2 = new(255, 255, 255, 170);
     private readonly Color  _color3 = new(255, 255, 255);
@@ -41,5 +43,65 @@ public class ColorConverterTests {
         //ToHexString doesnt work with alpha for like no reason
         //yeah i hate it too
         // Assert.True(this._color2.ToHexString() == this._hex2);
+    }
+
+    [Fact]
+    public void Vector2ToPoint() {
+        Vector2 vec = new(10, 7);
+
+        Point point = vec.ToPoint();
+        
+        Assert.Equal(vec.X, point.X);
+        Assert.Equal(vec.Y, point.Y);
+    }
+    
+    [Fact]
+    public void Vector2ToPointF() {
+        Vector2 vec = new(10.1f, 7.29f);
+
+        PointF point = vec.ToPointF();
+        
+        Assert.Equal(vec.X, point.X);
+        Assert.Equal(vec.Y, point.Y);
+    }
+    
+    [Fact]
+    public void Vector2ToSize() {
+        Vector2 vec = new(10, 7);
+
+        Size point = vec.ToSize();
+        
+        Assert.Equal(vec.X, point.Width);
+        Assert.Equal(vec.Y, point.Height);
+    }
+    
+    [Fact]
+    public void Vector2ToSizeF() {
+        Vector2 vec = new(10.1f, 7.29f);
+
+        SizeF point = vec.ToSizeF();
+        
+        Assert.Equal(vec.X, point.Width);
+        Assert.Equal(vec.Y, point.Height);
+    }
+    
+    [Fact]
+    public void PointToVector2() {
+        Point point = new(10, 7);
+
+        Vector2 vec = point.ToVector2();
+        
+        Assert.Equal(point.X, vec.X);
+        Assert.Equal(point.Y, vec.Y);
+    }
+    
+    [Fact]
+    public void PointFToVector2() {
+        PointF point = new(10.1f, 7.29f);
+
+        Vector2 vec = point.ToVector2();
+        
+        Assert.Equal(point.X, vec.X);
+        Assert.Equal(point.Y, vec.Y);
     }
 }
