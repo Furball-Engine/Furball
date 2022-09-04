@@ -2,89 +2,83 @@ using System;
 using Furball.Engine.Engine.Helpers;
 using Xunit;
 
-namespace Furball.Tests.Helpers {
-    public class BindableTests {
-        private const string STRING_START_VALUE = "begin";
-        private const string STRING_END_VALUE   = "end";
+namespace Furball.Tests.Helpers; 
 
-        private const double DOUBLE_START_VALUE = Math.PI;
+public class BindableTests {
+    private const string STRING_START_VALUE = "begin";
+    private const string STRING_END_VALUE   = "end";
 
-        private Bindable<string> CreateStringBindable() {
-            Bindable<string> bindable = new(STRING_START_VALUE);
+    private const double DOUBLE_START_VALUE = Math.PI;
 
-            //Make sure that the bindable actually starts with its intended value
-            Assert.True(bindable.Value == STRING_START_VALUE, "The bindable did not start with the correct value!");
+    private Bindable<string> CreateStringBindable() {
+        Bindable<string> bindable = new(STRING_START_VALUE);
 
-            return bindable;
-        }
+        //Make sure that the bindable actually starts with its intended value
+        Assert.True(bindable.Value == STRING_START_VALUE, "The bindable did not start with the correct value!");
 
-        private Bindable<double> CreateDoubleBindable() {
-            Bindable<double> bindable = new(DOUBLE_START_VALUE);
+        return bindable;
+    }
 
-            //Make sure that the bindable actually starts with its intended value
-            // ReSharper disable once CompareOfFloatsByEqualityOperator
-            Assert.True(bindable.Value == DOUBLE_START_VALUE, "The bindable did not start with the correct value!");
+    private Bindable<double> CreateDoubleBindable() {
+        Bindable<double> bindable = new(DOUBLE_START_VALUE);
 
-            return bindable;
-        }
+        //Make sure that the bindable actually starts with its intended value
+        // ReSharper disable once CompareOfFloatsByEqualityOperator
+        Assert.True(bindable.Value == DOUBLE_START_VALUE, "The bindable did not start with the correct value!");
 
-        [Fact]
-        public void BindableTestOnChange() {
-            Bindable<string> bindable = this.CreateStringBindable();
+        return bindable;
+    }
 
-            // ReSharper disable once ParameterOnlyUsedForPreconditionCheck.Local
-            bindable.OnChange += delegate(object _, string s) {
-                Assert.True(s == STRING_END_VALUE, "The value in the OnChange event is not what it should be!");
-            };
+    [Fact]
+    public void BindableTestOnChange() {
+        Bindable<string> bindable = this.CreateStringBindable();
 
-            bindable.Value = STRING_END_VALUE;
+        // ReSharper disable once ParameterOnlyUsedForPreconditionCheck.Local
+        bindable.OnChange += delegate(object _, string s) { Assert.True(s == STRING_END_VALUE, "The value in the OnChange event is not what it should be!"); };
 
-            Assert.True(bindable.Value == STRING_END_VALUE, "The value did not change to the intended value!");
-        }
+        bindable.Value = STRING_END_VALUE;
 
-        [Fact]
-        public void BindableTestSameValueCheck() {
-            Bindable<string> bindable = this.CreateStringBindable();
+        Assert.True(bindable.Value == STRING_END_VALUE, "The value did not change to the intended value!");
+    }
 
-            bindable.OnChange += delegate {
-                Assert.True(false, "This should not be called the bindable does not change value!");
-            };
+    [Fact]
+    public void BindableTestSameValueCheck() {
+        Bindable<string> bindable = this.CreateStringBindable();
 
-            bindable.Value = STRING_START_VALUE;
-        }
+        bindable.OnChange += delegate { Assert.True(false, "This should not be called the bindable does not change value!"); };
 
-        [Fact]
-        public void BindableTestDispose() {
-            Bindable<string> bindable = this.CreateStringBindable();
+        bindable.Value = STRING_START_VALUE;
+    }
 
-            bindable.OnChange += delegate {
-                Assert.True(false, "Bindable.OnChange should not be called after its disposed!");
-            };
+    [Fact]
+    public void BindableTestDispose() {
+        Bindable<string> bindable = this.CreateStringBindable();
 
-            bindable.Dispose();
+        bindable.OnChange += delegate { Assert.True(false, "Bindable.OnChange should not be called after its disposed!"); };
 
-            bindable.Value = STRING_END_VALUE;
-        }
+        bindable.Dispose();
 
-        [Fact]
-        public void BindableTestToString() {
-            Bindable<double> bindable = this.CreateDoubleBindable();
+        bindable.Value = STRING_END_VALUE;
+    }
 
-            // We disable this analysis here because Bindable.ToString calls double.ToString implicity with no parameters
-            // ReSharper disable once SpecifyACultureInStringConversionExplicitly
-            Assert.True(bindable.ToString() == DOUBLE_START_VALUE.ToString(), "Bindable.ToString returned the wrong value!");
-        }
+    [Fact]
+    public void BindableTestToString() {
+        Bindable<double> bindable = this.CreateDoubleBindable();
 
-        [Fact]
-        public void BindableTestImplicitConversion() {
-            Bindable<double> bindableDouble = this.CreateDoubleBindable();
+        // We disable this analysis here because Bindable.ToString calls double.ToString implicity with no parameters
+        // ReSharper disable once SpecifyACultureInStringConversionExplicitly
+        Assert.True(bindable.ToString() == DOUBLE_START_VALUE.ToString(), "Bindable.ToString returned the wrong value!");
+    }
 
-            // ReSharper disable once CompareOfFloatsByEqualityOperator
-            Assert.True(bindableDouble == DOUBLE_START_VALUE, "The double implicit conversion failed!");
+    [Fact]
+    public void BindableTestImplicitConversion() {
+        Bindable<double> bindableDouble = this.CreateDoubleBindable();
 
-            Bindable<string> bindableString = this.CreateStringBindable();
+        // ReSharper disable once CompareOfFloatsByEqualityOperator
+        Assert.True(bindableDouble == DOUBLE_START_VALUE, "The double implicit conversion failed!");
 
-            Assert.True(bindableString == STRING_START_VALUE, "The string implicit conversion failed!");
-        }
+        Bindable<string> bindableString = this.CreateStringBindable();
+
+        Assert.True(bindableString == STRING_START_VALUE, "The string implicit conversion failed!");
     }
 }
