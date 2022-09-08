@@ -114,27 +114,6 @@ public class TextDrawable : Drawable {
     public override Vector2 Size => this._sizeCache * this.Scale;
     public List<Glyph> TextRectangles => this.Font.GetGlyphs(this.Text, Vector2.Zero, Vector2.Zero, this.Scale);
 
-    public string PreWrapText { get; protected set; }
-
-    public void Wrap(float width, bool setPrewrap = true) {
-        if (setPrewrap)
-            this.PreWrapText = this.Text;
-
-        List<Glyph> glyphs = this.TextRectangles;
-
-        for (int i = 0; i < glyphs.Count; i++) {
-            Rectangle rectangle = glyphs[i].Bounds;
-
-            if (rectangle.Right > width) {
-                this.Text = this.Text.Insert(i, "\n");
-
-                glyphs = this.TextRectangles;
-
-                i -= 1;
-            }
-        }
-    }
-
     /// <summary>
     ///     The color type of the text, Solid means a single color, Repeating means the pattern in Colors repeats, and Stretch
     ///     means the colours stretch to fit

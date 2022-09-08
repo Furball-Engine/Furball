@@ -26,9 +26,7 @@ public class RichTextDrawable : Drawable {
         };
     }
 
-    public override Vector2 Size {
-        get => this.Layout.Measure(null).ToVector2() * this.Scale;
-    }
+    public override Vector2 Size => this.Layout.Measure(this.Layout.Width).ToVector2() * this.Scale;
 
     public RichTextDrawable(Vector2 position, string text, FontSystem system, int fontSize) {
         this.Layout = new RichTextLayout {
