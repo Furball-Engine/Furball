@@ -13,18 +13,15 @@ public class MemoryUsage : DebugCounterItem {
 
     public MemoryUsage() {
         this._process = Process.GetCurrentProcess();
+    }
 
-        FurballGame.TimeStepMethods.Add(
-        this._updateTimeStep = new FixedTimeStepMethod(
-        1000,
-        () => {
-            this._process.Refresh();
-            
-            this._managedMemory   = GC.GetTotalMemory(true);
-            this._unmanagedMemory = this._process.PrivateMemorySize64 - this._managedMemory;
-        }
-        )
-        );
+    public override void Update(double time) {
+        base.Update(time);
+
+        this._process.Refresh();
+
+        this._managedMemory   = GC.GetTotalMemory(true);
+        this._unmanagedMemory = this._process.PrivateMemorySize64 - this._managedMemory;
     }
 
     public override void Dispose() {

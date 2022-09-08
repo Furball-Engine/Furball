@@ -12,23 +12,19 @@ public class DrawableManagerStats : DebugCounterItem {
     private double _deltaTime;
 
     public override void Update(double time) {
-        this._deltaTime += time;
+        this._lastUpdatedDrawables = 0;
 
-        if (this._deltaTime >= 1.0) {
-            this._lastUpdatedDrawables   = 0;
+        int drawableManagerCount = DrawableManager.Instances;
 
-            int drawableManagerCount = DrawableManager.Instances;
+        this._lastUpdatedInstanceCount = drawableManagerCount;
 
-            this._lastUpdatedInstanceCount = drawableManagerCount;
+        for (int i = 0; i != drawableManagerCount; i++) {
+            DrawableManager current = DrawableManager.DrawableManagers[i];
 
-            for (int i = 0; i != drawableManagerCount; i++) {
-                DrawableManager current = DrawableManager.DrawableManagers[i];
-
-                this._lastUpdatedDrawables += current.Count;
-            }
-
-            this._deltaTime = 0.0;
+            this._lastUpdatedDrawables += current.Count;
         }
+
+        this._deltaTime = 0.0;
 
         base.Update(time);
     }

@@ -56,6 +56,7 @@ public static class ContentManager {
 
         Font regularFont = font.CreateFont(30, style);
 
+        //If we cant find the font *in the particualr style*, then just return the default font
         if (!regularFont.TryGetPath(out string path))
             return FurballGame.DefaultFont;
 
