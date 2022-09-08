@@ -13,6 +13,10 @@ public class Scheduler {
     public void Update(double time) {
         for (int i = 0; i < this._scheduledMethods.Count; i++) {
             ScheduledMethod method = this._scheduledMethods[i];
+            if (method == null) {
+                this._scheduledMethods.RemoveAll(x => x == null);
+                break;
+            }
             if (time > method.Time) {
                 Kettu.Logger.Log($"ScheduledMethod invoked at {time}", LoggerLevelSchedulerInfo.Instance);
                 method.MethodToRun.Invoke(time);
