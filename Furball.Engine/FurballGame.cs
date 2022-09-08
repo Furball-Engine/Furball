@@ -86,7 +86,7 @@ public class FurballGame : Game {
 
     private bool _drawDebugOverlay = false;
 
-    internal static TooltipDrawable TooltipDrawable;
+    public static TooltipDrawable TooltipDrawable;
 
     private DrawableForm _textureDisplayForm;
     private bool        _textureDisplayFormAdded;

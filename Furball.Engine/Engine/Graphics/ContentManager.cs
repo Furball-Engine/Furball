@@ -46,7 +46,7 @@ public static class ContentManager {
     }
 
     private static readonly Dictionary<string, FontSystem> SystemFontCache = new();
-    public static FontSystem LoadSystemFont(string familyName, FontSystemSettings settings = null, bool disableCache = false) {
+    public static FontSystem LoadSystemFont(string familyName, FontStyle style = FontStyle.Regular, FontSystemSettings settings = null, bool disableCache = false) {
         if (!disableCache && SystemFontCache.TryGetValue(familyName, out FontSystem sys))
             return sys;
 
@@ -54,14 +54,16 @@ public static class ContentManager {
         if (!SystemFonts.TryGet(familyName, out FontFamily font))
             return FurballGame.DefaultFont;
 
-        font.TryGetPaths(out IEnumerable<string> paths);
+        Font regularFont = font.CreateFont(30, style);
+
+        if (!regularFont.TryGetPath(out string path))
+            return FurballGame.DefaultFont;
 
         FontSystem system = settings != null 
                                 ? new FontSystem(settings) 
                                 : new FontSystem();
 
-        foreach (string path in paths)
-            system.AddFont(File.ReadAllBytes(path));
+        system.AddFont(File.ReadAllBytes(path));
         
         SystemFontCache.Add(familyName, system);
 
