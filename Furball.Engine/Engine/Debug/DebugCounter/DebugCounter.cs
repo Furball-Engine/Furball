@@ -20,6 +20,7 @@ public class DebugCounter : TextDrawable {
         new UpdateRate(),
         new BoundByDrawUpdate(),
         new GraphicsBackend(),
+        new VramUsage(),
         new TrackedVixieResources(),
         new DrawableManagerStats(),
         new ContentCacheItems(),
