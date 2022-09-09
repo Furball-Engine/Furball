@@ -43,7 +43,7 @@ public class DrawableBatch : IDisposable {
         this.Begun = false;
     }
 
-    public void Draw() {
+    public void ManualDraw() {
         this._renderer.Draw();
     }
     

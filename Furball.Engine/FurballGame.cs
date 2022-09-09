@@ -7,6 +7,7 @@ using System.Numerics;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
+using Eto.Forms;
 using FontStashSharp;
 using Furball.Engine.Engine;
 using Furball.Engine.Engine.Config;
@@ -40,6 +41,7 @@ using sowelipisona.ManagedBass;
 using Environment=System.Environment;
 using GraphicsBackend=Furball.Vixie.GraphicsBackend;
 using Rectangle=System.Drawing.Rectangle;
+using Screen=Furball.Engine.Engine.Screen;
 
 namespace Furball.Engine; 
 
@@ -52,6 +54,7 @@ public class FurballGame : Game {
 
     public static FurballGame   Instance;
     public static DrawableBatch DrawableBatch;
+    public static DrawableBatch CursorDrawableBatch;
     public static InputManager  InputManager;
     public static ITimeSource   GameTimeSource;
     public static Scheduler     GameTimeScheduler;
@@ -156,7 +159,9 @@ public class FurballGame : Game {
         InputManager = new InputManager();
         //Only use the silk input methods if we are using the `View` event loop!
         if (this.EventLoop is ViewEventLoop) {
-            InputManager.RegisterInputMethod(InputManager.SilkWindowingMouseInputMethod    = new SilkWindowingMouseInputMethod());
+            InputManager.RegisterInputMethod(InputManager.SilkWindowingMouseInputMethod = new SilkWindowingMouseInputMethod());
+
+            InputManager.SilkWindowingMouseInputMethod.SetRawInputStatus(FurballConfig.Instance.RawMouseInput);
 
             bool useSilkKeyboardInput = true;
 
@@ -216,6 +221,7 @@ public class FurballGame : Game {
         TooltipDrawable.Visible = false;
 
         DrawableBatch = new DrawableBatch();
+        CursorDrawableBatch = new DrawableBatch();
 
         DebugCounter = new DebugCounter {
             Position = new Vector2(5, 5),
@@ -618,6 +624,22 @@ public class FurballGame : Game {
         Debug.Assert(DrawableBatch.ScissorStackItemCount == 0, "Scissor Stack not empty at end of frame!");
 
         DrawableBatch.End();
+        
+        #region Draw software cursors
+
+        CursorDrawableBatch.Begin();
+
+        List<FurballMouse> mice = InputManager.Mice;
+        foreach (FurballMouse mouse in mice) {
+            if (mouse.SoftwareCursor) {
+                CursorDrawableBatch.Draw(WhitePixel, mouse.Position, new Vector2(10));
+            }
+        }
+
+        CursorDrawableBatch.SoftEnd();
+        CursorDrawableBatch.ManualDraw();
+
+        #endregion
     }
 
     protected override void Draw(double gameTime) {

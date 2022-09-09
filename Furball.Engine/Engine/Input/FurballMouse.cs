@@ -26,6 +26,7 @@ public class FurballMouse {
     internal List<MouseButton> QueuedButtonReleases = new();
 
     internal DragState[] DragStates = new DragState[12];
+    public   bool        SoftwareCursor;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool IsButtonPressed(MouseButton button) => this.PressedButtons.Contains(button);

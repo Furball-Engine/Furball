@@ -45,11 +45,15 @@ public class SilkWindowingMouseInputMethod : InputMethod {
 
     public bool SetRawInputStatus(bool value) {
         CursorMode newMode = value ? CursorMode.Raw : CursorMode.Normal;
-        foreach (IMouse mouse in this._silkMice)
-            if (mouse.Cursor.IsSupported(newMode))
-                mouse.Cursor.CursorMode = newMode;
+        for (int i = 0; i < this._silkMice.Count; i++) {
+            IMouse mouse = this._silkMice[i];
+            if (mouse.Cursor.IsSupported(newMode)) {
+                mouse.Cursor.CursorMode     = newMode;
+                this.Mice[i].SoftwareCursor = value;
+            }
             else
                 return false;
+        }
 
         return true;
     }
