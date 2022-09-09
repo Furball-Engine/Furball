@@ -1,12 +1,15 @@
+using System;
 using System.Collections.Generic;
 using System.Numerics;
+using Furball.Vixie.Helpers.Helpers;
 using Furball.Vixie.Input;
 using Silk.NET.Input;
 
 namespace Furball.Engine.Engine.Input.InputMethods;
 
 public class SilkWindowingMouseInputMethod : InputMethod {
-    private          IReadOnlyList<IMouse> _silkMice;
+    private IReadOnlyList<IMouse> _silkMice;
+    private List<Vector2>         _silkRawLastState = new();
     public override void Update() {
         foreach (FurballMouse mouse in this.Mice) {
             mouse.Position = mouse.TempPosition;
@@ -35,14 +38,42 @@ public class SilkWindowingMouseInputMethod : InputMethod {
                 Name        = mouse.Name,
                 ScrollWheel = new ScrollWheel()
             });
+            
+            this._silkRawLastState.Add(Vector2.Zero);
         }
     }
+
+    public bool SetRawInputStatus(bool value) {
+        CursorMode newMode = value ? CursorMode.Raw : CursorMode.Normal;
+        foreach (IMouse mouse in this._silkMice)
+            if (mouse.Cursor.IsSupported(newMode))
+                mouse.Cursor.CursorMode = newMode;
+            else
+                return false;
+
+        return true;
+    }
+
     private void MouseOnMove(Vector2 vector2, int i) {
-        FurballMouse mouse = this.Mice[i];
+        Console.WriteLine(vector2);
+        
+        FurballMouse mouse     = this.Mice[i];
+        IMouse       silkMouse = this._silkMice[i];
 
-        //Make sure its always scaled down to the right coordinate system
-        mouse.TempPosition = vector2 / FurballGame.VerticalRatio;
+        if (silkMouse.Cursor.CursorMode == CursorMode.Raw) {
+            Vector2 diff = (vector2 - this._silkRawLastState[i]) / FurballGame.VerticalRatio;
 
+            mouse.TempPosition += diff;
+
+            this._silkRawLastState[i] = vector2;
+        } else {
+            //Make sure its always scaled down to the right coordinate system
+            mouse.TempPosition = vector2 / FurballGame.VerticalRatio;
+        }
+        
+        mouse.TempPosition.X = mouse.TempPosition.X.Clamp(0, FurballGame.WindowWidth);
+        mouse.TempPosition.Y = mouse.TempPosition.Y.Clamp(0, FurballGame.WindowHeight);
+        
         this.Mice[i] = mouse;
     }
     private void MouseOnDown(MouseButton button, int i) {
