@@ -30,9 +30,9 @@ public class DevConsole {
         if (!Directory.Exists(ScriptPath)) Directory.CreateDirectory(ScriptPath);
         if (!Directory.Exists(LogPath)) Directory.CreateDirectory(LogPath);
 
-        VolpeEnvironment.SetVariableValue("cl_debug_overlay", new Value.Boolean(RuntimeInfo.IsDebug()));
-        VolpeEnvironment.SetVariableValue("cl_console_log",   new Value.Boolean(true));
-        VolpeEnvironment.SetVariableValue("cl_tooltipping",   new Value.Boolean(true));
+        VolpeEnvironment.SetVariable(new Variable("cl_debug_overlay", new Value.Boolean(RuntimeInfo.IsDebug())));
+        VolpeEnvironment.SetVariable(new Variable("cl_console_log",   new Value.Boolean(true)));
+        VolpeEnvironment.SetVariable(new Variable("cl_tooltipping", new Value.Boolean(true)));
 
         AddMessage("DevConsole is initialized!");
     }

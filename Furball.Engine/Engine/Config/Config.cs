@@ -71,10 +71,10 @@ public abstract class VolpeConfig : Config {
             Debugger.Break();
         }
 
-        IReadOnlyDictionary<string, Variable> vars = this._environment.Variables;
+        IReadOnlyDictionary<string, IVariable> vars = this._environment.Variables;
             
-        foreach (KeyValuePair<string, Variable> pair in vars) {
-            this.Values[pair.Key] = pair.Value.RawValue;
+        foreach (KeyValuePair<string, IVariable> pair in vars) {
+            this.Values[pair.Key] = pair.Value.ToVariable().RawValue;
         }
     }
 }

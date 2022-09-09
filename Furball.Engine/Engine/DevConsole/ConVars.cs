@@ -5,13 +5,19 @@ namespace Furball.Engine.Engine.DevConsole;
 public class ConVars {
     public static bool DebugOverlay {
         get {
-            DevConsole.VolpeEnvironment.TryGetVariableValue("cl_debug_overlay", out Value value);
+            if (!DevConsole.VolpeEnvironment.TryGetVariable("cl_debug_overlay", out IVariable value))
+                return false;
 
-            Value.Boolean asBool = value as Value.Boolean;
+            Value.Boolean asBool = value!.ToVariable().RawValue as Value.Boolean;
 
             return asBool != null && asBool.Value;
         }
-        set => DevConsole.VolpeEnvironment.SetVariableValue("cl_debug_overlay", new Value.Boolean(value));
+        set {
+            if (!DevConsole.VolpeEnvironment.TryGetVariable("cl_debug_overlay", out IVariable variable))
+                return;
+
+            variable!.ToTypedVariable<Value.Boolean>().Value = new Value.Boolean(value);
+        }
     }
 
     /// <summary>
@@ -19,13 +25,19 @@ public class ConVars {
     /// </summary>
     public static bool WriteLog {
         get {
-            DevConsole.VolpeEnvironment.TryGetVariableValue("cl_console_log", out Value value);
+            if (!DevConsole.VolpeEnvironment.TryGetVariable("cl_console_log", out IVariable value))
+                return false;
 
-            Value.Boolean asBool = value as Value.Boolean;
+            Value.Boolean asBool = value!.ToTypedVariable<Value.Boolean>().Value;
 
-            return asBool != null && asBool.Value;
+            return asBool.Value;
         }
-        set => DevConsole.VolpeEnvironment.SetVariableValue("cl_console_log", new Value.Boolean(value));
+        set {
+            if (!DevConsole.VolpeEnvironment.TryGetVariable("cl_console_log", out IVariable variable))
+                return;
+
+            variable!.ToTypedVariable<Value.Boolean>().Value = new Value.Boolean(value);
+        }
     }
 
     /// <summary>
@@ -34,12 +46,18 @@ public class ConVars {
     /// 
     public static bool ToolTips {
         get {
-            DevConsole.VolpeEnvironment.TryGetVariableValue("cl_tooltipping", out Value value);
+            if (!DevConsole.VolpeEnvironment.TryGetVariable("cl_tooltipping", out IVariable value))
+                return false;
 
-            Value.Boolean asBool = value as Value.Boolean;
+            Value.Boolean asBool = value!.ToTypedVariable<Value.Boolean>().Value;
 
-            return asBool != null && asBool.Value;
+            return asBool.Value;
         }
-        set => DevConsole.VolpeEnvironment.SetVariableValue("cl_tooltipping", new Value.Boolean(value));
+        set {
+            if (!DevConsole.VolpeEnvironment.TryGetVariable("cl_tooltipping", out IVariable variable))
+                return;
+
+            variable!.ToTypedVariable<Value.Boolean>().Value = new Value.Boolean(value);
+        }
     }
 }

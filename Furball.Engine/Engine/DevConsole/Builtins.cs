@@ -7,7 +7,6 @@ using Furball.Engine.Engine.Input;
 using Furball.Vixie.Backends.Shared.Backends;
 using Furball.Volpe.Evaluation;
 using Furball.Volpe.Exceptions;
-using Furball.Volpe.Memory;
 
 namespace Furball.Engine.Engine.DevConsole; 
 
@@ -191,12 +190,12 @@ public class Builtins {
             
         new ("im_input_methods", paramCount: 0,
              (_, _) => {
-                 List<CellSwap<Value>> arrayList = new();
+                 List<Value> arrayList = new();
                      
                  for (int i = 0; i != FurballGame.InputManager.RegisteredInputMethods.Count; i++) {
                      InputMethod currentMethod = FurballGame.InputManager.RegisteredInputMethods[i];
 
-                     arrayList.Add(new CellSwap<Value>(new Value.String(currentMethod.GetType().Name)));
+                     arrayList.Add(new Value.String(currentMethod.GetType().Name));
                  }
 
                  return new Value.Array(arrayList);
