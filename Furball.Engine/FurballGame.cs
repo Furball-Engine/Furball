@@ -619,6 +619,7 @@ public class FurballGame : Game {
         DrawableBatch.Begin();
     }
 
+    private float _cursorVerticalRatioCache;
     protected override void PostDraw(double deltaTime) {
         base.PostDraw(deltaTime);
 
@@ -638,6 +639,12 @@ public class FurballGame : Game {
 
             furballMouse.LastKnownSoftwareCursorPosition = furballMouse.Position;
         }
+
+        // ReSharper disable once CompareOfFloatsByEqualityOperator
+        if (this._cursorVerticalRatioCache != VerticalRatio)
+            needsRecalc = true;
+        
+        this._cursorVerticalRatioCache = VerticalRatio;
         
         if(needsRecalc) {
             CursorDrawableBatch.Begin();
@@ -652,25 +659,27 @@ public class FurballGame : Game {
                         const float mouseWidth  = 15;
                         const float mouseHeight = 25;
                         const float tailWidth   = mouseWidth / 3f;
-                        
-                        map.VertexPtr[0].Position = Vector2.Zero + mouse.Position;
-                        map.VertexPtr[1].Position = new Vector2(0,  mouseHeight) + mouse.Position;
-                        map.VertexPtr[2].Position = new Vector2(mouseWidth, mouseHeight) + mouse.Position;
+
+                        float mouseScale = 1 / VerticalRatio;
+
+                        map.VertexPtr[0].Position = Vector2.Zero * mouseScale + mouse.Position;
+                        map.VertexPtr[1].Position = new Vector2(0,          mouseHeight) * mouseScale + mouse.Position;
+                        map.VertexPtr[2].Position = new Vector2(mouseWidth, mouseHeight) * mouseScale + mouse.Position;
 
                         const float tailLeft         = mouseWidth / 2f - tailWidth / 2f;
                         const float tailRight        = mouseWidth / 2f + tailWidth / 2f;
                         const float tailLength       = 10f;
                         const float tailBottom       = mouseHeight + tailLength;
                         const float tailBottomOffset = 2.5f;
-                        
+
                         //Top left corner of the tail
-                        map.VertexPtr[3].Position = new Vector2(tailLeft, mouseHeight) + mouse.Position;
+                        map.VertexPtr[3].Position = new Vector2(tailLeft, mouseHeight) * mouseScale + mouse.Position;
                         //Top right corner of the tail
-                        map.VertexPtr[4].Position = new Vector2(tailRight, mouseHeight) + mouse.Position;
+                        map.VertexPtr[4].Position = new Vector2(tailRight, mouseHeight) * mouseScale + mouse.Position;
                         //Bottom left corner of the tail
-                        map.VertexPtr[5].Position = new Vector2(tailLeft + tailBottomOffset, tailBottom) + mouse.Position;
+                        map.VertexPtr[5].Position = new Vector2(tailLeft + tailBottomOffset, tailBottom) * mouseScale + mouse.Position;
                         //Bottom right corner of the tail
-                        map.VertexPtr[6].Position = new Vector2(tailRight + tailBottomOffset, tailBottom) + mouse.Position;
+                        map.VertexPtr[6].Position = new Vector2(tailRight + tailBottomOffset, tailBottom) * mouseScale + mouse.Position;
                         
                         for (int i = 0; i < map.VertexCount; i++) {
                             map.VertexPtr[i].Color = new Vixie.Backends.Shared.Color(1f, 1f, 1f, 0.8f);
