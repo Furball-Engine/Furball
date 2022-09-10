@@ -30,6 +30,7 @@ using Furball.Engine.Engine.Timing;
 using Furball.Engine.Engine.Transitions;
 using Furball.Vixie;
 using Furball.Vixie.Backends.Shared.Backends;
+using Furball.Vixie.Backends.Shared.Renderers;
 using Furball.Volpe.Evaluation;
 using JetBrains.Annotations;
 using Kettu;
@@ -625,18 +626,76 @@ public class FurballGame : Game {
 
         DrawableBatch.End();
         
+        //We want to draw software cursors after everything else in the game, so we do it in here
         #region Draw software cursors
 
-        CursorDrawableBatch.Begin();
-
         List<FurballMouse> mice = InputManager.Mice;
-        foreach (FurballMouse mouse in mice) {
-            if (mouse.SoftwareCursor) {
-                CursorDrawableBatch.Draw(WhitePixel, mouse.Position, new Vector2(10));
-            }
-        }
 
-        CursorDrawableBatch.SoftEnd();
+        bool needsRecalc = false;
+        foreach (FurballMouse furballMouse in mice) {
+            if (furballMouse.LastKnownSoftwareCursorPosition != furballMouse.Position)
+                needsRecalc = true;
+
+            furballMouse.LastKnownSoftwareCursorPosition = furballMouse.Position;
+        }
+        
+        if(needsRecalc) {
+            CursorDrawableBatch.Begin();
+
+            unsafe {
+                foreach (FurballMouse mouse in mice) {
+                    if (mouse.SoftwareCursor) {
+                        //3 vertices for the head, and 4 for the tail
+                        //3 indices for the head, 6 for the tail (2 tris)
+                        MappedData map = CursorDrawableBatch.Reserve(3 + 4, 3 + 6);
+
+                        const float mouseWidth  = 15;
+                        const float mouseHeight = 25;
+                        const float tailWidth   = mouseWidth / 3f;
+                        
+                        map.VertexPtr[0].Position = Vector2.Zero + mouse.Position;
+                        map.VertexPtr[1].Position = new Vector2(0,  mouseHeight) + mouse.Position;
+                        map.VertexPtr[2].Position = new Vector2(mouseWidth, mouseHeight) + mouse.Position;
+
+                        const float tailLeft         = mouseWidth / 2f - tailWidth / 2f;
+                        const float tailRight        = mouseWidth / 2f + tailWidth / 2f;
+                        const float tailLength       = 10f;
+                        const float tailBottom       = mouseHeight + tailLength;
+                        const float tailBottomOffset = 2.5f;
+                        
+                        //Top left corner of the tail
+                        map.VertexPtr[3].Position = new Vector2(tailLeft, mouseHeight) + mouse.Position;
+                        //Top right corner of the tail
+                        map.VertexPtr[4].Position = new Vector2(tailRight, mouseHeight) + mouse.Position;
+                        //Bottom left corner of the tail
+                        map.VertexPtr[5].Position = new Vector2(tailLeft + tailBottomOffset, tailBottom) + mouse.Position;
+                        //Bottom right corner of the tail
+                        map.VertexPtr[6].Position = new Vector2(tailRight + tailBottomOffset, tailBottom) + mouse.Position;
+                        
+                        for (int i = 0; i < map.VertexCount; i++) {
+                            map.VertexPtr[i].Color = new Vixie.Backends.Shared.Color(1f, 1f, 1f, 0.8f);
+                            map.VertexPtr[i].TexId = CursorDrawableBatch.GetTextureIdForReserve(WhitePixel);
+                        }
+                        
+                        //Head tri
+                        map.IndexPtr[0] = (ushort)(0 + map.IndexOffset);
+                        map.IndexPtr[1] = (ushort)(1 + map.IndexOffset);
+                        map.IndexPtr[2] = (ushort)(2 + map.IndexOffset);
+                        
+                        //Tail tri 1
+                        map.IndexPtr[3] = (ushort)(3 + map.IndexOffset);
+                        map.IndexPtr[4] = (ushort)(5 + map.IndexOffset);
+                        map.IndexPtr[5] = (ushort)(4 + map.IndexOffset);
+                        //Tail tri 2
+                        map.IndexPtr[6] = (ushort)(4 + map.IndexOffset);
+                        map.IndexPtr[7] = (ushort)(5 + map.IndexOffset);
+                        map.IndexPtr[8] = (ushort)(6 + map.IndexOffset);
+                    }
+                }
+            }
+
+            CursorDrawableBatch.SoftEnd();
+        }
         CursorDrawableBatch.ManualDraw();
 
         #endregion

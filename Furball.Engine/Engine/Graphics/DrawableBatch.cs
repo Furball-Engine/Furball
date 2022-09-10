@@ -53,6 +53,13 @@ public class DrawableBatch : IDisposable {
         this.Begun = false;
     }
 
+    public MappedData Reserve(ushort vtxCount, uint idxCount) {
+        return this._renderer.Reserve(vtxCount, idxCount);
+    }
+    public long GetTextureIdForReserve(Texture whitePixel) {
+        return this._renderer.GetTextureId(whitePixel);
+    }
+    
     public void Draw(Texture texture, Vector2 position, Vector2 scale, float rotation, Color colorOverride, TextureFlip texFlip = TextureFlip.None, Vector2 rotOrigin = default) {
         this._renderer.AllocateRotatedTexturedQuad(texture, position, scale, rotation, rotOrigin, colorOverride, texFlip);
     }

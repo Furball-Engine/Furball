@@ -59,8 +59,6 @@ public class SilkWindowingMouseInputMethod : InputMethod {
     }
 
     private void MouseOnMove(Vector2 vector2, int i) {
-        Console.WriteLine(vector2);
-        
         FurballMouse mouse     = this.Mice[i];
         IMouse       silkMouse = this._silkMice[i];
 
