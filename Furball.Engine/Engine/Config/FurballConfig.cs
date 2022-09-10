@@ -20,6 +20,7 @@ public class FurballConfig : VolpeConfig {
     public string Language => this.Values["language"].ToStringValue().Value;
 
     public bool RawMouseInput => this.Values["raw_mouse_input"].ToBoolean().Value;
+    public double SoftwareCursorScale => this.Values["software_cursor_scale"].ToNumber().Value;
     
     public void SetKeybind(object identifier, Key key) {
         this.Values[$"keybind_{identifier}"] = new Value.String(key.ToString());
@@ -48,7 +49,8 @@ public class FurballConfig : VolpeConfig {
 
         this.Values["language"] = new Value.String(LocalizationManager.DefaultLanguage.Iso6392Code().ToString());
 
-        this.Values["raw_mouse_input"] = new Value.Boolean(false);
+        this.Values["raw_mouse_input"]       = new Value.Boolean(false);
+        this.Values["software_cursor_scale"] = new Value.Number(1d);
     }
 
     public static FurballConfig Instance;

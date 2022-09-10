@@ -660,7 +660,7 @@ public class FurballGame : Game {
                         const float mouseHeight = 25;
                         const float tailWidth   = mouseWidth / 3f;
 
-                        float mouseScale = 1 / VerticalRatio;
+                        float mouseScale = (float)(1 / VerticalRatio * FurballConfig.Instance.SoftwareCursorScale);
 
                         map.VertexPtr[0].Position = Vector2.Zero * mouseScale + mouse.Position;
                         map.VertexPtr[1].Position = new Vector2(0,          mouseHeight) * mouseScale + mouse.Position;
