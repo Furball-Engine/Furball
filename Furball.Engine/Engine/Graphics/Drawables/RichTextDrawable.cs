@@ -21,12 +21,24 @@ public class RichTextDrawable : Drawable {
             return ContentManager.LoadSystemFont(fontName).GetFont(fontSize);
         };
         RichTextDefaults.ImageResolver = s => {
-            Texture tex = ContentManager.LoadTextureFromFileCached(s, ContentSource.User);
-            return new TextureFragment((VixieTexture)tex, new Rectangle(0, 0, tex.Width, tex.Height));
+            string[] args        = s.Split(',');
+            string   textureName = args[0];
+
+            Vector2 scale = args.Length switch {
+                2 => new Vector2(float.Parse(args[1])),
+                3 => new Vector2(float.Parse(args[1]), float.Parse(args[2])),
+                _ => Vector2.One
+            };
+
+            Texture tex = ContentManager.LoadTextureFromFileCached(textureName, ContentSource.User);
+            TextureFragment fragment = new((VixieTexture)tex, new Rectangle(0, 0, tex.Width, tex.Height)) {
+                Scale = scale
+            };
+            return fragment;
         };
     }
 
-    public override Vector2 Size => this.Layout.Measure(this.Layout.Width).ToVector2() * this.Scale;
+    public override Vector2 Size => this.Layout.Size.ToVector2() * this.Scale;
 
     public RichTextDrawable(Vector2 position, string text, FontSystem system, int fontSize) {
         this.Layout = new RichTextLayout {
