@@ -13,7 +13,7 @@ public class VideoDrawableTest : TestScreen {
 
         string videoPath = Path.Combine(FurballGame.AssemblyPath, "Content", "test.mp4");
 
-        this._video = new VideoDrawable(videoPath, 1, FurballGame.GameTimeSource, Vector2.Zero);
+        this._video = new VideoDrawable(File.ReadAllBytes(videoPath), 1, FurballGame.GameTimeSource, Vector2.Zero);
         
         this.Manager.Add(this._video);
     }

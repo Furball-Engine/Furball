@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Numerics;
 using Furball.Engine.Engine.Graphics.Video;
 using Furball.Engine.Engine.Timing;
@@ -20,10 +21,10 @@ public class VideoDrawable : TexturedDrawable {
     /// <param name="speed">The intended playback speed (does *not* actually effect playback speed)</param>
     /// <param name="timeSource">The time source for the video to follow</param>
     /// <param name="position">The position on screen</param>
-    public VideoDrawable(string path, double speed, ITimeSource timeSource, Vector2 position) : base(null, position) {
+    public VideoDrawable(byte[] path, double speed, ITimeSource timeSource, Vector2 position) : base(null, position) {
         //If we are moving at twice the speed, we should double our buffer size, and conversely if we are going half the speed we should half our buffer size
         this._decoder = new VideoDecoder((int)(4d * speed));
-        this._decoder.Load(path);
+        this._decoder.Load(new MemoryStream(path));
 
         //Create the texture which will store our video
         this.Texture      = Texture.CreateEmptyTexture((uint)this._decoder.Width, (uint)this._decoder.Height);
