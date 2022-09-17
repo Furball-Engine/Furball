@@ -2,22 +2,23 @@
 using System;
 using Furball.Engine.Engine.Graphics;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
+using Furball.Engine.Engine.Helpers;
 using Furball.Engine.Engine.Helpers.Logger;
 using Kettu;
 
-namespace Furball.Engine.Engine; 
+namespace Furball.Engine.Engine;
 
 public class ScreenManager {
     /// <summary>
-    /// Transition that's currently used, by default it is FadeTransition
+    ///     Transition that's currently used, by default it is FadeTransition
     /// </summary>
     internal static Transition? Transition;
     /// <summary>
-    /// Current Fade State
+    ///     Current Fade State
     /// </summary>
     public static FadeState CurrentFadeState { get; private set; } = FadeState.None;
     /// <summary>
-    /// Calls the Transition Draw Method
+    ///     Calls the Transition Draw Method
     /// </summary>
     /// <param name="time"></param>
     /// <param name="batch"></param>
@@ -26,29 +27,33 @@ public class ScreenManager {
         Transition?.Draw(time, batch, args);
     }
     /// <summary>
-    /// Calls the Transition Update Method
+    ///     Calls the Transition Update Method
     /// </summary>
     /// <param name="time"></param>
     internal static void UpdateTransition(double time) {
         Transition?.Update(time);
     }
+    private static double          _currentFadeInTime = 0;
+    private static ScheduledMethod _transitionFadeOutScheduled;
     /// <summary>
-    /// Changes the Screen to a new Screen
+    ///     Changes the Screen to a new Screen
     /// </summary>
     /// <param name="newScreen">Screen to Switch to</param>
     /// <param name="skipTransition">Whether to skip the transition and immediately go to the new screen</param>
     public static void ChangeScreen(Screen newScreen, bool skipTransition = false) {
         Logger.Log($"Screen change to {newScreen.GetType().Name} requested!", LoggerLevelEngineInfo.Instance);
-        
+
         if (Transition != null && !skipTransition) {
             Transition t = Transition;
+            if (CurrentFadeState != FadeState.FadeIn) {
+                _currentFadeInTime = Transition.TransitionBegin();
+                Logger.Log($"Transition for screen change to {newScreen.GetType().Name} begun!", LoggerLevelEngineInfo.Instance);
 
-            double fadeInTime = Transition.TransitionBegin();
-            Logger.Log($"Transition for screen change to {newScreen.GetType().Name} begun!", LoggerLevelEngineInfo.Instance);
-
-            CurrentFadeState = FadeState.FadeIn;
-
-            FurballGame.GameTimeScheduler.ScheduleMethod(
+                CurrentFadeState = FadeState.FadeIn;
+            } else {
+                _transitionFadeOutScheduled.Cancel = true;
+            }
+            _transitionFadeOutScheduled = FurballGame.GameTimeScheduler.ScheduleMethod(
             delegate {
                 GC.Collect();
 
@@ -66,23 +71,23 @@ public class ScreenManager {
                 FurballGame.Time + fadeOutTime
                 );
             },
-            FurballGame.Time + fadeInTime
+            FurballGame.Time + _currentFadeInTime
             );
         } else {
             FurballGame.Instance.ChangeScreen(newScreen);
         }
     }
     /// <summary>
-    /// Sets the Transition Effect to something else
+    ///     Sets the Transition Effect to something else
     /// </summary>
     /// <param name="transition">New Transition Effect</param>
     public static void SetTransition(Transition transition) {
         Transition?.Dispose();
-            
+
         Transition = transition;
     }
     /// <summary>
-    /// Sets the Transition effect to literally nothing, No Fading or anything will happen
+    ///     Sets the Transition effect to literally nothing, No Fading or anything will happen
     /// </summary>
     public static void SetBlankTransition() {
         Transition?.Dispose();
