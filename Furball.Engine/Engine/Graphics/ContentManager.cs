@@ -52,7 +52,10 @@ public static class ContentManager {
 
         //If we cant find the font, just give them the default one, ittl work
         if (!SystemFonts.TryGet(familyName, out FontFamily font))
+        {
+            Logger.Log($"Could not load system font by family name \"{familyName}\", loading default font instead", LoggerLevelEngineInfo.Instance);
             return FurballGame.DefaultFont;
+        }
 
         Font regularFont = font.CreateFont(30, style);
 
