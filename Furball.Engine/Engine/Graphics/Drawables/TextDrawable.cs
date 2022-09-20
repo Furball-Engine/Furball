@@ -36,12 +36,12 @@ public class TextDrawable : Drawable {
         }
     }
 
-    private int _fontSize;
+    private float _fontSize;
 
     /// <summary>
     /// The size of the font
     /// </summary>
-    public int FontSize {
+    public float FontSize {
         get => this._fontSize;
         set => this.SetFont(this.Font.FontSystem, value);
     }
@@ -133,7 +133,7 @@ public class TextDrawable : Drawable {
     /// <param name="font">A byte[] containing the font in ttf form)</param>
     /// <param name="text">What Text to Draw (can be changed later)</param>
     /// <param name="fontSize">The size of the text as a float</param>
-    public TextDrawable(Vector2 position, FontSystem font, string text, int fontSize) {
+    public TextDrawable(Vector2 position, FontSystem font, string text, float fontSize) {
         this.Position = position;
 
         this.SetFont(font, fontSize);
@@ -192,8 +192,8 @@ public class TextDrawable : Drawable {
         FurballGame.Instance.WindowManager.OnFramebufferResize -= this.OnFramebufferResize;
     }
 
-    public void SetFont(FontSystem font, int fontSize) {
-        (FontSystem FontSystem, int fontSize) key = (font, fontSize);
+    public void SetFont(FontSystem font, float fontSize) {
+        (FontSystem FontSystem, float fontSize) key = (font, fontSize);
 
         ContentManager.FssCache.TryGetValue(key, out WeakReference<DynamicSpriteFont> fontRef);
 

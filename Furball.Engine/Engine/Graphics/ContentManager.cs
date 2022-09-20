@@ -12,10 +12,10 @@ using SixLabors.Fonts;
 namespace Furball.Engine.Engine.Graphics; 
 
 public static class ContentManager {
-    private static readonly Dictionary<string, WeakReference<byte[]>>                       ContentCache = new();
-    private static readonly Dictionary<string, WeakReference<Texture>>                      TextureCache = new();
-    public static readonly  Dictionary<(FontSystem, int), WeakReference<DynamicSpriteFont>> FssCache     = new();
-    public static           string                                                          ContentPath   = "Content";
+    private static readonly Dictionary<string, WeakReference<byte[]>>                                             ContentCache = new();
+    private static readonly Dictionary<string, WeakReference<Texture>>                                            TextureCache = new();
+    public static readonly  Dictionary<(FontSystem FontSystem, float fontSize), WeakReference<DynamicSpriteFont>> FssCache     = new();
+    public static           string                                                                                ContentPath  = "Content";
 
     public static int CacheSizeLimit = 100000000;// 8 MB
 
