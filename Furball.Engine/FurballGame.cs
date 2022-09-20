@@ -343,6 +343,9 @@ public class FurballGame : Game {
         
         InputManager.RegisterInputMethod(InputManager.SilkWindowingMouseInputMethod    = new SilkWindowingMouseInputMethod());
         InputManager.RegisterInputMethod(InputManager.SilkWindowingKeyboardInputMethod = new SilkWindowingKeyboardInputMethod());
+
+        DrawableBatch       = new DrawableBatch();
+        CursorDrawableBatch = new DrawableBatch();
     }
 
     public new void RunHeadless() {
