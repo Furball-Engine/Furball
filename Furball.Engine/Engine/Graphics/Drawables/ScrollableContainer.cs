@@ -20,6 +20,7 @@ public class ScrollableContainer : CompositeDrawable {
 
         this._size = size;
     }
+    
     private void OnMouseMove(object sender, MouseMoveEventArgs e) {
         this._realHovered = this.RealContains(e.Position);
     }
@@ -30,8 +31,9 @@ public class ScrollableContainer : CompositeDrawable {
 
         this.Drawables.Add(drawable);
 
-        if (drawable.Position.Y + drawable.Size.Y - this.Size.Y > this._lastMax)
-            this._lastMax = Math.Max(0, drawable.Position.Y + drawable.Size.Y - this.Size.Y);
+        // ReSharper disable once CompareOfFloatsByEqualityOperator
+        if (drawable.Position.Y + drawable.Size.Y > this._lastMax || drawable.Size.Y == this.Size.Y)
+            this._lastMax = Math.Max(0, drawable.Position.Y + drawable.Size.Y);
     }
 
     private bool _realHovered;
