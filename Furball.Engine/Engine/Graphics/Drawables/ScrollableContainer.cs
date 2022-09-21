@@ -84,4 +84,8 @@ public class ScrollableContainer : CompositeDrawable {
             if (drawable.Position.Y + drawable.Size.Y - this.Size.Y > this._lastMax)
                 this._lastMax = Math.Max(0, drawable.Position.Y + drawable.Size.Y - this.Size.Y);
     }
+
+    public void SetTargetScroll(float f) {
+        this._targetScroll = f.Clamp(9, this._lastMax);
+    }
 }
