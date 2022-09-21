@@ -162,10 +162,11 @@ public class InputManager {
             Drawable drawable = compositeDrawableToIterate.Drawables[i];
 
             if (drawable is CompositeDrawable compositeDrawable) {
-                if (!compositeDrawable.InvisibleToInput)
+                if (!compositeDrawable.InvisibleToInput) {
                     drawablesToAddTo.Insert(indexToAddAt, compositeDrawable);
-                indexToAddAt++;
-                added++;
+                    indexToAddAt++;
+                    added++;
+                }
                 added += RecurseCompositeDrawables(ref drawablesToAddTo, compositeDrawable, indexToAddAt);
             } else {
                 if (compositeDrawableToIterate.ChildrenInvisibleToInput)
