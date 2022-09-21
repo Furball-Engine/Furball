@@ -40,11 +40,22 @@ public class DrawableButton : CompositeDrawable {
     /// <summary>
     ///     The outline color of the button
     /// </summary>
-    public Color OutlineColor;
+    public Color OutlineColor {
+        get => this._outlineDrawable.ColorOverride;
+        set => this._outlineDrawable.ColorOverride = value;
+    }
+
+    private Color _buttonColor;
     /// <summary>
     ///     The fill color of the button
     /// </summary>
-    public Color ButtonColor;
+    public Color ButtonColor {
+        get => this._buttonColor;
+        set {
+            this._backgroundDrawable.ColorOverride = value;
+            this._buttonColor = value;
+        }
+    }
 
     /// <summary>
     ///     The color of the text
@@ -101,9 +112,6 @@ public class DrawableButton : CompositeDrawable {
         this.OutlineColor = outlineColor;
         this.ButtonColor  = buttonColor;
         this.ButtonSize   = buttonSize;
-
-        this._backgroundDrawable.ColorOverride = buttonColor;
-        this._outlineDrawable.ColorOverride    = outlineColor;
         
         this.OnClick += onClick;
 
