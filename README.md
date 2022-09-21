@@ -1,6 +1,6 @@
 # Furball
 
-A Game Engine designed in C# using a custom made Renderer called Furball.Vixie, its mostly designed to provide an easy entity system for quickly getting a new game up and running quickly, providing all the tools to prototype fast, then expand to more complicated ideas.
+Modular Game Engine designed in C# using a custom rendering framework, it is designed to provide an easy system for quickly getting a new game up and running quickly, providing all the tools to prototype fast, then expand to more complicated ideas.
 
 ### On the prime ECS scale, we fall between E and EC (depending on how you classify our `DrawableManager` class)
 #### E: Entity classes with subclasses. Loop through a List<Entity> and call Update/Draw on each.
@@ -19,9 +19,20 @@ A Game Engine designed in C# using a custom made Renderer called Furball.Vixie, 
 ## Requirements
 
 * A desktop platform with the [.NET 6.0 SDK](https://dotnet.microsoft.com/download) or higher installed.
-* A OpenGL 3.0+ capable GPU.
 * When running on Windows 7 or 8.1 you may need to [install additional things.](https://docs.microsoft.com/en-us/dotnet/core/install/windows?tabs=net50&pivots=os-windows#dependencies) (Notably the Microsoft Visual C++ 2015-2019 Redistributable)
 * When working with the codebase, we strongly recommend using Jetbrains Rider or Visual Studio 2019+.
+
+## Graphics Requirements
+
+* OpenGL 3.0+
+* OpenGLES 2.0+
+* Direct3D 11 (Also working on Linux through dxvk-native)
+* Vulkan (WIP)
+* Direct3D 9 (WIP)
+* Software rendering through [Furball.Mola](https://github.com/Furball-Engine/Furball.Mola) (WIP)
+* Veldrid (Vulkan, OpenGL, OpenGLES, Metal, Direct3D11) (Will likely be removed at some point in the future)
+
+Furball will automatically decide on the optimal backend to render with, on Windows that will be Direct3D 11, on Linux that will be OpenGL, on MacOS that will be Metal (Veldrid)
 
 ## Linux
 
