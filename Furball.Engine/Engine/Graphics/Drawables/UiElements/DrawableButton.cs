@@ -40,11 +40,22 @@ public class DrawableButton : CompositeDrawable {
     /// <summary>
     ///     The outline color of the button
     /// </summary>
-    public Color OutlineColor;
+    public Color OutlineColor {
+        get => this._outlineDrawable.ColorOverride;
+        set => this._outlineDrawable.ColorOverride = value;
+    }
+
+    private Color _buttonColor;
     /// <summary>
     ///     The fill color of the button
     /// </summary>
-    public Color ButtonColor;
+    public Color ButtonColor {
+        get => this._buttonColor;
+        set {
+            this._backgroundDrawable.ColorOverride = value;
+            this._buttonColor = value;
+        }
+    }
 
     /// <summary>
     ///     The color of the text
@@ -101,9 +112,6 @@ public class DrawableButton : CompositeDrawable {
         this.OutlineColor = outlineColor;
         this.ButtonColor  = buttonColor;
         this.ButtonSize   = buttonSize;
-
-        this._backgroundDrawable.ColorOverride = buttonColor;
-        this._outlineDrawable.ColorOverride    = outlineColor;
         
         this.OnClick += onClick;
 
@@ -121,8 +129,8 @@ public class DrawableButton : CompositeDrawable {
             this._backgroundDrawable.Tweens.Add(
             new ColorTween(
             TweenType.Color,
-            this.ButtonColor,
-            new Color(this.ButtonColor.R - 50, this.ButtonColor.G - 50, this.ButtonColor.B - 50),
+            this._buttonColor,
+            new Color(this._buttonColor.R - 50, this._buttonColor.G - 50, this._buttonColor.B - 50),
             this.TimeSource.GetCurrentTime(),
             this.TimeSource.GetCurrentTime() + 150
             )
