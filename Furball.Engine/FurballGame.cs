@@ -7,7 +7,6 @@ using System.Numerics;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
-using Eto.Forms;
 using FontStashSharp;
 using Furball.Engine.Engine;
 using Furball.Engine.Engine.Config;
@@ -42,7 +41,6 @@ using sowelipisona.ManagedBass;
 using Environment=System.Environment;
 using GraphicsBackend=Furball.Vixie.GraphicsBackend;
 using Rectangle=System.Drawing.Rectangle;
-using Screen=Furball.Engine.Engine.Screen;
 
 namespace Furball.Engine; 
 
@@ -589,10 +587,11 @@ public class FurballGame : Game {
 
         base.Update(deltaTime);
 
-        foreach (FixedTimeStepMethod fixedTimeStepMethod in TimeStepMethods) {
+        for (int i = 0; i < TimeStepMethods.Count; i++) {
+            FixedTimeStepMethod fixedTimeStepMethod = TimeStepMethods[i];
             fixedTimeStepMethod.Update(deltaTime);
         }
-            
+
         DrawableManager.Update(deltaTime);
         OverlayDrawableManager.Update(deltaTime);
 
