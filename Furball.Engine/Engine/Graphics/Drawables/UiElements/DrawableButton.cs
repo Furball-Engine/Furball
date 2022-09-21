@@ -129,8 +129,8 @@ public class DrawableButton : CompositeDrawable {
             this._backgroundDrawable.Tweens.Add(
             new ColorTween(
             TweenType.Color,
-            this._buttonColor,
-            new Color(this._buttonColor.R - 50, this._buttonColor.G - 50, this._buttonColor.B - 50),
+            this.ButtonColor,
+            new Color(this.ButtonColor.R - 50, this.ButtonColor.G - 50, this.ButtonColor.B - 50),
             this.TimeSource.GetCurrentTime(),
             this.TimeSource.GetCurrentTime() + 150
             )
