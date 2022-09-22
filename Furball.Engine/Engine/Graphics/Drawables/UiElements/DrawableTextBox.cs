@@ -145,6 +145,9 @@ public partial class DrawableTextBox : CompositeDrawable, ICharInputHandler {
 
     private void OnKeyDown(object sender, KeyEventArgs e) {
         if (!this.Selected || !this.Visible) return;
+
+        if (this.SelectedRange.Value.Start > this.Text.Length)
+            this.SelectedRange.Value = new Range(0, 0);
             
         switch(e.Key) {
             case Key.V when FurballGame.InputManager.HeldKeys.Contains(Key.ControlLeft): {
