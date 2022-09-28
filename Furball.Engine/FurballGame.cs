@@ -268,6 +268,7 @@ public class FurballGame : Game {
         );
 
         this.WindowManager.EnableUnfocusCap = FurballConfig.Instance.UnfocusCap;
+        this.WindowManager.VerticalSync = FurballConfig.Instance.VerticalSync;
         Profiler.EndProfileAndPrint("set_window_properties");
 
         ScreenManager.ChangeScreen(this._startScreen);
