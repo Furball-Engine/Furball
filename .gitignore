@@ -7,3 +7,5 @@ riderModule.iml
 Furball.sln.DotSettings.user
 .vs/
 .vscode/
+Furball.Game/config/
+Furball.Game/logs/
