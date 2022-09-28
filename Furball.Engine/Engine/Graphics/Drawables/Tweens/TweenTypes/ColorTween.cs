@@ -50,10 +50,10 @@ public class ColorTween : Tween {
             return this._endColor;
 
         return new Color(
-        (int)this.CalculateCurrent(this._startColor.R, this._endColor.R),
-        (int)this.CalculateCurrent(this._startColor.G, this._endColor.G),
-        (int)this.CalculateCurrent(this._startColor.B, this._endColor.B),
-        (int)this.CalculateCurrent(this._startColor.A, this._endColor.A)
+        this.CalculateCurrent(this._startColor.Rf, this._endColor.Rf),
+        this.CalculateCurrent(this._startColor.Gf, this._endColor.Gf),
+        this.CalculateCurrent(this._startColor.Bf, this._endColor.Bf),
+        this.CalculateCurrent(this._startColor.Af, this._endColor.Af)
         );
     }
 }
