@@ -11,7 +11,6 @@ public class FurballConfig : VolpeConfig {
     public int ScreenWidth  => (int)this.Values["screen_width"].ToNumber().Value;
     public int ScreenHeight => (int)this.Values["screen_height"].ToNumber().Value;
 
-
     public bool LimitFps  => this.Values["limit_fps"].ToBoolean().Value;
     public int  TargetFps => (int)this.Values["target_fps"].ToNumber().Value;
     public bool UnfocusCap => this.Values["unfocus_cap"].ToBoolean().Value;
@@ -21,6 +20,8 @@ public class FurballConfig : VolpeConfig {
 
     public bool RawMouseInput => this.Values["raw_mouse_input"].ToBoolean().Value;
     public double SoftwareCursorScale => this.Values["software_cursor_scale"].ToNumber().Value;
+
+    public bool VerticalSync => this.Values["vertical_sync"].ToBoolean().Value;
     
     public void SetKeybind(object identifier, Key key) {
         this.Values[$"keybind_{identifier}"] = new Value.String(key.ToString());
@@ -51,6 +52,8 @@ public class FurballConfig : VolpeConfig {
 
         this.Values["raw_mouse_input"]       = new Value.Boolean(false);
         this.Values["software_cursor_scale"] = new Value.Number(1d);
+
+        this.Values["vertical_sync"] = new Value.Boolean(false);
     }
 
     public static FurballConfig Instance;
