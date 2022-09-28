@@ -103,7 +103,8 @@ public class FurballGame : Game {
         FontResolutionFactor = 2f,
         KernelWidth          = 2,
         KernelHeight         = 2,
-        Effect               = FontSystemEffect.None
+        Effect               = FontSystemEffect.None,
+        PremultiplyAlpha     = false
     }
     );
 
@@ -113,7 +114,8 @@ public class FurballGame : Game {
         KernelWidth          = 2,
         KernelHeight         = 2,
         Effect               = FontSystemEffect.Stroked,
-        EffectAmount         = 2
+        EffectAmount         = 2,
+        PremultiplyAlpha     = false
     }
     );
 
@@ -137,6 +139,8 @@ public class FurballGame : Game {
         Logger.AddLogger(new DevConsoleLogger());
 
         this._startScreen = startScreen;
+
+        FontSystemDefaults.PremultiplyAlpha = false;
     }
 
     protected override void Initialize() {
