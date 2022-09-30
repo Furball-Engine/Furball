@@ -9,7 +9,7 @@ using Furball.Vixie;
 using Furball.Vixie.Backends.Shared;
 using Furball.Vixie.Backends.Shared.Renderers;
 using Furball.Vixie.Helpers;
-using Color=Furball.Vixie.Backends.Shared.Color;
+using Color = Furball.Vixie.Backends.Shared.Color;
 
 namespace Furball.Engine.Engine.Graphics; 
 
@@ -75,7 +75,7 @@ public class DrawableBatch : IDisposable {
     }
 
     public void Draw(Texture texture, Vector2 position, Vector2 scale, Color colorOverride, float rotation = 0, TextureFlip texFlip = TextureFlip.None, Vector2 rotOrigin = default) {
-        this._renderer.AllocateRotatedTexturedQuad(texture, position, scale, rotation, rotOrigin, Color.White, texFlip);
+        this._renderer.AllocateRotatedTexturedQuad(texture, position, scale, rotation, rotOrigin, colorOverride, texFlip);
     }
 
     public void DrawLine(Vector2 begin, Vector2 end, float thickness, Color color) {
