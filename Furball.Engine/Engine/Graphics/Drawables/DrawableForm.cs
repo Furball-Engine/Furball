@@ -40,7 +40,11 @@ public class DrawableForm : CompositeDrawable {
         //We make the background a little bigger so there is margin
         this._background = new RectanglePrimitiveDrawable(new Vector2(0, 24), this.Contents.Size + new Vector2(10), 0, true) {
             ColorOverride = new Color(30, 30, 30, 175),
-            Depth         = 0f
+            Depth         = 0f,
+            Clickable     = false,
+            CoverClicks   = false,
+            Hoverable     = false,
+            CoverHovers   = false
         };
 
         //Center it in the margin
@@ -62,12 +66,12 @@ public class DrawableForm : CompositeDrawable {
             OriginType.Center       => new Vector2(FurballGame.WindowWidth / 2f - size.X / 2, FurballGame.WindowHeight / 2f - size.Y / 2f),
             OriginType.TopLeft      => Vector2.Zero,
             OriginType.TopRight     => new Vector2(FurballGame.WindowWidth - size.X, 0),
-            OriginType.BottomLeft   => new Vector2(0,                                FurballGame.WindowHeight - size.Y),
+            OriginType.BottomLeft   => new Vector2(0, FurballGame.WindowHeight - size.Y),
             OriginType.BottomRight  => new Vector2(FurballGame.WindowWidth, FurballGame.WindowHeight) - size,
             OriginType.TopCenter    => new Vector2(FurballGame.WindowWidth / 2f - size.X / 2, 0),
             OriginType.BottomCenter => new Vector2(FurballGame.WindowWidth / 2f - size.X / 2, FurballGame.WindowHeight - size.Y),
             OriginType.LeftCenter   => new Vector2(0,                                         FurballGame.WindowHeight / 2f - size.Y / 2f),
-            OriginType.RightCenter  => new Vector2(FurballGame.WindowWidth - size.X,          FurballGame.WindowHeight / 2f - size.Y / 2f),
+            OriginType.RightCenter  => new Vector2(FurballGame.WindowWidth - size.X, FurballGame.WindowHeight / 2f - size.Y / 2f),
             _                       => throw new ArgumentOutOfRangeException(nameof (startPosition), startPosition, null)
         };
 
