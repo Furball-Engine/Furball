@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Numerics;
 using System.Threading;
+using FontStashSharp;
 using Furball.Engine;
 using Furball.Engine.Engine.Graphics.Drawables;
 
@@ -29,6 +30,11 @@ public class LoadingScreenTest : TestScreen {
     public override void Initialize() {
         base.Initialize();
 
-        this.Manager.Add(new TextDrawable(new Vector2(10), FurballGame.DefaultFontStroked, "Loading Complete!", 30));
+        this.Manager.Add(
+        new TextDrawable(new Vector2(10), FurballGame.DefaultFont, "Loading Complete!", 30) {
+            Effect         = FontSystemEffect.Stroked,
+            EffectStrength = 1
+        }
+        );
     }
 }

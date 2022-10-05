@@ -109,13 +109,19 @@ public class DrawableBatch : IDisposable {
         this.Draw(FurballGame.WhitePixel, position, size, rotation, color);
     }
 
-    public void DrawString(DynamicSpriteFont font, string text, Vector2 position, Color color, float rotation = 0f, Vector2? scale = null, Vector2 origin = default) {
+    public void DrawString(
+        DynamicSpriteFont font, string text, Vector2 position, Color color, float rotation = 0f, Vector2? scale = null, Vector2 origin = default(Vector2),
+        TextStyle         style = TextStyle.None, FontSystemEffect effect = FontSystemEffect.None, int effectAmount = 0
+    ) {
         scale ??= Vector2.One;
-        this._renderer.DrawString(font, text, position, color, rotation, scale.Value, origin);
+        this._renderer.DrawString(font, text, position, color, rotation, scale.Value, origin, style, effect, effectAmount);
     }
 
-    public void DrawString(DynamicSpriteFont font, string text, Vector2 position, FSColor[] colors, float rotation = 0f, Vector2? scale = null, Vector2 origin = default ) {
-        this._renderer.DrawString(font, text, position, colors, rotation, scale, origin);
+    public void DrawString(
+        DynamicSpriteFont font, string text, Vector2 position, FSColor[] colors, float rotation = 0f, Vector2? scale = null, Vector2 origin = default(Vector2),
+        TextStyle         style = TextStyle.None, FontSystemEffect effect = FontSystemEffect.None, int effectAmount = 0
+    ) {
+        this._renderer.DrawString(font, text, position, colors, rotation, scale, origin, style, effect, effectAmount);
     }
 
     private readonly Stack<(object badge, Rectangle rect)> _scissorStack = new();

@@ -38,9 +38,9 @@ using Silk.NET.Maths;
 using Silk.NET.Windowing;
 using sowelipisona;
 using sowelipisona.ManagedBass;
-using Environment=System.Environment;
-using GraphicsBackend=Furball.Vixie.GraphicsBackend;
-using Rectangle=System.Drawing.Rectangle;
+using Environment = System.Environment;
+using GraphicsBackend = Furball.Vixie.GraphicsBackend;
+using Rectangle = System.Drawing.Rectangle;
 
 namespace Furball.Engine; 
 
@@ -103,18 +103,6 @@ public class FurballGame : Game {
         FontResolutionFactor = 2f,
         KernelWidth          = 2,
         KernelHeight         = 2,
-        Effect               = FontSystemEffect.None,
-        PremultiplyAlpha     = false
-    }
-    );
-
-    public static readonly FontSystem DefaultFontStroked = new(
-    new FontSystemSettings {
-        FontResolutionFactor = 2f,
-        KernelWidth          = 2,
-        KernelHeight         = 2,
-        Effect               = FontSystemEffect.Stroked,
-        EffectAmount         = 2,
         PremultiplyAlpha     = false
     }
     );
@@ -155,7 +143,6 @@ public class FurballGame : Game {
 
         DefaultFontData = ContentManager.LoadRawAsset("default-font.ttf");
         DefaultFont.AddFont(DefaultFontData);
-        DefaultFontStroked.AddFont(DefaultFontData);
 
         _stopwatch.Start();
 
@@ -311,10 +298,12 @@ public class FurballGame : Game {
         if (Assembly.GetExecutingAssembly().GetType("MonoMod.WasHere") != null) {
             GameTimeScheduler.ScheduleMethod(
             delegate {
-                TextDrawable easterEggText = new(new Vector2(5, 5), DefaultFontStroked, "Hello MonoMod user! :3c", 36);
+                TextDrawable easterEggText = new TextDrawable(new Vector2(5, 5), DefaultFont, "Hello MonoMod user! :3c", 36);
 
-                easterEggText.Hoverable = true;
-                easterEggText.ToolTip   = "Enjoy Modding!";
+                easterEggText.Effect         = FontSystemEffect.Stroked;
+                easterEggText.EffectStrength = 1;
+                easterEggText.Hoverable      = true;
+                easterEggText.ToolTip        = "Enjoy Modding!";
 
                 double drawableTime = easterEggText.DrawableTime;
 

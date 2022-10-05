@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Numerics;
 using FontStashSharp;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
@@ -24,6 +23,10 @@ public class TextDrawable : Drawable {
 
     private string _text = "";
 
+    public TextStyle        Style          = TextStyle.None;
+    public FontSystemEffect Effect         = FontSystemEffect.None;
+    public int              EffectStrength = 1;
+    
     /// <summary>
     /// Text that gets drawn
     /// </summary>
@@ -262,7 +265,10 @@ public class TextDrawable : Drawable {
                     this.Colors,
                     args.Rotation,
                     args.Scale / FurballGame.VerticalRatio / this._difference,
-                    this.RotationOrigin
+                    this.RotationOrigin,
+                    this.Style,
+                    this.Effect,
+                    this.EffectStrength
                     );
                     break;
                 }
@@ -274,7 +280,10 @@ public class TextDrawable : Drawable {
                     args.Color,
                     args.Rotation,
                     args.Scale / FurballGame.VerticalRatio / this._difference,
-                    this.RotationOrigin
+                    this.RotationOrigin,
+                    this.Style,
+                    this.Effect,
+                    this.EffectStrength
                     );
                     break;
                 }
@@ -286,7 +295,10 @@ public class TextDrawable : Drawable {
                     ArrayHelper.FitElementsInANewArray(this.Colors, this.Text.Length),
                     args.Rotation,
                     args.Scale / FurballGame.VerticalRatio / this._difference,
-                    this.RotationOrigin
+                    this.RotationOrigin,
+                    this.Style,
+                    this.Effect,
+                    this.EffectStrength
                     );
                     break;
                 }
