@@ -1,7 +1,8 @@
 using System.Collections.Generic;
+using System.Drawing;
 using System.Numerics;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
-using Furball.Vixie.Backends.Shared;
+using Color = Furball.Vixie.Backends.Shared.Color;
 
 namespace Furball.Engine.Engine.Graphics.Drawables; 
 
@@ -26,11 +27,15 @@ public class CompositeDrawable : Drawable {
             for (int i = 0; i < this.Drawables.Count; i++) {
                 Drawable drawable = this.Drawables[i];
 
-                if (drawable.Rectangle.X < topLeft.X) topLeft.X = drawable.Rectangle.X;
-                if (drawable.Rectangle.Y < topLeft.Y) topLeft.Y = drawable.Rectangle.Y;
+                RectangleF rect = drawable.Rectangle;
 
-                if (drawable.Rectangle.Right  > bottomRight.X) bottomRight.X = drawable.Rectangle.Right;
-                if (drawable.Rectangle.Bottom > bottomRight.Y) bottomRight.Y = drawable.Rectangle.Bottom;
+                rect.Location = new PointF(rect.Location.X - drawable.LastCalculatedOrigin.X, rect.Location.Y - drawable.LastCalculatedOrigin.Y);
+
+                if (rect.X < topLeft.X) topLeft.X = rect.X;
+                if (rect.Y < topLeft.Y) topLeft.Y = rect.Y;
+
+                if (rect.Right  > bottomRight.X) bottomRight.X = rect.Right;
+                if (rect.Bottom > bottomRight.Y) bottomRight.Y = rect.Bottom;
             }
 
             return (bottomRight - topLeft) * this.Scale;
