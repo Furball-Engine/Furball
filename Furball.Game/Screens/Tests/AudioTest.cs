@@ -1,25 +1,31 @@
+using System.IO;
 using System.Numerics;
 using Furball.Engine;
 using Furball.Engine.Engine.Graphics;
 using Furball.Engine.Engine.Graphics.Drawables;
+using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Furball.Engine.Engine.Graphics.Drawables.UiElements;
 using Furball.Engine.Engine.Input.Events;
+using Furball.Engine.Engine.Timing;
+using Furball.Vixie;
 using Furball.Vixie.Backends.Shared;
+using Furball.Vixie.Helpers;
 using ManagedBass;
 using sowelipisona;
 using sowelipisona.Effects;
 
 namespace Furball.Game.Screens.Tests; 
 
-public class AudioEffectTest : TestScreen {
+public class AudioTest : TestScreen {
     private AudioStream _testingStream;
 
-    private TextDrawable _topText;
+    private TextDrawable     _topText;
+    private WaveformDrawable _waveform;
 
     public override void Initialize() {
         base.Initialize();
 
-        this._topText = new TextDrawable(new Vector2(1280f / 2f, 40), FurballGame.DefaultFont, "Audio Effects testing!!!", 48) {
+        this._topText = new TextDrawable(new Vector2(1280f / 2f, 40), FurballGame.DefaultFont, "Audio testing!", 48) {
             OriginType = OriginType.Center
         };
 
@@ -89,7 +95,37 @@ public class AudioEffectTest : TestScreen {
         this.ReverbPlayOnClick
         );
 
+        currentY += 60;
+
         this.Manager.Add(reverbPlayButton);
+
+        DrawableButton generateWaveform = new DrawableButton(
+            new Vector2(50, currentY),
+            FurballGame.DefaultFont,
+            28,
+            "Generate a waveform of the audio",
+            Color.White,
+            Color.Black,
+            Color.Black,
+            Vector2.Zero, 
+            GenerateWaveform
+        );
+        
+        this.Manager.Add(generateWaveform);
+    }
+    
+    private void GenerateWaveform(object sender, MouseButtonEventArgs e) {
+        MemoryStream stream = new MemoryStream(ContentManager.LoadRawAsset("lulkanto.mp3"));
+
+        Waveform waveform = FurballGame.AudioEngine.GetWaveform(stream);
+        
+        Guard.EnsureNonNull(waveform.Points);
+
+        const int texHeight = 100;
+        
+        this.Manager.Add(this._waveform = new WaveformDrawable(waveform, texHeight) {
+            Scale = new Vector2(0.25f, 1)
+        });
     }
 
     private void ReverbPlayOnClick(object sender, MouseButtonEventArgs mouseButtonEventArgs) {
@@ -153,5 +189,8 @@ public class AudioEffectTest : TestScreen {
         this._testingStream        = FurballGame.AudioEngine.CreateStream(ContentManager.LoadRawAsset("lulkanto.mp3"));
         this._testingStream.Volume = 0.4;
         this._testingStream.Play();
+
+        if(this._waveform != null)
+            this._waveform.TimeSource = new AudioStreamTimeSource(this._testingStream);
     }
 }

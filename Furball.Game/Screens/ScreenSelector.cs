@@ -32,7 +32,7 @@ public class ScreenSelector : TestScreen {
             (LocalizationStrings.TextBoxTest, typeof(TextBoxTest)),
             (LocalizationStrings.CircleTest, typeof(CircleDrawableTest)),
             (LocalizationStrings.ScrollingStutterTest, typeof(ScrollingTest)),
-            (LocalizationStrings.AudioEffectsTest, typeof(AudioEffectTest)),
+            (LocalizationStrings.AudioEffectsTest, typeof(AudioTest)),
             (LocalizationStrings.LoadingScreenTest, typeof(LoadingScreenTest)),
             (LocalizationStrings.FixedTimeStepTest, typeof(FixedTimeStepTest)),
             (LocalizationStrings.LayoutingTest, typeof(LayoutingTest)),

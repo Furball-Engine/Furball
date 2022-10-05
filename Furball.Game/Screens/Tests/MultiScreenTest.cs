@@ -30,7 +30,7 @@ public class MultiScreenTest : TestScreen {
         }
         );
         this.Manager.Add(
-        this._bottomLeft = new ScreenDrawable(new AudioEffectTest(), Vector2.Zero, Vector2.Zero) {
+        this._bottomLeft = new ScreenDrawable(new AudioTest(), Vector2.Zero, Vector2.Zero) {
             OriginType       = OriginType.BottomLeft,
             ScreenOriginType = OriginType.BottomLeft
         }
