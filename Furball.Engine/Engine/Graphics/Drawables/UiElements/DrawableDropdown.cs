@@ -32,6 +32,12 @@ public class DrawableDropdown : CompositeDrawable {
             
         this.SelectedItem = new Bindable<KeyValuePair<object, string>>(items.First());
 
+        this.SelectedItem.OnChange += this.OnChange;
+
+        this.Update();
+    }
+
+    private void OnChange(object sender, KeyValuePair<object, string> e) {
         this.Update();
     }
 
@@ -65,11 +71,9 @@ public class DrawableDropdown : CompositeDrawable {
                 element = new DrawableButton(new Vector2(0, y), this.Font, this.FontSize, item.Value, Color.Blue, Color.White, Color.Black, this.ButtonSize);
 
                 element.OnClick += delegate {
-                    this.SelectedItem.Value = item;
-
                     this.Selected = false;
-
-                    this.Update();
+                    
+                    this.SelectedItem.Value = item;
                 };
 
                 this.Drawables.Add(element);
