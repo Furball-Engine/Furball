@@ -218,6 +218,8 @@ public partial class DrawableTextBox : CompositeDrawable, ICharInputHandler {
         if (this.RealContains(e.Mouse.Position) && this.Visible && this.Clickable) {
             FurballGame.InputManager.TakeTextFocus(this);
 
+            this.Text ??= "";
+                
             if (this.Text.Length == 0) {
                 this.SelectedRange.Value = new Range(0, 0);
                 this.UpdateCaretPosition(true);
