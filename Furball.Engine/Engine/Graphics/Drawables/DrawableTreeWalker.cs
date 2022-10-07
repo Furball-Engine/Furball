@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Numerics;
+using System.Text;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Furball.Vixie.Backends.Shared;
 
@@ -33,40 +35,46 @@ public class DrawableTreeWalker {
     }
     
     public static void PrintWalkedTree(DrawableManager manager) {
+        StringBuilder builder = new StringBuilder();
+        
         Walk(manager, (drawable, parent, depth) => {
             string indent = new string(' ', depth * 2);
-            Console.Write($"{indent}{drawable.GetType().Name} size: {drawable.RealSize} pos: {drawable.RealPosition} time: {drawable.DrawableTime} ");
+            builder.Append($"{indent}{drawable.GetType().Name} size: {drawable.RealSize} pos: {drawable.RealPosition} time: {drawable.DrawableTime} ");
             //If the drawable is a TextDrawable, print the text
             if (drawable is TextDrawable textDrawable) {
-                Console.Write($"text: \"{textDrawable.Text}\" ");
+                builder.Append($"text: \"{textDrawable.Text}\" ");
             }
             //If the drawable rotation is not 0, print the rotation
             if (drawable.Rotation != 0) {
-                Console.Write($"rotation: {drawable.Rotation}rad ");
+                builder.Append($"rotation: {drawable.Rotation}rad ");
             }
             //If the drawable color is not Color.White, print the color
             if (drawable.ColorOverride != Color.White) {
-                Console.Write($"color: {drawable.ColorOverride} ");
+                builder.Append($"color: {drawable.ColorOverride} ");
             }
             //If the drawable scale is not Vector2.One, print the scale
             if (drawable.Scale != Vector2.One) {
-                Console.Write($"scale: {drawable.Scale} ");
+                builder.Append($"scale: {drawable.Scale} ");
             }
             //If the drawable depth is not 0, print the depth
             if (drawable.Depth != 0) {
-                Console.Write($"depth: {drawable.Depth:N2} ");
+                builder.Append($"depth: {drawable.Depth:N2} ");
             }
             //If the drawable tooltip is not null or empty, print the tooltip
             if (!string.IsNullOrEmpty(drawable.ToolTip)) {
-                Console.Write($"tooltip: \"{drawable.ToolTip}\" ");
+                builder.Append($"tooltip: \"{drawable.ToolTip}\" ");
             }
             //If the drawable has more than 0 tweens, print the tween count
             if (drawable.Tweens.Count > 0) {
-                Console.Write($"tweens: {drawable.Tweens.Count} ");
+                builder.Append($"tweens: {drawable.Tweens.Count} ");
             }
 
             //Write the newline
-            Console.Write(Environment.NewLine);
+            builder.Append(Environment.NewLine);
         });
+        
+        File.WriteAllText("drawabletreedump.txt", builder.ToString());
+        
+        Console.WriteLine(builder.ToString());
     }
 }
