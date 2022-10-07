@@ -20,6 +20,11 @@ public class DrawableTreeWalker {
     public static void Walk(Drawable drawable, WalkAction action, Drawable parent = null, int depth = 0) {
         action(drawable, parent, depth);
 
+        //Walk the screens of ScreenDrawables
+        if(drawable is ScreenDrawable screenDrawable) {
+            Walk(screenDrawable.Screen.Manager, action);
+        }
+        
         if(drawable.Children != null) {
             foreach(Drawable child in drawable.Children) {
                 Walk(child, action, drawable, depth + 1);

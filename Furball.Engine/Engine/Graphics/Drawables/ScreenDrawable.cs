@@ -6,8 +6,8 @@ using Furball.Engine.Engine.Localization.Languages;
 namespace Furball.Engine.Engine.Graphics.Drawables;
 
 public class ScreenDrawable : Drawable {
-    private Screen  _screen;
-    private Vector2 _screenSize;
+    public readonly Screen  Screen;
+    private         Vector2 _screenSize;
 
     public Vector2 ScreenSize {
         get => this._screenSize;
@@ -20,7 +20,7 @@ public class ScreenDrawable : Drawable {
     public override Vector2 Size => this.ScreenSize * this.Scale;
 
     public ScreenDrawable(Screen screen, Vector2 position, Vector2 size) {
-        this._screen = screen;
+        this.Screen = screen;
         
         screen.Manager.EffectedByScaling = true;
 
@@ -38,26 +38,26 @@ public class ScreenDrawable : Drawable {
     }
     
     private void LanguageChanged(object sender, Language e) {
-        this._screen.UpdateTextStrings();
+        this.Screen.UpdateTextStrings();
     }
 
     private void OnRelayout() {
-        this._screen.ManagerOnOnScalingRelayoutNeeded(this, this._screen.Manager.Size);
+        this.Screen.ManagerOnOnScalingRelayoutNeeded(this, this.Screen.Manager.Size);
     }
 
     public override void Update(double time) {
         base.Update(time);
         
-        this._screen.Manager.Position = this.RealPosition;
-        this._screen.Manager.Size     = this.ScreenSize * this.RealScale;
+        this.Screen.Manager.Position = this.RealPosition;
+        this.Screen.Manager.Size     = this.ScreenSize * this.RealScale;
         
-        this._screen.Update(time);
+        this.Screen.Update(time);
     }
 
     public override void Draw(double time, DrawableBatch batch, DrawableManagerArgs args) {
         base.Draw(time, batch, args);
         
-        this._screen.Draw(time);
+        this.Screen.Draw(time);
     }
 
     public override void Dispose() {
@@ -65,7 +65,7 @@ public class ScreenDrawable : Drawable {
 
         LocalizationManager.LanguageChanged -= this.LanguageChanged;
 
-        this._screen.Unload();
-        this._screen.Dispose();
+        this.Screen.Unload();
+        this.Screen.Dispose();
     }
 }
