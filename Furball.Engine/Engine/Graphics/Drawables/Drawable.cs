@@ -129,7 +129,7 @@ public abstract class Drawable : IDisposable {
     /// </summary>
     public bool Visible = true;
 
-    public List<Drawable>? Children = null;
+    public List<Drawable> Children;
 
     /// <summary>
     ///     Unprocessed Position where the Drawable is expected to be drawn
