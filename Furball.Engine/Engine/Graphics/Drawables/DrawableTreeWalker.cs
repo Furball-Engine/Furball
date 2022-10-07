@@ -68,6 +68,10 @@ public class DrawableTreeWalker {
             if (drawable.Tweens.Count > 0) {
                 builder.Append($"tweens: {drawable.Tweens.Count} ");
             }
+            //If the drawable is not visible, print the visibility
+            if (!drawable.Visible) {
+                builder.Append($"visible: {drawable.Visible}");
+            }
 
             //Write the newline
             builder.Append(Environment.NewLine);
