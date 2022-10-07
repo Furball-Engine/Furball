@@ -7,6 +7,7 @@
  */
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -45,8 +46,8 @@ public unsafe class VideoDecoder : IDisposable {
         }
     }
 
-    public int Width => this.CodecContext.CodecContext->width;
-    public int Height => this.CodecContext.CodecContext->height;
+    public  int    Width       => this.CodecContext.CodecContext->width;
+    public  int    Height      => this.CodecContext.CodecContext->height;
     private double StartTimeMs => 1000 * this.VideoStream.Stream->start_time * this.FrameDelay;
 
     private readonly Thread _decodingThread;
@@ -86,7 +87,7 @@ public unsafe class VideoDecoder : IDisposable {
         int    read = this._fileStream.Read(arr, 0, bufferSize);
 
         fixed (void* ptr = arr) {
-            Buffer.MemoryCopy(ptr, bufferPtr, bufferSize, bufferSize);
+            Buffer.MemoryCopy(ptr, bufferPtr, bufferSize, read);
         }
 
         return read;
@@ -142,7 +143,7 @@ public unsafe class VideoDecoder : IDisposable {
 
         this.readPacketCallback = this.ReadPacketCallbackDef;
         this.seekCallback       = this.StreamSeekCallbackDef;
-        
+
         AVIOContext* ioContext = avio_alloc_context(contextBuffer, contextBufferSize, 0, (void*)0, this.readPacketCallback, null, this.seekCallback);
 
         AVFormatContext* formatContext = avformat_alloc_context();
@@ -150,12 +151,9 @@ public unsafe class VideoDecoder : IDisposable {
         formatContext->flags |= AVFMT_FLAG_GENPTS;
 
         // Open video file
-        if (avformat_open_input(&formatContext, "dummy", null, null) < 0) {
+        if (avformat_open_input(&formatContext, "dummy", null, null) < 0)
             Logger.Log("Failed to open input file!", VideoDecoderLoggerLevel.InstanceError);
-
-            // throw new Exception($"Failed to open input file {path}!");
-        }
-
+        // throw new Exception($"Failed to open input file {path}!");
         this.FormatContext = new FFmpegFormatContext(formatContext);
 
         // find stream info
@@ -209,8 +207,8 @@ public unsafe class VideoDecoder : IDisposable {
         //Allocate internal buffer
         this.InternalBuffer = (byte*)av_malloc((ulong)(size * sizeof(byte)));
 
-        byte_ptrArray4 dataArray4     = new();
-        int_array4     lineSizeArray4 = new();
+        byte_ptrArray4 dataArray4     = new byte_ptrArray4();
+        int_array4     lineSizeArray4 = new int_array4();
         dataArray4.UpdateFrom(this.RenderFrame.Frame->data);
         lineSizeArray4.UpdateFrom(this.RenderFrame.Frame->linesize);
 
@@ -256,12 +254,17 @@ public unsafe class VideoDecoder : IDisposable {
         return s;
     }
 
+    private readonly ConcurrentQueue<Delegate> _commandQueue = new ConcurrentQueue<Delegate>();
+
     private void DecodingRun() {
         try {
             bool gotNewFrame;
 
             while (this._runDecoding) {
                 gotNewFrame = false;
+
+                if (this._commandQueue.TryDequeue(out Delegate result))
+                    result.DynamicInvoke();
 
                 lock (this) {
                     while (this._writeCursor - this._readCursor < this._bufferSize && av_read_frame(this.FormatContext.FormatContext, this.Packet.Packet) >= 0) {
@@ -369,15 +372,21 @@ public unsafe class VideoDecoder : IDisposable {
         lock (this) {
             Logger.Log($"Seeking to {time}ms", VideoDecoderLoggerLevel.InstanceInfo);
 
-            int    flags     = 0;
-            double timestamp = time / 1000 / this.FrameDelay + this.VideoStream.Stream->start_time;
+            this._commandQueue.Enqueue(
+            new Action(
+            delegate {
+                int    flags     = 0;
+                double timestamp = time / 1000 / this.FrameDelay + this.VideoStream.Stream->start_time;
 
-            if (timestamp < this._lastPts)
-                flags = AVSEEK_FLAG_BACKWARD;
-            av_seek_frame(this.FormatContext.FormatContext, this.VideoStreamIndex, (long)timestamp, flags);
-            this._seekingTo   = (long)timestamp;
-            this._readCursor  = 0;
-            this._writeCursor = 0;
+                if (timestamp < this._lastPts)
+                    flags = AVSEEK_FLAG_BACKWARD;
+                avformat_seek_file(this.FormatContext.FormatContext, this.VideoStreamIndex, 0, (long)timestamp, long.MaxValue, flags);
+                this._seekingTo   = (long)timestamp;
+                this._readCursor  = 0;
+                this._writeCursor = 0;
+            }
+            )
+            );
         }
     }
 
@@ -418,9 +427,9 @@ public class VideoDecoderLoggerLevel : LoggerLevel {
         Error
     }
 
-    public static VideoDecoderLoggerLevel InstanceInfo    = new(ChannelEnum.Info);
-    public static VideoDecoderLoggerLevel InstanceWarning = new(ChannelEnum.Warning);
-    public static VideoDecoderLoggerLevel InstanceError   = new(ChannelEnum.Error);
+    public static VideoDecoderLoggerLevel InstanceInfo    = new VideoDecoderLoggerLevel(ChannelEnum.Info);
+    public static VideoDecoderLoggerLevel InstanceWarning = new VideoDecoderLoggerLevel(ChannelEnum.Warning);
+    public static VideoDecoderLoggerLevel InstanceError   = new VideoDecoderLoggerLevel(ChannelEnum.Error);
 
     private VideoDecoderLoggerLevel(ChannelEnum @enum) => this.Channel = @enum.ToString();
 }
