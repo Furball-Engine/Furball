@@ -77,7 +77,7 @@ public class TextDrawable : Drawable {
                 this.RealPosition,
                 this.Colors,
                 this.Rotation,
-                this.RealScale / FurballGame.VerticalRatio / this._difference,
+                this.RealScale / FurballGame.VerticalRatio,
                 this.RotationOrigin
                 );
                 break;
@@ -89,7 +89,7 @@ public class TextDrawable : Drawable {
                 this.RealPosition,
                 this.ColorOverride,
                 this.Rotation,
-                this.RealScale / FurballGame.VerticalRatio / this._difference,
+                this.RealScale / FurballGame.VerticalRatio,
                 this.RotationOrigin
                 );
                 break;
@@ -101,7 +101,7 @@ public class TextDrawable : Drawable {
                 this.RealPosition,
                 ArrayHelper.FitElementsInANewArray(this.Colors, this.Text.Length),
                 this.Rotation,
-                this.RealScale / FurballGame.VerticalRatio / this._difference,
+                this.RealScale / FurballGame.VerticalRatio,
                 this.RotationOrigin
                 );
                 break;
@@ -146,13 +146,10 @@ public class TextDrawable : Drawable {
         FurballGame.Instance.WindowManager.OnFramebufferResize += this.OnFramebufferResize;
     }
 
-    private float _difference = 1;
     private void OnFramebufferResize(object sender, Vector2 e) {
-        this._difference = (int)(this.Font.FontSize * FurballGame.VerticalRatio) / (this.Font.FontSize * FurballGame.VerticalRatio);
+        float fontSize = this.Font.FontSize * FurballGame.VerticalRatio;
 
-        int fontSize = (int)(this.Font.FontSize * FurballGame.VerticalRatio);
-
-        (FontSystem FontSystem, int fontSize) key = (this.Font.FontSystem, fontSize);
+        (FontSystem FontSystem, float fontSize) key = (this.Font.FontSystem, fontSize);
 
         ContentManager.FssCache.TryGetValue(key, out WeakReference<DynamicSpriteFont> fontRef);
 
@@ -264,7 +261,7 @@ public class TextDrawable : Drawable {
                     args.Position,
                     this.Colors,
                     args.Rotation,
-                    args.Scale / FurballGame.VerticalRatio / this._difference,
+                    args.Scale / FurballGame.VerticalRatio,
                     this.RotationOrigin,
                     this.Style,
                     this.Effect,
@@ -279,7 +276,7 @@ public class TextDrawable : Drawable {
                     args.Position,
                     args.Color,
                     args.Rotation,
-                    args.Scale / FurballGame.VerticalRatio / this._difference,
+                    args.Scale / FurballGame.VerticalRatio,
                     this.RotationOrigin,
                     this.Style,
                     this.Effect,
@@ -294,7 +291,7 @@ public class TextDrawable : Drawable {
                     args.Position,
                     ArrayHelper.FitElementsInANewArray(this.Colors, this.Text.Length),
                     args.Rotation,
-                    args.Scale / FurballGame.VerticalRatio / this._difference,
+                    args.Scale / FurballGame.VerticalRatio,
                     this.RotationOrigin,
                     this.Style,
                     this.Effect,
