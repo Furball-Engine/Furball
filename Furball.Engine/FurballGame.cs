@@ -374,13 +374,15 @@ public class FurballGame : Game {
         ToggleDebugOverlay,
         ToggleInputOverlay,
         ToggleConsole,
-        DispalyDebugTextureviewer
+        DispalyDebugTextureviewer,
+        WalkAndPrintCurrentScreen
     }
     
     private Keybind _toggleDebugOverlay;
     private Keybind _toggleInputOverlay;
     private Keybind _displayDebugTextureViewer;
     private Keybind _toggleConsole;
+    private Keybind _walkCurrentScreen;
     public virtual void RegisterKeybinds() {
         this._toggleDebugOverlay = new Keybind(EngineDebugKeybinds.ToggleDebugOverlay, "Toggle Debug Overlay", Key.F11,
                                                _ => {
@@ -408,11 +410,19 @@ public class FurballGame : Game {
             ImGuiConsole.Visible = !ImGuiConsole.Visible;
         }
         );
+        this._walkCurrentScreen = new Keybind(EngineDebugKeybinds.WalkAndPrintCurrentScreen, "Walk and print current screen", Key.F8,
+                                              _ => {
+                                                  if (this.RunningScreen is not null) {
+                                                      DrawableTreeWalker.PrintWalkedTree(this.RunningScreen.Manager);
+                                                  }
+                                              }
+        );
         
         InputManager.RegisterKeybind(this._toggleDebugOverlay);
         InputManager.RegisterKeybind(this._toggleInputOverlay);
         InputManager.RegisterKeybind(this._displayDebugTextureViewer);
         InputManager.RegisterKeybind(this._toggleConsole);
+        InputManager.RegisterKeybind(this._walkCurrentScreen);
     }
 
     public virtual void UnregisterKeybinds() {
@@ -420,6 +430,7 @@ public class FurballGame : Game {
         InputManager.UnregisterKeybind(this._toggleInputOverlay);
         InputManager.UnregisterKeybind(this._displayDebugTextureViewer);
         InputManager.UnregisterKeybind(this._toggleConsole);
+        InputManager.UnregisterKeybind(this._walkCurrentScreen);
     }
 
     protected override void DrawLoadingScreen() {
