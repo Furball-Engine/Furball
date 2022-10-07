@@ -117,9 +117,9 @@ public class DrawableButton : CompositeDrawable {
 
         this.TextDrawable.OriginType = OriginType.Center;
         
-        this.Drawables.Add(this._backgroundDrawable);
-        this.Drawables.Add(this._outlineDrawable);
-        this.Drawables.Add(this.TextDrawable);
+        this.Children!.Add(this._backgroundDrawable);
+        this.Children.Add(this._outlineDrawable);
+        this.Children.Add(this.TextDrawable);
 
         this.ChildrenInvisibleToInput = true;
 

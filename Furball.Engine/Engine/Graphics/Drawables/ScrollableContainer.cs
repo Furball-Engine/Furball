@@ -29,7 +29,7 @@ public class ScrollableContainer : CompositeDrawable {
         //Save the original Y position
         drawable.Tags.Add(drawable.Position.Y.ToString(CultureInfo.InvariantCulture));
 
-        this.Drawables.Add(drawable);
+        this.Children!.Add(drawable);
 
         // ReSharper disable once CompareOfFloatsByEqualityOperator
         if (drawable.Position.Y + drawable.Size.Y > this._lastMax || drawable.Size.Y == this.Size.Y)
@@ -52,7 +52,7 @@ public class ScrollableContainer : CompositeDrawable {
     private float _lastMax          = 0;
 
     public override void Update(double time) {
-        foreach (Drawable drawable in this.Drawables) {
+        foreach (Drawable drawable in this.Children!) {
             float origY = float.Parse(drawable.Tags[0]);
 
             float target = origY  - this._targetScroll;
@@ -80,7 +80,7 @@ public class ScrollableContainer : CompositeDrawable {
     public void RecalculateMax() {
         this._lastMax = 0;
 
-        foreach (Drawable drawable in this.Drawables)
+        foreach (Drawable drawable in this.Children!)
             if (drawable.Position.Y + drawable.Size.Y - this.Size.Y > this._lastMax)
                 this._lastMax = Math.Max(0, drawable.Position.Y + drawable.Size.Y - this.Size.Y);
     }

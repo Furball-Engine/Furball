@@ -17,8 +17,8 @@ public class TooltipDrawable : CompositeDrawable {
             ColorOverride = Color.White
         };
 
-        this.Drawables.Add(this._backgroundRect);
-        this.Drawables.Add(this.TextDrawable);
+        this.Children!.Add(this._backgroundRect);
+        this.Children.Add(this.TextDrawable);
 
         this.Clickable   = false;
         this.CoverClicks = false;

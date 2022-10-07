@@ -7,13 +7,12 @@ using Color = Furball.Vixie.Backends.Shared.Color;
 namespace Furball.Engine.Engine.Graphics.Drawables; 
 
 public class CompositeDrawable : Drawable {
-    /// <summary>
-    ///     The list of drawables contained in the CompositeDrawable
-    /// </summary>
-    public List<Drawable> Drawables = new();
-
     protected bool SortDrawables;
 
+    protected CompositeDrawable() {
+        this.Children = new List<Drawable>();
+    }
+    
     private readonly DrawableManagerArgs _drawableArgs = new();
 
     public bool InvisibleToInput = false;
@@ -24,8 +23,8 @@ public class CompositeDrawable : Drawable {
             Vector2 topLeft     = new(0, 0);
             Vector2 bottomRight = new(0, 0);
 
-            for (int i = 0; i < this.Drawables.Count; i++) {
-                Drawable drawable = this.Drawables[i];
+            for (int i = 0; i < this.Children!.Count; i++) {
+                Drawable drawable = this.Children[i];
 
                 RectangleF rect = drawable.Rectangle;
 
@@ -43,31 +42,31 @@ public class CompositeDrawable : Drawable {
     }
 
     public override void Update(double time) {
-        foreach (Drawable drawable in this.Drawables) {
+        foreach (Drawable drawable in this.Children!) {
             drawable.Update(time);
             drawable.UpdateTweens();
         }
     }
 
     public override void Dispose() {
-        foreach (Drawable drawable in this.Drawables) {
+        foreach (Drawable drawable in this.Children!) {
             drawable.Dispose();
         }
         
-        this.Drawables.Clear();
+        this.Children.Clear();
 
         base.Dispose();
     }
 
     public override void Draw(double time, DrawableBatch batch, DrawableManagerArgs args) {
         if (this.SortDrawables) {
-            this.Drawables.Sort((x, y) => x.Depth.CompareTo(y.Depth));
+            this.Children!.Sort((x, y) => x.Depth.CompareTo(y.Depth));
 
             this.SortDrawables = false;
         }
 
-        for (int i = 0; i < this.Drawables.Count; i++) {
-            Drawable drawable = this.Drawables[i];
+        for (int i = 0; i < this.Children!.Count; i++) {
+            Drawable drawable = this.Children[i];
 
             // ReSharper disable once CompareOfFloatsByEqualityOperator
             if (drawable.Depth != drawable.DrawablesLastKnownDepth)

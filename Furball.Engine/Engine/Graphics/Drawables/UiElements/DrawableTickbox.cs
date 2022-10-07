@@ -35,8 +35,8 @@ public class DrawableTickbox : CompositeDrawable {
 
         this._textDrawable.Position = new Vector2(fontHeight + 5f, -7.5f);
 
-        this.Drawables.Add(this._textDrawable);
-        this.Drawables.Add(this._rectangleDrawable);
+        this.Children!.Add(this._textDrawable);
+        this.Children.Add(this._rectangleDrawable);
 
         this.Selected.OnChange += this.OnSelectChange;
 

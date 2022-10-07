@@ -42,7 +42,7 @@ public class DrawableDropdown : CompositeDrawable {
     }
 
     public void Update() {
-        this.Drawables.Clear();
+        this.Children!.Clear();
 
         if (this.Selected) {
             DrawableButton element = new(
@@ -62,7 +62,7 @@ public class DrawableDropdown : CompositeDrawable {
                 this.Update();
             };
 
-            this.Drawables.Add(element);
+            this.Children.Add(element);
 
             float y = element.Size.Y;
             foreach (KeyValuePair<object, string> item in this.Items) {
@@ -76,7 +76,7 @@ public class DrawableDropdown : CompositeDrawable {
                     this.SelectedItem.Value = item;
                 };
 
-                this.Drawables.Add(element);
+                this.Children.Add(element);
 
                 y += element.Size.Y;
             }
@@ -98,7 +98,7 @@ public class DrawableDropdown : CompositeDrawable {
                 this.Update();
             };
 
-            this.Drawables.Add(element);
+            this.Children.Add(element);
         }
     }
 }

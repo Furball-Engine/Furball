@@ -53,12 +53,12 @@ public class DrawableForm : CompositeDrawable {
         //Make sure the contents are above the background
         this.Contents.Depth = 2f;
 
-        this.Drawables.Add(this._titleBar);
-        this.Drawables.Add(this._title);
-        this.Drawables.Add(this._closeButton);
+        this.Children!.Add(this._titleBar);
+        this.Children.Add(this._title);
+        this.Children.Add(this._closeButton);
 
-        this.Drawables.Add(this._background);
-        this.Drawables.Add(this.Contents);
+        this.Children.Add(this._background);
+        this.Children.Add(this.Contents);
 
         Vector2 size = base.Size;
 

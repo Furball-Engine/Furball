@@ -98,9 +98,9 @@ public partial class DrawableTextBox : CompositeDrawable, ICharInputHandler {
             CoverHovers   = false,
         };
 
-        this.Drawables.Add(this._textDrawable);
-        this.Drawables.Add(this._outline);
-        this.Drawables.Add(this._caret);
+        this.Children!.Add(this._textDrawable);
+        this.Children.Add(this._outline);
+        this.Children.Add(this._caret);
 
         this.RegisterHandlers();
         this.RecalcOutline();

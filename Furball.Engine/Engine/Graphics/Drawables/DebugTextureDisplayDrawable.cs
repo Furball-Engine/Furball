@@ -24,7 +24,7 @@ public class DebugTextureDisplayDrawable : CompositeDrawable {
     }
 
     private void ResetLayout() {
-        this.Drawables.Clear();
+        this.Children!.Clear();
 
         float x      = 0, y = 0;
         float higher = 0;
@@ -57,7 +57,7 @@ public class DebugTextureDisplayDrawable : CompositeDrawable {
                 x = 200;
             }
 
-            this.Drawables.Add(drawable);
+            this.Children.Add(drawable);
         }
 
         this.LayoutReset?.Invoke(null, EventArgs.Empty);

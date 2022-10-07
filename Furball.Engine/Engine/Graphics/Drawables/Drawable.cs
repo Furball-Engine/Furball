@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -128,6 +129,8 @@ public abstract class Drawable : IDisposable {
     /// </summary>
     public bool Visible = true;
 
+    public List<Drawable>? Children = null;
+
     /// <summary>
     ///     Unprocessed Position where the Drawable is expected to be drawn
     ///     <remarks>
@@ -232,31 +235,31 @@ public abstract class Drawable : IDisposable {
     /// <summary>
     ///     Called whenever a cursor hovers over the drawable
     /// </summary>
-    public event EventHandler OnHover;
+    public event EventHandler? OnHover;
     /// <summary>
     ///     Called whenever a cursor moves off of the drawable
     /// </summary>
-    public event EventHandler OnHoverLost;
+    public event EventHandler? OnHoverLost;
     /// <summary>
     ///     Called when the drawable is clicked
     /// </summary>
-    public event EventHandler<MouseButtonEventArgs> OnClick;
+    public event EventHandler<MouseButtonEventArgs>? OnClick;
     /// <summary>
     ///     Called when the drawable is no longer being clicked
     /// </summary>
-    public event EventHandler<MouseButtonEventArgs> OnClickUp;
+    public event EventHandler<MouseButtonEventArgs>? OnClickUp;
     /// <summary>
     ///     Gets fired when the Drawable is first getting started to Drag
     /// </summary>
-    public event EventHandler<MouseDragEventArgs> OnDragBegin;
+    public event EventHandler<MouseDragEventArgs>? OnDragBegin;
     /// <summary>
     ///     Gets fired every Input Frame for the duration of the drag
     /// </summary>
-    public event EventHandler<MouseDragEventArgs> OnDrag;
+    public event EventHandler<MouseDragEventArgs>? OnDrag;
     /// <summary>
     ///     Gets Fired when the Dragging stops
     /// </summary>
-    public event EventHandler<MouseDragEventArgs> OnDragEnd;
+    public event EventHandler<MouseDragEventArgs>? OnDragEnd;
 
     public virtual void ClearEvents() {
         this.OnClick     = null;

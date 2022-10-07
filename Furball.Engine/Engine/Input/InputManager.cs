@@ -158,8 +158,8 @@ public class InputManager {
     public static int RecurseCompositeDrawables(ref List<Drawable> drawablesToAddTo, CompositeDrawable compositeDrawableToIterate, int indexToAddAt) {
         int added = 0;
 
-        for (int i = compositeDrawableToIterate.Drawables.Count - 1; i >= 0; i--) {
-            Drawable drawable = compositeDrawableToIterate.Drawables[i];
+        for (int i = compositeDrawableToIterate.Children!.Count - 1; i >= 0; i--) {
+            Drawable drawable = compositeDrawableToIterate.Children[i];
 
             if (drawable is CompositeDrawable compositeDrawable) {
                 if (!compositeDrawable.InvisibleToInput) {

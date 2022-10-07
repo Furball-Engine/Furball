@@ -35,8 +35,8 @@ public class DrawableColorPicker : CompositeDrawable {
 
         this.Color.OnChange += this.OnColorChange;
 
-        this.Drawables.Add(this._colorText);
-        this.Drawables.Add(this._colorDisplay);
+        this.Children!.Add(this._colorText);
+        this.Children.Add(this._colorDisplay);
     }
 
     private void OnColorChange(object sender, Color e) {
