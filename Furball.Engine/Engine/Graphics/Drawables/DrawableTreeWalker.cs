@@ -11,11 +11,11 @@ namespace Furball.Engine.Engine.Graphics.Drawables;
 public class DrawableTreeWalker {
     public delegate void WalkAction(Drawable drawable, Drawable parent, int depth);
     
-    public static void Walk(DrawableManager manager, WalkAction action) {
+    public static void Walk(DrawableManager manager, WalkAction action, int depth = 0) {
         IReadOnlyList<Drawable> drawables = manager.Drawables;
         
         for (int i = 0; i < drawables.Count; i++) {
-            Walk(drawables[i], action);
+            Walk(drawables[i], action, null, depth);
         }
     }
     
@@ -24,7 +24,7 @@ public class DrawableTreeWalker {
 
         //Walk the screens of ScreenDrawables
         if(drawable is ScreenDrawable screenDrawable) {
-            Walk(screenDrawable.Screen.Manager, action);
+            Walk(screenDrawable.Screen.Manager, action, depth + 1);
         }
         
         if(drawable.Children != null) {
