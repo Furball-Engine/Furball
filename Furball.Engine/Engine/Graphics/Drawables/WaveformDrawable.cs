@@ -145,6 +145,7 @@ public class WaveformDrawable : Drawable {
         float offsetFromStart = this._cropPositions.X % TEXTURE_SIZE;
         float offsetFromEnd   = this._cropPositions.Y % TEXTURE_SIZE;
 
+        //If we only need to draw one of the textures, then do special logic
         if (Math.Abs(this._cropPositions.Y - this._cropPositions.X) < TEXTURE_SIZE) {
             batch.Draw(
             this._renderTargets[startTextureIndex],
@@ -162,6 +163,7 @@ public class WaveformDrawable : Drawable {
         for (int i = startTextureIndex; i < endTextureIndex; i++) {
             RenderTarget target = this._renderTargets[i];
 
+            //If we are drawing the first waveform texture
             if (i == startTextureIndex)
                 batch.Draw(
                 target,
@@ -172,6 +174,7 @@ public class WaveformDrawable : Drawable {
                 new Rectangle((int)offsetFromStart, 0, TEXTURE_SIZE, (int)this.Size.Y),
                 args.Effects
                 );
+            //If we are drawing the last waveform texture
             else if (i == endTextureIndex - 1)
                 batch.Draw(
                 target,
@@ -182,6 +185,7 @@ public class WaveformDrawable : Drawable {
                 new Rectangle(0, 0, (int)(TEXTURE_SIZE - offsetFromEnd), (int)this.Size.Y),
                 args.Effects
                 );
+            //If we are drawing one of the ones in the middle
             else
                 batch.Draw(
                 target,
