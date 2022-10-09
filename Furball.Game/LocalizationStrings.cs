@@ -25,4 +25,5 @@ public enum LocalizationStrings {
     EtoTest,
     RichTextDrawableTest,
     VerticalSyncTest,
+    RenderTargetTest,
 }

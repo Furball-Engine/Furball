@@ -20,7 +20,7 @@ public class AudioTest : TestScreen {
     private AudioStream _testingStream;
 
     private TextDrawable     _topText;
-    private WaveformDrawable _waveform;
+    private RawWaveformDrawable _rawWaveform;
 
     public override void Initialize() {
         base.Initialize();
@@ -123,7 +123,7 @@ public class AudioTest : TestScreen {
 
         const int texHeight = 100;
         
-        this.Manager.Add(this._waveform = new WaveformDrawable(waveform, texHeight) {
+        this.Manager.Add(this._rawWaveform = new RawWaveformDrawable(waveform, texHeight) {
             Scale = new Vector2(0.25f, 1)
         });
     }
@@ -190,7 +190,7 @@ public class AudioTest : TestScreen {
         this._testingStream.Volume = 0.4;
         this._testingStream.Play();
 
-        if(this._waveform != null)
-            this._waveform.TimeSource = new AudioStreamTimeSource(this._testingStream);
+        if(this._rawWaveform != null)
+            this._rawWaveform.TimeSource = new AudioStreamTimeSource(this._testingStream);
     }
 }

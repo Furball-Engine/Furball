@@ -14,26 +14,32 @@ public class FurballTestGame : FurballGame {
     private enum TestKeybinds {
         TakeScreenshot
     }
-    
+
     protected override void Initialize() {
         base.Initialize();
-        
-        GraphicsBackend.Current.ScreenshotTaken += OnScreenshot;
+
+        GraphicsBackend.Current.ScreenshotTaken += this.OnScreenshot;
     }
 
     private Keybind _screenshotKeybind;
     public override void RegisterKeybinds() {
         base.RegisterKeybinds();
-        
-        InputManager.RegisterKeybind(this._screenshotKeybind = new Keybind(TestKeybinds.TakeScreenshot, "Take Screenshot", Key.F1,
-                                                 _ => {
-                                                     GraphicsBackend.Current.TakeScreenshot();
-                                                 }));
+
+        InputManager.RegisterKeybind(
+        this._screenshotKeybind = new Keybind(
+        TestKeybinds.TakeScreenshot,
+        "Take Screenshot",
+        Key.F1,
+        _ => {
+            GraphicsBackend.Current.TakeScreenshot();
+        }
+        )
+        );
     }
 
     public override void UnregisterKeybinds() {
         base.UnregisterKeybinds();
-        
+
         InputManager.UnregisterKeybind(this._screenshotKeybind);
     }
 
@@ -61,6 +67,7 @@ public class FurballTestGame : FurballGame {
         LocalizationManager.AddDefaultTranslation(LocalizationStrings.EtoTest,              "Eto Test");
         LocalizationManager.AddDefaultTranslation(LocalizationStrings.RichTextDrawableTest, "Rich Text Drawable Test");
         LocalizationManager.AddDefaultTranslation(LocalizationStrings.VerticalSyncTest,     "VSync Test");
+        LocalizationManager.AddDefaultTranslation(LocalizationStrings.RenderTargetTest,     "Render Target Test");
 
         LocalizationManager.AddDefaultTranslation(LocalizationStrings.ChooseScreen, "Choose Screen");
     }
