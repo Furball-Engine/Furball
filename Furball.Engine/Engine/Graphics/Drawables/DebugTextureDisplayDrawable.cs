@@ -60,6 +60,38 @@ public class DebugTextureDisplayDrawable : CompositeDrawable {
             this.Children.Add(drawable);
         }
 
+        for (int i = 0; i < Global.TrackedRenderTargets.Count; i++) {
+            WeakReference<RenderTarget> reference = Global.TrackedRenderTargets[i];
+
+            if (!reference.TryGetTarget(out RenderTarget tex))
+                continue;//if the reference is invalid, then skip it
+
+            DebugWeakReferencedTextureDrawable drawable = new DebugWeakReferencedTextureDrawable(reference) {
+                Position = new Vector2(x, y),
+                ToolTip  = "Render Target"
+            };
+
+            drawable.Scale = new Vector2(200f / drawable.Size.X);
+
+            drawable.TextureReferenceCleared += delegate {
+                this.ResetLayout();
+            };
+
+            if (drawable.Size.Y > higher)
+                higher = drawable.Size.Y;
+
+            if (i % 2 == 1) {
+                y += higher + 10;
+                x =  0;
+
+                higher = 0;
+            } else {
+                x = 200;
+            }
+
+            this.Children.Add(drawable);
+        }
+
         this.LayoutReset?.Invoke(null, EventArgs.Empty);
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Numerics;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Furball.Vixie.Backends.Shared;
@@ -9,6 +10,9 @@ namespace Furball.Engine.Engine.Graphics.Drawables;
 public class RawWaveformDrawable : Drawable {
     private readonly Waveform _waveform;
     private readonly float    _height;
+
+    public int StartIndex = 0;
+    public int EndIndex   = int.MaxValue;
 
     public override Vector2 Size => new Vector2(this._waveform.Points!.Length, this._height) * this.Scale;
 
@@ -22,7 +26,8 @@ public class RawWaveformDrawable : Drawable {
     public override void Draw(double time, DrawableBatch batch, DrawableManagerArgs args) {
         base.Draw(time, batch, args);
 
-        for (int i = 0; i < this._waveform.Points!.Length; i++) {
+        //Draw the waveform between the start and end index
+        for (int i = Math.Max(this.StartIndex, 0); i < Math.Min(this.EndIndex, this._waveform.Points!.Length); i++) {
             Waveform.Point point = this._waveform.Points![i];
 
             float leftHeight  = this._height * point.AmplitudeLeft * args.Scale.Y;
