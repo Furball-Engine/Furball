@@ -166,12 +166,8 @@ public class WaveformDrawable : Drawable {
             int startPos = TEXTURE_SIZE * (i - startTextureIndex);
 
             //Dont draw if we are before the start of the screen
-            if (startPos + TEXTURE_SIZE < 0)
+            if (args.Scale.X * (startPos + TEXTURE_SIZE) + args.Position.X < 0)
                 continue;
-
-            //Dont draw if we are past the end of the screen
-            if (startPos > FurballGame.WindowWidth)
-                break;
 
             //If we are drawing the first waveform texture
             if (i == startTextureIndex)
@@ -192,7 +188,7 @@ public class WaveformDrawable : Drawable {
                 args.Scale,
                 0,
                 Color.White,
-                new Rectangle(0, 0, (int)(TEXTURE_SIZE - offsetFromEnd), (int)this.Size.Y),
+                new Rectangle(0, 0, (int)offsetFromEnd, (int)this.Size.Y),
                 args.Effects
                 );
             //If we are drawing one of the ones in the middle
