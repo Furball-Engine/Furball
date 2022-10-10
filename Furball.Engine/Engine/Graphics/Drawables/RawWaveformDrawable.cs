@@ -37,7 +37,7 @@ public class RawWaveformDrawable : Drawable {
             float leftY  = this._height * args.Scale.Y - leftHeight;
             float rightY = this._height * args.Scale.Y - rightHeight;
 
-            const float alpha = 0.75f;
+            const float alpha = 0.9f;
             
             batch.Draw(FurballGame.WhitePixel, new Vector2(x, leftY) + args.Position, new Vector2(1 * args.Scale.X, leftHeight),  new Color(1f, 0f, 0f, alpha));
             batch.Draw(FurballGame.WhitePixel, new Vector2(x, rightY)+ args.Position, new Vector2(1 * args.Scale.X, rightHeight), new Color(0f, 0f, 1f, alpha));
