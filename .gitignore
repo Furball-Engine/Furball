@@ -10,3 +10,6 @@ Furball.sln.DotSettings.user
 Furball.Game/config/
 Furball.Game/logs/
 AppImages/
+AppDir/
+logs/
+config/
