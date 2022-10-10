@@ -127,7 +127,14 @@ public class LocalizationManager {
         DirectoryInfo dirInfo = null;
             
         if (!Directory.Exists(localizationFolder)) {
-            dirInfo = Directory.CreateDirectory(localizationFolder);
+            try {
+                Directory.CreateDirectory(localizationFolder);
+            }
+            catch {
+                // ignored
+            }
+
+            return;
         }
 
         dirInfo ??= new DirectoryInfo(localizationFolder);
