@@ -108,22 +108,20 @@ public static class ContentManager {
 
         byte[] data = Array.Empty<byte>();
 
-        string executablePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? throw new Exception("shits fucked man");
-
-        string path;
         if(source != ContentSource.External) {
+            string path;
             if ((int)source >= (int)ContentSource.User) {
-                path = Path.Combine(executablePath, "UserContent/", filename);
+                path = Path.Combine(FurballGame.AssemblyPath, "UserContent/", filename);
                 if (File.Exists(path))
                     data = File.ReadAllBytes(path);
             }
             if ((int)source >= (int)ContentSource.Game && data.Length == 0) {
-                path = Path.Combine(ContentPath, filename);
+                path = Path.Combine(FurballGame.AssemblyPath, ContentPath, filename);
                 if (File.Exists(path))
                     data = File.ReadAllBytes(path);
             }
             if ((int)source >= (int)ContentSource.Engine && data.Length == 0) {
-                path = Path.Combine(executablePath, "EngineContent/", filename);
+                path = Path.Combine(FurballGame.AssemblyPath, "EngineContent/", filename);
                 if (File.Exists(path))
                     data = File.ReadAllBytes(path);
             }
