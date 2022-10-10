@@ -2,17 +2,11 @@
 
 Modular Game Engine designed in C# using a custom rendering framework, it is designed to provide an easy system for quickly getting a new game up and running quickly, providing all the tools to prototype fast, then expand to more complicated ideas.
 
-### On the prime ECS scale, we fall between E and EC (depending on how you classify our `DrawableManager` class)
-#### E: Entity classes with subclasses. Loop through a List<Entity> and call Update/Draw on each.
-#### C: (Unity like) Component based, sealed Entity/GameObject class with a list of Components. Loop through a List<Entity> and call Update/Draw on each.
-#### EC: (Unreal like) Entity classes with the ability to subclass <i>along with</i> a list of Components per Entity (E + C from above). Loop through a List<Entity> then loop through each Entity's List<Component> and call Update/Draw on each.
-#### ECS: AKA <i>pure</i> ECS. Entity is reduced to an integer, Components are plan old structs stored in arrays. Systems are optional and merely functions that iterate and optionally modify Components.
-
 ## Objectives
 
-* Ease of adding new types of "drawables". (See `CompositeDrawable`, etc.)
+* Ease of development and startup
 * Easy Incorporation of Scripting using [Furball.Volpe](https://github.com/Furball-Engine/Furball.Volpe). (Custom scripting language)
-* Deliver reasonable performance even on extreme scenarios
+* Reasonable performance characteristics
 * Low memory footprint
 * High hardware compatability
 
@@ -24,9 +18,9 @@ Modular Game Engine designed in C# using a custom rendering framework, it is des
 
 ## Graphics Requirements
 
-* OpenGL 3.0+
+* OpenGL 2.0* (For OpenGL 2.0 support your graphics card *requires* the EXT_framebuffer_object extension, and pre-OpenGL 2.0 is possible yet not well tested)
 * OpenGLES 2.0+
-* Direct3D 11 (Also working on Linux through dxvk-native)
+* Direct3D 11 on Windows or Linux (DXVK-native)
 * Vulkan (WIP)
 * Direct3D 9 (WIP)
 * Software rendering through [Furball.Mola](https://github.com/Furball-Engine/Furball.Mola) (WIP)
@@ -34,18 +28,10 @@ Modular Game Engine designed in C# using a custom rendering framework, it is des
 
 Furball will automatically decide on the optimal backend to render with, on Windows that will be Direct3D 11, on Linux that will be OpenGL, on MacOS that will be Metal (Veldrid)
 
-## Linux
-
-Due to ManagedBass only checking system locations for libraries, the user is required to manually place the Bass and BassFx libraries found from [here](https://www.un4seen.com/) into your system library folder (usually `/usr/lib/`)
-
-### Arch Linux
-On the AUR, 2 packages are available to automate the install process (`libbass` and `libbass_fx`)
-#### Side note:
-These package do not get updated often, and you may encounter issues with verification
-
 # Building
 
 ## GUI
+
 `git clone --recurse submodules https://github.com/Furball-Engine/Furball/`
 
 Assuming you meet all the requirements, the project should build.
@@ -56,13 +42,35 @@ Assuming you meet all the requirements, the project should build.
 `dotnet restore`<br>
 `dotnet build`
 
-## License
+# Packaging
 
-This Game Engine is licensed under the [GPL-2.0 License](https://github.com/Furball-Engine/Furball/blob/master/LICENSE), meaning you're free to use this however you'd like as well as for commercial use (although see below regarding BASS) under the Conditions that you also follow the GPL-2.0 License and disclose the source code to your rendition of the project. No Liability or Warranty is guaranteed.
+## Windows
+
+Use the standard `dotnet publish` command
+
+## Linux
+
+### AppImage
+
+Furball supports publishing through the [Publish-AppImage](https://github.com/kuiperzone/Publish-AppImage/) script.
+
+To publish an AppImage, your game folder must contain a `publish-appimage.conf` file, sample contained [here](https://github.com/Furball-Engine/Furball/blob/master/Furball.Game/publish-appimage.conf), you should modify this file to contain your own information, along with an image, then when you are ready, run the `publish-appimage` script and a .AppImage file will be generated in the folder specified in the config.
+
+You must take into account that the assembly directory will *not* be guarenteed to be writable when run under an AppImage. Please test deeply before sending out builds, as we do not guarentee that it will work OOTB.
+
+# License
+
+Furball is licensed under the [GPL-2.0 License](https://github.com/Furball-Engine/Furball/blob/master/LICENSE), meaning you're free to use this however you'd like as well as for commercial use (although see below regarding BASS) under the Conditions that you also follow the GPL-2.0 License and disclose the source code to your rendition of Furball. No Liability or Warranty is guaranteed.
+
+## Bass Audio
 
 The BASS audio library (a dependency of our audio engine) is a commercial product. While it is free for non-commercial use, please ensure to [obtain a valid licence](http://www.un4seen.com/bass.html#license) if you plan on distributing any application using it commercially.
 
-## Games and Applications currently using Furball
+## FMOD Audio
+
+The FMOD audio engine (a by-default disabled replacement for Bass) is a commercial product. While it is free for *some* non-commercial use, please ensure to [obtain a license](https://fmod.com/licensing) if you are going to use FMOD as a replacement for Bass in a commercial product.
+
+# Games and Applications currently using Furball
 
 [pTyping](https://github.com/Beyley/pTyping), A clone of [UTyping](https://tosk.jp/utyping/) built on Furball.
 
