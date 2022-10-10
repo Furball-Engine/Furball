@@ -70,5 +70,15 @@
             <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
             <TargetPath>runtimes/win-x64/native/libgtk-3-0.dll</TargetPath>
         </ContentWithTargetPath>
+        <ContentWithTargetPath Include="../lib/linux-x86_64/libbass.so">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+            <TargetPath>libbass.so</TargetPath>
+        </ContentWithTargetPath>
+        <ContentWithTargetPath Include="../lib/linux-x86_64/libbass_fx.so">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+            <TargetPath>libbass_fx.so</TargetPath>
+        </ContentWithTargetPath>
     </ItemGroup>
 </Project>
