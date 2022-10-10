@@ -163,6 +163,16 @@ public class WaveformDrawable : Drawable {
         for (int i = startTextureIndex; i < endTextureIndex; i++) {
             RenderTarget target = this._renderTargets[i];
 
+            int startPos = TEXTURE_SIZE * (i - startTextureIndex);
+
+            //Dont draw if we are before the start of the screen
+            if (startPos + TEXTURE_SIZE < 0)
+                continue;
+
+            //Dont draw if we are past the end of the screen
+            if (startPos > FurballGame.WindowWidth)
+                break;
+
             //If we are drawing the first waveform texture
             if (i == startTextureIndex)
                 batch.Draw(
@@ -178,7 +188,7 @@ public class WaveformDrawable : Drawable {
             else if (i == endTextureIndex - 1)
                 batch.Draw(
                 target,
-                args.Position + new Vector2(TEXTURE_SIZE * (i - startTextureIndex) - offsetFromStart, 0) * args.Scale,
+                args.Position + new Vector2(startPos - offsetFromStart, 0) * args.Scale,
                 args.Scale,
                 0,
                 Color.White,
@@ -189,7 +199,7 @@ public class WaveformDrawable : Drawable {
             else
                 batch.Draw(
                 target,
-                args.Position + new Vector2(TEXTURE_SIZE * (i - startTextureIndex) - offsetFromStart, 0) * args.Scale,
+                args.Position + new Vector2(startPos - offsetFromStart, 0) * args.Scale,
                 args.Scale,
                 0,
                 Color.White,
