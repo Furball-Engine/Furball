@@ -111,7 +111,7 @@ public static class ContentManager {
         if(source != ContentSource.External) {
             string path;
             if ((int)source >= (int)ContentSource.User) {
-                path = Path.Combine(FurballGame.AssemblyPath, "UserContent/", filename);
+                path = Path.Combine(FurballGame.DataFolder, "UserContent/", filename);
                 if (File.Exists(path))
                     data = File.ReadAllBytes(path);
             }

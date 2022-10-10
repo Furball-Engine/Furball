@@ -29,15 +29,15 @@ public abstract class Config {
 public abstract class VolpeConfig : Config {
     private Environment _environment = new();
         
-    public const string VOLPE_CONFIG_FOLDER = "config";
+    public static string VolpeConfigFolder => Path.Combine(FurballGame.DataFolder, "config");
         
     public string Filename => $"{this.Name}.cfg";
         
-    public string FilePath => Path.Combine(VOLPE_CONFIG_FOLDER, this.Filename);
+    public string FilePath => Path.Combine(VolpeConfigFolder, this.Filename);
 
     public override void Save() {
-        if (!Directory.Exists(VOLPE_CONFIG_FOLDER))
-            Directory.CreateDirectory(VOLPE_CONFIG_FOLDER);
+        if (!Directory.Exists(VolpeConfigFolder))
+            Directory.CreateDirectory(VolpeConfigFolder);
 
         using FileStream   stream = File.Create(this.FilePath);
         using StreamWriter writer = new(stream);

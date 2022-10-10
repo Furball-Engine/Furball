@@ -71,6 +71,7 @@ public class FurballGame : Game {
     public const int DEFAULT_WINDOW_HEIGHT = 720;
 
     public static string AssemblyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? throw new Exception("shits fucked man");
+    public static string DataFolder   = AssemblyPath;
     public static string LocalizationFolder => $"{AssemblyPath}/Localization";
 
     public static int RealWindowWidth => (int) Instance.WindowManager.WindowSize.X;
@@ -133,6 +134,10 @@ public class FurballGame : Game {
 
     protected override void Initialize() {
         Profiler.StartProfile("full_furball_initialize");
+
+        //If we are in a readonly environment, we should write to another folder which is more likely to not be readonly
+        if (new DirectoryInfo(DataFolder).Attributes.HasFlag(FileAttributes.ReadOnly))
+            DataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), this.GetType().Assembly.GetName().Name);
 
         this.InitializeLocalizations();
             

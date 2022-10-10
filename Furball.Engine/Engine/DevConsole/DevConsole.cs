@@ -19,8 +19,8 @@ namespace Furball.Engine.Engine.DevConsole;
 public class DevConsole {
     public static readonly ObservableCollection<(string input, ConsoleResult)> ConsoleLog = new();
 
-    public static string ScriptPath = "scripts";
-    public static string LogPath    = "logs";
+    public static string ScriptPath => Path.Combine(FurballGame.DataFolder, "scripts");
+    public static string LogPath    => Path.Combine(FurballGame.DataFolder, "logs");
 
     public static readonly Environment VolpeEnvironment
         //= new Volpe.Evaluation.Environment(DefaultBuiltins.Core.Concat(DefaultBuiltins.Math).Concat(Builtins.Collection).ToArray());
