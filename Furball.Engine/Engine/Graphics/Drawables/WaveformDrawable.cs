@@ -171,7 +171,7 @@ public class WaveformDrawable : Drawable {
                 args.Scale,
                 0,
                 Color.White,
-                new Rectangle((int)offsetFromStart, 0, TEXTURE_SIZE, (int)this.Size.Y),
+                new Rectangle((int)offsetFromStart, 0, (int)(TEXTURE_SIZE - offsetFromStart), (int)this.Size.Y),
                 args.Effects
                 );
             //If we are drawing the last waveform texture
