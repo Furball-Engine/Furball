@@ -5,7 +5,7 @@ using Eto.Forms;
 using Furball.Engine.Engine.Helpers.Logger;
 using Furball.Vixie.Backends.Shared;
 
-namespace Furball.Engine.Engine.Helpers; 
+namespace Furball.Engine.Engine.Helpers;
 
 public static class EtoHelper {
     private static Thread      _thread;
@@ -17,13 +17,13 @@ public static class EtoHelper {
         Profiler.StartProfile("init_eto");
 
         _initCalled = true;
-            
+
         _thread = new Thread(
         () => {
             Eto.Platform.Initialize(Platforms.Gtk);
 
             Kettu.Logger.Log("Eto Initialized", LoggerLevelEtoInfo.Instance);
-                
+
             _app = new Application();
             _app.Run();
         }
@@ -34,14 +34,19 @@ public static class EtoHelper {
         Profiler.EndProfileAndPrint("init_eto");
     }
 
+    private static bool _QuitInvoked = false;
     public static void Dispose() {
-        while (_initCalled && _app == null) {
+        while (_initCalled && _app == null)
             Thread.Sleep(150);
-        }
 
-        _app?.Invoke(() => {
-            _app?.Quit();
-        });
+        if (!_QuitInvoked) {
+            _QuitInvoked = true;
+            _app?.Invoke(
+            () => {
+                _app?.Quit();
+            }
+            );
+        }
     }
 
     public static void MessageDialog(EventHandler<DialogResult> callback, string message, MessageBoxButtons buttons) {
@@ -56,12 +61,12 @@ public static class EtoHelper {
     public static void OpenColorPicker(EventHandler<Color> callback, Color existingColor, string title = "Color Picker", bool allowAlpha = true) {
         _app?.Invoke(
         () => {
-            ColorPickerForm form = new(title, allowAlpha);
+            ColorPickerForm form = new ColorPickerForm(title, allowAlpha);
 
             form.ColorPicker.Value = new Eto.Drawing.Color(existingColor.R / 255f, existingColor.G / 255f, existingColor.B / 255f, existingColor.A / 255f);
 
             bool preventClosure = true;
-                
+
             form.Show();
             form.BringToFront();
             form.ColorPicker.ValueChanged += (_, _) => {
