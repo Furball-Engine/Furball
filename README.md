@@ -73,5 +73,6 @@ The FMOD audio engine (a by-default disabled replacement for Bass) is a commerci
 # Games and Applications currently using Furball
 
 [pTyping](https://github.com/Beyley/pTyping), A clone of [UTyping](https://tosk.jp/utyping/) built on Furball.
+[ConsoleDE](https://gitlab.com/jvyden/consolede), A relatively lightweight front-end intended for launching small emulators and games and managing the host system.
 
 And more to come!
