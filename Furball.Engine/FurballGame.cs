@@ -151,28 +151,26 @@ public class FurballGame : Game {
         _stopwatch.Start();
 
         InputManager = new InputManager();
-        //Only use the silk input methods if we are using the `View` event loop!
-        if (this.EventLoop is ViewEventLoop) {
-            InputManager.RegisterInputMethod(InputManager.SilkWindowingMouseInputMethod = new SilkWindowingMouseInputMethod());
+        
+        InputManager.RegisterInputMethod(InputManager.SilkWindowingMouseInputMethod = new SilkWindowingMouseInputMethod());
 
-            InputManager.SilkWindowingMouseInputMethod.SetRawInputStatus(FurballConfig.Instance.RawMouseInput);
+        InputManager.SilkWindowingMouseInputMethod.SetRawInputStatus(FurballConfig.Instance.RawMouseInput);
 
-            bool useSilkKeyboardInput = true;
+        bool useSilkKeyboardInput = true;
 
-            //If we are on linux and we are the root user, we can use the EvDev input instead, which can detect multiple keyboards separately
-            if (RuntimeInfo.CurrentPlatform() == OSPlatform.Linux && UnixEnvironment.IsRoot()) {
-                useSilkKeyboardInput = false;
-                InputManager.RegisterInputMethod(new EvDevKeyboardInputMethod());
-            }
-            
-            if(useSilkKeyboardInput)
-                InputManager.RegisterInputMethod(InputManager.SilkWindowingKeyboardInputMethod = new SilkWindowingKeyboardInputMethod());
+        //If we are on linux and we are the root user, we can use the EvDev input instead, which can detect multiple keyboards separately
+        if (RuntimeInfo.CurrentPlatform() == OSPlatform.Linux && UnixEnvironment.IsRoot()) {
+            useSilkKeyboardInput = false;
+            InputManager.RegisterInputMethod(new EvDevKeyboardInputMethod());
         }
+        
+        if(useSilkKeyboardInput)
+            InputManager.RegisterInputMethod(InputManager.SilkWindowingKeyboardInputMethod = new SilkWindowingKeyboardInputMethod());
 
         Profiler.StartProfile("init_audio_engine");
         //TODO: Add logic to decide on what audio backend to use, and maybe write some code to help change backend on the fly
         AudioEngine = new ManagedBassAudioEngine();
-        AudioEngine.Initialize(this.EventLoop is ViewEventLoop ? this.WindowManager.GetWindowHandle() : IntPtr.Zero);
+        AudioEngine.Initialize(this.WindowManager.GetWindowHandle());
         Profiler.EndProfileAndPrint("init_audio_engine");
 
         DrawableManager             = new DrawableManager();
@@ -447,9 +445,6 @@ public class FurballGame : Game {
     }
 
     public void SetTargetFps(double? fps) {
-        if (this.EventLoop is not ViewEventLoop)
-            return;
-        
         this.WindowManager.TargetFramerate = fps ?? 0;
 
         if (!BypassFurballFpsLimit)
@@ -457,9 +452,6 @@ public class FurballGame : Game {
     }
 
     public void SetTargetUps(double? ups) {
-        if (this.EventLoop is not ViewEventLoop)
-            return;
-        
         this.WindowManager.TargetUpdaterate = ups ?? 0;
 
         if (!BypassFurballUpsLimit)
