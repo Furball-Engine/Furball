@@ -88,21 +88,25 @@ public class DrawableBatch : IDisposable {
 
     //TODO: add rotations
     public void DrawRectangle(Vector2 position, Vector2 size, float thickness, Color color) {
-        Vector2 p0 = position;                                             //TL
-        Vector2 p1 = new(position.X + size.X, position.Y);         //TR
-        Vector2 p2 = new(position.X + size.X, position.Y + size.Y);//BR
-        Vector2 p3 = new(position.X, position.Y + size.Y);//BL
+        Vector2 topLeft     = position;                                             //TL
+        Vector2 topRight    = new Vector2(position.X + size.X, position.Y);         //TR
+        Vector2 bottomRight = new Vector2(position.X + size.X, position.Y + size.Y);//BR
+        Vector2 bottomLeft  = new Vector2(position.X,          position.Y + size.Y);//BL
 
-        this.DrawLine(p0, p1, thickness, color);
-        this.DrawLine(p1, p2, thickness, color);
-        this.DrawLine(p2, p3, thickness, color);
-        this.DrawLine(p3, p0, thickness, color);
+        //Draw top line
+        this.DrawLine(topLeft, topRight, thickness, color);
+        //Drap right line
+        this.DrawLine(topRight, bottomRight, thickness, color);
+        //Draw bottom line
+        this.DrawLine(bottomRight, bottomLeft, thickness, color);
+        //Draw left line
+        this.DrawLine(bottomLeft, topLeft, thickness, color);
 
         //drawn with lines to not break batch
-        this.DrawLine(new Vector2(p0.X - thickness / 2, p0.Y), new Vector2(p0.X + thickness / 2, p0.Y), thickness, color);
-        this.DrawLine(new Vector2(p1.X - thickness / 2, p1.Y), new Vector2(p1.X + thickness / 2, p1.Y), thickness, color);
-        this.DrawLine(new Vector2(p2.X - thickness / 2, p2.Y), new Vector2(p2.X + thickness / 2, p2.Y), thickness, color);
-        this.DrawLine(new Vector2(p3.X - thickness / 2, p3.Y), new Vector2(p3.X + thickness / 2, p3.Y), thickness, color);
+        this.DrawLine(new Vector2(topLeft.X     - thickness / 2, topLeft.Y),     new Vector2(topLeft.X     + thickness / 2, topLeft.Y),     thickness, color);
+        this.DrawLine(new Vector2(topRight.X    - thickness / 2, topRight.Y),    new Vector2(topRight.X    + thickness / 2, topRight.Y),    thickness, color);
+        this.DrawLine(new Vector2(bottomRight.X - thickness / 2, bottomRight.Y), new Vector2(bottomRight.X + thickness / 2, bottomRight.Y), thickness, color);
+        this.DrawLine(new Vector2(bottomLeft.X  - thickness / 2, bottomLeft.Y),  new Vector2(bottomLeft.X  + thickness / 2, bottomLeft.Y),  thickness, color);
     }
 
     public void FillRectangle(Vector2 position, Vector2 size, Color color, float rotation = 0f) {
