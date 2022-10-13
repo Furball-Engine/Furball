@@ -37,7 +37,7 @@ public class DebugCounter : TextDrawable {
         this.CoverClicks = false;
         this.Hoverable   = false;
         this.CoverHovers = false;
-
+        
         FurballGame.TimeStepMethods.Add(
         this._updateTimeStep = new FixedTimeStepMethod(
         250,
@@ -46,8 +46,6 @@ public class DebugCounter : TextDrawable {
 
             for (int i = 0; i != this.Items.Count; i++) {
                 DebugCounterItem current = this.Items[i];
-
-                current.Update(FurballGame.Time);
 
                 if (current.ForceNewLine || i % 3 == 0 && i != 0)
                     builder.AppendLine();
@@ -59,6 +57,13 @@ public class DebugCounter : TextDrawable {
         }
         )
         );
+    }
+
+    public override void Update(double time) {
+        for (int i = 0; i < this.Items.Count; i++)
+            this.Items[i].Update(time);
+
+        base.Update(time);
     }
 
     public override void Draw(double time, DrawableBatch batch, DrawableManagerArgs args) {

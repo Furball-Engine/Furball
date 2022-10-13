@@ -14,7 +14,7 @@ public class FrameRate : DebugCounterItem {
         this._deltaTime += time;
         this._frames++;
 
-        if (this._deltaTime >= 1.0) {
+        if (this._deltaTime >= 1000.0) {
             this._lastUpdatedFramerate = this._frames;
             this._deltaTime            = 0.0;
             this._frames               = 0;

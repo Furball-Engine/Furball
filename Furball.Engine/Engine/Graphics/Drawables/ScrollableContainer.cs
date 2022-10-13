@@ -58,7 +58,7 @@ public class ScrollableContainer : CompositeDrawable {
             float target = origY  - this._targetScroll;
             float diff   = target - drawable.Position.Y;
 
-            drawable.Position.Y += (float)(diff * 0.985d * time * 8);
+            drawable.Position.Y += (float)(diff * 0.985d * (time / 1000d) * 8);
         }
 
         base.Update(time);

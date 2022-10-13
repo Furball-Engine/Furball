@@ -17,7 +17,7 @@ public class DebugTextureDisplayDrawable : CompositeDrawable {
         base.Update(time);
 
         this._updateDelta += time;
-        if (this._updateDelta > 1) {
+        if (this._updateDelta > 1000) {
             this.ResetLayout();
             this._updateDelta = 0;
         }

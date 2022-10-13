@@ -14,13 +14,13 @@ public class UpdateRate : DebugCounterItem {
         this._deltaTime += time;
         this._updates++;
 
-        if (this._deltaTime >= 1.0) {
+        if (this._deltaTime >= 1000) {
             this._lastUpdatedUpdateRate = this._updates;
             this._deltaTime             = 0.0;
             this._updates               = 0;
         }
 
-        base.Draw(time);
+        base.Update(time);
     }
 
     public override string GetAsString(double time) => $"{this._lastUpdatedUpdateRate:N0}ups ({Math.Round(1000.0 / this._lastUpdatedUpdateRate, 2):N2}ms)";

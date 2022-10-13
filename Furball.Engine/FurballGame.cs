@@ -608,7 +608,8 @@ public class FurballGame : Game {
         if (this._drawDebugOverlay)
             DebugOverlayDrawableManager.Update(deltaTime);
 
-        Logger.XnaUpdate(deltaTime);
+        //Kettu uses seconds for delta time, so we need to convert it
+        Logger.XnaUpdate(deltaTime / 1000f);
 
         ScreenManager.UpdateTransition(deltaTime);
 

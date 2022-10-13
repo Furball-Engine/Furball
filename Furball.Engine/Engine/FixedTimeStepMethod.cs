@@ -23,7 +23,7 @@ public class FixedTimeStepMethod {
     }
 
     internal void Update(double delta) {
-        this._delta += delta * 1000d;
+        this._delta += delta;
 
         int timesToRun = (int)Math.Floor(this._delta / this.Tempo);
 
