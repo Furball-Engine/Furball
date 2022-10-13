@@ -6,7 +6,7 @@ using System.Numerics;
 using Furball.Engine.Engine.Helpers;
 using Furball.Vixie;
 using Furball.Vixie.Helpers;
-using Color=Furball.Vixie.Backends.Shared.Color;
+using Color = Furball.Vixie.Backends.Shared.Color;
 
 namespace Furball.Engine.Engine.Graphics.Drawables.Managers; 
 
@@ -204,7 +204,10 @@ public class DrawableManager : IDisposable {
         this._drawables.AddRange(drawables);
         this._sortDrawables = true;
     }
-    public void Remove(Drawable drawable) {
+    public void Remove(Drawable? drawable) {
+        if (drawable == null)
+            return;
+        
         this._drawables.Remove(drawable);
     }
 
