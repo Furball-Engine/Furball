@@ -65,7 +65,7 @@ public class TextDrawable : Drawable {
         if (!this.NeedsRenderer)
             return;
 
-        this._renderer ??= GraphicsBackend.Current.CreateRenderer();
+        this._renderer ??= new Renderer();
 
         this._renderer.Begin();
 

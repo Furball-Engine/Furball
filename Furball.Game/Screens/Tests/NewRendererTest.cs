@@ -29,7 +29,7 @@ public class NewRendererTest : TestScreen {
         public override Vector2 Size => new(100, 100);
 
         public MeshDrawable() {
-            this._renderer = GraphicsBackend.Current.CreateRenderer();
+            this._renderer = new Renderer();
 
             this.Vertices.Add(
             new Vertex {

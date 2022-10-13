@@ -26,7 +26,7 @@ public class DrawableBatch : IDisposable {
 
     public DrawableBatch() {
         Profiler.StartProfile("create_drawable_batch");
-        this._renderer = GraphicsBackend.Current.CreateRenderer(); 
+        this._renderer = new Renderer(); 
         Profiler.EndProfileAndPrint("create_drawable_batch");
     }
 
