@@ -25,28 +25,6 @@ public class Builtins {
                 return Value.DefaultVoid;
             }),
         
-        new("change_graphics_backend", paramCount: 1, 
-            (_, parameters) => {
-                Backend output = Backend.None;
-                if (parameters[0] is Value.Number num)
-                    output = (Backend)(int)num.Value;
-                else if (parameters[0] is Value.String str) {
-                    Enum.TryParse(str.Value, true, out output);
-                }
-
-                if (output == Backend.None) {
-                    DevConsole.AddMessage("Unknown backend!", ExecutionResult.Error);
-                    return Value.DefaultFalse;
-                }
-
-                DevConsole.AddMessage($"Switching to backend {output}!");
-
-                FurballGame.Instance.WindowManager.Backend = output;
-                FurballGame.Instance.RecreateWindow();
-                
-                return Value.DefaultTrue;
-            }),
-            
         new("cl_clear_log", paramCount: 0,
             (_, _) => {
                 if (DevConsole.ConsoleLog.Count == 0) {

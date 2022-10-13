@@ -74,13 +74,12 @@ public static class ImGuiConsole {
         
         FurballGame.DrawableManager.Add(_consoleInputCoverDrawable);
         
-        FurballGame.Instance.WindowRecreation += OnWindowRecreate;
-        OnWindowRecreate(null, EventArgs.Empty);
+        SetImGuiStyle();
 
         Profiler.EndProfileAndPrint("init_imgui_console");
     }
     
-    private static void OnWindowRecreate(object sender, EventArgs e) {
+    private static void SetImGuiStyle() {
 #if USE_IMGUI
         ImGuiStylePtr style = ImGui.GetStyle();
 

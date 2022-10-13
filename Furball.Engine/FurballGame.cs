@@ -331,19 +331,6 @@ public class FurballGame : Game {
         }
     }
 
-    protected override void OnWindowRecreation() {
-        base.OnWindowRecreation();
-        
-        InputManager.RemoveInputMethod(InputManager.SilkWindowingMouseInputMethod);
-        InputManager.RemoveInputMethod(InputManager.SilkWindowingKeyboardInputMethod);
-        
-        InputManager.RegisterInputMethod(InputManager.SilkWindowingMouseInputMethod    = new SilkWindowingMouseInputMethod());
-        InputManager.RegisterInputMethod(InputManager.SilkWindowingKeyboardInputMethod = new SilkWindowingKeyboardInputMethod());
-
-        DrawableBatch       = new DrawableBatch();
-        CursorDrawableBatch = new DrawableBatch();
-    }
-
     public new void RunHeadless() {
         base.RunHeadless();
     }
