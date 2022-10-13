@@ -40,7 +40,6 @@ public class ScreenSelector : TestScreen {
             (LocalizationStrings.FormTest, typeof(FormTest)),
             (LocalizationStrings.SmartTextTest, typeof(SmartTextTest)),
             (LocalizationStrings.VideoDrawableTest, typeof(VideoDrawableTest)),
-            (LocalizationStrings.EcsTest, typeof(EcsTest)),
             (LocalizationStrings.NewRendererTest, typeof(NewRendererTest)),
             (LocalizationStrings.EtoTest, typeof(EtoTest)),
             (LocalizationStrings.RichTextDrawableTest, typeof(RichTextDrawableTest)),

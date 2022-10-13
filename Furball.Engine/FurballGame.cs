@@ -12,7 +12,6 @@ using Furball.Engine.Engine;
 using Furball.Engine.Engine.Config;
 using Furball.Engine.Engine.Debug.DebugCounter;
 using Furball.Engine.Engine.DevConsole;
-using Furball.Engine.Engine.ECS;
 using Furball.Engine.Engine.Graphics;
 using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
@@ -775,12 +774,4 @@ public class FurballGame : Game {
     }
 
     #endregion
-
-    #region ECS Stuff
-
-    public void RegisterEntity(Entity   entity) => this.Components.Add(entity);
-    public void UnregisterEntity(Entity entity) => this.Components.Remove(entity);
-
-    #endregion
-
 }

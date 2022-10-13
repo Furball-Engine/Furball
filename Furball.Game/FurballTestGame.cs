@@ -62,7 +62,6 @@ public class FurballTestGame : FurballGame {
         LocalizationManager.AddDefaultTranslation(LocalizationStrings.FormTest,             "Form Test");
         LocalizationManager.AddDefaultTranslation(LocalizationStrings.SmartTextTest,        "Smart Text Test");
         LocalizationManager.AddDefaultTranslation(LocalizationStrings.VideoDrawableTest,    "VideoDrawable Test");
-        LocalizationManager.AddDefaultTranslation(LocalizationStrings.EcsTest,              "ECS Test");
         LocalizationManager.AddDefaultTranslation(LocalizationStrings.NewRendererTest,      "New Renderer Test");
         LocalizationManager.AddDefaultTranslation(LocalizationStrings.EtoTest,              "Eto Test");
         LocalizationManager.AddDefaultTranslation(LocalizationStrings.RichTextDrawableTest, "Rich Text Drawable Test");
