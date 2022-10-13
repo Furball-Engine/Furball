@@ -182,7 +182,7 @@ public class NewRendererTest : TestScreen {
         }
     }
 
-    public override void Unload() {
+    public override void Dispose() {
         base.Dispose();
 
         FurballGame.InputManager.OnMouseDown -= this.OnMouseDown;

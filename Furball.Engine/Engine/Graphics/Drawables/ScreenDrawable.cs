@@ -65,7 +65,6 @@ public class ScreenDrawable : Drawable {
 
         LocalizationManager.LanguageChanged -= this.LanguageChanged;
 
-        this.Screen.Unload();
         this.Screen.Dispose();
     }
 }

@@ -80,8 +80,8 @@ public class FixedTimeStepTest : TestScreen {
         );
     }
 
-    public override void Unload() {
-        base.Unload();
+    public override void Dispose() {
+        base.Dispose();
 
         FurballGame.TimeStepMethods.Remove(this._1PerSecondMethod);
         FurballGame.TimeStepMethods.Remove(this._2PerSecondMethod);

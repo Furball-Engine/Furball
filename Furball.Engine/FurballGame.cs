@@ -491,17 +491,17 @@ public class FurballGame : Game {
 
         this.BeforeScreenChange?.Invoke(this, screen);
 
-        if (this.RunningScreen != null) {
-            this.Components.Remove(this.RunningScreen);
+        //Dispose the currently running screen
+        this.RunningScreen?.Dispose();
 
-            this.RunningScreen = null;
-        }
+        this.RunningScreen = null;
 
         if((!screen.RequireLoadingScreen) || (screen.RequireLoadingScreen && screen.LoadingComplete)) {
             this._loadingScreen                 = null;
             this._loadingScreenChangeOffQueued = false;
                 
-            this.Components.Add(screen);
+            screen.Initialize();
+            
             screen.UpdateTextStrings();
             if (screen.Manager.EffectedByScaling)
                 screen.ManagerOnOnScalingRelayoutNeeded(this, screen.Manager.Size);
@@ -594,6 +594,7 @@ public class FurballGame : Game {
 
         InputManager.Update();
 
+        this.RunningScreen?.Update(deltaTime);
         base.Update(deltaTime);
 
         for (int i = 0; i < TimeStepMethods.Count; i++) {
@@ -733,6 +734,7 @@ public class FurballGame : Game {
 
         ImGuiConsole.Draw();
 
+        this.RunningScreen?.Draw(gameTime);
         base.Draw(gameTime);
 
         DrawableManager.Draw(gameTime, DrawableBatch);
