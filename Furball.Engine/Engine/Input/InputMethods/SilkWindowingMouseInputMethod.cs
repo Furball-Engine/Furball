@@ -2,14 +2,18 @@ using System;
 using System.Collections.Generic;
 using System.Numerics;
 using Furball.Vixie.Helpers.Helpers;
-using Furball.Vixie.Input;
 using Silk.NET.Input;
 
 namespace Furball.Engine.Engine.Input.InputMethods;
 
 public class SilkWindowingMouseInputMethod : InputMethod {
-    private IReadOnlyList<IMouse> _silkMice;
-    private List<Vector2>         _silkRawLastState = new();
+    private readonly IInputContext         _inputContext;
+    private          IReadOnlyList<IMouse> _silkMice;
+    private          List<Vector2>         _silkRawLastState = new();
+    
+    public SilkWindowingMouseInputMethod(IInputContext inputContext) {
+        this._inputContext = inputContext;
+    }
     public override void Update() {
         foreach (FurballMouse mouse in this.Mice) {
             mouse.Position = mouse.TempPosition;
@@ -22,7 +26,7 @@ public class SilkWindowingMouseInputMethod : InputMethod {
     }
 
     public override void Initialize() {
-        this._silkMice = Mouse.GetMice();
+        this._silkMice = this._inputContext.Mice;
 
         for (int i = 0; i < this._silkMice.Count; i++) {
             int j = i;

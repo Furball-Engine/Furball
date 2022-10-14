@@ -59,7 +59,7 @@ public class SmartTextDrawable : TexturedDrawable {
                     this.Texture.Dispose();
                 }
                 
-                this.Texture      = Texture.CreateTextureFromImage(image);
+                this.Texture      = Game.ResourceFactory.CreateTextureFromImage(image);
                 this.Texture.Name = "SmartText";
                 
                 image.Dispose();

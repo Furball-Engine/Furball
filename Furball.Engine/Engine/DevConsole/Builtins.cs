@@ -153,7 +153,7 @@ public class Builtins {
         new ("quit", paramCount: 0, 
              (_, _) => {
                  DevConsole.AddMessage("Bye!", ExecutionResult.Success);
-                 FurballGame.Instance.WindowManager.Close();
+                 FurballGame.Instance.WindowManager.CloseWindow();
                      
                  return Value.DefaultVoid;
              }),

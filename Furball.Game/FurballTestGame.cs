@@ -18,7 +18,7 @@ public class FurballTestGame : FurballGame {
     protected override void Initialize() {
         base.Initialize();
 
-        GraphicsBackend.Current.ScreenshotTaken += this.OnScreenshot;
+        this.WindowManager.GraphicsBackend.ScreenshotTaken += this.OnScreenshot;
     }
 
     private Keybind _screenshotKeybind;
@@ -31,7 +31,7 @@ public class FurballTestGame : FurballGame {
         "Take Screenshot",
         Key.F1,
         _ => {
-            GraphicsBackend.Current.TakeScreenshot();
+            this.WindowManager.GraphicsBackend.TakeScreenshot();
         }
         )
         );

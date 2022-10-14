@@ -26,7 +26,7 @@ public class DrawableBatch : IDisposable {
 
     public DrawableBatch() {
         Profiler.StartProfile("create_drawable_batch");
-        this._renderer = new Renderer(); 
+        this._renderer = Game.ResourceFactory.CreateRenderer(); 
         Profiler.EndProfileAndPrint("create_drawable_batch");
     }
 
@@ -159,10 +159,10 @@ public class DrawableBatch : IDisposable {
     
     private Rectangle ScissorRect {
         get => new(
-        (int)(GraphicsBackend.Current.ScissorRect.X / FurballGame.VerticalRatio),
-        (int)(GraphicsBackend.Current.ScissorRect.Y / FurballGame.VerticalRatio),
-        (int)(GraphicsBackend.Current.ScissorRect.Width / FurballGame.VerticalRatio),
-        (int)(GraphicsBackend.Current.ScissorRect.Height / FurballGame.VerticalRatio)
+        (int)(FurballGame.Instance.WindowManager.GraphicsBackend.ScissorRect.X / FurballGame.VerticalRatio),
+        (int)(FurballGame.Instance.WindowManager.GraphicsBackend.ScissorRect.Y / FurballGame.VerticalRatio),
+        (int)(FurballGame.Instance.WindowManager.GraphicsBackend.ScissorRect.Width / FurballGame.VerticalRatio),
+        (int)(FurballGame.Instance.WindowManager.GraphicsBackend.ScissorRect.Height / FurballGame.VerticalRatio)
         );
         set {
             if (value == this.ScissorRect)
@@ -170,7 +170,7 @@ public class DrawableBatch : IDisposable {
             
             this.End();
             this.Begin();
-            GraphicsBackend.Current.ScissorRect = new SixLabors.ImageSharp.Rectangle(
+            FurballGame.Instance.WindowManager.GraphicsBackend.ScissorRect = new SixLabors.ImageSharp.Rectangle(
             (int)(value.X * FurballGame.VerticalRatio),
             (int)(value.Y * FurballGame.VerticalRatio),
             (int)(value.Width * FurballGame.VerticalRatio),

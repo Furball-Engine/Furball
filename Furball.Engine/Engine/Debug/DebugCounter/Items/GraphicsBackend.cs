@@ -10,20 +10,21 @@ public class GraphicsBackend : DebugCounterItem {
         
     //TODO: handle backend changing
     public GraphicsBackend() {
-        if (Vixie.GraphicsBackend.Current is VeldridBackend veldridBackend) {
-            this._stringCache = $"Backend: Veldrid ({veldridBackend.ChosenBackend})";
-            return;
+        switch (FurballGame.Instance.WindowManager.GraphicsBackend) {
+            case VeldridBackend veldridBackend:
+                this._stringCache = $"Backend: Veldrid ({veldridBackend.ChosenBackend})";
+                return;
+            case OpenGLBackend openGlBackend: {
+                this._stringCache = openGlBackend.CreationBackend == Backend.OpenGL 
+                                        ? $"Backend: OpenGL ({Global.LatestSupportedGl.GL.MajorVersion}.{Global.LatestSupportedGl.GL.MinorVersion})" 
+                                        : $"Backend: OpenGLES ({Global.LatestSupportedGl.GLES.MajorVersion}.{Global.LatestSupportedGl.GLES.MinorVersion})";
+                return;
+            }
+            default:
+                this._stringCache = $"Backend: {FurballGame.Instance.WindowManager.Backend}";
+                break;
         }
 
-        if (Vixie.GraphicsBackend.Current is OpenGLBackend openGlBackend) {
-            if(openGlBackend.CreationBackend == Backend.OpenGL)
-                this._stringCache = $"Backend: OpenGL ({Global.LatestSupportedGl.GL.MajorVersion}.{Global.LatestSupportedGl.GL.MinorVersion})";
-            else
-                this._stringCache = $"Backend: OpenGLES ({Global.LatestSupportedGl.GLES.MajorVersion}.{Global.LatestSupportedGl.GLES.MinorVersion})";
-            return;
-        }
-
-        this._stringCache = $"Backend: {FurballGame.Instance.WindowManager.Backend}";
     }
         
     public override string GetAsString(double time) {

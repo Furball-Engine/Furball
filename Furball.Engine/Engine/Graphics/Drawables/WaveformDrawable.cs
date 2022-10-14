@@ -80,7 +80,7 @@ public class WaveformDrawable : Drawable {
 
         //Create the render targets
         for (int i = 0; i < renderTargetCount; i++) {
-            RenderTarget renderTarget = new RenderTarget(TEXTURE_SIZE, (uint)this._rawWaveform.Size.Y);
+            RenderTarget renderTarget = Game.ResourceFactory.CreateRenderTarget(TEXTURE_SIZE, (uint)this._rawWaveform.Size.Y);
             this._renderTargets.Add(renderTarget);
         }
 
@@ -104,7 +104,7 @@ public class WaveformDrawable : Drawable {
             target.Bind();
 
             //Clear the render target
-            GraphicsBackend.Current.Clear();
+            FurballGame.Instance.WindowManager.GraphicsBackend.Clear();
 
             //Begin the batch
             batch.Begin();

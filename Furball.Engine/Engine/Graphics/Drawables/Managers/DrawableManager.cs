@@ -166,12 +166,12 @@ public class DrawableManager : IDisposable {
     public RenderTarget DrawRenderTarget2D(double time, DrawableBatch batch) {
         if((this._target2D?.Size.X ?? 0) != FurballGame.RealWindowWidth || (this._target2D?.Size.Y ?? 0) != FurballGame.RealWindowHeight) {
             this._target2D?.Dispose();
-            this._target2D = new RenderTarget((uint)FurballGame.RealWindowWidth, (uint)FurballGame.RealWindowHeight);
+            this._target2D = Game.ResourceFactory.CreateRenderTarget((uint)FurballGame.RealWindowWidth, (uint)FurballGame.RealWindowHeight);
         }
             
         this._target2D!.Bind();
 
-        GraphicsBackend.Current.Clear();
+        FurballGame.Instance.WindowManager.GraphicsBackend.Clear();
 
         this.Draw(time, batch);
 

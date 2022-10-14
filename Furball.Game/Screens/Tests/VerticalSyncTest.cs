@@ -25,7 +25,7 @@ public class VerticalSyncTest : TestScreen {
             Color.Black,
             new Vector2(250, 28),
             delegate {
-                FurballGame.Instance.WindowManager.VerticalSync = true;
+                FurballGame.Instance.WindowManager.VSync = true;
             }));
 
         this.Manager.Add(new DrawableButton(
@@ -38,7 +38,7 @@ public class VerticalSyncTest : TestScreen {
             Color.Black,
             new Vector2(250, 28),
             delegate {
-                FurballGame.Instance.WindowManager.VerticalSync = false;
+                FurballGame.Instance.WindowManager.VSync = false;
             }));
 
         this.Manager.Add(focusStatusText);
@@ -49,6 +49,6 @@ public class VerticalSyncTest : TestScreen {
         base.Update(gameTime);
 
         this.focusStatusText.Text = $"Focused: {FurballGame.Instance.WindowManager.Focused}";
-        this.vsyncStatusText.Text = $"Vertical Sync: {FurballGame.Instance.WindowManager.VerticalSync}";
+        this.vsyncStatusText.Text = $"Vertical Sync: {FurballGame.Instance.WindowManager.VSync}";
     }
 }

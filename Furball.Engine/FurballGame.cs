@@ -29,6 +29,7 @@ using Furball.Engine.Engine.Transitions;
 using Furball.Vixie;
 using Furball.Vixie.Backends.Shared.Backends;
 using Furball.Vixie.Backends.Shared.Renderers;
+using Furball.Vixie.WindowManagement;
 using Furball.Volpe.Evaluation;
 using JetBrains.Annotations;
 using Kettu;
@@ -38,8 +39,8 @@ using Silk.NET.Windowing;
 using sowelipisona;
 using sowelipisona.ManagedBass;
 using Environment = System.Environment;
-using GraphicsBackend = Furball.Vixie.GraphicsBackend;
 using Rectangle = System.Drawing.Rectangle;
+using WindowState=Furball.Vixie.WindowManagement.WindowState;
 
 namespace Furball.Engine; 
 
@@ -152,10 +153,6 @@ public class FurballGame : Game {
 
         InputManager = new InputManager();
         
-        InputManager.RegisterInputMethod(InputManager.SilkWindowingMouseInputMethod = new SilkWindowingMouseInputMethod());
-
-        InputManager.SilkWindowingMouseInputMethod.SetRawInputStatus(FurballConfig.Instance.RawMouseInput);
-
         bool useSilkKeyboardInput = true;
 
         //If we are on linux and we are the root user, we can use the EvDev input instead, which can detect multiple keyboards separately
@@ -163,21 +160,26 @@ public class FurballGame : Game {
             useSilkKeyboardInput = false;
             InputManager.RegisterInputMethod(new EvDevKeyboardInputMethod());
         }
+
+        if (this.WindowManager is SilkWindowManager silkWindowManager) {
+            if(useSilkKeyboardInput)
+                InputManager.RegisterInputMethod(InputManager.SilkWindowingKeyboardInputMethod = new SilkWindowingKeyboardInputMethod(silkWindowManager.InputContext));
         
-        if(useSilkKeyboardInput)
-            InputManager.RegisterInputMethod(InputManager.SilkWindowingKeyboardInputMethod = new SilkWindowingKeyboardInputMethod());
+            InputManager.RegisterInputMethod(InputManager.SilkWindowingMouseInputMethod = new SilkWindowingMouseInputMethod(silkWindowManager.InputContext));
+            InputManager.SilkWindowingMouseInputMethod.SetRawInputStatus(FurballConfig.Instance.RawMouseInput);
+        }
 
         Profiler.StartProfile("init_audio_engine");
         //TODO: Add logic to decide on what audio backend to use, and maybe write some code to help change backend on the fly
         AudioEngine = new ManagedBassAudioEngine();
-        AudioEngine.Initialize(this.WindowManager.GetWindowHandle());
+        AudioEngine.Initialize(this.WindowManager.WindowHandle);
         Profiler.EndProfileAndPrint("init_audio_engine");
 
         DrawableManager             = new DrawableManager();
         DebugOverlayDrawableManager = new DrawableManager();
         OverlayDrawableManager      = new DrawableManager();
         
-        WhitePixel      = Texture.CreateWhitePixelTexture();
+        WhitePixel      = ResourceFactory.CreateWhitePixelTexture();
         WhitePixel.Name = "FurballGame.WhitePixel";
         
         LocalizationManager.ReadTranslations();
@@ -256,8 +258,8 @@ public class FurballGame : Game {
         FurballConfig.Instance.Values["fullscreen"].ToBoolean().Value
         );
 
-        this.WindowManager.EnableUnfocusCap = FurballConfig.Instance.UnfocusCap;
-        this.WindowManager.VerticalSync = FurballConfig.Instance.VerticalSync;
+        this.WindowManager.UnfocusFramerateCap = FurballConfig.Instance.UnfocusCap;
+        this.WindowManager.VSync               = FurballConfig.Instance.VerticalSync;
         Profiler.EndProfileAndPrint("set_window_properties");
 
         ScreenManager.ChangeScreen(this._startScreen);
@@ -292,6 +294,8 @@ public class FurballGame : Game {
         };
 
         #endregion
+
+        WindowManager.FramebufferResize += this.OnWindowResize;
         
         Profiler.EndProfileAndPrint("full_furball_initialize");
     }
@@ -329,18 +333,8 @@ public class FurballGame : Game {
         }
     }
 
-    public new void RunHeadless() {
-        base.RunHeadless();
-    }
-    
     public void Run(Backend backend = Backend.None) {
-        WindowOptions options = WindowOptions.Default;
-
-        options.VSync = false;
-
-        options.Size = new Vector2D<int>(FurballConfig.Instance.ScreenWidth, FurballConfig.Instance.ScreenHeight);
-
-        this.Run(options, backend);
+        base.Run(backend);
     }
         
     protected override void OnClosing() {
@@ -423,7 +417,7 @@ public class FurballGame : Game {
     }
 
     protected override void DrawLoadingScreen() {
-        GraphicsBackend.Current.Clear();
+        FurballGame.Instance.WindowManager.GraphicsBackend.Clear();
 
         DrawableBatch b = new();
 
@@ -514,13 +508,19 @@ public class FurballGame : Game {
 
     public void ChangeScreenSize(int width, int height, bool fullscreen) {
         this.ChangeScreenSize(width, height);
-        this.WindowManager.Fullscreen = fullscreen;
-            
+
+        //do *not* move this to a switch expression, it will break
+        // ReSharper disable once ConvertIfStatementToSwitchStatement
+        if (!fullscreen && this.WindowManager.WindowState.HasFlag(WindowState.Fullscreen))
+            this.WindowManager.WindowState = WindowState.Windowed;
+        else if (fullscreen && !this.WindowManager.WindowState.HasFlag(WindowState.Fullscreen))
+            this.WindowManager.WindowState = WindowState.Fullscreen;
+
         FurballConfig.Instance.Values["fullscreen"] = new Value.Boolean(fullscreen);
     }
 
     public void ChangeScreenSize(int width, int height) {
-        this.WindowManager.SetWindowSize(width, height);
+        this.WindowManager.WindowSize                  = new Vector2D<int>(width, height);
         FurballConfig.Instance.Values["screen_width"]  = new Value.Number(width);
         FurballConfig.Instance.Values["screen_height"] = new Value.Number(height);
 
@@ -531,9 +531,7 @@ public class FurballGame : Game {
         this.OnRelayout?.Invoke(this, new Vector2(WindowWidth, WindowHeight));
     }
 
-    protected override void OnWindowResize(Vector2D<int> newSize) {
-        base.OnWindowResize(newSize);
-
+    protected void OnWindowResize(Vector2D<int> newSize) {
         if (this.RunningScreen?.Manager.EffectedByScaling ?? false)
             this.RunningScreen.ManagerOnOnScalingRelayoutNeeded(this, this.RunningScreen.Manager.Size);
         else
@@ -708,9 +706,9 @@ public class FurballGame : Game {
             this._drawWatch.Start();
         }
 
-        GraphicsBackend.Current.Clear();
+        FurballGame.Instance.WindowManager.GraphicsBackend.Clear();
 
-        GraphicsBackend.Current.SetFullScissorRect();
+        FurballGame.Instance.WindowManager.GraphicsBackend.SetFullScissorRect();
 
         ImGuiConsole.Draw();
 

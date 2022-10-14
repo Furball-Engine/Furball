@@ -82,7 +82,7 @@ public static class ContentManager {
             TextureCache.Remove(filename);
         }
 
-        Texture tex = Texture.CreateTextureFromStream(new MemoryStream(LoadRawAsset(filename, source)));
+        Texture tex = Game.ResourceFactory.CreateTextureFromStream(new MemoryStream(LoadRawAsset(filename, source)));
         tex.Name = filename;
         
         TextureCache[filename] = new WeakReference<Texture>(tex);
@@ -91,7 +91,7 @@ public static class ContentManager {
     }
         
     public static Texture LoadTextureFromFile(string filename, ContentSource source = ContentSource.Game, bool bypassCache = false) {
-        Texture tex = Texture.CreateTextureFromStream(new MemoryStream(LoadRawAsset(filename, source, bypassCache)));
+        Texture tex = Game.ResourceFactory.CreateTextureFromStream(new MemoryStream(LoadRawAsset(filename, source, bypassCache)));
         tex.Name = filename;
         
         return tex;

@@ -1,11 +1,16 @@
 using System.Collections.Generic;
-using Furball.Vixie.Input;
 using Silk.NET.Input;
 
 namespace Furball.Engine.Engine.Input.InputMethods;
 
 public class SilkWindowingKeyboardInputMethod : InputMethod {
-    private IReadOnlyList<IKeyboard> _silkKeyboards;
+    private readonly IInputContext            _inputContext;
+    private          IReadOnlyList<IKeyboard> _silkKeyboards;
+    
+    public SilkWindowingKeyboardInputMethod(IInputContext inputContext) {
+        this._inputContext = inputContext;
+
+    }
 
     public override void Update() {}
 
@@ -14,7 +19,7 @@ public class SilkWindowingKeyboardInputMethod : InputMethod {
     }
 
     public override void Initialize() {
-        this._silkKeyboards = Keyboard.GetKeyboards();
+        this._silkKeyboards = this._inputContext.Keyboards;
 
         this.Keyboards.Capacity += this._silkKeyboards.Count;
 

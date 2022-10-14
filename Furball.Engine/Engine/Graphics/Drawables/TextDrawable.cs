@@ -8,6 +8,7 @@ using Furball.Engine.Engine.Helpers.Logger;
 using Furball.Vixie;
 using Furball.Vixie.Backends.Shared.Renderers;
 using Kettu;
+using Silk.NET.Maths;
 
 namespace Furball.Engine.Engine.Graphics.Drawables;
 
@@ -65,7 +66,7 @@ public class TextDrawable : Drawable {
         if (!this.NeedsRenderer)
             return;
 
-        this._renderer ??= new Renderer();
+        this._renderer ??= Game.ResourceFactory.CreateRenderer();
 
         this._renderer.Begin();
 
@@ -143,10 +144,10 @@ public class TextDrawable : Drawable {
 
         this.Text = text;
 
-        FurballGame.Instance.WindowManager.OnFramebufferResize += this.OnFramebufferResize;
+        FurballGame.Instance.WindowManager.FramebufferResize += this.OnFramebufferResize;
     }
 
-    private void OnFramebufferResize(object sender, Vector2 e) {
+    private void OnFramebufferResize(Vector2D<int> vector2D) {
         float fontSize = this.Font.FontSize * FurballGame.VerticalRatio;
 
         (FontSystem FontSystem, float fontSize) key = (this.Font.FontSystem, fontSize);
@@ -189,7 +190,7 @@ public class TextDrawable : Drawable {
     public override void ClearEvents() {
         base.ClearEvents();
 
-        FurballGame.Instance.WindowManager.OnFramebufferResize -= this.OnFramebufferResize;
+        FurballGame.Instance.WindowManager.FramebufferResize -= this.OnFramebufferResize;
     }
 
     public void SetFont(FontSystem font, float fontSize) {
@@ -212,7 +213,7 @@ public class TextDrawable : Drawable {
             this.Font = f;
         }
         this._fontSize = fontSize;
-        this.OnFramebufferResize(null, FurballGame.Instance.WindowManager.WindowSize);
+        this.OnFramebufferResize(FurballGame.Instance.WindowManager.WindowSize);
     }
 
     private Vector2 _posCache;

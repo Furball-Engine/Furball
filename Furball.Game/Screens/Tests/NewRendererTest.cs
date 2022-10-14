@@ -29,7 +29,7 @@ public class NewRendererTest : TestScreen {
         public override Vector2 Size => new(100, 100);
 
         public MeshDrawable() {
-            this._renderer = new Renderer();
+            this._renderer = Vixie.Game.ResourceFactory.CreateRenderer();
 
             this.Vertices.Add(
             new Vertex {
