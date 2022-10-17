@@ -61,20 +61,44 @@ public class DrawableBatch : IDisposable {
     }
     
     public void Draw(Texture texture, Vector2 position, Vector2 scale, float rotation, Color colorOverride, TextureFlip texFlip = TextureFlip.None, Vector2 rotOrigin = default) {
+        if (rotation == 0 && rotOrigin.X == 0 && rotOrigin.Y == 0) {
+            this._renderer.AllocateUnrotatedTexturedQuad(texture, position, scale, colorOverride, texFlip);
+            return;
+        }
+        
         this._renderer.AllocateRotatedTexturedQuad(texture, position, scale, rotation, rotOrigin, colorOverride, texFlip);
     }
 
     public void Draw(Texture texture, Vector2 position, Vector2 scale, float rotation, Color colorOverride, Rectangle sourceRect, TextureFlip texFlip = TextureFlip.None, Vector2 rotOrigin = default) {
+        if (rotation == 0 && rotOrigin.X == 0 && rotOrigin.Y == 0) {
+            this._renderer.AllocateUnrotatedTexturedQuadWithSourceRect(texture, position, scale, sourceRect, colorOverride, texFlip);
+            return;
+        }
+        
         this._renderer.AllocateRotatedTexturedQuadWithSourceRect(texture, position, scale, rotation, rotOrigin, sourceRect, colorOverride, texFlip);
     }
     public void Draw(Texture texture, Vector2 position, float rotation = 0, TextureFlip flip = TextureFlip.None, Vector2 rotOrigin = default) {
+        if (rotation == 0 && rotOrigin.X == 0 && rotOrigin.Y == 0) {
+            this._renderer.AllocateUnrotatedTexturedQuad(texture, position, Vector2.One, Color.White, flip);
+            return;
+        }
+        
         this._renderer.AllocateRotatedTexturedQuad(texture, position, Vector2.One, rotation, rotOrigin, Color.White, flip);
     }
     public void Draw(Texture texture, Vector2 position, Vector2 scale, float rotation = 0, TextureFlip flip = TextureFlip.None, Vector2 rotOrigin = default) {
+        if (rotation == 0 && rotOrigin.X == 0 && rotOrigin.Y == 0) {
+            this._renderer.AllocateUnrotatedTexturedQuad(texture, position, Vector2.One, Color.White, flip);
+            return;
+        }
         this._renderer.AllocateRotatedTexturedQuad(texture, position, scale, rotation, rotOrigin, Color.White, flip);
     }
 
     public void Draw(Texture texture, Vector2 position, Vector2 scale, Color colorOverride, float rotation = 0, TextureFlip texFlip = TextureFlip.None, Vector2 rotOrigin = default) {
+        if (rotation == 0 && rotOrigin.X == 0 && rotOrigin.Y == 0) {
+            this._renderer.AllocateUnrotatedTexturedQuad(texture, position, Vector2.One, Color.White, texFlip);
+            return;
+        }
+        
         this._renderer.AllocateRotatedTexturedQuad(texture, position, scale, rotation, rotOrigin, colorOverride, texFlip);
     }
 
