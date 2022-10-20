@@ -715,20 +715,8 @@ public class FurballGame : Game {
 
         DrawableManager.Draw(gameTime, DrawableBatch);
 
-        if (this._loadingScreen != null) {
-            DynamicSpriteFont f = DefaultFont.GetFont(40);
-
-            string text = this._loadingScreen.LoadingStatus;
-
-            Vector2 textSize = f.MeasureString(text);
-
-            const float gap       = DEFAULT_WINDOW_HEIGHT * 0.05f;
-            const float barHeight = 30;
-                
-            DrawableBatch.DrawString(f, text, new Vector2(WindowWidth / 2f - textSize.X / 2f, WindowHeight * 0.3f), Color.White);
-            DrawableBatch.FillRectangle(new Vector2(gap,                                      WindowHeight - gap - barHeight), new Vector2((WindowWidth - gap * 2f) * this._loadingScreen.LoadingProgress, barHeight), Vixie.Backends.Shared.Color.Grey);
-            DrawableBatch.DrawRectangle(new Vector2(gap,                                      WindowHeight - gap - barHeight), new Vector2(WindowWidth - gap * 2f, barHeight), 1, Vixie.Backends.Shared.Color.White);
-        }
+        if (this._loadingScreen != null)
+            this.DrawSceneLoadingScreen();
 
         OverlayDrawableManager.Draw(gameTime, DrawableBatch);
 
@@ -741,6 +729,30 @@ public class FurballGame : Game {
             this._drawWatch.Stop();
             this.LastDrawTime = this._drawWatch.Elapsed.TotalMilliseconds;
         }
+    }
+
+    private void DrawSceneLoadingScreen() {
+        DynamicSpriteFont f = DefaultFont.GetFont(40);
+
+        string text = this._loadingScreen.LoadingStatus;
+
+        Vector2 textSize = f.MeasureString(text);
+
+        const float gap       = DEFAULT_WINDOW_HEIGHT * 0.05f;
+        const float barHeight = 30;
+
+        DrawableBatch.DrawString(f, text, new Vector2(WindowWidth / 2f - textSize.X / 2f, WindowHeight * 0.3f), Color.White);
+        DrawableBatch.FillRectangle(
+        new Vector2(gap,                                                            WindowHeight - gap - barHeight),
+        new Vector2((WindowWidth - gap * 2f) * this._loadingScreen.LoadingProgress, barHeight),
+        Vixie.Backends.Shared.Color.Grey
+        );
+        DrawableBatch.DrawRectangle(
+        new Vector2(gap, WindowHeight - gap - barHeight),
+        new Vector2(WindowWidth       - gap * 2f, barHeight),
+        1,
+        Vixie.Backends.Shared.Color.White
+        );
     }
 
     #region Timing
