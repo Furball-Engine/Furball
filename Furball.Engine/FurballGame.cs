@@ -35,12 +35,10 @@ using JetBrains.Annotations;
 using Kettu;
 using Silk.NET.Input;
 using Silk.NET.Maths;
-using Silk.NET.Windowing;
 using sowelipisona;
 using sowelipisona.ManagedBass;
 using Environment = System.Environment;
 using Rectangle = System.Drawing.Rectangle;
-using WindowState=Furball.Vixie.WindowManagement.WindowState;
 
 namespace Furball.Engine; 
 
@@ -417,7 +415,7 @@ public class FurballGame : Game {
     }
 
     protected override void DrawLoadingScreen() {
-        FurballGame.Instance.WindowManager.GraphicsBackend.Clear();
+        Instance.WindowManager.GraphicsBackend.Clear();
 
         DrawableBatch b = new();
 
@@ -706,9 +704,9 @@ public class FurballGame : Game {
             this._drawWatch.Start();
         }
 
-        FurballGame.Instance.WindowManager.GraphicsBackend.Clear();
+        Instance.WindowManager.GraphicsBackend.Clear();
 
-        FurballGame.Instance.WindowManager.GraphicsBackend.SetFullScissorRect();
+        Instance.WindowManager.GraphicsBackend.SetFullScissorRect();
 
         ImGuiConsole.Draw();
 
