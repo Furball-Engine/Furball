@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
+using FontStashSharp;
 using Furball.Engine.Engine.Debug.DebugCounter.Items;
 using Furball.Engine.Engine.Graphics;
 using Furball.Engine.Engine.Graphics.Drawables;
@@ -27,7 +28,8 @@ public class DebugCounter : TextDrawable {
         new GameTimeSourceTime(),
         new MemoryUsage(),
         new MousePosition(),
-        new KeyboardInputs()
+        new KeyboardInputs(),
+        new DrawCounts()
     };
 
     private readonly FixedTimeStepMethod _updateTimeStep;
@@ -37,6 +39,9 @@ public class DebugCounter : TextDrawable {
         this.CoverClicks = false;
         this.Hoverable   = false;
         this.CoverHovers = false;
+
+        this.Effect         = FontSystemEffect.Stroked;
+        this.EffectStrength = 2;
         
         FurballGame.TimeStepMethods.Add(
         this._updateTimeStep = new FixedTimeStepMethod(

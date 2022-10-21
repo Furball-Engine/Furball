@@ -11,6 +11,7 @@ using FontStashSharp;
 using Furball.Engine.Engine;
 using Furball.Engine.Engine.Config;
 using Furball.Engine.Engine.Debug.DebugCounter;
+using Furball.Engine.Engine.Debug.DebugCounter.Items;
 using Furball.Engine.Engine.DevConsole;
 using Furball.Engine.Engine.Graphics;
 using Furball.Engine.Engine.Graphics.Drawables;
@@ -603,6 +604,9 @@ public class FurballGame : Game {
         base.PreDraw(deltaTime);
 
         Debug.Assert(DrawableBatch.ScissorStackItemCount == 0, "Scissor Stack not empty at start of frame!");
+
+        Renderer.VertexCount = 0;
+        Renderer.IndexCount  = 0;
         
         DrawableBatch.Begin();
     }
@@ -696,6 +700,9 @@ public class FurballGame : Game {
         CursorDrawableBatch.ManualDraw();
 
         #endregion
+
+        DrawCounts.LastVertexCount = Renderer.VertexCount;
+        DrawCounts.LastIndexCount  = Renderer.IndexCount;
     }
 
     protected override void Draw(double gameTime) {
