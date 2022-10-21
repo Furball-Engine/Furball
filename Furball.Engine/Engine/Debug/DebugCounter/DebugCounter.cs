@@ -16,7 +16,7 @@ public class DebugCounter : TextDrawable {
     /// <summary>
     ///     Items which will be displayed on the Counter
     /// </summary>
-    public List<DebugCounterItem> Items = new() {
+    public readonly List<DebugCounterItem> Items = new List<DebugCounterItem> {
         new FrameRate(),
         new UpdateRate(),
         new BoundByDrawUpdate(),

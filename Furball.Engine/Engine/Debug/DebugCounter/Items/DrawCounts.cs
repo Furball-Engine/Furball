@@ -1,6 +1,6 @@
 namespace Furball.Engine.Engine.Debug.DebugCounter.Items;
 
-public class DrawCounts : DebugCounterItem {
+internal class DrawCounts : DebugCounterItem {
     public static ulong LastVertexCount;
     public static ulong LastIndexCount;
 

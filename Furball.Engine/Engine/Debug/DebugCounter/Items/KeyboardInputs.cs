@@ -4,7 +4,7 @@ using Furball.Engine.Engine.Input;
 
 namespace Furball.Engine.Engine.Debug.DebugCounter.Items;
 
-public class KeyboardInputs : DebugCounterItem {
+internal class KeyboardInputs : DebugCounterItem {
     public override bool ForceNewLine => true;
 
     public override string GetAsString(double time) {

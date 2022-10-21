@@ -3,9 +3,9 @@ using Furball.Vixie.Backends.Shared;
 using Furball.Vixie.Backends.Shared.Backends;
 using Furball.Vixie.Backends.Veldrid;
 
-namespace Furball.Engine.Engine.Debug.DebugCounter.Items; 
+namespace Furball.Engine.Engine.Debug.DebugCounter.Items;
 
-public class GraphicsBackend : DebugCounterItem {
+internal class GraphicsBackend : DebugCounterItem {
     private readonly string _stringCache;
         
     //TODO: handle backend changing

@@ -5,7 +5,7 @@ namespace Furball.Engine.Engine.Debug.DebugCounter.Items;
 /// <summary>
 /// Basic Frame Rate counter, updates every second
 /// </summary>
-public class FrameRate : DebugCounterItem {
+internal class FrameRate : DebugCounterItem {
     private int    _lastUpdatedFramerate;
     private int    _frames;
     private double _deltaTime;

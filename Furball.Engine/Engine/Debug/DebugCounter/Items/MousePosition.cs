@@ -6,7 +6,7 @@ namespace Furball.Engine.Engine.Debug.DebugCounter.Items;
 /// <summary>
 /// Displays the Desktop Mouse Position
 /// </summary>
-public class MousePosition : DebugCounterItem {
+internal class MousePosition : DebugCounterItem {
     public override string GetAsString(double time) {
         StringBuilder builder = new("mouse: ");
 

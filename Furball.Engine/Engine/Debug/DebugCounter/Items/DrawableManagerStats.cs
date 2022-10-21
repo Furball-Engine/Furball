@@ -6,7 +6,7 @@ namespace Furball.Engine.Engine.Debug.DebugCounter.Items;
 ///     Displays some basic DrawableManager stats, like the amount of ManagedDrawables total
 ///     aswell as how many DrawableManager instances exist
 /// </summary>
-public class DrawableManagerStats : DebugCounterItem {
+internal class DrawableManagerStats : DebugCounterItem {
     private int    _lastUpdatedDrawables;
     private int    _lastUpdatedInstanceCount;
     private double _deltaTime;

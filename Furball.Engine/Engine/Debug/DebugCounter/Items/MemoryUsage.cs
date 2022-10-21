@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace Furball.Engine.Engine.Debug.DebugCounter.Items;
 
-public class MemoryUsage : DebugCounterItem {
+internal class MemoryUsage : DebugCounterItem {
     private long _managedMemory = GC.GetTotalMemory(false);
     private long _unmanagedMemory;
 

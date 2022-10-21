@@ -5,7 +5,7 @@ namespace Furball.Engine.Engine.Debug.DebugCounter.Items;
 /// <summary>
 /// Basic Update Rate Counter, updates every second
 /// </summary>
-public class UpdateRate : DebugCounterItem {
+internal class UpdateRate : DebugCounterItem {
     private int    _lastUpdatedUpdateRate;
     private int    _updates;
     private double _deltaTime;
