@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Reflection;
 using Furball.Engine.Engine.Helpers;
+using Furball.Vixie;
 using Furball.Vixie.Backends.Shared;
 
 namespace Furball.Engine.Engine.Graphics.Drawables.Debug.SceneViewer;
@@ -50,6 +51,9 @@ public class DebugSceneViewerEditorPane : CompositeDrawable {
             TextDrawable text = new TextDrawable(new Vector2(0, y), FurballGame.DefaultFont, $"{field.Name}: {GetFancyString(value)}", 20);
             y += text.Size.Y;
             
+            if(field.IsPrivate)
+                text.ColorOverride = Color.LightPink;
+
             this.Children.Add(text);
         }
         
@@ -62,6 +66,9 @@ public class DebugSceneViewerEditorPane : CompositeDrawable {
                 ColorOverride = Color.LightBlue
             };
             y += text.Size.Y;
+            
+            if(property.GetMethod?.IsPrivate == true || property.SetMethod?.IsPrivate == true)
+                text.ColorOverride = Color.Red;
             
             this.Children.Add(text);
         }
@@ -102,6 +109,10 @@ public class DebugSceneViewerEditorPane : CompositeDrawable {
             return result.TrimEnd(',', ' ') + "}";
         }
 
+        if (value is Texture texture) return $"{texture.Name} ({texture.Width}x{texture.Height})";
+
+        if (value is RenderTarget target) return $"{target} ({target.Size.X}x{target.Size.Y})";
+        
         return value.ToString();
     }
 }
