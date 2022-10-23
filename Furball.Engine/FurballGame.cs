@@ -284,16 +284,34 @@ public class FurballGame : Game {
     }
 
     private void CreateSceneViewer() {
-        DebugSceneViewerTreePane treePane = new DebugSceneViewerTreePane();
+        Bindable<Drawable> selected = new Bindable<Drawable>(null);
 
-        ScrollableContainer container = new ScrollableContainer(treePane.Size);
+        DebugSceneViewerTreePane   treePane   = new DebugSceneViewerTreePane(selected);
+        DebugSceneViewerEditorPane editorPane = new DebugSceneViewerEditorPane(selected);
 
-        container.ScrollSpeed       *= 2;
-        container.InfiniteScrolling =  true;
-        
-        container.Add(treePane);
-        
-        this._sceneDebuggerForm = new DrawableForm("Scene Debugger", container) {
+        ScrollableContainer treeContainer = new ScrollableContainer(treePane.Size) {
+            InvisibleToInput = true
+        };
+        treeContainer.ScrollSpeed *= 2;
+        ScrollableContainer editorContainer = new ScrollableContainer(editorPane.Size) {
+            Position = treePane.Size with {
+                Y = 0
+            },
+            InvisibleToInput = true
+        };
+        editorContainer.ScrollSpeed *= 2;
+
+        treeContainer.Add(treePane);
+        editorContainer.Add(editorPane);
+
+        CompositeDrawable composite = new CompositeDrawable {
+            InvisibleToInput = true
+        };
+
+        composite.Children.Add(treeContainer);
+        composite.Children.Add(editorContainer);
+
+        this._sceneDebuggerForm = new DrawableForm("Scene Debugger", composite) {
             Depth = -10
         };
 
@@ -301,7 +319,7 @@ public class FurballGame : Game {
             this._sceneDebuggerFormAdded = false;
 
             DrawableManager.Remove(this._sceneDebuggerForm);
-        }; 
+        };
     }
     
     private void CreateTextureDebugger() {
@@ -418,7 +436,7 @@ public class FurballGame : Game {
         this._displaySceneDebugger = new Keybind(
         EngineDebugKeybinds.DisplaySceneDebugger,
         "Display Debug Texture Viewer",
-        Key.F8,
+        Key.F7,
         _ => {
             if (!this._sceneDebuggerFormAdded) {
                 DrawableManager.Add(this._sceneDebuggerForm);

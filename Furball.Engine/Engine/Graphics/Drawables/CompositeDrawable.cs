@@ -9,7 +9,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables;
 public class CompositeDrawable : Drawable {
     protected bool SortDrawables;
 
-    protected CompositeDrawable() {
+    public CompositeDrawable() {
         this.Children = new List<Drawable>();
     }
     
