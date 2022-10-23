@@ -15,6 +15,8 @@ using Furball.Engine.Engine.Debug.DebugCounter.Items;
 using Furball.Engine.Engine.DevConsole;
 using Furball.Engine.Engine.Graphics;
 using Furball.Engine.Engine.Graphics.Drawables;
+using Furball.Engine.Engine.Graphics.Drawables.Debug;
+using Furball.Engine.Engine.Graphics.Drawables.Debug.SceneViewer;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes;
@@ -91,7 +93,9 @@ public class FurballGame : Game {
     public static TooltipDrawable TooltipDrawable;
 
     private DrawableForm _textureDisplayForm;
-    private bool        _textureDisplayFormAdded;
+    private bool         _textureDisplayFormAdded;
+    private DrawableForm _sceneDebuggerForm;
+    private bool         _sceneDebuggerFormAdded;
     
     public static byte[] DefaultFontData;
 
@@ -152,16 +156,16 @@ public class FurballGame : Game {
 
         InputManager = new InputManager();
         
-        bool useSilkKeyboardInput = true;
+        bool usingEvDevInput = false;
 
         //If we are on linux and we are the root user, we can use the EvDev input instead, which can detect multiple keyboards separately
         if (RuntimeInfo.CurrentPlatform() == OSPlatform.Linux && UnixEnvironment.IsRoot()) {
-            useSilkKeyboardInput = false;
+            usingEvDevInput = true;
             InputManager.RegisterInputMethod(new EvDevKeyboardInputMethod());
         }
 
         if (this.WindowManager is SilkWindowManager silkWindowManager) {
-            if(useSilkKeyboardInput)
+            if(!usingEvDevInput)
                 InputManager.RegisterInputMethod(InputManager.SilkWindowingKeyboardInputMethod = new SilkWindowingKeyboardInputMethod(silkWindowManager.InputContext));
         
             InputManager.RegisterInputMethod(InputManager.SilkWindowingMouseInputMethod = new SilkWindowingMouseInputMethod(silkWindowManager.InputContext));
@@ -271,8 +275,36 @@ public class FurballGame : Game {
 
         MonoModCheck();
 
-        #region Texture debugger
+        this.CreateTextureDebugger();
+        this.CreateSceneViewer();
 
+        WindowManager.FramebufferResize += this.OnWindowResize;
+        
+        Profiler.EndProfileAndPrint("full_furball_initialize");
+    }
+
+    private void CreateSceneViewer() {
+        DebugSceneViewerTreePane treePane = new DebugSceneViewerTreePane();
+
+        ScrollableContainer container = new ScrollableContainer(treePane.Size);
+
+        container.ScrollSpeed       *= 2;
+        container.InfiniteScrolling =  true;
+        
+        container.Add(treePane);
+        
+        this._sceneDebuggerForm = new DrawableForm("Scene Debugger", container) {
+            Depth = -10
+        };
+
+        this._sceneDebuggerForm.OnTryClose += delegate {
+            this._sceneDebuggerFormAdded = false;
+
+            DrawableManager.Remove(this._sceneDebuggerForm);
+        }; 
+    }
+    
+    private void CreateTextureDebugger() {
         ScrollableContainer scrollable = new(new Vector2(400, 500));
 
         scrollable.ScrollSpeed       *= 2;
@@ -291,14 +323,8 @@ public class FurballGame : Game {
 
             DrawableManager.Remove(this._textureDisplayForm);
         };
-
-        #endregion
-
-        WindowManager.FramebufferResize += this.OnWindowResize;
-        
-        Profiler.EndProfileAndPrint("full_furball_initialize");
     }
-    
+
     private static void MonoModCheck() {
         if (Assembly.GetExecutingAssembly().GetType("MonoMod.WasHere") != null) {
             GameTimeScheduler.ScheduleMethod(
@@ -356,13 +382,15 @@ public class FurballGame : Game {
         ToggleDebugOverlay,
         ToggleInputOverlay,
         ToggleConsole,
-        DispalyDebugTextureviewer,
+        DisplayDebugTextureViewer,
+        DisplaySceneDebugger,
         WalkAndPrintCurrentScreen
     }
     
     private Keybind _toggleDebugOverlay;
     private Keybind _toggleInputOverlay;
     private Keybind _displayDebugTextureViewer;
+    private Keybind _displaySceneDebugger;
     private Keybind _toggleConsole;
     private Keybind _walkCurrentScreen;
     public virtual void RegisterKeybinds() {
@@ -376,13 +404,27 @@ public class FurballGame : Game {
                                                    DrawInputOverlay = !DrawInputOverlay;
                                                }
         );
-        this._displayDebugTextureViewer = new Keybind(EngineDebugKeybinds.DispalyDebugTextureviewer, "Display Debug Texture Viewer", Key.F9,
-                                                      _ => {
-                                                          if (!this._textureDisplayFormAdded) {
-                                                              DrawableManager.Add(this._textureDisplayForm);
-                                                              this._textureDisplayFormAdded = true;
-                                                          }
-                                                      }
+        this._displayDebugTextureViewer = new Keybind(
+        EngineDebugKeybinds.DisplayDebugTextureViewer,
+        "Display Debug Texture Viewer",
+        Key.F9,
+        _ => {
+            if (!this._textureDisplayFormAdded) {
+                DrawableManager.Add(this._textureDisplayForm);
+                this._textureDisplayFormAdded = true;
+            }
+        }
+        );
+        this._displaySceneDebugger = new Keybind(
+        EngineDebugKeybinds.DisplaySceneDebugger,
+        "Display Debug Texture Viewer",
+        Key.F8,
+        _ => {
+            if (!this._sceneDebuggerFormAdded) {
+                DrawableManager.Add(this._sceneDebuggerForm);
+                this._sceneDebuggerFormAdded = true;
+            }
+        }
         );
         this._toggleConsole = new Keybind(
         EngineDebugKeybinds.ToggleConsole,
@@ -403,6 +445,7 @@ public class FurballGame : Game {
         InputManager.RegisterKeybind(this._toggleDebugOverlay);
         InputManager.RegisterKeybind(this._toggleInputOverlay);
         InputManager.RegisterKeybind(this._displayDebugTextureViewer);
+        InputManager.RegisterKeybind(this._displaySceneDebugger);
         InputManager.RegisterKeybind(this._toggleConsole);
         InputManager.RegisterKeybind(this._walkCurrentScreen);
     }
@@ -411,6 +454,7 @@ public class FurballGame : Game {
         InputManager.UnregisterKeybind(this._toggleDebugOverlay);
         InputManager.UnregisterKeybind(this._toggleInputOverlay);
         InputManager.UnregisterKeybind(this._displayDebugTextureViewer);
+        InputManager.UnregisterKeybind(this._displaySceneDebugger);
         InputManager.UnregisterKeybind(this._toggleConsole);
         InputManager.UnregisterKeybind(this._walkCurrentScreen);
     }

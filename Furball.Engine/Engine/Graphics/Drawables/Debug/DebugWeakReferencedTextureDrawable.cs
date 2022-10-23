@@ -4,7 +4,7 @@ using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Furball.Vixie;
 using JetBrains.Annotations;
 
-namespace Furball.Engine.Engine.Graphics.Drawables;
+namespace Furball.Engine.Engine.Graphics.Drawables.Debug;
 
 public class DebugWeakReferencedTextureDrawable : Drawable {
     [CanBeNull]

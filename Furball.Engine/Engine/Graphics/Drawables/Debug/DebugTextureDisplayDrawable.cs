@@ -2,7 +2,7 @@ using System;
 using System.Numerics;
 using Furball.Vixie;
 
-namespace Furball.Engine.Engine.Graphics.Drawables;
+namespace Furball.Engine.Engine.Graphics.Drawables.Debug;
 
 public class DebugTextureDisplayDrawable : CompositeDrawable {
     public DebugTextureDisplayDrawable() {
