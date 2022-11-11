@@ -708,7 +708,7 @@ public class FurballGame : Game {
                     if (mouse.SoftwareCursor) {
                         //3 vertices for the head, and 4 for the tail
                         //3 indices for the head, 6 for the tail (2 tris)
-                        MappedData map = CursorDrawableBatch.Reserve(3 + 4, 3 + 6);
+                        MappedData map = CursorDrawableBatch.Reserve(3 + 4, 3 + 6, WhitePixel);
 
                         const float mouseWidth  = 15;
                         const float mouseHeight = 25;
@@ -737,7 +737,7 @@ public class FurballGame : Game {
                         
                         for (int i = 0; i < map.VertexCount; i++) {
                             map.VertexPtr[i].Color = new Vixie.Backends.Shared.Color(1f, 1f, 1f, 0.8f);
-                            map.VertexPtr[i].TexId = CursorDrawableBatch.GetTextureIdForReserve(WhitePixel);
+                            map.VertexPtr[i].TexId = map.TextureId;
                         }
                         
                         //Head tri

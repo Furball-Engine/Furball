@@ -64,12 +64,12 @@ public class NewRendererTest : TestScreen {
                 Vertex[] vertices = this.Vertices.ToArray();
                 ushort[] indices  = this.Indices.ToArray();
 
-                long texid = this._renderer.GetTextureId(FurballGame.WhitePixel);
+                MappedData map = this._renderer.Reserve((ushort)vertices.Length, (uint)indices.Length, FurballGame.WhitePixel);
+                
+                long texid = map.TextureId;
 
                 for (int i = 0; i < vertices.Length; i++)
                     vertices[i].TexId = texid;
-
-                MappedData map = this._renderer.Reserve((ushort)vertices.Length, (uint)indices.Length);
 
                 //Copy the vertex data
                 fixed (void* ptr = vertices) {
