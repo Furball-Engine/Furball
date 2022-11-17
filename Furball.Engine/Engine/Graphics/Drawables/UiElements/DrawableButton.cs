@@ -98,7 +98,7 @@ public class DrawableButton : CompositeDrawable {
     /// <param name="onClick">What happens when the button is clicked</param>
     /// <param name="margin">The margin between the text and the side of the button</param>
     public DrawableButton(
-        Vector2 position, FontSystem font, int textSize, string text, Color buttonColor, Color textColor, Color outlineColor, Vector2 buttonSize,
+        Vector2 position, FontSystem font, float textSize, string text, Color buttonColor, Color textColor, Color outlineColor, Vector2 buttonSize,
         EventHandler<MouseButtonEventArgs> onClick = null, float margin = 5f
     ) {
         this.Position           = position;

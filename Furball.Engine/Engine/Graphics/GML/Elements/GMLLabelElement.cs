@@ -13,8 +13,9 @@ public class GMLLabelElement : IGMLElement {
     private readonly Object   _object;
     private readonly GMLTheme _theme;
 
-    private string            _text = null!;
-    private DynamicSpriteFont _font = null!;
+    public string            Text = null!;
+    public DynamicSpriteFont Font = null!;
+    public OriginType        OriginType;
 
     public GMLLabelElement(Object obj, GMLTheme theme) {
         this._object = obj;
@@ -36,15 +37,15 @@ public class GMLLabelElement : IGMLElement {
             y = new GMLSize(fixedH.Value);
 
         //TODO: Add support for text wrapping, this is part of the default behaviour of GUI::Label
-        Vector2 measuredSize = this._font.MeasureString(this._text);
+        Vector2 measuredSize = this.Font.MeasureString(this.Text);
 
         //If the size is not set by fixed_width/height, just use the measured size, that can expand to fit
         x ??= new GMLSize {
-            Type = SizeType.ExpandToFit, 
+            Type = SizeType.ExpandToFit,
             Size = measuredSize.X
         };
         y ??= new GMLSize {
-            Type = SizeType.ExpandToFit, 
+            Type = SizeType.ExpandToFit,
             Size = measuredSize.Y
         };
 
@@ -72,7 +73,7 @@ public class GMLLabelElement : IGMLElement {
     }
 
     public void Invalidate() {
-        this._text = "";
+        this.Text = "";
 
         if (this._object.Properties.LastOrDefault(
             x => x is KeyValuePair {
@@ -83,9 +84,11 @@ public class GMLLabelElement : IGMLElement {
                     Value: {}
                 } text
             })
-            this._text = Convert.ToString(text.Value);
+            this.Text = Convert.ToString(text.Value);
 
         //TODO: support variable font sized in GML
-        this._font = this._theme.Font.GetFont(this._theme.DefaultFontSize);
+        this.Font = this._theme.Font.GetFont(this._theme.DefaultFontSize);
+
+        this.OriginType = this.GetOriginType();
     }
 }

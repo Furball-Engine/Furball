@@ -27,7 +27,7 @@ public class TextDrawable : Drawable {
     public TextStyle        Style          = TextStyle.None;
     public FontSystemEffect Effect         = FontSystemEffect.None;
     public int              EffectStrength = 1;
-    
+
     /// <summary>
     /// Text that gets drawn
     /// </summary>
@@ -59,7 +59,7 @@ public class TextDrawable : Drawable {
     // };
 
     private bool NeedsRenderer => false;
-    
+
     private Renderer _renderer;
     private void RedrawRenderer() {
         //If this text object doesnt need a renderer, dont try to draw to it
@@ -145,6 +145,17 @@ public class TextDrawable : Drawable {
         this.Text = text;
 
         FurballGame.Instance.WindowManager.FramebufferResize += this.OnFramebufferResize;
+    }
+
+    public TextDrawable(Vector2 position, DynamicSpriteFont font, string text) {
+        this.Position = position;
+
+        this.Font      = font;
+        this._fontSize = font.FontSize;
+        this.OnFramebufferResize(FurballGame.Instance.WindowManager.WindowSize);
+        FurballGame.Instance.WindowManager.FramebufferResize += this.OnFramebufferResize;
+
+        this.Text = text;
     }
 
     private void OnFramebufferResize(Vector2D<int> vector2D) {

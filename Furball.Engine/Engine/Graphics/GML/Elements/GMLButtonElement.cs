@@ -11,8 +11,8 @@ public class GMLButtonElement : IGMLElement {
     private readonly Object   _object;
     private readonly GMLTheme _theme;
 
-    private string            _text;
-    private DynamicSpriteFont _font;
+    public string            Text;
+    public DynamicSpriteFont Font;
 
     public GMLButtonElement(Object obj, GMLTheme theme) {
         this._object = obj;
@@ -51,7 +51,7 @@ public class GMLButtonElement : IGMLElement {
     }
     
     public void Invalidate() {
-        this._text = "";
+        this.Text = "";
 
         if (this._object.Properties.LastOrDefault(
             x => x is KeyValuePair {
@@ -62,9 +62,9 @@ public class GMLButtonElement : IGMLElement {
                     Value: {}
                 } text
             })
-            this._text = Convert.ToString(text.Value);
+            this.Text = Convert.ToString(text.Value);
 
         //TODO: support variable font sized in GML
-        this._font = this._theme.Font.GetFont(this._theme.DefaultFontSize);
+        this.Font = this._theme.Font.GetFont(this._theme.DefaultFontSize);
     }
 }
