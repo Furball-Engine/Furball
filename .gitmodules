@@ -7,3 +7,6 @@
 [submodule "evdev-sharp"]
 	path = evdev-sharp
 	url = https://github.com/Beyley/evdev-sharp
+[submodule "GMLSharp"]
+	path = GMLSharp
+	url = https://github.com/Beyley/GMLSharp
