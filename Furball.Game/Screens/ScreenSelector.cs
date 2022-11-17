@@ -46,6 +46,7 @@ public class ScreenSelector : TestScreen {
             (LocalizationStrings.VerticalSyncTest, typeof(VerticalSyncTest)),
             (LocalizationStrings.RenderTargetTest, typeof(RenderTargetTest)),
             (LocalizationStrings.GraphTest, typeof(GraphTest)), 
+            (LocalizationStrings.GMLTest, typeof(GMLTest)), 
         };
 
         this.Manager.Add(this._topText = new TextDrawable(new Vector2(1280f / 2f, 40), FurballGame.DefaultFont, LocalizationManager.GetLocalizedString(LocalizationStrings.ChooseScreen), 48) {
