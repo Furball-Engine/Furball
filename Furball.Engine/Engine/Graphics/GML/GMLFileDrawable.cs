@@ -1,10 +1,13 @@
 #nullable enable
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
+using Furball.Engine.Engine.Graphics.GML.Elements;
 using GMLSharp;
+using Object=GMLSharp.Object;
 
 namespace Furball.Engine.Engine.Graphics.GML;
 
@@ -35,57 +38,67 @@ public class GMLFileDrawable : Drawable, IGMLElement {
         if (this.File == null)
             return;
 
-        this._size = this.ElementSize();
+        GMLCalculatedElementSize calcedSize = this.MinimumSize();
+        this._size = new Vector2(calcedSize.Width.Size, calcedSize.Height.Size);
+
+        List<GMLElementDrawable> workingElements = new List<GMLElementDrawable>();
+        
+        //First pass to create all the working elements, and calculate their minimum sizes
+        foreach (Node node in this.File.MainClass.SubObjects) {
+            if (node is Object subObject) {
+                switch (subObject.Name) {
+                    case "GUI::Label": {
+                        GMLLabelElement label = new GMLLabelElement(subObject, this.Theme);
+                        workingElements.Add(new GMLElementDrawable(label, this.Theme));
+                        
+                        break;
+                    }
+                    case "GUI::Button": {
+                        GMLButtonElement button = new GMLButtonElement(subObject, this.Theme);
+                        workingElements.Add(new GMLElementDrawable(button, this.Theme));
+
+                        break;
+                    }
+                    default: throw new NotImplementedException($"Unknown GML Object {subObject.Name}");
+                }
+            }
+        }
     }
 
-    public Vector2 ElementSize() {
+    public GMLCalculatedElementSize MinimumSize() {
         Vector2 size = Vector2.Zero;
         
         if (this.File == null)
-            return size;
+            return new GMLCalculatedElementSize();
 
-        if (this.File.MainClass.Properties.LastOrDefault(
-            x => x is KeyValuePair {
-                Key: "fixed_width"
-            }
-            ) is KeyValuePair {
-                Value: JsonValueNode {
-                    Value: {}
-                } fixedWidth
-            })
-            size.X = Convert.ToSingle(fixedWidth.Value);
-        if (this.File.MainClass.Properties.LastOrDefault(
-            x => x is KeyValuePair {
-                Key: "fixed_height"
-            }
-            ) is KeyValuePair {
-                Value: JsonValueNode {
-                    Value: {}
-                } fixedHeight
-            })
-            size.Y = Convert.ToSingle(fixedHeight.Value);
+        float? fixedWidth = this.File.MainClass.FixedWidth();
+        if (fixedWidth != null)
+            size.X = fixedWidth.Value;
+        
+        float? fixedHeight = this.File.MainClass.FixedHeight();
+        if (fixedWidth != null)
+            size.Y = fixedHeight.Value;
         
         //TODO: parse the other types of width/height, along with recursively going through to find the size of the children
 
         if (size.X == 0 || size.Y == 0)
             throw new Exception("Unable to determine size!");
 
-        return size;
+        return new GMLCalculatedElementSize {
+            Width = new GMLSize {
+                Size = size.X, 
+                Type = SizeType.Fixed
+            }, 
+            Height = new GMLSize {
+                Size = size.Y, 
+                Type = SizeType.Fixed
+            }
+        };
     }
 
     public bool FillWithBackgroundColor() {
-        if (this.File == null)
-            return false;
-        
-        return this.File.MainClass.Properties.LastOrDefault(
-               x => x is KeyValuePair {
-                   Key: "fill_with_background_color"
-               }
-               ) is KeyValuePair {
-                   Value: JsonValueNode {
-                       Value: {}
-                   } fillWithBackgroundColor
-               } && Convert.ToBoolean(fillWithBackgroundColor.Value);
+        return this.File != null && this.File.MainClass.FillWithBackgroundColor();
+
     }
 
     public override void Draw(double time, DrawableBatch batch, DrawableManagerArgs args) {

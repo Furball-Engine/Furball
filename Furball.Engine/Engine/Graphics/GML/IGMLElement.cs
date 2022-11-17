@@ -1,9 +1,9 @@
 using System.Numerics;
 
-namespace Furball.Engine.Engine.Graphics.GML; 
+namespace Furball.Engine.Engine.Graphics.GML;
 
 public interface IGMLElement {
-    public Vector2 ElementSize();
+    public GMLCalculatedElementSize MinimumSize();
 
     public bool FillWithBackgroundColor();
     
