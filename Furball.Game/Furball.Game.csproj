@@ -6,7 +6,7 @@
         <RootNamespace>Furball.Game</RootNamespace>
         <LangVersion>11</LangVersion>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-        <TargetFramework>net7.0</TargetFramework>
+        <TargetFrameworks>net461;net7.0</TargetFrameworks>
     </PropertyGroup>
     <ItemGroup>
         <None Update="Localization\Esperanto.lang">
@@ -22,5 +22,25 @@
         <None Update="Content/test.mp4" CopyToOutputDirectory="PreserveNewest" />
         <None Update="Content/lulkanto.mp3" CopyToOutputDirectory="PreserveNewest" />
         <None Update="Content/test.png" CopyToOutputDirectory="PreserveNewest" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <Reference Include="System" Condition="'$(TargetFramework)' == 'net461'" />
+        <Reference Include="System.Runtime" Condition="'$(TargetFramework)' == 'net461'" />
+        <Reference Include="System.Private.CoreLib" Condition="'$(TargetFramework)' == 'net461'" />
+        <Reference Include="System.Numerics" Condition="'$(TargetFramework)' == 'net461'" />
+        <Reference Include="System.Numerics.Vectors" Condition="'$(TargetFramework)' == 'net461'" />
+        <Reference Include="System.Runtime.Versioning" Condition="'$(TargetFramework)' == 'net461'" />
+    </ItemGroup>
+    
+    <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
+        <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies.net461" Version="1.0.3">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
     </ItemGroup>
 </Project>
