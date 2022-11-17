@@ -2,10 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Text;
 using FontStashSharp;
 using Furball.Engine.Engine.Helpers;
 using Furball.Engine.Engine.Helpers.Logger;
 using Furball.Vixie;
+using GMLSharp;
 using Kettu;
 using SixLabors.Fonts;
 
@@ -140,6 +142,12 @@ public static class ContentManager {
         }
 
         return data;
+    }
+    
+    public static GMLFile LoadGMLFile(string filename, ContentSource source = ContentSource.Game, bool bypassCache = false) {
+        GMLFile gmlFile = new Parser().Parse(Encoding.UTF8.GetString(LoadRawAsset(filename, source, bypassCache)));
+
+        return gmlFile;
     }
 }
 
