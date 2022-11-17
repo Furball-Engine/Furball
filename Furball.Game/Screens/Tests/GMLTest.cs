@@ -22,7 +22,7 @@ public class GMLTest : TestScreen {
 
         GMLFile file = new Parser().Parse(gml);
 
-        GMLFileDrawable drawable = new GMLFileDrawable(Vector2.Zero);
+        GMLFileDrawable drawable = new GMLFileDrawable(new Vector2(10));
         
         drawable.SetGMLFile(file);
         
