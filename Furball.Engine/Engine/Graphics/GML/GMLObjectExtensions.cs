@@ -48,7 +48,22 @@ public static class GMLObjectExtensions {
 
         return null;
     }
-    
+
+    public static string? Name(this Object obj) {
+        if (obj.Properties.LastOrDefault(
+            node => node is KeyValuePair {
+                Key: "name"
+            }
+            ) is KeyValuePair {
+                Value: JsonValueNode {
+                    Value: {}
+                } name
+            })
+            return Convert.ToString(name.Value);
+
+        return null;
+    }
+
     public static float? FixedHeight(this Object obj) {
         if (obj.Properties.LastOrDefault(
             node => node is KeyValuePair {
