@@ -288,7 +288,10 @@ public abstract class Drawable : IDisposable {
     }
 
     public virtual void Dispose() {
+        //Clear explicitly to make the objects get GC'd sooner
         this.Tweens.Clear();
+        //Set the tweens list to null to prevent any accidental tween adding
+        this.Tweens = null!;
     }
 
     private bool _sortTweenScheduled = false;
