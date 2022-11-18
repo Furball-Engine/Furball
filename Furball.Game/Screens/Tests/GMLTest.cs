@@ -15,9 +15,9 @@ public class GMLTest : TestScreen {
     fill_with_background_color: true
 
     @GUI::Label {
-        // fixed_height: 22
+        fixed_height: 30
         text: ""Test Text""
-        text_alignment: ""Center""
+        text_alignment: ""TopLeft""
     }
     @GUI::Button {
         // fixed_height: 22

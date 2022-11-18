@@ -59,7 +59,9 @@ public class GMLElementDrawable : CompositeDrawable {
             }
             case GMLButtonElement button: {
                 this.Children.Add(
-                new DrawableButton(Vector2.Zero, button.Font.FontSystem, button.Font.FontSize, button.Text, Color.Blue, Color.White, Color.Black, this.CalculatedSize)
+                new DrawableButton(Vector2.Zero, button.Font.FontSystem, button.Font.FontSize, button.Text, Color.Blue, Color.White, Color.Black, this.CalculatedSize) {
+                    OutlineThickness = 1
+                }
                 );
 
                 break;
