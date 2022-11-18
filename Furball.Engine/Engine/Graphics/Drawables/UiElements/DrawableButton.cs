@@ -67,7 +67,7 @@ public class DrawableButton : CompositeDrawable {
     /// <summary>
     ///     The thickness of the outline
     /// </summary>
-    public float OutlineThickness = 5f;
+    private float _outlineThickness = 5f;
 
     /// <summary>
     ///     The size of the button, Vector2.Zero means autosize it
@@ -81,6 +81,18 @@ public class DrawableButton : CompositeDrawable {
             } 
                 
             return this.ButtonSize * this.Scale;
+        }
+    }
+
+    /// <summary>
+    ///     The thickness of the outline
+    /// </summary>
+    public float OutlineThickness {
+        get => this._outlineThickness;
+        set {
+            this._outlineThickness = value;
+
+            this._outlineDrawable.Thickness = value;
         }
     }
 
