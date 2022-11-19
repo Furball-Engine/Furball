@@ -42,7 +42,8 @@ public class Scheduler {
     public void Dispose(double time) {
         Kettu.Logger.Log($"Scheduler disposed at {time}", LoggerLevelSchedulerInfo.Instance);
 
-        foreach (ScheduledMethod method in this._scheduledMethods) {
+        for (int i = 0; i < this._scheduledMethods.Count; i++) {
+            ScheduledMethod method = this._scheduledMethods[i];
             Kettu.Logger.Log($"ScheduledMethod invoked at {time} during dispose", LoggerLevelSchedulerInfo.Instance);
             method.MethodToRun.Invoke(time);
         }
