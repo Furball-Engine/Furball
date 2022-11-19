@@ -53,8 +53,8 @@ public class CompositeDrawable : Drawable {
             foreach (Drawable drawable in this.Children!) {
                 drawable.Dispose();
             }
-        
-        this.Children.Clear();
+
+        this.Children?.Clear();
 
         base.Dispose();
     }
