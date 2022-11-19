@@ -49,9 +49,10 @@ public class CompositeDrawable : Drawable {
     }
 
     public override void Dispose() {
-        foreach (Drawable drawable in this.Children!) {
-            drawable.Dispose();
-        }
+        if (this.Children != null)
+            foreach (Drawable drawable in this.Children!) {
+                drawable.Dispose();
+            }
         
         this.Children.Clear();
 
