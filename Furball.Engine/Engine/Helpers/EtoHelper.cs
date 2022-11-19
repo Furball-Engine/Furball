@@ -1,8 +1,10 @@
 using System;
+using System.Runtime.InteropServices;
 using System.Threading;
 using Eto;
 using Eto.Forms;
 using Furball.Engine.Engine.Helpers.Logger;
+using Furball.Engine.Engine.Platform;
 using Furball.Vixie.Backends.Shared;
 
 namespace Furball.Engine.Engine.Helpers;
@@ -20,7 +22,16 @@ public static class EtoHelper {
 
         _thread = new Thread(
         () => {
-            Eto.Platform.Initialize(Platforms.Gtk);
+            string platform = Platforms.Gtk;
+
+            if (RuntimeInfo.CurrentPlatform() == OSPlatform.Windows) {
+                platform = Platforms.WinForms;
+
+                if (RuntimeInformation.FrameworkDescription.Contains("Framework"))
+                    platform = Platforms.Gtk;
+            }
+
+            Eto.Platform.Initialize(platform);
 
             Kettu.Logger.Log("Eto Initialized", LoggerLevelEtoInfo.Instance);
 

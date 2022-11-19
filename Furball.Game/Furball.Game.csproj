@@ -7,6 +7,7 @@
         <LangVersion>11</LangVersion>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <TargetFrameworks>net461;net7.0</TargetFrameworks>
+        <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('Windows'))">$(TargetFrameworks);net7.0-windows</TargetFrameworks>
     </PropertyGroup>
     <ItemGroup>
         <None Update="Localization\Esperanto.lang">
@@ -23,14 +24,16 @@
         <None Update="Content/lulkanto.mp3" CopyToOutputDirectory="PreserveNewest" />
         <None Update="Content/test.png" CopyToOutputDirectory="PreserveNewest" />
     </ItemGroup>
-    
+
     <ItemGroup>
-        <Reference Include="System" Condition="'$(TargetFramework)' == 'net461'" />
-        <Reference Include="System.Runtime" Condition="'$(TargetFramework)' == 'net461'" />
-        <Reference Include="System.Private.CoreLib" Condition="'$(TargetFramework)' == 'net461'" />
-        <Reference Include="System.Numerics" Condition="'$(TargetFramework)' == 'net461'" />
-        <Reference Include="System.Numerics.Vectors" Condition="'$(TargetFramework)' == 'net461'" />
-        <Reference Include="System.Runtime.Versioning" Condition="'$(TargetFramework)' == 'net461'" />
+        <Reference Include="System" Condition="'$(TargetFramework)' == 'net461'"/>
+        <Reference Include="System.Runtime" Condition="'$(TargetFramework)' == 'net461'"/>
+        <Reference Include="System.Private.CoreLib" Condition="'$(TargetFramework)' == 'net461'"/>
+        <Reference Include="System.Numerics" Condition="'$(TargetFramework)' == 'net461'"/>
+        <Reference Include="System.Numerics.Vectors" Condition="'$(TargetFramework)' == 'net461'"/>
+        <Reference Include="System.Runtime.Versioning" Condition="'$(TargetFramework)' == 'net461'"/>
+
+        <PackageReference Condition="'$(TargetFramework)' == 'net7.0-windows'" Include="Eto.Platform.Windows" Version="2.7.2"/>
     </ItemGroup>
     
     <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
