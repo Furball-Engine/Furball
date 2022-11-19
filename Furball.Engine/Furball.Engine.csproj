@@ -21,10 +21,10 @@
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="aqua.tool.polyfill.IsExternalInit" Version="2.0.0">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="FFmpeg.AutoGen" Version="5.1.1" />
+        <PackageReference Include="FFmpeg.AutoGen" Version="5.1.1"/>
         <PackageReference Include="FontStashSharp" Version="1.2.8"/>
         <PackageReference Include="GtkSharp.Win32" Version="3.1.2"/>
         <PackageReference Include="Kettu" Version="1.4.0"/>
@@ -55,22 +55,19 @@
         <None Update="EngineContent/*.ttf" CopyToOutputDirectory="Always" />
     </ItemGroup>
 
-    <ItemGroup>
+    <ItemGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
         <ContentWithTargetPath Include="../lib/win/bass.dll">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-            <TargetPath>runtimes/win-x64/native/bass.dll</TargetPath>
+            <TargetPath>bass.dll</TargetPath>
         </ContentWithTargetPath>
         <ContentWithTargetPath Include="../lib/win/bass_fx.dll">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-            <TargetPath>runtimes/win-x64/native/bass_fx.dll</TargetPath>
+            <TargetPath>bass_fx.dll</TargetPath>
         </ContentWithTargetPath>
-        <ContentWithTargetPath Include="../lib/win/libgtk-3-0.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-            <TargetPath>runtimes/win-x64/native/libgtk-3-0.dll</TargetPath>
-        </ContentWithTargetPath>
+    </ItemGroup>
+    <ItemGroup Condition="$([MSBuild]::IsOSPlatform('Linux'))">
         <ContentWithTargetPath Include="../lib/linux-x86_64/libbass.so">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
