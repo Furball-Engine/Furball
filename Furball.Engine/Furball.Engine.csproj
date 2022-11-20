@@ -58,24 +58,24 @@
 
     <ItemGroup Condition="$(RuntimeIdentifier.StartsWith('win'))">
         <!--64 bit-->
-        <ContentWithTargetPath Condition="$(RuntimeIdentifier.Contains('64'))" Include="../lib/win/bass.dll">
+        <ContentWithTargetPath Condition="$(RuntimeIdentifier.Contains('64'))" Include="../lib/win-x86_64/bass.dll">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
             <TargetPath>bass.dll</TargetPath>
         </ContentWithTargetPath>
-        <ContentWithTargetPath Condition="$(RuntimeIdentifier.Contains('64'))" Include="../lib/win/bass_fx.dll">
+        <ContentWithTargetPath Condition="$(RuntimeIdentifier.Contains('64'))" Include="../lib/win-x86_64/bass_fx.dll">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
             <TargetPath>bass_fx.dll</TargetPath>
         </ContentWithTargetPath>
 
         <!--32 bit-->
-        <ContentWithTargetPath Condition="$(RuntimeIdentifier.Contains('86'))" Include="../lib/win32/bass.dll">
+        <ContentWithTargetPath Condition="$(RuntimeIdentifier.Contains('86'))" Include="../lib/win-x86/bass.dll">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
             <TargetPath>bass.dll</TargetPath>
         </ContentWithTargetPath>
-        <ContentWithTargetPath Condition="$(RuntimeIdentifier.Contains('86'))" Include="../lib/win32/bass_fx.dll">
+        <ContentWithTargetPath Condition="$(RuntimeIdentifier.Contains('86'))" Include="../lib/win-x86/bass_fx.dll">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
             <TargetPath>bass_fx.dll</TargetPath>
@@ -107,12 +107,12 @@
         </ContentWithTargetPath>
 
         <!--32 bit-->
-        <ContentWithTargetPath Condition="$(RuntimeIdentifier.Contains('86'))" Include="../lib/linux-i686/libbass.so">
+        <ContentWithTargetPath Condition="$(RuntimeIdentifier.Contains('86'))" Include="../lib/linux-x86/libbass.so">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
             <TargetPath>libbass.so</TargetPath>
         </ContentWithTargetPath>
-        <ContentWithTargetPath Condition="$(RuntimeIdentifier.Contains('86'))" Include="../lib/linux-i686/libbass_fx.so">
+        <ContentWithTargetPath Condition="$(RuntimeIdentifier.Contains('86'))" Include="../lib/linux-x86/libbass_fx.so">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
             <TargetPath>libbass_fx.so</TargetPath>
