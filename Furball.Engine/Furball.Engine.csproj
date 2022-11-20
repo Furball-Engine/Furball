@@ -18,7 +18,7 @@
         <PackageReleaseNotes>+ we forgot to do this for like 8 months lol SO much has changed</PackageReleaseNotes>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <LangVersion>10</LangVersion>
-        <RuntimeIdentifiers>win-x64;win-x86;linux-x64;linux-x86;linux-arm;linux-arm64</RuntimeIdentifiers>
+        <RuntimeIdentifiers>win-x64;win-x86;win-arm64;linux-x64;linux-x86;linux-arm;linux-arm64</RuntimeIdentifiers>
         <SkipGtkInstall>true</SkipGtkInstall>
     </PropertyGroup>
     <ItemGroup>
@@ -80,14 +80,63 @@
             <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
             <TargetPath>bass_fx.dll</TargetPath>
         </ContentWithTargetPath>
+
+        <!--arm64-->
+        <ContentWithTargetPath Condition="$(RuntimeIdentifier.Contains('arm64'))" Include="../lib/win-arm64/bass.dll">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+            <TargetPath>bass.dll</TargetPath>
+        </ContentWithTargetPath>
+        <ContentWithTargetPath Condition="$(RuntimeIdentifier.Contains('arm64'))" Include="../lib/win-arm64/bass_fx.dll">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+            <TargetPath>bass_fx.dll</TargetPath>
+        </ContentWithTargetPath>
     </ItemGroup>
     <ItemGroup Condition="$(RuntimeIdentifier.StartsWith('linux'))">
+        <!--64 bit-->
         <ContentWithTargetPath Condition="$(RuntimeIdentifier.Contains('64'))" Include="../lib/linux-x86_64/libbass.so">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
             <TargetPath>libbass.so</TargetPath>
         </ContentWithTargetPath>
         <ContentWithTargetPath Condition="$(RuntimeIdentifier.Contains('64'))" Include="../lib/linux-x86_64/libbass_fx.so">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+            <TargetPath>libbass_fx.so</TargetPath>
+        </ContentWithTargetPath>
+
+        <!--32 bit-->
+        <ContentWithTargetPath Condition="$(RuntimeIdentifier.Contains('86'))" Include="../lib/linux-i686/libbass.so">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+            <TargetPath>libbass.so</TargetPath>
+        </ContentWithTargetPath>
+        <ContentWithTargetPath Condition="$(RuntimeIdentifier.Contains('86'))" Include="../lib/linux-i686/libbass_fx.so">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+            <TargetPath>libbass_fx.so</TargetPath>
+        </ContentWithTargetPath>
+
+        <!--arm64-->
+        <ContentWithTargetPath Condition="$(RuntimeIdentifier.Contains('arm64'))" Include="../lib/linux-arm64/libbass.so">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+            <TargetPath>libbass.so</TargetPath>
+        </ContentWithTargetPath>
+        <ContentWithTargetPath Condition="$(RuntimeIdentifier.Contains('arm64'))" Include="../lib/linux-arm64/libbass_fx.so">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+            <TargetPath>libbass_fx.so</TargetPath>
+        </ContentWithTargetPath>
+
+        <!--armhf (we cant tell between armhf and arm32, but bass is armhf only)-->
+        <ContentWithTargetPath Condition="$(RuntimeIdentifier.EndsWidth('arm'))" Include="../lib/linux-arm/libbass.so">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+            <TargetPath>libbass.so</TargetPath>
+        </ContentWithTargetPath>
+        <ContentWithTargetPath Condition="$(RuntimeIdentifier.EndsWidth('arm'))" Include="../lib/linux-arm/libbass_fx.so">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
             <TargetPath>libbass_fx.so</TargetPath>

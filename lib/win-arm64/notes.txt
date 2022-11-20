@@ -1,0 +1,9 @@
+Win32 arm64 is not officially supported in Bass
+see:
+https://www.un4seen.com/forum/?topic=19471.msg136146#msg136146
+
+*however* there are test builds of both Bass and BassFX for arm64! 
+So this means we *can* run on arm64! woohoo!
+
+Our usage of Bass and BassFX is very very basic, so there should be no problem with a >1yo build
+(also bass_fx and bass are version mismatched but im sure its fiine)
