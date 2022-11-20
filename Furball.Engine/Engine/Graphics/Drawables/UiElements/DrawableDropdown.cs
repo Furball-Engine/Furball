@@ -18,6 +18,19 @@ public class DrawableDropdown : CompositeDrawable {
 
     public Bindable<KeyValuePair<object, string>> SelectedItem;
 
+    private float? _outlineThickness;
+    public float OutlineThickness {
+        get => ((DrawableButton)this.Children.First(x => x is DrawableButton)).OutlineThickness;
+        set {
+            this._outlineThickness = value;
+            foreach (Drawable drawable in this.Children) {
+                if (drawable is DrawableButton button) {
+                    button.OutlineThickness = this._outlineThickness.Value;
+                }
+            }
+        }
+    }
+
     public DrawableDropdown(Vector2 position, FontSystem font, int fontSize, Vector2 buttonSize, Dictionary<object, string> items) {
         this.Position   = position;
         this.Items      = items;
@@ -56,6 +69,10 @@ public class DrawableDropdown : CompositeDrawable {
             this.ButtonSize
             );
 
+            if (this._outlineThickness.HasValue) {
+                element.OutlineThickness = this._outlineThickness.Value;
+            }
+
             element.OnClick += delegate {
                 this.Selected = false;
 
@@ -70,6 +87,10 @@ public class DrawableDropdown : CompositeDrawable {
 
                 element = new DrawableButton(new Vector2(0, y), this.Font, this.FontSize, item.Value, Color.Blue, Color.White, Color.Black, this.ButtonSize);
 
+                if (this._outlineThickness.HasValue) {
+                    element.OutlineThickness = this._outlineThickness.Value;
+                }
+                
                 element.OnClick += delegate {
                     this.Selected = false;
                     
@@ -91,6 +112,10 @@ public class DrawableDropdown : CompositeDrawable {
             Color.Black,
             this.ButtonSize
             );
+
+            if (this._outlineThickness.HasValue) {
+                element.OutlineThickness = this._outlineThickness.Value;
+            }
 
             element.OnClick += delegate {
                 this.Selected = true;
