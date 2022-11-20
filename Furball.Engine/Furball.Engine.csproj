@@ -55,7 +55,7 @@
         <None Update="EngineContent/*.ttf" CopyToOutputDirectory="Always"/>
     </ItemGroup>
 
-    <ItemGroup Condition="$(RuntimeIdentifier.StartsWith('win'))">
+    <ItemGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
         <!--64 bit-->
         <ContentWithTargetPath Condition="$(RuntimeIdentifier.EndsWith('x64'))" Include="../lib/win/bass.dll">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
