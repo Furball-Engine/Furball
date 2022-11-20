@@ -18,6 +18,7 @@
         <PackageReleaseNotes>+ we forgot to do this for like 8 months lol SO much has changed</PackageReleaseNotes>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <LangVersion>10</LangVersion>
+        <RuntimeIdentifiers>win-x64;win-x86;linux-x64;linux-x86;linux-arm;linux-arm64</RuntimeIdentifiers>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="aqua.tool.polyfill.IsExternalInit" Version="2.0.0">
