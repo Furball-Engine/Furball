@@ -57,24 +57,24 @@
 
     <ItemGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
         <!--64 bit-->
-        <ContentWithTargetPath Condition="$(RuntimeIdentifier.EndsWith('x64'))" Include="../lib/win/bass.dll">
+        <ContentWithTargetPath Condition="$(RuntimeIdentifier.Contains('64'))" Include="../lib/win/bass.dll">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
             <TargetPath>bass.dll</TargetPath>
         </ContentWithTargetPath>
-        <ContentWithTargetPath Condition="$(RuntimeIdentifier.EndsWith('x64'))" Include="../lib/win/bass_fx.dll">
+        <ContentWithTargetPath Condition="$(RuntimeIdentifier.Contains('64'))" Include="../lib/win/bass_fx.dll">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
             <TargetPath>bass_fx.dll</TargetPath>
         </ContentWithTargetPath>
 
         <!--32 bit-->
-        <ContentWithTargetPath Condition="$(RuntimeIdentifier.EndsWith('x86'))" Include="../lib/win32/bass.dll">
+        <ContentWithTargetPath Condition="$(RuntimeIdentifier.Contains('86'))" Include="../lib/win32/bass.dll">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
             <TargetPath>bass.dll</TargetPath>
         </ContentWithTargetPath>
-        <ContentWithTargetPath Condition="$(RuntimeIdentifier.EndsWith('86'))" Include="../lib/win32/bass_fx.dll">
+        <ContentWithTargetPath Condition="$(RuntimeIdentifier.Contains('86'))" Include="../lib/win32/bass_fx.dll">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
             <TargetPath>bass_fx.dll</TargetPath>
