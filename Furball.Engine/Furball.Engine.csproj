@@ -55,7 +55,7 @@
         <None Update="EngineContent/*.ttf" CopyToOutputDirectory="Always"/>
     </ItemGroup>
 
-    <ItemGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
+    <ItemGroup Condition="$(RuntimeIdentifier.StartsWith('win'))">
         <!--64 bit-->
         <ContentWithTargetPath Condition="$(RuntimeIdentifier.Contains('64'))" Include="../lib/win/bass.dll">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -80,13 +80,13 @@
             <TargetPath>bass_fx.dll</TargetPath>
         </ContentWithTargetPath>
     </ItemGroup>
-    <ItemGroup Condition="$([MSBuild]::IsOSPlatform('Linux'))">
-        <ContentWithTargetPath Include="../lib/linux-x86_64/libbass.so">
+    <ItemGroup Condition="$(RuntimeIdentifier.StartsWith('linux'))">
+        <ContentWithTargetPath Condition="$(RuntimeIdentifier.Contains('64'))" Include="../lib/linux-x86_64/libbass.so">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
             <TargetPath>libbass.so</TargetPath>
         </ContentWithTargetPath>
-        <ContentWithTargetPath Include="../lib/linux-x86_64/libbass_fx.so">
+        <ContentWithTargetPath Condition="$(RuntimeIdentifier.Contains('64'))" Include="../lib/linux-x86_64/libbass_fx.so">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
             <TargetPath>libbass_fx.so</TargetPath>
