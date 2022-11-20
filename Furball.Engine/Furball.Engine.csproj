@@ -45,23 +45,36 @@
     </ItemGroup>
     
     <ItemGroup>
-        <ProjectReference Include="..\evdev-sharp\EvDevSharp\EvDevSharp.csproj" />
-        <ProjectReference Include="..\Furball.Vixie\Furball.Vixie\Furball.Vixie.csproj" />
-        <ProjectReference Include="..\Furball.Volpe\Furball.Volpe\Furball.Volpe.csproj" />
-        <ProjectReference Include="..\GMLSharp\GMLSharp\GMLSharp.csproj" />
+        <ProjectReference Include="..\evdev-sharp\EvDevSharp\EvDevSharp.csproj"/>
+        <ProjectReference Include="..\Furball.Vixie\Furball.Vixie\Furball.Vixie.csproj"/>
+        <ProjectReference Include="..\Furball.Volpe\Furball.Volpe\Furball.Volpe.csproj"/>
+        <ProjectReference Include="..\GMLSharp\GMLSharp\GMLSharp.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-        <None Update="EngineContent/*.ttf" CopyToOutputDirectory="Always" />
+        <None Update="EngineContent/*.ttf" CopyToOutputDirectory="Always"/>
     </ItemGroup>
 
-    <ItemGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
-        <ContentWithTargetPath Include="../lib/win/bass.dll">
+    <ItemGroup Condition="$(RuntimeIdentifier.StartsWith('win'))">
+        <!--64 bit-->
+        <ContentWithTargetPath Condition="$(RuntimeIdentifier.EndsWith('x64'))" Include="../lib/win/bass.dll">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
             <TargetPath>bass.dll</TargetPath>
         </ContentWithTargetPath>
-        <ContentWithTargetPath Include="../lib/win/bass_fx.dll">
+        <ContentWithTargetPath Condition="$(RuntimeIdentifier.EndsWith('x64'))" Include="../lib/win/bass_fx.dll">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+            <TargetPath>bass_fx.dll</TargetPath>
+        </ContentWithTargetPath>
+
+        <!--32 bit-->
+        <ContentWithTargetPath Condition="$(RuntimeIdentifier.EndsWith('x86'))" Include="../lib/win32/bass.dll">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+            <TargetPath>bass.dll</TargetPath>
+        </ContentWithTargetPath>
+        <ContentWithTargetPath Condition="$(RuntimeIdentifier.EndsWith('86'))" Include="../lib/win32/bass_fx.dll">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
             <TargetPath>bass_fx.dll</TargetPath>
