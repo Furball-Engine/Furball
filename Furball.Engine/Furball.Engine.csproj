@@ -26,7 +26,6 @@
         </PackageReference>
         <PackageReference Include="FFmpeg.AutoGen" Version="5.1.1"/>
         <PackageReference Include="FontStashSharp" Version="1.2.8"/>
-        <PackageReference Include="GtkSharp.Win32" Version="3.1.2"/>
         <PackageReference Include="Kettu" Version="1.4.0"/>
         <PackageReference Include="ManagedBass" Version="3.1.1"/>
         <PackageReference Include="ManagedBass.Fx" Version="3.1.1"/>
@@ -43,7 +42,7 @@
     <ItemGroup Condition="'$(UseImGui)'=='true'">
         <PackageReference Include="ImGui.NET" Version="1.87.3" />
     </ItemGroup>
-    
+
     <ItemGroup>
         <ProjectReference Include="..\evdev-sharp\EvDevSharp\EvDevSharp.csproj"/>
         <ProjectReference Include="..\Furball.Vixie\Furball.Vixie\Furball.Vixie.csproj"/>
