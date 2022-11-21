@@ -135,12 +135,12 @@
         </ContentWithTargetPath>
 
         <!--armhf (we cant tell between armhf and arm32, but bass is armhf only)-->
-        <ContentWithTargetPath Condition="$(RuntimeIdentifier.EndsWidth('arm'))" Include="$(NativeLibPath)/linux-arm/libbass.so">
+        <ContentWithTargetPath Condition="$(RuntimeIdentifier.EndsWith('arm'))" Include="$(NativeLibPath)/linux-arm/libbass.so">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
             <TargetPath>libbass.so</TargetPath>
         </ContentWithTargetPath>
-        <ContentWithTargetPath Condition="$(RuntimeIdentifier.EndsWidth('arm'))" Include="$(NativeLibPath)/linux-arm/libbass_fx.so">
+        <ContentWithTargetPath Condition="$(RuntimeIdentifier.EndsWith('arm'))" Include="$(NativeLibPath)/linux-arm/libbass_fx.so">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
             <TargetPath>libbass_fx.so</TargetPath>
