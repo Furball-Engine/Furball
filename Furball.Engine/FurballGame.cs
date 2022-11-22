@@ -75,8 +75,8 @@ public class FurballGame : Game {
     public static string DataFolder   = AssemblyPath;
     public static string LocalizationFolder => $"{AssemblyPath}/Localization";
 
-    public static int RealWindowWidth => (int) Instance.WindowManager.WindowSize.X;
-    public static int RealWindowHeight => (int) Instance.WindowManager.WindowSize.Y;
+    public static int RealWindowWidth => (int) Instance.WindowManager.FramebufferSize.X;
+    public static int RealWindowHeight => (int) Instance.WindowManager.FramebufferSize.Y;
 
     public static float HorizontalRatio => (float)RealWindowWidth / DEFAULT_WINDOW_WIDTH;
     public static float VerticalRatio => (float)RealWindowHeight / DEFAULT_WINDOW_HEIGHT;

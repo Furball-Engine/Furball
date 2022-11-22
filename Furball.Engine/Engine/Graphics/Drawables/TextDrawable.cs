@@ -152,7 +152,7 @@ public class TextDrawable : Drawable {
 
         this.Font      = font;
         this._fontSize = font.FontSize;
-        this.OnFramebufferResize(FurballGame.Instance.WindowManager.WindowSize);
+        this.OnFramebufferResize(FurballGame.Instance.WindowManager.FramebufferSize);
         FurballGame.Instance.WindowManager.FramebufferResize += this.OnFramebufferResize;
 
         this.Text = text;
