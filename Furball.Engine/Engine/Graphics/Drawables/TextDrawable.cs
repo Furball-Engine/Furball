@@ -224,7 +224,7 @@ public class TextDrawable : Drawable {
             this.Font = f;
         }
         this._fontSize = fontSize;
-        this.OnFramebufferResize(FurballGame.Instance.WindowManager.WindowSize);
+        this.OnFramebufferResize(FurballGame.Instance.WindowManager.FramebufferSize);
     }
 
     private Vector2 _posCache;
