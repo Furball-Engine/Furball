@@ -12,7 +12,7 @@ Modular Game Engine designed in C# using a custom rendering framework, it is des
 
 ## Requirements
 
-* A desktop platform with the [.NET 6.0 SDK](https://dotnet.microsoft.com/download) or higher installed.
+* A desktop platform with the [.NET 7.0 SDK](https://dotnet.microsoft.com/download) or higher installed.
 * When running on Windows 7 or 8.1 you may need to [install additional things.](https://docs.microsoft.com/en-us/dotnet/core/install/windows?tabs=net50&pivots=os-windows#dependencies) (Notably the Microsoft Visual C++ 2015-2019 Redistributable)
 * When working with the codebase, we strongly recommend using Jetbrains Rider or Visual Studio 2019+.
 
@@ -25,6 +25,7 @@ Modular Game Engine designed in C# using a custom rendering framework, it is des
 * Direct3D 9 (WIP)
 * Software rendering through [Furball.Mola](https://github.com/Furball-Engine/Furball.Mola) (WIP)
 * Veldrid (Vulkan, OpenGL, OpenGLES, Metal, Direct3D11) (Will likely be removed at some point in the future)
+* WebGPU (WIP)
 
 Furball will automatically decide on the optimal backend to render with, on Windows that will be Direct3D 11, on Linux that will be OpenGL, on MacOS that will be Metal (Veldrid)
 
@@ -46,7 +47,10 @@ Assuming you meet all the requirements, the project should build.
 
 ## Windows
 
-Use the standard `dotnet publish` command
+Use the standard `dotnet publish -r win-x64` command
+
+### Notes
+The runtime identifier is required to properly copy the native libraries to the output folder, blame microsoft, not us
 
 ## Linux
 
