@@ -14,7 +14,7 @@ Modular Game Engine designed in C# using a custom rendering framework, it is des
 
 * A desktop platform with the [.NET 7.0 SDK](https://dotnet.microsoft.com/download) or higher installed.
 * When running on Windows 7 or 8.1 you may need to [install additional things.](https://docs.microsoft.com/en-us/dotnet/core/install/windows?tabs=net50&pivots=os-windows#dependencies) (Notably the Microsoft Visual C++ 2015-2019 Redistributable)
-* When working with the codebase, we strongly recommend using Jetbrains Rider or Visual Studio 2019+.
+* When working with the codebase, we strongly recommend using Jetbrains Rider or Visual Studio 2022+.
 
 ## Graphics Requirements
 
