@@ -1,29 +1,22 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using Furball.Vixie;
 using Furball.Vixie.Helpers.Helpers;
 using Silk.NET.Maths;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Drawing.Processing;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
 using Rectangle=System.Drawing.Rectangle;
 
-namespace Furball.Engine.Engine.Graphics;
+namespace Furball.Engine.Engine.Graphics.TexturePacker;
 
 public class TexturePacker {
-    private readonly List<Image<Rgba32>> _images;
+    private readonly List<TextureToPack> _images;
 
-    public TexturePacker(List<Image<Rgba32>> images) {
-        images.Sort((y, x) => (x.Width * x.Height) - (y.Width * y.Height));
+    public TexturePacker(List<TextureToPack> images) {
+        int PathologicalMultiplier(TextureToPack tex) {
+            return Math.Max(tex.Width, tex.Height) / Math.Min(tex.Width, tex.Height) * tex.Width * tex.Height;
+        }
+        
+        images.Sort((y, x) => PathologicalMultiplier(x).CompareTo(PathologicalMultiplier(y)));
 
         this._images = images;
-    }
-
-    public struct TakenSpace {
-        public Rectangle     Rectangle;
-        public Image<Rgba32> Image;
     }
 
     private List<TakenSpace> _lastGoodTakenSpaces;
@@ -37,11 +30,11 @@ public class TexturePacker {
         size.X = size.X.Clamp(0, 4096);
         size.Y = size.Y.Clamp(0, 4096);
 
-        bool TryPack(Vector2D<int> size) {
+        bool TryPack(Vector2D<int> fullSize) {
             this._emptySpaces = new List<Rectangle>();
             this._takenSpaces = new List<TakenSpace>();
             
-            this._emptySpaces.Add(new Rectangle(0, 0, size.X, size.Y));
+            this._emptySpaces.Add(new Rectangle(0, 0, fullSize.X, fullSize.Y));
 
             int IndexOfFirstCandidate(Rectangle rect) {
                 for (int i = this._emptySpaces.Count - 1; i >= 0; i--) {
@@ -54,7 +47,7 @@ public class TexturePacker {
                 return -1;
             }
 
-            foreach (Image<Rgba32> image in this._images) {
+            foreach (TextureToPack image in this._images) {
                 int index = IndexOfFirstCandidate(new Rectangle(0, 0, image.Width, image.Height));
 
                 if (index == -1) {
@@ -71,7 +64,7 @@ public class TexturePacker {
                     this._takenSpaces.Add(
                     new TakenSpace {
                         Rectangle = candidate,
-                        Image     = image
+                        TextureName     = image.Name
                     }
                     );
                     continue;
@@ -81,8 +74,10 @@ public class TexturePacker {
                 if (candidate.Width == image.Width) {
                     this._takenSpaces.Add(
                     new TakenSpace {
-                        Rectangle = candidate,
-                        Image     = image
+                        Rectangle = candidate with {
+                            Height = image.Height
+                        },
+                        TextureName     = image.Name
                     }
                     );
 
@@ -98,8 +93,10 @@ public class TexturePacker {
                 if (candidate.Height == image.Height) {
                     this._takenSpaces.Add(
                     new TakenSpace {
-                        Rectangle = candidate,
-                        Image     = image
+                        Rectangle = candidate with {
+                            Width = image.Width
+                        },
+                        TextureName     = image.Name
                     }
                     );
 
@@ -137,7 +134,7 @@ public class TexturePacker {
                         Width = image.Width,
                         Height = image.Height
                     },
-                    Image = image
+                    TextureName = image.Name
                 }
                 );
             }
@@ -156,24 +153,11 @@ public class TexturePacker {
             size.Y -= 10;
         }
 
-        Image<Rgba32> packed = null;
-
-        if (fillImageSharpImage) {
-            packed = new Image<Rgba32>(lastGoodSize.X, lastGoodSize.Y);
-
-            packed.Mutate(
-            context => {
-                context.Clear(Color.Transparent);
-
-                foreach (TakenSpace takenSpace in this._lastGoodTakenSpaces) {
-                    context.DrawImage(takenSpace.Image, new Point(takenSpace.Rectangle.X, takenSpace.Rectangle.Y), 1);
-                }
-            }
-            );
+        if (this._lastGoodTakenSpaces == null) {
+            throw new Exception("Unable to pack!");
         }
 
         return new PackedTexture {
-            Image = packed, 
             Spaces = this._lastGoodTakenSpaces,
             Size = lastGoodSize
         };

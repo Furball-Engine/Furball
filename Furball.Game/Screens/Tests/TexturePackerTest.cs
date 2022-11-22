@@ -1,20 +1,24 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
+using FontStashSharp;
 using Furball.Engine;
-using Furball.Engine.Engine.Graphics;
 using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Graphics.Drawables.Primitives;
+using Furball.Engine.Engine.Graphics.TexturePacker;
 using Furball.Engine.Engine.Helpers;
 using Furball.Vixie;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
+using Image=SixLabors.ImageSharp.Image;
+using Size=System.Drawing.Size;
 
 namespace Furball.Game.Screens.Tests;
 
 public class TexturePackerTest : TestScreen {
     private PackedTexture _packed;
-    private Texture       _texture;
+
+    private Dictionary<string, Image<Rgba32>> _sourceImages = new Dictionary<string, Image<Rgba32>>();
 
     public override bool RequireLoadingScreen => true;
 
@@ -27,12 +31,19 @@ public class TexturePackerTest : TestScreen {
 
         this.LoadingStatus = "Gathering Images...";
 
-        List<Image<Rgba32>> images = new List<Image<Rgba32>>();
+        List<TextureToPack> toPack = new List<TextureToPack>();
         for (int i = 0; i < files.Length; i++) {
 
             FileInfo fileInfo = files[i];
             this.LoadingStatus = $"Gathering Image... {fileInfo.Name}";
-            images.Add(Image.Load<Rgba32>(fileInfo.FullName));
+            Image<Rgba32> img;
+            _sourceImages[fileInfo.FullName] = img = Image.Load<Rgba32>(fileInfo.FullName);
+            toPack.Add(
+            new TextureToPack {
+                Name = fileInfo.FullName,
+                Size = new Size(img.Width, img.Height)
+            }
+            );
 
             this.LoadingProgress = i / (files.Length + 1);
         }
@@ -40,7 +51,7 @@ public class TexturePackerTest : TestScreen {
         this.LoadingStatus = "Packing Image...";
 
         Profiler.StartProfile("texture_pack");
-        TexturePacker packer = new TexturePacker(images);
+        TexturePacker packer = new TexturePacker(toPack);
 
         this._packed = packer.Pack();
         Profiler.EndProfileAndPrint("texture_pack");
@@ -53,13 +64,8 @@ public class TexturePackerTest : TestScreen {
     public override void Initialize() {
         base.Initialize();
 
-        Texture tex = Vixie.Game.ResourceFactory.CreateTextureFromImage(this._packed.Image);
-
-        this._texture = tex;
+        Texture tex = Vixie.Game.ResourceFactory.CreateEmptyTexture((uint)this._packed.Size.X, (uint)this._packed.Size.Y);
         
-        this._packed.Image.Dispose();
-        this._packed.Image = null;
-
         Vector2 scale = new Vector2((float)FurballGame.DEFAULT_WINDOW_HEIGHT / tex.Height);
         
         this.Manager.Add(
@@ -68,11 +74,37 @@ public class TexturePackerTest : TestScreen {
         }
         );
         
-        foreach (TexturePacker.TakenSpace space in this._packed.Spaces) {
+        foreach (TakenSpace space in this._packed.Spaces) {
+            Image<Rgba32> sourceImage = this._sourceImages[space.TextureName];
+            
+            sourceImage.ProcessPixelRows(
+            x => {
+                for (int i = 0; i < x.Height; i++) {
+                    tex.SetData<Rgba32>(
+                    x.GetRowSpan(i),
+                    space.Rectangle with {
+                        Width = x.Width,
+                        Y = space.Rectangle.Y + i,
+                        Height = 1
+                    }
+                    );
+                }
+            });
+            
+            sourceImage.Dispose();
+            
             this.Manager.Add(new RectanglePrimitiveDrawable(space.Rectangle.Location.ToVector2() * scale, space.Rectangle.Size.ToVector2() * scale, 1, false));
         }
+
+        this.Manager.Add(
+        new TextDrawable(new Vector2(10), FurballGame.DefaultFont, $"Final Size: {this._packed.Size}", 24) {
+            Effect         = FontSystemEffect.Stroked,
+            EffectStrength = 1
+        }
+        );
         
         //Make sure to clear everything so the GC picks it up
+        this._sourceImages = null;
         this._packed = null;
     }
 }
