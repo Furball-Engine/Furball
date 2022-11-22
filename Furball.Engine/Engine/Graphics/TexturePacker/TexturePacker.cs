@@ -13,27 +13,29 @@ public class TexturePacker {
         int PathologicalMultiplier(TextureToPack tex) {
             return Math.Max(tex.Width, tex.Height) / Math.Min(tex.Width, tex.Height) * tex.Width * tex.Height;
         }
-        
+
         images.Sort((y, x) => PathologicalMultiplier(x).CompareTo(PathologicalMultiplier(y)));
 
         this._images = images;
     }
 
     private List<TakenSpace> _lastGoodTakenSpaces;
-    
+
     private List<TakenSpace> _takenSpaces = new List<TakenSpace>();
     private List<Rectangle>  _emptySpaces = new List<Rectangle>();
 
-    public PackedTexture Pack(bool fillImageSharpImage = true) {
+    public PackedTexture Pack(int clampSize = 4096) {
         Vector2D<int> size = FurballGame.MaxTextureSize;
 
-        size.X = size.X.Clamp(0, 4096);
-        size.Y = size.Y.Clamp(0, 4096);
+        size.X = size.X.Clamp(0, clampSize);
+        size.Y = size.Y.Clamp(0, clampSize);
+
+        Vector2D<int> origSize = size;
 
         bool TryPack(Vector2D<int> fullSize) {
             this._emptySpaces = new List<Rectangle>();
             this._takenSpaces = new List<TakenSpace>();
-            
+
             this._emptySpaces.Add(new Rectangle(0, 0, fullSize.X, fullSize.Y));
 
             int IndexOfFirstCandidate(Rectangle rect) {
@@ -63,8 +65,8 @@ public class TexturePacker {
                 if (candidate.Width == image.Width && candidate.Height == image.Height) {
                     this._takenSpaces.Add(
                     new TakenSpace {
-                        Rectangle = candidate,
-                        TextureName     = image.Name
+                        Rectangle   = candidate,
+                        TextureName = image.Name
                     }
                     );
                     continue;
@@ -77,7 +79,7 @@ public class TexturePacker {
                         Rectangle = candidate with {
                             Height = image.Height
                         },
-                        TextureName     = image.Name
+                        TextureName = image.Name
                     }
                     );
 
@@ -96,7 +98,7 @@ public class TexturePacker {
                         Rectangle = candidate with {
                             Width = image.Width
                         },
-                        TextureName     = image.Name
+                        TextureName = image.Name
                     }
                     );
 
@@ -143,15 +145,77 @@ public class TexturePacker {
         }
 
         Vector2D<int> lastGoodSize = size;
-        
-        while (TryPack(size)) {
-            this._lastGoodTakenSpaces = this._takenSpaces;
-            lastGoodSize              = size;
 
-            //10 is rather rough, but we want this to be relatively fast, so /shrug
-            size.X -= 10;
-            size.Y -= 10;
+        { //Get a good pack with a square
+            int stepSize = 25;
+
+            //Shrink a bunch
+            while (TryPack(size)) {
+                this._lastGoodTakenSpaces = this._takenSpaces;
+                lastGoodSize              = size;
+
+                size.X -= stepSize;
+                size.Y -= stepSize;
+            }
+
+            for (int i = 0; i < stepSize; i++) {
+                size.X += 1;
+                size.Y += 1;
+            
+                if (TryPack(size)) {
+                    this._lastGoodTakenSpaces = this._takenSpaces;
+                    lastGoodSize              = size;
+                    break;
+                }
+            }
         }
+
+        { //Further refine the pack by shrinking width
+            int stepSize = 5;
+            
+            size.X -= stepSize;
+            while (TryPack(size)) {
+                this._lastGoodTakenSpaces = this._takenSpaces;
+                lastGoodSize              = size; 
+                
+                size.X -= stepSize;
+            }
+        
+            for (int i = 0; i < stepSize; i++) {
+                size.X += 1;
+        
+                if (TryPack(size)) {
+                    this._lastGoodTakenSpaces = this._takenSpaces;
+                    lastGoodSize              = size;
+                    break; 
+                }
+            }
+        }
+        
+        { //Further refine the pack by shrinking height
+            int stepSize = 5;
+            
+            size.Y -= stepSize;
+            while (TryPack(size)) {
+                this._lastGoodTakenSpaces = this._takenSpaces;
+                lastGoodSize              = size; 
+                
+                size.Y -= stepSize;
+            }
+            
+            for (int i = 0; i < stepSize; i++) {
+                size.Y += 1;
+        
+                if (TryPack(size)) {
+                    this._lastGoodTakenSpaces = this._takenSpaces;
+                    lastGoodSize              = size;
+                    break; 
+                }
+            }
+        }
+
+        if (lastGoodSize.X > origSize.X || lastGoodSize.Y > origSize.Y)
+            throw new Exception("Could not pack texture, try increasing the clamp size");
 
         if (this._lastGoodTakenSpaces == null) {
             throw new Exception("Unable to pack!");
@@ -159,7 +223,7 @@ public class TexturePacker {
 
         return new PackedTexture {
             Spaces = this._lastGoodTakenSpaces,
-            Size = lastGoodSize
+            Size   = lastGoodSize
         };
     }
 }
