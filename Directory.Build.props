@@ -1,17 +1,3 @@
 <Project>
-    <PropertyGroup>
-        <UseImGui>false</UseImGui>
-        <EnabledBackends>Vulkan;Direct3D11;Mola;OpenGL;Veldrid;Dummy;WebGPU</EnabledBackends>
-    </PropertyGroup>
-
-    <PropertyGroup>
-        <DefineConstants Condition="'$(UseImGui)'=='true'">$(DefineConstants);USE_IMGUI</DefineConstants>
-        <DefineConstants Condition="$(EnabledBackends.Contains('Vulkan'))">$(DefineConstants); VIXIE_BACKEND_VULKAN</DefineConstants>
-        <DefineConstants Condition="$(EnabledBackends.Contains('Direct3D11'))">$(DefineConstants);VIXIE_BACKEND_D3D11</DefineConstants>
-        <DefineConstants Condition="$(EnabledBackends.Contains('Mola'))">$(DefineConstants);VIXIE_BACKEND_MOLA</DefineConstants>
-        <DefineConstants Condition="$(EnabledBackends.Contains('OpenGL'))">$(DefineConstants);VIXIE_BACKEND_OPENGL</DefineConstants>
-        <DefineConstants Condition="$(EnabledBackends.Contains('Veldrid'))">$(DefineConstants);VIXIE_BACKEND_VELDRID</DefineConstants>
-        <DefineConstants Condition="$(EnabledBackends.Contains('Dummy'))">$(DefineConstants); VIXIE_BACKEND_DUMMY</DefineConstants>
-        <DefineConstants Condition="$(EnabledBackends.Contains('WebGPU'))">$(DefineConstants); VIXIE_BACKEND_WEBGPU</DefineConstants>
-    </PropertyGroup>
+    <Import Project="Furball.Vixie/Directory.Build.props"/>
 </Project>
