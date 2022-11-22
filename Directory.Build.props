@@ -1,6 +1,6 @@
 <Project>
     <PropertyGroup>
-        <UseImGui>true</UseImGui>
+        <UseImGui>false</UseImGui>
         <EnabledBackends>Vulkan;Direct3D11;Mola;OpenGL;Veldrid;Dummy;WebGPU</EnabledBackends>
     </PropertyGroup>
 
