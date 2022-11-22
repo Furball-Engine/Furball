@@ -279,6 +279,8 @@ public class FurballGame : Game {
         this.CreateSceneViewer();
 
         WindowManager.FramebufferResize += this.OnWindowResize;
+
+        MaxTextureSize = WindowManager.GraphicsBackend.MaxTextureSize;
         
         Profiler.EndProfileAndPrint("full_furball_initialize");
     }
@@ -828,6 +830,11 @@ public class FurballGame : Game {
 
     private static Stopwatch _stopwatch = new();
     public static double Time {
+        get;
+        private set;
+    }
+    
+    public static Vector2D<int> MaxTextureSize {
         get;
         private set;
     }

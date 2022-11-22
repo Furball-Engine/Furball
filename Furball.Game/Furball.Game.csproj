@@ -23,17 +23,25 @@
         <None Update="Content/test.mp4" CopyToOutputDirectory="PreserveNewest" />
         <None Update="Content/lulkanto.mp3" CopyToOutputDirectory="PreserveNewest" />
         <None Update="Content/test.png" CopyToOutputDirectory="PreserveNewest" />
+        <None Update="Content/3652_komi_awkward.png" CopyToOutputDirectory="PreserveNewest" />
+        <None Update="Content/772946098419531856.png" CopyToOutputDirectory="PreserveNewest" />
+        <None Update="Content/mods.png" CopyToOutputDirectory="PreserveNewest" />
+        <None Update="Content/785392032436715541.png" CopyToOutputDirectory="PreserveNewest" />
+        <None Update="Content/aaxel.png" CopyToOutputDirectory="PreserveNewest" />
+        <None Update="Content/cursedfork.png" CopyToOutputDirectory="PreserveNewest" />
+        <None Update="Content/Danger-Asbestos-Portrait-200mm-x-300mm.png" CopyToOutputDirectory="PreserveNewest" />
+        <None Update="Content/appimage.png" CopyToOutputDirectory="PreserveNewest" />
     </ItemGroup>
 
     <ItemGroup>
-        <Reference Include="System" Condition="'$(TargetFramework)' == 'net461'"/>
-        <Reference Include="System.Runtime" Condition="'$(TargetFramework)' == 'net461'"/>
-        <Reference Include="System.Private.CoreLib" Condition="'$(TargetFramework)' == 'net461'"/>
-        <Reference Include="System.Numerics" Condition="'$(TargetFramework)' == 'net461'"/>
-        <Reference Include="System.Numerics.Vectors" Condition="'$(TargetFramework)' == 'net461'"/>
-        <Reference Include="System.Runtime.Versioning" Condition="'$(TargetFramework)' == 'net461'"/>
+        <Reference Include="System" Condition="'$(TargetFramework)' == 'net461'" />
+        <Reference Include="System.Runtime" Condition="'$(TargetFramework)' == 'net461'" />
+        <Reference Include="System.Private.CoreLib" Condition="'$(TargetFramework)' == 'net461'" />
+        <Reference Include="System.Numerics" Condition="'$(TargetFramework)' == 'net461'" />
+        <Reference Include="System.Numerics.Vectors" Condition="'$(TargetFramework)' == 'net461'" />
+        <Reference Include="System.Runtime.Versioning" Condition="'$(TargetFramework)' == 'net461'" />
 
-        <PackageReference Condition="'$(TargetFramework)' == 'net7.0-windows'" Include="Eto.Platform.Windows" Version="2.7.2"/>
+        <PackageReference Condition="'$(TargetFramework)' == 'net7.0-windows'" Include="Eto.Platform.Windows" Version="2.7.2" />
     </ItemGroup>
     
     <ItemGroup Condition="'$(TargetFramework)' == 'net461'">

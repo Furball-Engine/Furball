@@ -2,7 +2,7 @@ using System.Drawing;
 using System.Numerics;
 using Color=Furball.Vixie.Backends.Shared.Color;
 
-namespace Furball.Engine.Engine.Helpers; 
+namespace Furball.Engine.Engine.Helpers;
 
 public static class ConversionHelpers {
     public static void ColorFromHexString(ref this Color color, string input) {
@@ -33,7 +33,10 @@ public static class ConversionHelpers {
         return ColorTranslator.ToHtml(color);
     }
 
-    public static Vector2 ToVector2(this Point point) => new(point.X, point.Y);
+    public static Vector2 ToVector2(this Point  point) => new(point.X, point.Y);
+    public static Vector2 ToVector2(this PointF point) => new(point.X, point.Y);
+    public static Vector2 ToVector2(this Size   size)  => new(size.Width, size.Height);
+    public static Vector2 ToVector2(this SizeF  size)  => new(size.Width, size.Height);
 
     public static Point  ToPoint(this  Vector2 vec2) => new((int)vec2.X, (int)vec2.Y);
     public static PointF ToPointF(this Vector2 vec2) => new(vec2.X, vec2.Y);

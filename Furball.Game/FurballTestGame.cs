@@ -69,6 +69,7 @@ public class FurballTestGame : FurballGame {
         LocalizationManager.AddDefaultTranslation(LocalizationStrings.RenderTargetTest,     "Render Target Test");
         LocalizationManager.AddDefaultTranslation(LocalizationStrings.GraphTest,            "Graph Test");
         LocalizationManager.AddDefaultTranslation(LocalizationStrings.GMLTest,              "GML Test");
+        LocalizationManager.AddDefaultTranslation(LocalizationStrings.TexturePackerTest,    "Texture Packer Test");
 
         LocalizationManager.AddDefaultTranslation(LocalizationStrings.ChooseScreen, "Choose Screen");
     }

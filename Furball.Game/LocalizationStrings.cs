@@ -26,5 +26,6 @@ public enum LocalizationStrings {
     VerticalSyncTest,
     RenderTargetTest,
     GraphTest,
-    GMLTest
+    GMLTest,
+    TexturePackerTest,
 }
