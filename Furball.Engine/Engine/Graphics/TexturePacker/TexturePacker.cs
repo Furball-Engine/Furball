@@ -20,6 +20,7 @@ public class TexturePacker {
     }
 
     private List<TakenSpace> _lastGoodTakenSpaces;
+    private List<Rectangle> _lastGoodEmptySpaces;
 
     private List<TakenSpace> _takenSpaces = new List<TakenSpace>();
     private List<Rectangle>  _emptySpaces = new List<Rectangle>();
@@ -50,6 +51,8 @@ public class TexturePacker {
             }
 
             foreach (TextureToPack image in this._images) {
+                this._emptySpaces.Sort((y, x) => (x.Width * x.Height).CompareTo(y.Width * y.Height));
+                
                 int index = IndexOfFirstCandidate(new Rectangle(0, 0, image.Width, image.Height));
 
                 if (index == -1) {
@@ -152,6 +155,7 @@ public class TexturePacker {
             //Shrink a bunch
             while (TryPack(size)) {
                 this._lastGoodTakenSpaces = this._takenSpaces;
+                this._lastGoodEmptySpaces = this._emptySpaces;
                 lastGoodSize              = size;
 
                 size.X -= stepSize;
@@ -164,6 +168,7 @@ public class TexturePacker {
             
                 if (TryPack(size)) {
                     this._lastGoodTakenSpaces = this._takenSpaces;
+                    this._lastGoodEmptySpaces = this._emptySpaces;
                     lastGoodSize              = size;
                     break;
                 }
@@ -176,6 +181,7 @@ public class TexturePacker {
             size.X -= stepSize;
             while (TryPack(size)) {
                 this._lastGoodTakenSpaces = this._takenSpaces;
+                this._lastGoodEmptySpaces = this._emptySpaces;
                 lastGoodSize              = size; 
                 
                 size.X -= stepSize;
@@ -186,6 +192,7 @@ public class TexturePacker {
         
                 if (TryPack(size)) {
                     this._lastGoodTakenSpaces = this._takenSpaces;
+                    this._lastGoodEmptySpaces = this._emptySpaces;
                     lastGoodSize              = size;
                     break; 
                 }
@@ -198,6 +205,7 @@ public class TexturePacker {
             size.Y -= stepSize;
             while (TryPack(size)) {
                 this._lastGoodTakenSpaces = this._takenSpaces;
+                this._lastGoodEmptySpaces = this._emptySpaces;
                 lastGoodSize              = size; 
                 
                 size.Y -= stepSize;
@@ -208,6 +216,7 @@ public class TexturePacker {
         
                 if (TryPack(size)) {
                     this._lastGoodTakenSpaces = this._takenSpaces;
+                    this._lastGoodEmptySpaces = this._emptySpaces;
                     lastGoodSize              = size;
                     break; 
                 }
@@ -222,8 +231,9 @@ public class TexturePacker {
         }
 
         return new PackedTexture {
-            Spaces = this._lastGoodTakenSpaces,
-            Size   = lastGoodSize
+            Spaces      = this._lastGoodTakenSpaces,
+            EmptySpaces = this._lastGoodEmptySpaces,
+            Size        = lastGoodSize
         };
     }
 }
