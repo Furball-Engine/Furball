@@ -27,12 +27,11 @@ public class TexturePacker {
     }
 
     private List<TakenSpace> _lastGoodTakenSpaces;
-    private List<Rectangle> _lastGoodEmptySpaces;
     
     private List<TakenSpace> _takenSpaces = new List<TakenSpace>();
     private List<Rectangle>  _emptySpaces = new List<Rectangle>();
 
-    public PackedTexture Pack() {
+    public PackedTexture Pack(bool fillImageSharpImage = true) {
         Vector2D<int> size = FurballGame.MaxTextureSize;
 
         size.X = size.X.Clamp(0, 4096);
@@ -146,30 +145,37 @@ public class TexturePacker {
             return true;
         }
 
+        Vector2D<int> lastGoodSize = size;
+        
         while (TryPack(size)) {
-            this._lastGoodEmptySpaces = this._emptySpaces;
             this._lastGoodTakenSpaces = this._takenSpaces;
+            lastGoodSize              = size;
 
             //10 is rather rough, but we want this to be relatively fast, so /shrug
             size.X -= 10;
             size.Y -= 10;
         }
 
-        Image<Rgba32> packed = new Image<Rgba32>(size.X, size.Y);
+        Image<Rgba32> packed = null;
 
-        packed.Mutate(
-        context => {
-            context.Clear(Color.Transparent);
+        if (fillImageSharpImage) {
+            packed = new Image<Rgba32>(lastGoodSize.X, lastGoodSize.Y);
 
-            foreach (TakenSpace takenSpace in this._lastGoodTakenSpaces) {
-                context.DrawImage(takenSpace.Image, new Point(takenSpace.Rectangle.X, takenSpace.Rectangle.Y), 1);
+            packed.Mutate(
+            context => {
+                context.Clear(Color.Transparent);
+
+                foreach (TakenSpace takenSpace in this._lastGoodTakenSpaces) {
+                    context.DrawImage(takenSpace.Image, new Point(takenSpace.Rectangle.X, takenSpace.Rectangle.Y), 1);
+                }
             }
+            );
         }
-        );
 
         return new PackedTexture {
             Image = packed, 
-            Spaces = this._lastGoodTakenSpaces
+            Spaces = this._lastGoodTakenSpaces,
+            Size = lastGoodSize
         };
     }
 }
