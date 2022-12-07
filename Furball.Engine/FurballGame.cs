@@ -394,7 +394,11 @@ public class FurballGame : Game {
         EtoHelper.Dispose();
 
         FurballConfig.Instance.Save();
-            
+        
+        this.RunningScreen?.Dispose();
+
+        Logger.Update().Wait();
+        
         base.OnClosing();
     }
 
