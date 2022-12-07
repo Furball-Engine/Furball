@@ -75,8 +75,8 @@ public unsafe class VideoDecoder : IDisposable {
             RootPath = "/usr/lib";
     }
 
-    public void Load(string path) {
-        this.Load(File.OpenRead(path));
+    public void Load(string path, HardwareDecoderType wantedDecoderTypes) {
+        this.Load(File.OpenRead(path), wantedDecoderTypes);
     }
 
     private avio_alloc_context_read_packet readPacketCallback;
@@ -122,7 +122,51 @@ public unsafe class VideoDecoder : IDisposable {
         return this._fileStream.Position;
     }
 
-    public void Load(Stream stream) {
+    private List<(AVHWDeviceType, FFmpegCodec)> GetPossibleDecoders(AVCodecID codecId, HardwareDecoderType wantedHwDecodingType) {
+        AVHWDeviceTypePerformanceComparer comparer = new();
+        List<(AVHWDeviceType, FFmpegCodec)> list = new();
+
+        //This is the first matching codec found, which should aloways be the SW fallback
+        FFmpegCodec first = null;
+        
+        void* itr = null;
+        FFmpegCodec codec = null;
+        
+        while ((codec = new FFmpegCodec(av_codec_iterate(&itr))).Codec != null) {
+            //If the ID doesnt match or its not a decoder, skip it 
+            if (codec.Codec->id != codecId || av_codec_is_decoder(codec.Codec) == 0)
+                continue;
+
+            //Set the first codec if it is not set
+            first ??= codec;
+
+            //If we dont want hardware decoding, break out, as we found a SW decoder
+            if (wantedHwDecodingType == HardwareDecoderType.None) 
+                break;
+            
+            //Iterate through the supported hardware devices of the codec
+            foreach (AVHWDeviceType avhwDeviceType in codec.SupportedHardwareDevices.Value) {
+                HardwareDecoderType? type = avhwDeviceType.ToHardwareDecoderType();
+
+                //If its not a valid hw decoder type or its not on our target list, ignore it
+                if (!type.HasValue || !wantedHwDecodingType.HasFlag(type.Value))
+                    continue;
+                
+                //We found a hardware decoder, and its on our list of wanted ones
+                list.Add((avhwDeviceType, codec));
+            }
+        }
+        
+        //If we found a SW decoder, add it to the list
+        if(first != null)
+            list.Add((AVHWDeviceType.AV_HWDEVICE_TYPE_NONE, first));
+
+        list.Sort((x, h) => comparer.Compare(x.Item1, h.Item1));
+        
+        return list;
+    }
+
+    public void Load(Stream stream, HardwareDecoderType wantedDecoderTypes) {
         int ret = 0;
         if (this._videoLoaded)
             throw new InvalidOperationException("Unable to load 2 videos with the same VideoDecoder!");
@@ -180,63 +224,62 @@ public unsafe class VideoDecoder : IDisposable {
 
         //Get the video stream
         this.VideoStream = new FFmpegStream(this.FormatContext.FormatContext->streams[this.VideoStreamIndex]);
+
+        List<(AVHWDeviceType, FFmpegCodec)> validDecoders = this.GetPossibleDecoders(this.VideoStream.Stream->codecpar->codec_id, wantedDecoderTypes);
+
+        AVCodecContext* codecContext = null;
         
-        //Create and fill the codec context
-        this.CodecContext = new FFmpegCodecContext(avcodec_alloc_context3(null));
-        avcodec_parameters_to_context(this.CodecContext.CodecContext, this.VideoStream.Stream->codecpar);
-        
-        //Find a decoder
-        FFmpegCodec swDecoder = this.Decoder = new FFmpegCodec(avcodec_find_decoder(this.CodecContext.CodecContext->codec_id));
-        if (this.Decoder.Codec == null) {
-            Logger.Log("Failed to find decoder!", VideoDecoderLoggerLevel.InstanceError);
+        foreach ((AVHWDeviceType, FFmpegCodec) validDecoder in validDecoders) {
+            AVHWDeviceType type = validDecoder.Item1;
+            FFmpegCodec codec = validDecoder.Item2;
 
-            throw new Exception("Failed to find decoder!");
-        }
+            //Free a previous codec context, if there
+            if (codecContext != null) {
+                avcodec_free_context(&codecContext);
+                this.CodecContext = null;
+            }
+            
+            //Create and fill the codec context
+            codecContext               = avcodec_alloc_context3(codec.Codec);
+            codecContext->pkt_timebase = this.VideoStream.Stream->time_base;
 
-        void*    iter  = null;
-        AVCodec* codec;
-
-        bool   foundHw  = false;
-        string softName = SilkMarshal.PtrToString((nint)this.Decoder.Codec->name);
-        while ((codec = av_codec_iterate(&iter)) != null) {
-            string name     = SilkMarshal.PtrToString((nint)codec->name);
-            string longName = SilkMarshal.PtrToString((nint)codec->long_name);
-
-            //If its not a decoder or its not a video decoder, skip it
-            if (av_codec_is_decoder(codec) == 0 || codec->type != AVMediaType.AVMEDIA_TYPE_VIDEO || avcodec_get_hw_config(codec, 0) == null)
+            //If we failed to create the codec context, try the next one
+            if (codecContext == null) {
+                Logger.Log($"Failed to create codec context for decoder {SilkMarshal.PtrToString((nint)codec.Codec->name)}", VideoDecoderLoggerLevel.InstanceInfo);
                 continue;
+            }
+            
+            ret = avcodec_parameters_to_context(codecContext, this.VideoStream.Stream->codecpar);
+            if (ret < 0) {
+                Logger.Log($"Couldnt copy codec parameters from video stream to codec context. Err:{this.FFmpegErrorToString(ret)}", VideoDecoderLoggerLevel.InstanceInfo);
+                continue;
+            }
 
-            if (softName != name && codec->id == this.Decoder.Codec->id) {
-                codec = avcodec_find_decoder_by_name(name);
-
-                Logger.Log($"Trying to use hardware decoder {longName} instead of {softName}!", VideoDecoderLoggerLevel.InstanceInfo);
-                
-                //Open the codec
-                if ((ret = avcodec_open2(this.CodecContext.CodecContext, codec, null)) < 0) {
-                    Logger.Log($"Failed to open codec {SilkMarshal.PtrToString((nint)codec->name)}! Err:{DescribeError(ret)}", VideoDecoderLoggerLevel.InstanceError);
-
+            if (type != AVHWDeviceType.AV_HWDEVICE_TYPE_NONE) {
+                ret = av_hwdevice_ctx_create(&codecContext->hw_device_ctx, type, null, null, 0);
+                if (ret < 0) {
+                    Logger.Log($"Failed to init hardware device context! Err:{FFmpegErrorToString(ret)}", VideoDecoderLoggerLevel.InstanceInfo);
                     continue;
                 }
-
-                Logger.Log($"Found a hardware decoder {name} for software decoder {softName}!", VideoDecoderLoggerLevel.InstanceInfo);
-
-                this.Decoder = new FFmpegCodec(codec);
-                foundHw      = true;
-                break;
+                
+                Logger.Log($"Successfully created hardware video decoder {type} for codec {SilkMarshal.PtrToString((nint)codec.Codec->name)}", VideoDecoderLoggerLevel.InstanceInfo);
             }
+
+            ret = avcodec_open2(codecContext, codec.Codec, null);
+            if (ret < 0) {
+                Logger.Log($"Failed to open codec {codec.Name}!", VideoDecoderLoggerLevel.InstanceInfo);
+                continue;
+            }
+
+            this.CodecContext = new FFmpegCodecContext(codecContext);
+            
+            Logger.Log($"Successfully initialized codec {SilkMarshal.PtrToString((nint)codec.Codec->long_name)}", VideoDecoderLoggerLevel.InstanceInfo);
+            break;
         }
 
-        if (!foundHw)
-            this.Decoder = swDecoder;
+        if (this.CodecContext == null)
+            throw new Exception($"No usable decoder found! Tried {validDecoders.Count}!");
         
-        ret = 0;
-        //Open the codec
-        if (!foundHw && (ret = avcodec_open2(this.CodecContext.CodecContext, this.Decoder.Codec, null)) < 0) {
-            Logger.Log("Failed to open codec!", VideoDecoderLoggerLevel.InstanceError);
-
-            throw new Exception("Failed to open codec!");
-        }
-
         // allocate the video frames
         this.AvFrame     = new FFmpegFrame();
         this.RenderFrame = new FFmpegFrame();
@@ -280,7 +323,7 @@ public unsafe class VideoDecoder : IDisposable {
         this._decodingThread.Start();
     }
 
-    private string DescribeError(int err) {
+    private string FFmpegErrorToString(int err) {
         byte* temp = (byte*)SilkMarshal.Allocate(AV_ERROR_MAX_STRING_SIZE);
 
         av_make_error_string(temp, AV_ERROR_MAX_STRING_SIZE, err);

@@ -24,7 +24,7 @@ public class VideoDrawable : TexturedDrawable {
     public VideoDrawable(byte[] path, double speed, ITimeSource timeSource, Vector2 position) : base(null, position) {
         //If we are moving at twice the speed, we should double our buffer size, and conversely if we are going half the speed we should half our buffer size
         this._decoder = new VideoDecoder((int)(4d * speed));
-        this._decoder.Load(new MemoryStream(path));
+        this._decoder.Load(new MemoryStream(path), HardwareDecoderType.Any);
 
         //Create the texture which will store our video
         this.Texture      = Game.ResourceFactory.CreateEmptyTexture((uint)this._decoder.Width, (uint)this._decoder.Height);
