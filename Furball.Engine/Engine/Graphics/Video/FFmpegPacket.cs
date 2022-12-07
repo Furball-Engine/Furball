@@ -9,12 +9,14 @@
 using System;
 using FFmpeg.AutoGen;
 
-namespace Furball.Engine.Engine.Graphics.Video; 
+namespace Furball.Engine.Engine.Graphics.Video;
 
 public unsafe class FFmpegPacket : IDisposable {
     public AVPacket* Packet;
-    public FFmpegPacket(AVPacket* avPacketAlloc) {
-        this.Packet = avPacketAlloc;
+    public FFmpegPacket(AVPacket* avPacketAlloc) => this.Packet = avPacketAlloc;
+    public void Dispose() {
+        this.ReleaseUnmanagedResources();
+        GC.SuppressFinalize(this);
     }
     private void ReleaseUnmanagedResources() {
         if (this.Packet == null)
@@ -23,11 +25,8 @@ public unsafe class FFmpegPacket : IDisposable {
         ffmpeg.av_packet_free(&packet);
         this.Packet = null;
     }
-    public void Dispose() {
-        ReleaseUnmanagedResources();
-        GC.SuppressFinalize(this);
-    }
     ~FFmpegPacket() {
-        ReleaseUnmanagedResources();
+        this.ReleaseUnmanagedResources();
     }
 }
+

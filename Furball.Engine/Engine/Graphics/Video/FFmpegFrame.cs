@@ -9,34 +9,33 @@
 using System;
 using FFmpeg.AutoGen;
 
-namespace Furball.Engine.Engine.Graphics.Video; 
+namespace Furball.Engine.Engine.Graphics.Video;
 
 public unsafe class FFmpegFrame : IDisposable {
-    public AVFrame* Frame;
 
-    public FFmpegFrame() {
-        this.Frame = ffmpeg.av_frame_alloc();
+    private bool     _released = false;
+    public  AVFrame* Frame;
+
+    public FFmpegFrame() => this.Frame = ffmpeg.av_frame_alloc();
+
+    public void Dispose() {
+
+        this.ReleaseUnmanagedResources();
+        GC.SuppressFinalize(this);
     }
 
     ~FFmpegFrame() {
-        ReleaseUnmanagedResources();
+        this.ReleaseUnmanagedResources();
     }
-
-    private bool _released = false;
     private void ReleaseUnmanagedResources() {
         if (this._released)
             return;
 
         this._released = true;
-        
+
         AVFrame* ptr = this.Frame;
         ffmpeg.av_frame_free(&ptr);
         this.Frame = null;
     }
-    
-    public void Dispose() {
-        
-        ReleaseUnmanagedResources();
-        GC.SuppressFinalize(this);
-    }
 }
+

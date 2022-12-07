@@ -9,26 +9,25 @@
 using System;
 using FFmpeg.AutoGen;
 
-namespace Furball.Engine.Engine.Graphics.Video; 
+namespace Furball.Engine.Engine.Graphics.Video;
 
 public unsafe class FFmpegFormatContext : IDisposable {
     public AVFormatContext* FormatContext;
-    
-    public FFmpegFormatContext(AVFormatContext* avFormatContext) {
-        this.FormatContext = avFormatContext;
+
+    public FFmpegFormatContext(AVFormatContext* avFormatContext) => this.FormatContext = avFormatContext;
+    public void Dispose() {
+        this.ReleaseUnmanagedResources();
+        GC.SuppressFinalize(this);
     }
     private void ReleaseUnmanagedResources() {
-        if(this.FormatContext == null)
+        if (this.FormatContext == null)
             return;
 
         ffmpeg.avformat_free_context(this.FormatContext);
         this.FormatContext = null;
     }
-    public void Dispose() {
-        ReleaseUnmanagedResources();
-        GC.SuppressFinalize(this);
-    }
     ~FFmpegFormatContext() {
-        ReleaseUnmanagedResources();
+        this.ReleaseUnmanagedResources();
     }
 }
+

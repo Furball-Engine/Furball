@@ -12,7 +12,7 @@
 using System.Collections.Generic;
 using FFmpeg.AutoGen;
 
-namespace Furball.Engine.Engine.Graphics.Video; 
+namespace Furball.Engine.Engine.Graphics.Video;
 
 // ReSharper disable once InconsistentNaming
 internal class AVHWDeviceTypePerformanceComparer : Comparer<AVHWDeviceType> {

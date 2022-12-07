@@ -6,14 +6,12 @@
  * Originally written by Beyley Thomas <ep1cm1n10n123@gmail.com>
  */
 
-using System;
 using FFmpeg.AutoGen;
 
-namespace Furball.Engine.Engine.Graphics.Video; 
+namespace Furball.Engine.Engine.Graphics.Video;
 
 public unsafe class FFmpegStream {
     public AVStream* Stream;
-    public FFmpegStream(AVStream* avStream) {
-        this.Stream = avStream;
-    }
+    public FFmpegStream(AVStream* avStream) => this.Stream = avStream;
 }
+

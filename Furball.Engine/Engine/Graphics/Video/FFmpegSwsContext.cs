@@ -9,12 +9,14 @@
 using System;
 using FFmpeg.AutoGen;
 
-namespace Furball.Engine.Engine.Graphics.Video; 
+namespace Furball.Engine.Engine.Graphics.Video;
 
-public unsafe class FFmpegSwsContext : IDisposable{
+public unsafe class FFmpegSwsContext : IDisposable {
     public SwsContext* SwsContext;
-    public FFmpegSwsContext(SwsContext* swsGetContext) {
-        this.SwsContext = swsGetContext;
+    public FFmpegSwsContext(SwsContext* swsGetContext) => this.SwsContext = swsGetContext;
+    public void Dispose() {
+        this.ReleaseUnmanagedResources();
+        GC.SuppressFinalize(this);
     }
     private void ReleaseUnmanagedResources() {
         if (this.SwsContext == null)
@@ -22,11 +24,8 @@ public unsafe class FFmpegSwsContext : IDisposable{
         ffmpeg.sws_freeContext(this.SwsContext);
         this.SwsContext = null;
     }
-    public void Dispose() {
-        ReleaseUnmanagedResources();
-        GC.SuppressFinalize(this);
-    }
     ~FFmpegSwsContext() {
-        ReleaseUnmanagedResources();
+        this.ReleaseUnmanagedResources();
     }
 }
+

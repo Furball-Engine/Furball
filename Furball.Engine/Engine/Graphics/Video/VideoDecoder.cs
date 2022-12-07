@@ -21,22 +21,54 @@ namespace Furball.Engine.Engine.Graphics.Video;
 
 // ReSharper disable UnusedMember.Local
 public unsafe class VideoDecoder : IDisposable {
-    private FFmpegFrame         AvFrame;
-    private FFmpegFrame         AvHwDstFrame;
-    private FFmpegFrame         RenderFrame;
-    private FFmpegSwsContext    ConvertContext;
-    private FFmpegPacket        Packet;
-    private FFmpegStream        VideoStream;
-    private FFmpegFormatContext FormatContext;
-    private FFmpegCodecContext  CodecContext;
-    private FFmpegCodec         Decoder;
-    private int                 VideoStreamIndex;
-    private byte*               InternalBuffer;
-    private AVIOContext*        AvioContext;
+    private readonly int _bufferSize;
+
+    private readonly ConcurrentQueue<Delegate> _commandQueue = new ConcurrentQueue<Delegate>();
+
+    private readonly Thread   _decodingThread;
+    private readonly byte[][] _frameBuffer;
+
+    private readonly double[] _frameBufferTimes;
 
     private Stream _fileStream;
+    private bool   _isDisposed = false;
+    private long   _lastPts;
+    private int    _readCursor;
+    private bool   _runDecoding = true;
 
-    public double FrameDelay;
+    private long                _seekingTo;
+    private bool                _videoLoaded = false;
+    private int                 _writeCursor;
+    private FFmpegFrame         AvFrame;
+    private FFmpegFrame         AvHwDstFrame;
+    private AVIOContext*        AvioContext;
+    private FFmpegCodecContext  CodecContext;
+    private FFmpegSwsContext    ConvertContext;
+    private FFmpegCodec         Decoder;
+    private FFmpegFormatContext FormatContext;
+
+    public  double       FrameDelay;
+    private byte*        InternalBuffer;
+    private FFmpegPacket Packet;
+
+    private avio_alloc_context_read_packet readPacketCallback;
+    private FFmpegFrame                    RenderFrame;
+    private avio_alloc_context_seek        seekCallback;
+    private FFmpegStream                   VideoStream;
+    private int                            VideoStreamIndex;
+
+    public VideoDecoder(int bufferSize) {
+        //Having too small of a buffer size causes issues
+        this._bufferSize = Math.Max(4, bufferSize);
+
+        this._frameBufferTimes = new double[this._bufferSize];
+        this._frameBuffer      = new byte[this._bufferSize][];
+
+        this._decodingThread = new Thread(this.DecodingRun);
+
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            RootPath = "/usr/lib";
+    }
     public double CurrentDisplayTime { get; private set; } = 0d;
 
     public double Length {
@@ -51,37 +83,34 @@ public unsafe class VideoDecoder : IDisposable {
     public int Height => this.CodecContext.CodecContext->height;
     private double StartTimeMs => 1000 * this.VideoStream.Stream->start_time * this.FrameDelay;
 
-    private readonly Thread _decodingThread;
-    private          bool   _isDisposed = false;
+    public void Dispose() {
+        if (this._isDisposed)
+            return;
+        this._isDisposed = true;
 
-    private readonly double[] _frameBufferTimes;
-    private readonly byte[][] _frameBuffer;
-    private readonly int      _bufferSize;
-    private          bool     _videoLoaded = false;
-    private          bool     _runDecoding = true;
-    private          int      _writeCursor;
-    private          int      _readCursor;
-    private          long     _lastPts;
+        this._runDecoding = false;
 
-    public VideoDecoder(int bufferSize) {
-        //Having too small of a buffer size causes issues
-        this._bufferSize = Math.Max(4, bufferSize);
+        if (this._decodingThread.IsAlive)
+            this._decodingThread.Join();
 
-        this._frameBufferTimes = new double[this._bufferSize];
-        this._frameBuffer      = new byte[this._bufferSize][];
+        this._fileStream.Dispose();
 
-        this._decodingThread = new Thread(this.DecodingRun);
+        // AppData data = this._data;
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-            RootPath = "/usr/lib";
+        //Clean up after ourselves
+        // avformat_close_input(&data.FormatContext);
+
+        // if (data.AvFrame        != null) av_free(data.AvFrame);
+        // if (data.RenderFrame    != null) av_free(data.RenderFrame);
+        // if (data.Packet         != null) av_free(data.Packet);
+        // if (data.CodecContext   != null) avcodec_close(data.CodecContext);
+        // if (data.FormatContext  != null) avformat_free_context(data.FormatContext);
+        // if (data.ConvertContext != null) sws_freeContext(data.ConvertContext);
     }
 
     public void Load(string path, HardwareDecoderType wantedDecoderTypes) {
         this.Load(File.OpenRead(path), wantedDecoderTypes);
     }
-
-    private avio_alloc_context_read_packet readPacketCallback;
-    private avio_alloc_context_seek        seekCallback;
 
     private int ReadPacketCallbackDef(void* opaque, byte* bufferPtr, int bufferSize) {
         byte[] arr  = new byte[bufferSize];
@@ -92,12 +121,6 @@ public unsafe class VideoDecoder : IDisposable {
         }
 
         return read;
-    }
-
-    private enum SeekType {
-        SeekSet,
-        SeekCur,
-        SeekEnd
     }
 
     private long StreamSeekCallbackDef(void* opaque, long offset, int whence) {
@@ -124,8 +147,8 @@ public unsafe class VideoDecoder : IDisposable {
     }
 
     private List<(AVHWDeviceType, FFmpegCodec)> GetPossibleDecoders(AVCodecID codecId, HardwareDecoderType wantedHwDecodingType) {
-        AVHWDeviceTypePerformanceComparer   comparer = new();
-        List<(AVHWDeviceType, FFmpegCodec)> list     = new();
+        AVHWDeviceTypePerformanceComparer   comparer = new AVHWDeviceTypePerformanceComparer();
+        List<(AVHWDeviceType, FFmpegCodec)> list     = new List<(AVHWDeviceType, FFmpegCodec)>();
 
         //This is the first matching codec found, which should aloways be the SW fallback
         FFmpegCodec first = null;
@@ -264,7 +287,7 @@ public unsafe class VideoDecoder : IDisposable {
             if (type != AVHWDeviceType.AV_HWDEVICE_TYPE_NONE) {
                 ret = av_hwdevice_ctx_create(&codecContext->hw_device_ctx, type, null, null, 0);
                 if (ret < 0) {
-                    Logger.Log($"Failed to init hardware device context! Err:{FFmpegErrorToString(ret)}", VideoDecoderLoggerLevel.InstanceInfo);
+                    Logger.Log($"Failed to init hardware device context! Err:{this.FFmpegErrorToString(ret)}", VideoDecoderLoggerLevel.InstanceInfo);
                     continue;
                 }
 
@@ -347,8 +370,6 @@ public unsafe class VideoDecoder : IDisposable {
         return s;
     }
 
-    private readonly ConcurrentQueue<Delegate> _commandQueue = new ConcurrentQueue<Delegate>();
-
     private void DecodingRun() {
         try {
             bool gotNewFrame;
@@ -394,9 +415,11 @@ public unsafe class VideoDecoder : IDisposable {
                                 if (((AVPixelFormat)this.AvFrame.Frame->format).IsHardwarePixelFormat()) {
                                     ret = av_hwframe_transfer_data(this.AvHwDstFrame.Frame, this.AvFrame.Frame, 0);
 
-                                    if (ret < 0) {
-                                        Logger.Log($"Failed to get data from hardware frame! Err:{FFmpegErrorToString(ret)}", VideoDecoderLoggerLevel.InstanceError);
-                                    }
+                                    if (ret < 0)
+                                        Logger.Log(
+                                        $"Failed to get data from hardware frame! Err:{this.FFmpegErrorToString(ret)}",
+                                        VideoDecoderLoggerLevel.InstanceError
+                                        );
                                     frame = this.AvHwDstFrame;
                                 } else {
                                     frame = this.AvFrame;
@@ -443,8 +466,7 @@ public unsafe class VideoDecoder : IDisposable {
                                 this._writeCursor++;
 
                                 //Use the best effort timestamp, if available
-                                this._lastPts = this.AvFrame.Frame->best_effort_timestamp != AV_NOPTS_VALUE 
-                                                    ? this.AvFrame.Frame->best_effort_timestamp
+                                this._lastPts = this.AvFrame.Frame->best_effort_timestamp != AV_NOPTS_VALUE ? this.AvFrame.Frame->best_effort_timestamp
                                                     : this.Packet.Packet->dts;
 
                                 gotNewFrame = true;
@@ -478,8 +500,6 @@ public unsafe class VideoDecoder : IDisposable {
 
         return null;
     }
-
-    private long _seekingTo;
     public void Seek(double time) {
         lock (this) {
             Logger.Log($"Seeking to {time}ms", VideoDecoderLoggerLevel.InstanceInfo);
@@ -506,42 +526,25 @@ public unsafe class VideoDecoder : IDisposable {
         this.Dispose();
     }
 
-    public void Dispose() {
-        if (this._isDisposed)
-            return;
-        this._isDisposed = true;
-
-        this._runDecoding = false;
-
-        if (this._decodingThread.IsAlive)
-            this._decodingThread.Join();
-
-        this._fileStream.Dispose();
-
-        // AppData data = this._data;
-
-        //Clean up after ourselves
-        // avformat_close_input(&data.FormatContext);
-
-        // if (data.AvFrame        != null) av_free(data.AvFrame);
-        // if (data.RenderFrame    != null) av_free(data.RenderFrame);
-        // if (data.Packet         != null) av_free(data.Packet);
-        // if (data.CodecContext   != null) avcodec_close(data.CodecContext);
-        // if (data.FormatContext  != null) avformat_free_context(data.FormatContext);
-        // if (data.ConvertContext != null) sws_freeContext(data.ConvertContext);
+    private enum SeekType {
+        SeekSet,
+        SeekCur,
+        SeekEnd
     }
 }
 
 public class VideoDecoderLoggerLevel : LoggerLevel {
-    private enum ChannelEnum {
-        Info,
-        Warning,
-        Error
-    }
 
     public static VideoDecoderLoggerLevel InstanceInfo    = new VideoDecoderLoggerLevel(ChannelEnum.Info);
     public static VideoDecoderLoggerLevel InstanceWarning = new VideoDecoderLoggerLevel(ChannelEnum.Warning);
     public static VideoDecoderLoggerLevel InstanceError   = new VideoDecoderLoggerLevel(ChannelEnum.Error);
 
     private VideoDecoderLoggerLevel(ChannelEnum @enum) => this.Channel = @enum.ToString();
+
+    private enum ChannelEnum {
+        Info,
+        Warning,
+        Error
+    }
 }
+
