@@ -108,4 +108,29 @@ public static class HardwareDecoderTypeExtensions {
                 return null;
         }
     }
+    
+    public static bool IsHardwarePixelFormat(this AVPixelFormat pixFmt)
+    {
+        switch (pixFmt)
+        {
+            case AVPixelFormat.AV_PIX_FMT_VDPAU:
+            case AVPixelFormat.AV_PIX_FMT_CUDA:
+            case AVPixelFormat.AV_PIX_FMT_VAAPI:
+            case AVPixelFormat.AV_PIX_FMT_DXVA2_VLD:
+            case AVPixelFormat.AV_PIX_FMT_QSV:
+            case AVPixelFormat.AV_PIX_FMT_VIDEOTOOLBOX:
+            case AVPixelFormat.AV_PIX_FMT_D3D11:
+            case AVPixelFormat.AV_PIX_FMT_D3D11VA_VLD:
+            case AVPixelFormat.AV_PIX_FMT_DRM_PRIME:
+            case AVPixelFormat.AV_PIX_FMT_OPENCL:
+            case AVPixelFormat.AV_PIX_FMT_MEDIACODEC:
+            case AVPixelFormat.AV_PIX_FMT_VULKAN:
+            case AVPixelFormat.AV_PIX_FMT_MMAL:
+            case AVPixelFormat.AV_PIX_FMT_XVMC:
+                return true;
+
+            default:
+                return false;
+        }
+    }
 }

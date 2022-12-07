@@ -22,6 +22,7 @@ namespace Furball.Engine.Engine.Graphics.Video;
 // ReSharper disable UnusedMember.Local
 public unsafe class VideoDecoder : IDisposable {
     private FFmpegFrame         AvFrame;
+    private FFmpegFrame         AvHwDstFrame;
     private FFmpegFrame         RenderFrame;
     private FFmpegSwsContext    ConvertContext;
     private FFmpegPacket        Packet;
@@ -46,8 +47,8 @@ public unsafe class VideoDecoder : IDisposable {
         }
     }
 
-    public  int    Width       => this.CodecContext.CodecContext->width;
-    public  int    Height      => this.CodecContext.CodecContext->height;
+    public int Width => this.CodecContext.CodecContext->width;
+    public int Height => this.CodecContext.CodecContext->height;
     private double StartTimeMs => 1000 * this.VideoStream.Stream->start_time * this.FrameDelay;
 
     private readonly Thread _decodingThread;
@@ -123,15 +124,15 @@ public unsafe class VideoDecoder : IDisposable {
     }
 
     private List<(AVHWDeviceType, FFmpegCodec)> GetPossibleDecoders(AVCodecID codecId, HardwareDecoderType wantedHwDecodingType) {
-        AVHWDeviceTypePerformanceComparer comparer = new();
-        List<(AVHWDeviceType, FFmpegCodec)> list = new();
+        AVHWDeviceTypePerformanceComparer   comparer = new();
+        List<(AVHWDeviceType, FFmpegCodec)> list     = new();
 
         //This is the first matching codec found, which should aloways be the SW fallback
         FFmpegCodec first = null;
-        
-        void* itr = null;
+
+        void*       itr   = null;
         FFmpegCodec codec = null;
-        
+
         while ((codec = new FFmpegCodec(av_codec_iterate(&itr))).Codec != null) {
             //If the ID doesnt match or its not a decoder, skip it 
             if (codec.Codec->id != codecId || av_codec_is_decoder(codec.Codec) == 0)
@@ -141,9 +142,9 @@ public unsafe class VideoDecoder : IDisposable {
             first ??= codec;
 
             //If we dont want hardware decoding, break out, as we found a SW decoder
-            if (wantedHwDecodingType == HardwareDecoderType.None) 
+            if (wantedHwDecodingType == HardwareDecoderType.None)
                 break;
-            
+
             //Iterate through the supported hardware devices of the codec
             foreach (AVHWDeviceType avhwDeviceType in codec.SupportedHardwareDevices.Value) {
                 HardwareDecoderType? type = avhwDeviceType.ToHardwareDecoderType();
@@ -151,18 +152,18 @@ public unsafe class VideoDecoder : IDisposable {
                 //If its not a valid hw decoder type or its not on our target list, ignore it
                 if (!type.HasValue || !wantedHwDecodingType.HasFlag(type.Value))
                     continue;
-                
+
                 //We found a hardware decoder, and its on our list of wanted ones
                 list.Add((avhwDeviceType, codec));
             }
         }
-        
+
         //If we found a SW decoder, add it to the list
-        if(first != null)
+        if (first != null)
             list.Add((AVHWDeviceType.AV_HWDEVICE_TYPE_NONE, first));
 
         list.Sort((x, h) => comparer.Compare(x.Item1, h.Item1));
-        
+
         return list;
     }
 
@@ -228,17 +229,17 @@ public unsafe class VideoDecoder : IDisposable {
         List<(AVHWDeviceType, FFmpegCodec)> validDecoders = this.GetPossibleDecoders(this.VideoStream.Stream->codecpar->codec_id, wantedDecoderTypes);
 
         AVCodecContext* codecContext = null;
-        
+
         foreach ((AVHWDeviceType, FFmpegCodec) validDecoder in validDecoders) {
-            AVHWDeviceType type = validDecoder.Item1;
-            FFmpegCodec codec = validDecoder.Item2;
+            AVHWDeviceType type  = validDecoder.Item1;
+            FFmpegCodec    codec = validDecoder.Item2;
 
             //Free a previous codec context, if there
             if (codecContext != null) {
                 avcodec_free_context(&codecContext);
                 this.CodecContext = null;
             }
-            
+
             //Create and fill the codec context
             codecContext               = avcodec_alloc_context3(codec.Codec);
             codecContext->pkt_timebase = this.VideoStream.Stream->time_base;
@@ -248,41 +249,52 @@ public unsafe class VideoDecoder : IDisposable {
                 Logger.Log($"Failed to create codec context for decoder {SilkMarshal.PtrToString((nint)codec.Codec->name)}", VideoDecoderLoggerLevel.InstanceInfo);
                 continue;
             }
-            
+
+            //Copy the codec parameters to the codec context
             ret = avcodec_parameters_to_context(codecContext, this.VideoStream.Stream->codecpar);
             if (ret < 0) {
-                Logger.Log($"Couldnt copy codec parameters from video stream to codec context. Err:{this.FFmpegErrorToString(ret)}", VideoDecoderLoggerLevel.InstanceInfo);
+                Logger.Log(
+                $"Couldnt copy codec parameters from video stream to codec context. Err:{this.FFmpegErrorToString(ret)}",
+                VideoDecoderLoggerLevel.InstanceInfo
+                );
                 continue;
             }
 
+            //If the type is a hardware decoder
             if (type != AVHWDeviceType.AV_HWDEVICE_TYPE_NONE) {
                 ret = av_hwdevice_ctx_create(&codecContext->hw_device_ctx, type, null, null, 0);
                 if (ret < 0) {
                     Logger.Log($"Failed to init hardware device context! Err:{FFmpegErrorToString(ret)}", VideoDecoderLoggerLevel.InstanceInfo);
                     continue;
                 }
-                
-                Logger.Log($"Successfully created hardware video decoder {type} for codec {SilkMarshal.PtrToString((nint)codec.Codec->name)}", VideoDecoderLoggerLevel.InstanceInfo);
+
+                Logger.Log(
+                $"Successfully created hardware video decoder {type} for codec {SilkMarshal.PtrToString((nint)codec.Codec->name)}",
+                VideoDecoderLoggerLevel.InstanceInfo
+                );
             }
 
+            //Open the codec
             ret = avcodec_open2(codecContext, codec.Codec, null);
             if (ret < 0) {
                 Logger.Log($"Failed to open codec {codec.Name}!", VideoDecoderLoggerLevel.InstanceInfo);
                 continue;
             }
 
+            //If we got here, it should work, so use it
             this.CodecContext = new FFmpegCodecContext(codecContext);
-            
+
             Logger.Log($"Successfully initialized codec {SilkMarshal.PtrToString((nint)codec.Codec->long_name)}", VideoDecoderLoggerLevel.InstanceInfo);
             break;
         }
 
         if (this.CodecContext == null)
             throw new Exception($"No usable decoder found! Tried {validDecoders.Count}!");
-        
+
         // allocate the video frames
-        this.AvFrame     = new FFmpegFrame();
-        this.RenderFrame = new FFmpegFrame();
+        this.AvFrame      = new FFmpegFrame();
+        this.AvHwDstFrame = new FFmpegFrame();
+        this.RenderFrame  = new FFmpegFrame();
         //Get buffer size
         int size = av_image_get_buffer_size(AVPixelFormat.AV_PIX_FMT_RGBA, this.CodecContext.CodecContext->width, this.CodecContext.CodecContext->height, 1);
         //Allocate internal buffer
@@ -355,17 +367,17 @@ public unsafe class VideoDecoder : IDisposable {
                         if (this.Packet.Packet->stream_index == this.VideoStreamIndex) {
                             bool frameFinished = false;
 
-                            int response;
+                            int ret = 0;
                             if (this.CodecContext.CodecContext->codec_type == AVMediaType.AVMEDIA_TYPE_VIDEO ||
                                 this.CodecContext.CodecContext->codec_type == AVMediaType.AVMEDIA_TYPE_AUDIO) {
-                                response = avcodec_send_packet(this.CodecContext.CodecContext, this.Packet.Packet);
-                                if (response < 0 && response != AVERROR(EAGAIN) && response != AVERROR(AVERROR_EOF)) {} else {
-                                    if (response >= 0)
+                                ret = avcodec_send_packet(this.CodecContext.CodecContext, this.Packet.Packet);
+                                if (ret < 0 && ret != AVERROR(EAGAIN) && ret != AVERROR(AVERROR_EOF)) {} else {
+                                    if (ret >= 0)
                                         this.Packet.Packet->size = 0;
-                                    response = avcodec_receive_frame(this.CodecContext.CodecContext, this.AvFrame.Frame);
-                                    if (response == AVERROR(EAGAIN) || response == AVERROR(AVERROR_EOF))
-                                        response = 0;
-                                    if (response >= 0)
+                                    ret = avcodec_receive_frame(this.CodecContext.CodecContext, this.AvFrame.Frame);
+                                    if (ret == AVERROR(EAGAIN) || ret == AVERROR(AVERROR_EOF))
+                                        ret = 0;
+                                    if (ret >= 0)
                                         frameFinished = true;
                                 }
                             }
@@ -375,12 +387,27 @@ public unsafe class VideoDecoder : IDisposable {
 
                             this._seekingTo = 0;
 
+                            FFmpegFrame frame;
+
                             if (frameFinished && this.Packet.Packet->data != null) {
+                                //If its a hardware pixel format, transfer the data to the temp frame and use that
+                                if (((AVPixelFormat)this.AvFrame.Frame->format).IsHardwarePixelFormat()) {
+                                    ret = av_hwframe_transfer_data(this.AvHwDstFrame.Frame, this.AvFrame.Frame, 0);
+
+                                    if (ret < 0) {
+                                        Logger.Log($"Failed to get data from hardware frame! Err:{FFmpegErrorToString(ret)}", VideoDecoderLoggerLevel.InstanceError);
+                                    }
+                                    frame = this.AvHwDstFrame;
+                                } else {
+                                    frame = this.AvFrame;
+                                }
+
+                                //Convert the frame to RGBA
                                 this.ConvertContext ??= new FFmpegSwsContext(
                                 sws_getContext(
                                 this.CodecContext.CodecContext->width,
                                 this.CodecContext.CodecContext->height,
-                                this.CodecContext.CodecContext->pix_fmt,
+                                (AVPixelFormat)frame.Frame->format,
                                 this.CodecContext.CodecContext->width,
                                 this.CodecContext.CodecContext->height,
                                 AVPixelFormat.AV_PIX_FMT_RGBA,
@@ -391,16 +418,18 @@ public unsafe class VideoDecoder : IDisposable {
                                 )
                                 );
 
+                                //Scale the frame
                                 sws_scale(
                                 this.ConvertContext.SwsContext,
-                                this.AvFrame.Frame->data,
-                                this.AvFrame.Frame->linesize,
+                                frame.Frame->data,
+                                frame.Frame->linesize,
                                 0,
                                 this.CodecContext.CodecContext->height,
                                 this.RenderFrame.Frame->data,
                                 this.RenderFrame.Frame->linesize
                                 );
 
+                                //Copy the frame to the buffer
                                 Marshal.Copy(
                                 (IntPtr)this.RenderFrame.Frame->data[0],
                                 this._frameBuffer[this._writeCursor % this._bufferSize],
@@ -413,7 +442,10 @@ public unsafe class VideoDecoder : IDisposable {
 
                                 this._writeCursor++;
 
-                                this._lastPts = this.Packet.Packet->dts;
+                                //Use the best effort timestamp, if available
+                                this._lastPts = this.AvFrame.Frame->best_effort_timestamp != AV_NOPTS_VALUE 
+                                                    ? this.AvFrame.Frame->best_effort_timestamp
+                                                    : this.Packet.Packet->dts;
 
                                 gotNewFrame = true;
                             }
@@ -483,7 +515,7 @@ public unsafe class VideoDecoder : IDisposable {
 
         if (this._decodingThread.IsAlive)
             this._decodingThread.Join();
-        
+
         this._fileStream.Dispose();
 
         // AppData data = this._data;
