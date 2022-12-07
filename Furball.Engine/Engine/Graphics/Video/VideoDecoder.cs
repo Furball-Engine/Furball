@@ -123,6 +123,7 @@ public unsafe class VideoDecoder : IDisposable {
     }
 
     public void Load(Stream stream) {
+        int ret = 0;
         if (this._videoLoaded)
             throw new InvalidOperationException("Unable to load 2 videos with the same VideoDecoder!");
 
@@ -179,21 +180,58 @@ public unsafe class VideoDecoder : IDisposable {
 
         //Get the video stream
         this.VideoStream = new FFmpegStream(this.FormatContext.FormatContext->streams[this.VideoStreamIndex]);
-
+        
         //Create and fill the codec context
         this.CodecContext = new FFmpegCodecContext(avcodec_alloc_context3(null));
         avcodec_parameters_to_context(this.CodecContext.CodecContext, this.VideoStream.Stream->codecpar);
-
+        
         //Find a decoder
-        this.Decoder = new FFmpegCodec(avcodec_find_decoder(this.CodecContext.CodecContext->codec_id));
+        FFmpegCodec swDecoder = this.Decoder = new FFmpegCodec(avcodec_find_decoder(this.CodecContext.CodecContext->codec_id));
         if (this.Decoder.Codec == null) {
             Logger.Log("Failed to find decoder!", VideoDecoderLoggerLevel.InstanceError);
 
             throw new Exception("Failed to find decoder!");
         }
 
+        void*    iter  = null;
+        AVCodec* codec;
+
+        bool   foundHw  = false;
+        string softName = SilkMarshal.PtrToString((nint)this.Decoder.Codec->name);
+        while ((codec = av_codec_iterate(&iter)) != null) {
+            string name     = SilkMarshal.PtrToString((nint)codec->name);
+            string longName = SilkMarshal.PtrToString((nint)codec->long_name);
+
+            //If its not a decoder or its not a video decoder, skip it
+            if (av_codec_is_decoder(codec) == 0 || codec->type != AVMediaType.AVMEDIA_TYPE_VIDEO || avcodec_get_hw_config(codec, 0) == null)
+                continue;
+
+            if (softName != name && codec->id == this.Decoder.Codec->id) {
+                codec = avcodec_find_decoder_by_name(name);
+
+                Logger.Log($"Trying to use hardware decoder {longName} instead of {softName}!", VideoDecoderLoggerLevel.InstanceInfo);
+                
+                //Open the codec
+                if ((ret = avcodec_open2(this.CodecContext.CodecContext, codec, null)) < 0) {
+                    Logger.Log($"Failed to open codec {SilkMarshal.PtrToString((nint)codec->name)}! Err:{DescribeError(ret)}", VideoDecoderLoggerLevel.InstanceError);
+
+                    continue;
+                }
+
+                Logger.Log($"Found a hardware decoder {name} for software decoder {softName}!", VideoDecoderLoggerLevel.InstanceInfo);
+
+                this.Decoder = new FFmpegCodec(codec);
+                foundHw      = true;
+                break;
+            }
+        }
+
+        if (!foundHw)
+            this.Decoder = swDecoder;
+        
+        ret = 0;
         //Open the codec
-        if (avcodec_open2(this.CodecContext.CodecContext, this.Decoder.Codec, null) < 0) {
+        if (!foundHw && (ret = avcodec_open2(this.CodecContext.CodecContext, this.Decoder.Codec, null)) < 0) {
             Logger.Log("Failed to open codec!", VideoDecoderLoggerLevel.InstanceError);
 
             throw new Exception("Failed to open codec!");
@@ -295,21 +333,20 @@ public unsafe class VideoDecoder : IDisposable {
                             this._seekingTo = 0;
 
                             if (frameFinished && this.Packet.Packet->data != null) {
-                                if (this.ConvertContext == null)
-                                    this.ConvertContext = new FFmpegSwsContext(
-                                    sws_getContext(
-                                    this.CodecContext.CodecContext->width,
-                                    this.CodecContext.CodecContext->height,
-                                    this.CodecContext.CodecContext->pix_fmt,
-                                    this.CodecContext.CodecContext->width,
-                                    this.CodecContext.CodecContext->height,
-                                    AVPixelFormat.AV_PIX_FMT_RGBA,
-                                    0,
-                                    null,
-                                    null,
-                                    null
-                                    )
-                                    );
+                                this.ConvertContext ??= new FFmpegSwsContext(
+                                sws_getContext(
+                                this.CodecContext.CodecContext->width,
+                                this.CodecContext.CodecContext->height,
+                                this.CodecContext.CodecContext->pix_fmt,
+                                this.CodecContext.CodecContext->width,
+                                this.CodecContext.CodecContext->height,
+                                AVPixelFormat.AV_PIX_FMT_RGBA,
+                                0,
+                                null,
+                                null,
+                                null
+                                )
+                                );
 
                                 sws_scale(
                                 this.ConvertContext.SwsContext,
