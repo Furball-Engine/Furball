@@ -109,16 +109,19 @@ public unsafe class VideoDecoder : IDisposable {
         this.Load(File.OpenRead(path), wantedDecoderTypes);
     }
 
+    private byte[] _readBuf = new byte[128];
     private int ReadPacketCallbackDef(void* opaque, byte* bufferPtr, int bufferSize) {
         #if NETSTANDARD2_1_OR_GREATER
         return this._fileStream.Read(new Span<byte>(bufferPtr, bufferSize));
         #else
-        //Create a buffer to store the read data
-        byte[] arr = new byte[bufferSize];
-        int read = this._fileStream.Read(arr, 0, bufferSize);
+        //Make sure the read buffer is large enough
+        if (this._readBuf.Length < bufferSize)
+            this._readBuf = new byte[bufferSize];
+        //Read into the read buffer
+        int read = this._fileStream.Read(this._readBuf, 0, bufferSize);
 
         //Copy the memory into FFmpeg's pointer
-        fixed (void* ptr = arr) {
+        fixed (void* ptr = this._readBuf) {
             Buffer.MemoryCopy(ptr, bufferPtr, bufferSize, read);
         }
 
