@@ -42,7 +42,9 @@ public unsafe class VideoDecoder : IDisposable {
     private FFmpegFrame         AvFrame;
     private FFmpegFrame         AvHwDstFrame;
     private AVIOContext*        AvioContext;
-    private FFmpegCodecContext  CodecContext;
+    public  FFmpegCodecContext  CodecContext;
+    public  FFmpegCodec         Codec;
+    public  AVHWDeviceType      HwCodecType;
     private FFmpegSwsContext    ConvertContext;
     private FFmpegCodec         Decoder;
     private FFmpegFormatContext FormatContext;
@@ -79,8 +81,8 @@ public unsafe class VideoDecoder : IDisposable {
         }
     }
 
-    public int Width => this.CodecContext.CodecContext->width;
-    public int Height => this.CodecContext.CodecContext->height;
+    public  int    Width       => this.CodecContext.CodecContext->width;
+    public  int    Height      => this.CodecContext.CodecContext->height;
     private double StartTimeMs => 1000 * this.VideoStream.Stream->start_time * this.FrameDelay;
 
     public void Dispose() {
@@ -306,6 +308,8 @@ public unsafe class VideoDecoder : IDisposable {
 
             //If we got here, it should work, so use it
             this.CodecContext = new FFmpegCodecContext(codecContext);
+            this.Codec        = codec;
+            this.HwCodecType  = type;
 
             Logger.Log($"Successfully initialized codec {SilkMarshal.PtrToString((nint)codec.Codec->long_name)}", VideoDecoderLoggerLevel.InstanceInfo);
             break;
@@ -547,4 +551,3 @@ public class VideoDecoderLoggerLevel : LoggerLevel {
         Error
     }
 }
-
