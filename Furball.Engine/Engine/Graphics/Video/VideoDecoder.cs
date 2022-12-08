@@ -97,31 +97,44 @@ public unsafe class VideoDecoder : IDisposable {
             return;
         this._isDisposed = true;
 
+        AVIOContext* context = this.AvioContext;
+        avio_context_free(&context);
+        this.AvioContext = context;
+        
         this._runDecoding = false;
 
         if (this._decodingThread.IsAlive)
             this._decodingThread.Join();
 
         this._fileStream.Dispose();
+        this._gcHandle.Free();
     }
 
     public void Load(string path, HardwareDecoderType wantedDecoderTypes) {
         this.Load(File.OpenRead(path), wantedDecoderTypes);
     }
 
-    private byte[] _readBuf = new byte[128];
-    private int ReadPacketCallbackDef(void* opaque, byte* bufferPtr, int bufferSize) {
+    private byte[]   _readBuf = new byte[128];
+    private GCHandle _gcHandle;
+    private static int ReadPacketCallbackDef(void* opaque, byte* bufferPtr, int bufferSize) {
+        GCHandle handle = GCHandle.FromIntPtr((IntPtr)opaque);
+
+        if (!handle.IsAllocated)
+            throw new Exception();
+
+        VideoDecoder @this = (VideoDecoder)handle.Target;
+        
         #if NETSTANDARD2_1_OR_GREATER
-        return this._fileStream.Read(new Span<byte>(bufferPtr, bufferSize));
+        return @this._fileStream.Read(new Span<byte>(bufferPtr, bufferSize));
         #else
         //Make sure the read buffer is large enough
-        if (this._readBuf.Length < bufferSize)
-            this._readBuf = new byte[bufferSize];
+        if (@this._readBuf.Length < bufferSize)
+            @this._readBuf = new byte[bufferSize];
         //Read into the read buffer
-        int read = this._fileStream.Read(this._readBuf, 0, bufferSize);
+        int read = @this._fileStream.Read(@this._readBuf, 0, bufferSize);
 
         //Copy the memory into FFmpeg's pointer
-        fixed (void* ptr = this._readBuf) {
+        fixed (void* ptr = @this._readBuf) {
             Buffer.MemoryCopy(ptr, bufferPtr, bufferSize, read);
         }
 
@@ -129,27 +142,34 @@ public unsafe class VideoDecoder : IDisposable {
         #endif
     }
 
-    private long StreamSeekCallbackDef(void* opaque, long offset, int whence) {
-        if (!this._fileStream.CanSeek)
+    private static long StreamSeekCallbackDef(void* opaque, long offset, int whence) {
+        GCHandle handle = GCHandle.FromIntPtr((IntPtr)opaque);
+
+        if (!handle.IsAllocated)
+            throw new Exception();
+
+        VideoDecoder @this = (VideoDecoder)handle.Target;
+ 
+        if (!@this._fileStream.CanSeek)
             throw new InvalidOperationException("Tried seeking on a video sourced by a non-seekable stream.");
 
         switch (whence) {
             case (int)SeekType.SeekCur:
-                this._fileStream.Seek(offset, SeekOrigin.Current);
+                @this._fileStream.Seek(offset, SeekOrigin.Current);
                 break;
             case (int)SeekType.SeekEnd:
-                this._fileStream.Seek(offset, SeekOrigin.End);
+                @this._fileStream.Seek(offset, SeekOrigin.End);
                 break;
             case (int)SeekType.SeekSet:
-                this._fileStream.Seek(offset, SeekOrigin.Begin);
+                @this._fileStream.Seek(offset, SeekOrigin.Begin);
                 break;
             case AVSEEK_SIZE:
-                return this._fileStream.Length;
+                return @this._fileStream.Length;
             default:
                 return -1;
         }
 
-        return this._fileStream.Position;
+        return @this._fileStream.Position;
     }
 
     private List<(AVHWDeviceType, FFmpegCodec)> GetPossibleDecoders(AVCodecID codecId, HardwareDecoderType wantedHwDecodingType) {
@@ -216,10 +236,11 @@ public unsafe class VideoDecoder : IDisposable {
         const int contextBufferSize = 4096;
         byte* contextBuffer = (byte*)av_malloc(contextBufferSize);
 
-        this.readPacketCallback = this.ReadPacketCallbackDef;
-        this.seekCallback       = this.StreamSeekCallbackDef;
+        this.readPacketCallback = ReadPacketCallbackDef;
+        this.seekCallback       = StreamSeekCallbackDef;
 
-        AVIOContext* ioContext = avio_alloc_context(contextBuffer, contextBufferSize, 0, (void*)0, this.readPacketCallback, null, this.seekCallback);
+        this._gcHandle = GCHandle.Alloc(this, GCHandleType.Normal);
+        AVIOContext* ioContext = avio_alloc_context(contextBuffer, contextBufferSize, 0, (void*)GCHandle.ToIntPtr(this._gcHandle), this.readPacketCallback, null, this.seekCallback);
 
         AVFormatContext* formatContext = avformat_alloc_context();
         formatContext->pb    =  ioContext;
