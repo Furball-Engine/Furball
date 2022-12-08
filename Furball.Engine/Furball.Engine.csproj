@@ -1,6 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>netstandard2.0</TargetFramework>
         <PublishReadyToRun>false</PublishReadyToRun>
         <TieredCompilation>false</TieredCompilation>
         <Nullable>disable</Nullable>
@@ -20,6 +19,7 @@
         <LangVersion>10</LangVersion>
         <RuntimeIdentifiers>win-x64;win-x86;win-arm64;linux-x64;linux-x86;linux-arm;linux-arm64</RuntimeIdentifiers>
         <SkipGtkInstall>true</SkipGtkInstall>
+        <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="aqua.tool.polyfill.IsExternalInit" Version="2.0.0">
@@ -58,6 +58,10 @@
 
     <PropertyGroup>
         <NativeLibPath>../Furball.SharedLibraries</NativeLibPath>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <DebugType>full</DebugType>
     </PropertyGroup>
 
     <ItemGroup Condition="$(RuntimeIdentifier.StartsWith('win'))">

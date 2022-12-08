@@ -36,11 +36,17 @@ public unsafe class VideoDecoder : IDisposable {
     private int    _readCursor;
     private bool   _runDecoding = true;
 
-    private long                _seekingTo;
-    private bool                _videoLoaded = false;
-    private int                 _writeCursor;
-    private FFmpegFrame         AvFrame;
-    private FFmpegFrame         AvHwDstFrame;
+    private long _seekingTo;
+    private bool _videoLoaded = false;
+    private int  _writeCursor;
+    /// <summary>
+    /// Intermediary frame used just before copying data to the frame buffer (separate words :^)
+    /// </summary>
+    private FFmpegFrame AvFrame;
+    /// <summary>
+    /// Staging frame used when we have to copy from a HW frame to a HW accessible CPU frame
+    /// </summary>
+    private FFmpegFrame AvStagingFrame;
     private AVIOContext*        AvioContext;
     public  FFmpegCodecContext  CodecContext;
     public  FFmpegCodec         Codec;
@@ -54,8 +60,9 @@ public unsafe class VideoDecoder : IDisposable {
     private FFmpegPacket Packet;
 
     private avio_alloc_context_read_packet readPacketCallback;
-    private FFmpegFrame                    RenderFrame;
     private avio_alloc_context_seek        seekCallback;
+    
+    private FFmpegFrame                    RenderFrame;
     private FFmpegStream                   VideoStream;
     private int                            VideoStreamIndex;
 
@@ -81,8 +88,8 @@ public unsafe class VideoDecoder : IDisposable {
         }
     }
 
-    public  int    Width       => this.CodecContext.CodecContext->width;
-    public  int    Height      => this.CodecContext.CodecContext->height;
+    public int Width => this.CodecContext.CodecContext->width;
+    public int Height => this.CodecContext.CodecContext->height;
     private double StartTimeMs => 1000 * this.VideoStream.Stream->start_time * this.FrameDelay;
 
     public void Dispose() {
@@ -96,18 +103,6 @@ public unsafe class VideoDecoder : IDisposable {
             this._decodingThread.Join();
 
         this._fileStream.Dispose();
-
-        // AppData data = this._data;
-
-        //Clean up after ourselves
-        // avformat_close_input(&data.FormatContext);
-
-        // if (data.AvFrame        != null) av_free(data.AvFrame);
-        // if (data.RenderFrame    != null) av_free(data.RenderFrame);
-        // if (data.Packet         != null) av_free(data.Packet);
-        // if (data.CodecContext   != null) avcodec_close(data.CodecContext);
-        // if (data.FormatContext  != null) avformat_free_context(data.FormatContext);
-        // if (data.ConvertContext != null) sws_freeContext(data.ConvertContext);
     }
 
     public void Load(string path, HardwareDecoderType wantedDecoderTypes) {
@@ -115,14 +110,20 @@ public unsafe class VideoDecoder : IDisposable {
     }
 
     private int ReadPacketCallbackDef(void* opaque, byte* bufferPtr, int bufferSize) {
-        byte[] arr  = new byte[bufferSize];
-        int    read = this._fileStream.Read(arr, 0, bufferSize);
+        #if NETSTANDARD2_1_OR_GREATER
+        return this._fileStream.Read(new Span<byte>(bufferPtr, bufferSize));
+        #else
+        //Create a buffer to store the read data
+        byte[] arr = new byte[bufferSize];
+        int read = this._fileStream.Read(arr, 0, bufferSize);
 
+        //Copy the memory into FFmpeg's pointer
         fixed (void* ptr = arr) {
             Buffer.MemoryCopy(ptr, bufferPtr, bufferSize, read);
         }
 
         return read;
+        #endif
     }
 
     private long StreamSeekCallbackDef(void* opaque, long offset, int whence) {
@@ -149,13 +150,13 @@ public unsafe class VideoDecoder : IDisposable {
     }
 
     private List<(AVHWDeviceType, FFmpegCodec)> GetPossibleDecoders(AVCodecID codecId, HardwareDecoderType wantedHwDecodingType) {
-        AVHWDeviceTypePerformanceComparer   comparer = new AVHWDeviceTypePerformanceComparer();
-        List<(AVHWDeviceType, FFmpegCodec)> list     = new List<(AVHWDeviceType, FFmpegCodec)>();
+        AVHWDeviceTypePerformanceComparer comparer = new AVHWDeviceTypePerformanceComparer();
+        List<(AVHWDeviceType, FFmpegCodec)> list = new List<(AVHWDeviceType, FFmpegCodec)>();
 
         //This is the first matching codec found, which should aloways be the SW fallback
         FFmpegCodec first = null;
 
-        void*       itr   = null;
+        void* itr = null;
         FFmpegCodec codec = null;
 
         while ((codec = new FFmpegCodec(av_codec_iterate(&itr))).Codec != null) {
@@ -210,7 +211,7 @@ public unsafe class VideoDecoder : IDisposable {
         }
 
         const int contextBufferSize = 4096;
-        byte*     contextBuffer     = (byte*)av_malloc(contextBufferSize);
+        byte* contextBuffer = (byte*)av_malloc(contextBufferSize);
 
         this.readPacketCallback = this.ReadPacketCallbackDef;
         this.seekCallback       = this.StreamSeekCallbackDef;
@@ -256,8 +257,8 @@ public unsafe class VideoDecoder : IDisposable {
         AVCodecContext* codecContext = null;
 
         foreach ((AVHWDeviceType, FFmpegCodec) validDecoder in validDecoders) {
-            AVHWDeviceType type  = validDecoder.Item1;
-            FFmpegCodec    codec = validDecoder.Item2;
+            AVHWDeviceType type = validDecoder.Item1;
+            FFmpegCodec codec = validDecoder.Item2;
 
             //Free a previous codec context, if there
             if (codecContext != null) {
@@ -319,16 +320,16 @@ public unsafe class VideoDecoder : IDisposable {
             throw new Exception($"No usable decoder found! Tried {validDecoders.Count}!");
 
         // allocate the video frames
-        this.AvFrame      = new FFmpegFrame();
-        this.AvHwDstFrame = new FFmpegFrame();
-        this.RenderFrame  = new FFmpegFrame();
+        this.AvFrame        = new FFmpegFrame();
+        this.AvStagingFrame = new FFmpegFrame();
+        this.RenderFrame    = new FFmpegFrame();
         //Get buffer size
         int size = av_image_get_buffer_size(AVPixelFormat.AV_PIX_FMT_RGBA, this.CodecContext.CodecContext->width, this.CodecContext.CodecContext->height, 1);
         //Allocate internal buffer
         this.InternalBuffer = (byte*)av_malloc((ulong)(size * sizeof(byte)));
 
-        byte_ptrArray4 dataArray4     = new byte_ptrArray4();
-        int_array4     lineSizeArray4 = new int_array4();
+        byte_ptrArray4 dataArray4 = new byte_ptrArray4();
+        int_array4 lineSizeArray4 = new int_array4();
         dataArray4.UpdateFrom(this.RenderFrame.Frame->data);
         lineSizeArray4.UpdateFrom(this.RenderFrame.Frame->linesize);
 
@@ -412,21 +413,21 @@ public unsafe class VideoDecoder : IDisposable {
 
                             this._seekingTo = 0;
 
-                            FFmpegFrame frame;
-
                             if (frameFinished && this.Packet.Packet->data != null) {
+                                FFmpegFrame copyFrame;
+
                                 //If its a hardware pixel format, transfer the data to the temp frame and use that
                                 if (((AVPixelFormat)this.AvFrame.Frame->format).IsHardwarePixelFormat()) {
-                                    ret = av_hwframe_transfer_data(this.AvHwDstFrame.Frame, this.AvFrame.Frame, 0);
+                                    ret = av_hwframe_transfer_data(this.AvStagingFrame.Frame, this.AvFrame.Frame, 0);
 
                                     if (ret < 0)
                                         Logger.Log(
                                         $"Failed to get data from hardware frame! Err:{this.FFmpegErrorToString(ret)}",
                                         VideoDecoderLoggerLevel.InstanceError
                                         );
-                                    frame = this.AvHwDstFrame;
+                                    copyFrame = this.AvStagingFrame;
                                 } else {
-                                    frame = this.AvFrame;
+                                    copyFrame = this.AvFrame;
                                 }
 
                                 //Convert the frame to RGBA
@@ -434,7 +435,7 @@ public unsafe class VideoDecoder : IDisposable {
                                 sws_getContext(
                                 this.CodecContext.CodecContext->width,
                                 this.CodecContext.CodecContext->height,
-                                (AVPixelFormat)frame.Frame->format,
+                                (AVPixelFormat)copyFrame.Frame->format,
                                 this.CodecContext.CodecContext->width,
                                 this.CodecContext.CodecContext->height,
                                 AVPixelFormat.AV_PIX_FMT_RGBA,
@@ -448,8 +449,8 @@ public unsafe class VideoDecoder : IDisposable {
                                 //Scale the frame
                                 sws_scale(
                                 this.ConvertContext.SwsContext,
-                                frame.Frame->data,
-                                frame.Frame->linesize,
+                                copyFrame.Frame->data,
+                                copyFrame.Frame->linesize,
                                 0,
                                 this.CodecContext.CodecContext->height,
                                 this.RenderFrame.Frame->data,
@@ -470,7 +471,8 @@ public unsafe class VideoDecoder : IDisposable {
                                 this._writeCursor++;
 
                                 //Use the best effort timestamp, if available
-                                this._lastPts = this.AvFrame.Frame->best_effort_timestamp != AV_NOPTS_VALUE ? this.AvFrame.Frame->best_effort_timestamp
+                                this._lastPts = this.AvFrame.Frame->best_effort_timestamp != AV_NOPTS_VALUE
+                                                    ? this.AvFrame.Frame->best_effort_timestamp
                                                     : this.Packet.Packet->dts;
 
                                 gotNewFrame = true;
@@ -511,7 +513,7 @@ public unsafe class VideoDecoder : IDisposable {
             this._commandQueue.Enqueue(
             new Action(
             delegate {
-                int    flags     = 0;
+                int flags = 0;
                 double timestamp = time / 1000 / this.FrameDelay + this.VideoStream.Stream->start_time;
 
                 if (timestamp < this._lastPts)
