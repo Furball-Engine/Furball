@@ -13,6 +13,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
 using FFmpeg.AutoGen;
+using JetBrains.Annotations;
 using Kettu;
 using Silk.NET.Core.Native;
 using static FFmpeg.AutoGen.ffmpeg;
@@ -383,110 +384,140 @@ public unsafe class VideoDecoder : IDisposable {
 
     private void DecodingRun() {
         try {
-            bool gotNewFrame;
-
             while (this._runDecoding) {
-                gotNewFrame = false;
+                bool gotNewFrame = false;
 
                 if (this._commandQueue.TryDequeue(out Delegate result))
                     result.DynamicInvoke();
 
                 lock (this) {
-                    while (this._writeCursor - this._readCursor < this._bufferSize && av_read_frame(this.FormatContext.FormatContext, this.Packet.Packet) >= 0) {
+                    while (this._writeCursor - this._readCursor < this._bufferSize) {
+                        //If we should stop decoding, return out of the function all together
                         if (!this._runDecoding)
                             return;
+                        
+                        //If we reach EOF, break
+                        if (av_read_frame(this.FormatContext.FormatContext, this.Packet.Packet) < 0)
+                            break;
+                        
+                        //If the recieved packet is not from the video stream, ignore it
+                        if (this.Packet.Packet->stream_index != this.VideoStreamIndex)
+                            continue;
+                        
+                        //Whether we have finished recieving a frame or not
+                        bool frameFinished = false;
 
-                        if (this.Packet.Packet->stream_index == this.VideoStreamIndex) {
-                            bool frameFinished = false;
-
-                            int ret = 0;
-                            if (this.CodecContext.CodecContext->codec_type == AVMediaType.AVMEDIA_TYPE_VIDEO ||
-                                this.CodecContext.CodecContext->codec_type == AVMediaType.AVMEDIA_TYPE_AUDIO) {
-                                ret = avcodec_send_packet(this.CodecContext.CodecContext, this.Packet.Packet);
-                                if (ret < 0 && ret != AVERROR(EAGAIN) && ret != AVERROR(AVERROR_EOF)) {} else {
-                                    if (ret >= 0)
-                                        this.Packet.Packet->size = 0;
-                                    ret = avcodec_receive_frame(this.CodecContext.CodecContext, this.AvFrame.Frame);
-                                    if (ret == AVERROR(EAGAIN) || ret == AVERROR(AVERROR_EOF))
-                                        ret = 0;
-                                    if (ret >= 0)
-                                        frameFinished = true;
-                                }
+                        int ret;
+                        //If the codec context type is Video or Audio
+                        if (this.CodecContext.CodecContext->codec_type == AVMediaType.AVMEDIA_TYPE_VIDEO ||
+                            this.CodecContext.CodecContext->codec_type == AVMediaType.AVMEDIA_TYPE_AUDIO) {
+                            //Send the read frame packet to the decoder
+                            ret = avcodec_send_packet(this.CodecContext.CodecContext, this.Packet.Packet);
+                            //If it succeeded or the error is EAGAIN or EOF
+                            if (ret >= 0 || ret == AVERROR(EAGAIN) || ret == AVERROR(AVERROR_EOF)) {
+                                //If we succeeded, set the packet size to 0
+                                if (ret >= 0)
+                                    this.Packet.Packet->size = 0;
+                                //Recieve the next frame 
+                                ret = avcodec_receive_frame(this.CodecContext.CodecContext, this.AvFrame.Frame);
+                                //If we failed to recieve frame and the error is EAGAIN or EOF, then say we succeeded
+                                if (ret == AVERROR(EAGAIN) || ret == AVERROR(AVERROR_EOF))
+                                    ret = 0;
+                                //If we succeeded then mark that we finished a frame
+                                if (ret >= 0)
+                                    frameFinished = true;
                             }
+                        }
+                        
+                        //If the decoding timestamp of the packet is less than what we are seeking to, continue and keep trying to decode
+                        if (this.Packet.Packet->dts < this._seekingTo)
+                            continue;
 
-                            if (this.Packet.Packet->dts < this._seekingTo)
-                                continue;
+                        //Once we reach here we are guarenteed to either not be seeking or to be past or equal to where we want to seek to
+                        this._seekingTo = 0;
 
-                            this._seekingTo = 0;
+                        //If we have finished recieving a frame and the packet data is not null
+                        if (frameFinished && this.Packet.Packet->data != null) {
+                            //Set the frame to copy from to the frame we just recieved
+                            FFmpegFrame copyFrame = this.AvFrame;
 
-                            if (frameFinished && this.Packet.Packet->data != null) {
-                                FFmpegFrame copyFrame;
+                            //If its a hardware pixel format, transfer the data to the temp frame and copy from that instead
+                            if (((AVPixelFormat)this.AvFrame.Frame->format).IsHardwarePixelFormat()) {
+                                //Transfer the hardware frame into the staging frame
+                                ret = av_hwframe_transfer_data(this.AvStagingFrame.Frame, this.AvFrame.Frame, 0);
 
-                                //If its a hardware pixel format, transfer the data to the temp frame and use that
-                                if (((AVPixelFormat)this.AvFrame.Frame->format).IsHardwarePixelFormat()) {
-                                    ret = av_hwframe_transfer_data(this.AvStagingFrame.Frame, this.AvFrame.Frame, 0);
+                                if (ret < 0) {
+                                    Logger.Log(
+                                    $"Failed to get data from hardware frame! Err:{this.FFmpegErrorToString(ret)}",
+                                    VideoDecoderLoggerLevel.InstanceError
+                                    );
 
-                                    if (ret < 0)
-                                        Logger.Log(
-                                        $"Failed to get data from hardware frame! Err:{this.FFmpegErrorToString(ret)}",
-                                        VideoDecoderLoggerLevel.InstanceError
-                                        );
-                                    copyFrame = this.AvStagingFrame;
-                                } else {
-                                    copyFrame = this.AvFrame;
+                                    //If we failed to copy the hardware pixel format to the CPU, something bad went wrong, so just return out
+                                    //TODO: add the ability to notify when something goes wrong decoding wise
+                                    return;
                                 }
+                                
+                                //Set the frame to copy from to the staging frame
+                                copyFrame = this.AvStagingFrame;
+                            } 
 
-                                //Convert the frame to RGBA
-                                this.ConvertContext ??= new FFmpegSwsContext(
-                                sws_getContext(
-                                this.CodecContext.CodecContext->width,
-                                this.CodecContext.CodecContext->height,
-                                (AVPixelFormat)copyFrame.Frame->format,
-                                this.CodecContext.CodecContext->width,
-                                this.CodecContext.CodecContext->height,
-                                AVPixelFormat.AV_PIX_FMT_RGBA,
-                                0,
-                                null,
-                                null,
-                                null
-                                )
-                                );
+                            //Create the convert context which will convert the native format of the frame to Rgba 8 bits per channel
+                            this.ConvertContext ??= new FFmpegSwsContext(
+                            sws_getContext(
+                            this.CodecContext.CodecContext->width,
+                            this.CodecContext.CodecContext->height,
+                            (AVPixelFormat)copyFrame.Frame->format,
+                            this.CodecContext.CodecContext->width,
+                            this.CodecContext.CodecContext->height,
+                            AVPixelFormat.AV_PIX_FMT_RGBA,
+                            0,
+                            null,
+                            null,
+                            null
+                            )
+                            );
 
-                                //Scale the frame
-                                sws_scale(
-                                this.ConvertContext.SwsContext,
-                                copyFrame.Frame->data,
-                                copyFrame.Frame->linesize,
-                                0,
-                                this.CodecContext.CodecContext->height,
-                                this.RenderFrame.Frame->data,
-                                this.RenderFrame.Frame->linesize
-                                );
+                            //Scale the frame
+                            sws_scale(
+                            this.ConvertContext.SwsContext,
+                            copyFrame.Frame->data,
+                            copyFrame.Frame->linesize,
+                            0,
+                            this.CodecContext.CodecContext->height,
+                            this.RenderFrame.Frame->data,
+                            this.RenderFrame.Frame->linesize
+                            );
 
-                                //Copy the frame to the buffer
-                                Marshal.Copy(
-                                (IntPtr)this.RenderFrame.Frame->data[0],
-                                this._frameBuffer[this._writeCursor % this._bufferSize],
-                                0,
-                                this._frameBuffer[this._writeCursor % this._bufferSize].Length
-                                );
+                            //Copy the frame to the buffer
+                            Marshal.Copy(
+                            (IntPtr)this.RenderFrame.Frame->data[0],
+                            this._frameBuffer[this._writeCursor % this._bufferSize],
+                            0,
+                            this._frameBuffer[this._writeCursor % this._bufferSize].Length
+                            );
 
-                                this._frameBufferTimes[this._writeCursor % this._bufferSize] =
-                                    (this.Packet.Packet->dts - this.VideoStream.Stream->start_time) * this.FrameDelay * 1000;
+                            //The best possible timestamp for the frame, best_effort_timestamp if possible, if not, then use decompression time
+                            long frameTimestamp = this.AvFrame.Frame->best_effort_timestamp != AV_NOPTS_VALUE
+                                                      ? this.AvFrame.Frame->best_effort_timestamp
+                                                      : this.Packet.Packet->dts;
+                            
+                            //Set the time of the frame buffer to the (frame timestamp - start time) of the video stream
+                            this._frameBufferTimes[this._writeCursor % this._bufferSize] =
+                                (frameTimestamp - this.VideoStream.Stream->start_time) * this.FrameDelay * 1000;
 
-                                this._writeCursor++;
+                            //Increment the write cursor
+                            this._writeCursor++;
 
-                                //Use the best effort timestamp, if available
-                                this._lastPts = this.AvFrame.Frame->best_effort_timestamp != AV_NOPTS_VALUE
-                                                    ? this.AvFrame.Frame->best_effort_timestamp
-                                                    : this.Packet.Packet->dts;
+                            //Set the last playback timestamp to the timestamp of the frame
+                            this._lastPts = frameTimestamp;
 
-                                gotNewFrame = true;
-                            }
+                            //Mark that we have got a new frame
+                            gotNewFrame = true;
                         }
                     }
                 }
 
+                //If we havent got a new frame yet, wait 15ms before trying again
                 if (!gotNewFrame)
                     Thread.Sleep(15);
             }
@@ -501,6 +532,7 @@ public unsafe class VideoDecoder : IDisposable {
     ///     Returns null if decoding full video has finished.
     /// </summary>
     /// <returns></returns>
+    [CanBeNull]
     public byte[] GetFrame(int time) {
         while (this._readCursor < this._writeCursor - 1 && this._frameBufferTimes[(this._readCursor + 1) % this._bufferSize] <= time)
             this._readCursor++;
@@ -512,6 +544,7 @@ public unsafe class VideoDecoder : IDisposable {
 
         return null;
     }
+    
     public void Seek(double time) {
         lock (this) {
             Logger.Log($"Seeking to {time}ms", VideoDecoderLoggerLevel.InstanceInfo);
@@ -539,9 +572,11 @@ public unsafe class VideoDecoder : IDisposable {
             return;
         this._isDisposed = true;
 
-        //Notify the decoding thread to stop
-        this._runDecoding = false;
-
+        lock (this) {
+            //Notify the decoding thread to stop
+            this._runDecoding = false;
+        }
+        
         //Wait for the decoding thread to close before finishing dispose
         if (this._decodingThread.IsAlive)
             this._decodingThread.Join();
