@@ -92,24 +92,6 @@ public unsafe class VideoDecoder : IDisposable {
     public int Height => this.CodecContext.CodecContext->height;
     private double StartTimeMs => 1000 * this.VideoStream.Stream->start_time * this.FrameDelay;
 
-    public void Dispose() {
-        if (this._isDisposed)
-            return;
-        this._isDisposed = true;
-
-        AVIOContext* context = this.AvioContext;
-        avio_context_free(&context);
-        this.AvioContext = context;
-        
-        this._runDecoding = false;
-
-        if (this._decodingThread.IsAlive)
-            this._decodingThread.Join();
-
-        this._fileStream.Dispose();
-        this._gcHandle.Free();
-    }
-
     public void Load(string path, HardwareDecoderType wantedDecoderTypes) {
         this.Load(File.OpenRead(path), wantedDecoderTypes);
     }
@@ -154,13 +136,13 @@ public unsafe class VideoDecoder : IDisposable {
             throw new InvalidOperationException("Tried seeking on a video sourced by a non-seekable stream.");
 
         switch (whence) {
-            case (int)SeekType.SeekCur:
+            case (int)SeekType.Current:
                 @this._fileStream.Seek(offset, SeekOrigin.Current);
                 break;
-            case (int)SeekType.SeekEnd:
+            case (int)SeekType.End:
                 @this._fileStream.Seek(offset, SeekOrigin.End);
                 break;
-            case (int)SeekType.SeekSet:
+            case (int)SeekType.Set:
                 @this._fileStream.Seek(offset, SeekOrigin.Begin);
                 break;
             case AVSEEK_SIZE:
@@ -552,14 +534,38 @@ public unsafe class VideoDecoder : IDisposable {
         }
     }
 
+    public void Dispose() {
+        if (this._isDisposed)
+            return;
+        this._isDisposed = true;
+
+        //Notify the decoding thread to stop
+        this._runDecoding = false;
+
+        //Wait for the decoding thread to close before finishing dispose
+        if (this._decodingThread.IsAlive)
+            this._decodingThread.Join();
+        
+        //Free the AVIO context
+        AVIOContext* context = this.AvioContext;
+        avio_context_free(&context);
+        this.AvioContext = context;
+
+
+        //Dispose the stream
+        this._fileStream.Dispose();
+        //Free the GC handle
+        this._gcHandle.Free();
+    }
+    
     ~VideoDecoder() {
         this.Dispose();
     }
 
     private enum SeekType {
-        SeekSet,
-        SeekCur,
-        SeekEnd
+        Set,
+        Current,
+        End
     }
 }
 
