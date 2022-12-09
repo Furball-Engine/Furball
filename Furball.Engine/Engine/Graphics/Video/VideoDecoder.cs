@@ -20,6 +20,35 @@ using static FFmpeg.AutoGen.ffmpeg;
 
 namespace Furball.Engine.Engine.Graphics.Video;
 
+/*
+ * Load():
+ *  File loaded
+ *  Decoders detected
+ *  Codec chosen according to HW decoder options and input file
+ *  Decoding thread started
+ *
+ * Decoding Thread Run():
+ *  while running:
+ *   \ Dequeue and invoke any commands sent to the command queue
+ *     loop to make sure we are always _bufferSize frames ahead of the read cursor position
+ *      \ Read the next frame packet
+ *        Send the frame packet to the decoder
+ *        Try to recieve the AVFrame for said packet
+ *        If seeking, and we arent at the wanted frame, `continue` (do nothing and try the next packet)
+ *        If we have finished recieving a whole AVFrame from the current packet
+ *         \ If the AVFrame uses a hardware format, transfer it to CPU memory
+ *           Convert the AVFrame to RGBA format (8 bits per channel)
+ *           Copy the frame to the respective frame buffer for the write position
+ *           Write the timestamp of the frame to the framebuffer times array
+ *           Increment the write cursor
+ *
+ * GetFrame(time):
+ *  while the read cursor is behind the write cursor and the time of the frame is less than `time`
+ *   \ increment read cursor
+ *  if we are behind the write cursor, then we are at a completely new frame, and return it
+ *  else return null, which means we are at a frame we have already returned before
+ */
+
 // ReSharper disable UnusedMember.Local
 public unsafe class VideoDecoder : IDisposable {
     private readonly int _bufferSize;
@@ -391,6 +420,8 @@ public unsafe class VideoDecoder : IDisposable {
                     result.DynamicInvoke();
 
                 lock (this) {
+                    //While we have a difference of write position to read position less than the buffer size, read new frames
+                    //This ensures that we are constantly reading new frames to fill the buffer size
                     while (this._writeCursor - this._readCursor < this._bufferSize) {
                         //If we should stop decoding, return out of the function all together
                         if (!this._runDecoding)
