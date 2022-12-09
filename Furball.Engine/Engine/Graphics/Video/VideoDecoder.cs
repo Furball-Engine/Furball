@@ -529,19 +529,31 @@ public unsafe class VideoDecoder : IDisposable {
 
     /// <summary>
     ///     Decodes one frame.
-    ///     Returns null if decoding full video has finished.
+    ///     Returns null if no new frame is available
     /// </summary>
     /// <returns></returns>
     [CanBeNull]
     public byte[] GetFrame(int time) {
+        //While the read cursor is less than the previous position of the write cursor,
+        //and the time of the associated framebuffer (to the next position of the read cursor) is less than or equal to the requested time
         while (this._readCursor < this._writeCursor - 1 && this._frameBufferTimes[(this._readCursor + 1) % this._bufferSize] <= time)
+            //Increment the read cursor
             this._readCursor++;
 
+        //NOTE: We reach here if the read cursor is at or in front of the write cursor,
+        //      and the time of the framebuffer associated with the read cursor is greater than the requested time
+        
+        //TODO: should currFramebuffer <= time be less than instead? I think it may, as if we request a time that is *exact* to the framebuffer time, it will go one frame ahead?
+
+        //If the read cursor is less than the write cursor
         if (this._readCursor < this._writeCursor) {
+            //Set the current display time to the time in the frame buffer for the current position of the read cursor
             this.CurrentDisplayTime = this._frameBufferTimes[this._readCursor % this._bufferSize];
+            //Return the associated framebuffer for the position of the read cursor
             return this._frameBuffer[this._readCursor % this._bufferSize];
         }
 
+        //If the read cursor is greater greater than the write cursor, return null, meaning there is no new frame
         return null;
     }
     
