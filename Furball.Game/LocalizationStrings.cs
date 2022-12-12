@@ -28,4 +28,5 @@ public enum LocalizationStrings {
     GraphTest,
     GMLTest,
     TexturePackerTest,
+    BoxBlurTest,
 }
