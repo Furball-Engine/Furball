@@ -34,9 +34,15 @@ public class TexturedDrawable : Drawable {
     private FloatTween _fadeTextureTween = null;
     private Texture    _fadeTextureTo;
     public void FadeTexture(Texture tex, double time, Easing easing = Easing.None) {
+        //If the sizes dont match, throw an exception, im not sure how to handle this
+        //TODO: is there a logical way to do this? theres multiple possible ways of doing so, none of which are really good
         if (tex.Size != this.Texture.Size)
             throw new Exception("Sizes of the fading textures must match!");
 
+        //If the user is trying to fade to the same texture, dont do anything
+        if (tex == this.Texture)
+            return;
+        
         this._fadeTextureTween = new FloatTween(TweenType.Fade, 0, 1, FurballGame.Time, FurballGame.Time + time, easing);
         this._fadeTextureTo    = tex;
     }
