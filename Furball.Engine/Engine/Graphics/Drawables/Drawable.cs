@@ -268,7 +268,6 @@ public abstract class Drawable : IDisposable {
         this.OnDragEnd   = null;
         this.OnDragBegin = null;
         this.OnHover     = null;
-        // this.OnMove      = null;
         this.OnHoverLost = null;
     }
 
