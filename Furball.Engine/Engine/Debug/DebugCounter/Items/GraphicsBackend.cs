@@ -16,8 +16,8 @@ internal class GraphicsBackend : DebugCounterItem {
                 return;
             case OpenGLBackend openGlBackend: {
                 this._stringCache = openGlBackend.CreationBackend == Backend.OpenGL 
-                                        ? $"Backend: OpenGL ({Global.LatestSupportedGl.GL.MajorVersion}.{Global.LatestSupportedGl.GL.MinorVersion})" 
-                                        : $"Backend: OpenGLES ({Global.LatestSupportedGl.GLES.MajorVersion}.{Global.LatestSupportedGl.GLES.MinorVersion})";
+                                        ? $"Backend: OpenGL ({Global.LatestSupportedGl.Value.GL.MajorVersion}.{Global.LatestSupportedGl.Value.GL.MinorVersion})" 
+                                        : $"Backend: OpenGLES ({Global.LatestSupportedGl.Value.GLES.MajorVersion}.{Global.LatestSupportedGl.Value.GLES.MinorVersion})";
                 return;
             }
             default:
