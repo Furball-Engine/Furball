@@ -275,8 +275,10 @@ public class FurballGame : Game {
 
         MonoModCheck();
 
-        this.CreateTextureDebugger();
-        this.CreateSceneViewer();
+        if (RuntimeInfo.IsDebug()) {
+            this.CreateTextureDebugger();
+            this.CreateSceneViewer();
+        }
 
         WindowManager.FramebufferResize += this.OnWindowResize;
 
