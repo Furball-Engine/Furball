@@ -145,7 +145,7 @@ public class InputManager {
             switch (item.Value) {
                 case MouseMoveEvent mouseMoveEvent: {
                     Console.WriteLine($"Mouse move event: {mouseMoveEvent.Position}");
-                    this.OnMouseMove?.Invoke(this, new MouseMoveEventArgs(mouseMoveEvent.Position, null)); //TODO: mouse
+                    this.OnMouseMove?.Invoke(this, new MouseMoveEventArgs(mouseMoveEvent.Position, null));//TODO: mouse
                     break;
                 }
                 case MouseUpEvent mouseUpEvent: {
@@ -171,13 +171,14 @@ public class InputManager {
         public int         MouseId;
         public MouseButton Button;
     }
-    
+
     private struct MouseUpEvent {
         public int         MouseId;
         public MouseButton Button;
     }
 
-    private readonly Channel<OneOf<MouseMoveEvent, MouseDownEvent, MouseUpEvent>> _channel = Channel.CreateUnbounded<OneOf<MouseMoveEvent, MouseDownEvent, MouseUpEvent>>();
+    private readonly Channel<OneOf<MouseMoveEvent, MouseDownEvent, MouseUpEvent>> _channel =
+        Channel.CreateUnbounded<OneOf<MouseMoveEvent, MouseDownEvent, MouseUpEvent>>();
 
     private void Run() {
         using HighResolutionClock clock = new HighResolutionClock(TimeSpan.FromMilliseconds(10));
@@ -225,45 +226,14 @@ public class InputManager {
 
             for (int i = 0; i < mice.Count; i++) {
                 FurballMouse mouse = mice[i];
-                
-                if(i < silkMice.Count) {
+
+                if (i < silkMice.Count) {
                     IMouse silkMouse = silkMice[i];
 
-                    Vector2 newPosition = silkMouse.Position;
-                    for (int j = 0; j < newButtons.Length; j++) {
-                        if (silkMouse.IsButtonPressed((MouseButton)j)) {
-                            newButtons[j] = true;
-                            
-                            if (!mouse.PressedButtons[j]) {
-                                writer.WriteAsync(
-                                new MouseDownEvent {
-                                    MouseId = i, 
-                                    Button = (MouseButton)j
-                                }
-                                );
-                            }
-                        } else {
-                            newButtons[j] = false;
-                            
-                            if (mouse.PressedButtons[j]) {
-                                writer.WriteAsync(
-                                new MouseUpEvent {
-                                    MouseId = i, 
-                                    Button = (MouseButton)j
-                                }
-                                );
-                            }
-                        }
-                        
-                        mouse.PressedButtons[j] = newButtons[j];
-                    }
+                    SilkMouseButtonCheck(newButtons, silkMouse, mouse, writer, i);
 
-                    if (newPosition != mouse.Position) {
-                        writer.WriteAsync(new MouseMoveEvent {
-                            MouseId = i,
-                            Position = newPosition
-                        });
-                    }
+                    Vector2 newPosition = silkMouse.Position;
+                    SilkMousePositionCheck(newPosition, mouse, writer, i);
 
                     mouse.Position = newPosition;
                 }
@@ -276,6 +246,46 @@ public class InputManager {
                 // Console.WriteLine($"Input frame delta {elapsed:N2}ms:{1000d / elapsed:N2} per second");
             }
             start = stopwatch.Elapsed.TotalMilliseconds;
+        }
+    }
+    
+    private static void SilkMouseButtonCheck(bool[] newButtons, IMouse silkMouse, FurballMouse mouse, ChannelWriter<OneOf<MouseMoveEvent, MouseDownEvent, MouseUpEvent>> writer, int i) {
+        for (int j = 0; j < newButtons.Length; j++) {
+            if (silkMouse.IsButtonPressed((MouseButton)j)) {
+                newButtons[j] = true;
+
+                if (!mouse.PressedButtons[j]) {
+                    writer.WriteAsync(
+                    new MouseDownEvent {
+                        MouseId = i,
+                        Button  = (MouseButton)j
+                    }
+                    );
+                }
+            } else {
+                newButtons[j] = false;
+
+                if (mouse.PressedButtons[j]) {
+                    writer.WriteAsync(
+                    new MouseUpEvent {
+                        MouseId = i,
+                        Button  = (MouseButton)j
+                    }
+                    );
+                }
+            }
+
+            mouse.PressedButtons[j] = newButtons[j];
+        }
+    }
+    private static void SilkMousePositionCheck(Vector2 newPosition, FurballMouse mouse, ChannelWriter<OneOf<MouseMoveEvent, MouseDownEvent, MouseUpEvent>> writer, int i) {
+        if (newPosition != mouse.Position) {
+            writer.WriteAsync(
+            new MouseMoveEvent {
+                MouseId  = i,
+                Position = newPosition
+            }
+            );
         }
     }
 
