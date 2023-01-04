@@ -138,12 +138,19 @@ public class InputManager {
         //currently at 100ms (10 per second) for testing
         using HighResolutionClock clock = new HighResolutionClock(TimeSpan.FromMilliseconds(100));
         
+        Stopwatch stopwatch = Stopwatch.StartNew();
+
+        double start = stopwatch.Elapsed.TotalMilliseconds;
         while (this._run) {
             Console.WriteLine($"Input frame clock run");
             
             //Wait the clock 
-            if(this._run)
+            if (this._run) {
                 clock.WaitFrame();
+                double elapsed = stopwatch.Elapsed.TotalMilliseconds - start;
+                Console.WriteLine($"Input frame delta {elapsed:N2}ms:{1000d / elapsed:N2} per second");
+            }
+            start = stopwatch.Elapsed.TotalMilliseconds;
         }
     }
     
