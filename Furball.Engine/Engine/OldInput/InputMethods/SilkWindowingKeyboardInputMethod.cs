@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Furball.Engine.Engine.Input;
 using Silk.NET.Input;
 
 namespace Furball.Engine.Engine.OldInput.InputMethods;

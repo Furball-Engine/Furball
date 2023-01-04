@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Numerics;
+using Furball.Engine.Engine.Input;
 using Furball.Vixie.Helpers.Helpers;
 using Silk.NET.Input;
 

@@ -1,12 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Numerics;
 using System.Threading;
+using System.Threading.Channels;
 using Furball.Engine.Engine.Helpers.Logger;
 using Furball.Engine.Engine.Input.Events;
 using Furball.Engine.Engine.Timing;
+using Furball.Vixie.WindowManagement;
 using JetBrains.Annotations;
 using Kettu;
+using OneOf;
+using Silk.NET.Input;
 
 namespace Furball.Engine.Engine.Input;
 
@@ -50,7 +55,7 @@ public class InputManager {
     public InputManager() {
         this._thread = new(this.Run);
     }
-    
+
     [CanBeNull]
     public ICharInputHandler CharInputHandler => this._charInputHandlers.Count == 0 ? null : this._charInputHandlers.Last.Value;
 
@@ -131,33 +136,99 @@ public class InputManager {
     }
 
     public void Update() {
-        //TODO: process events from the channel and invoke them on the main thread
+        ChannelReader<OneOf<MouseMoveEvent>> reader = this._channel.Reader;
+
+        while (reader.TryRead(out OneOf<MouseMoveEvent> item)) {
+            switch (item.Value) {
+                case MouseMoveEvent mouseMoveEvent: {
+                    Console.WriteLine($"Mouse move event: {mouseMoveEvent.Position}");
+                    this.OnMouseMove?.Invoke(this, new MouseMoveEventArgs(mouseMoveEvent.Position, null));//TODO: mouse
+                    break;
+                }
+            }
+        }
     }
-    
+
+    private struct MouseMoveEvent {
+        public int     MouseId;
+        public Vector2 Position;
+    }
+
+    private Channel<OneOf<MouseMoveEvent>> _channel = Channel.CreateUnbounded<OneOf<MouseMoveEvent>>();
+
     private void Run() {
-        //currently at 100ms (10 per second) for testing
-        using HighResolutionClock clock = new HighResolutionClock(TimeSpan.FromMilliseconds(100));
-        
+        using HighResolutionClock clock = new HighResolutionClock(TimeSpan.FromMilliseconds(10));
+
         Stopwatch stopwatch = Stopwatch.StartNew();
+
+        ChannelWriter<OneOf<MouseMoveEvent>> writer = this._channel.Writer;
+
+        List<FurballMouse>    mice      = new List<FurballMouse>();
+        List<FurballKeyboard> keyboards = new List<FurballKeyboard>();
+
+        IReadOnlyList<IMouse>    silkMice      = new List<IMouse>();
+        IReadOnlyList<IKeyboard> silkKeyboards = new List<IKeyboard>();
+        if (FurballGame.Instance.WindowManager is SilkWindowManager silkWindowManager) {
+            silkMice      = silkWindowManager.InputContext.Mice;
+            silkKeyboards = silkWindowManager.InputContext.Keyboards;
+        }
+
+        foreach (IMouse mouse in silkMice) {
+            mice.Add(
+            new FurballMouse() {
+                Name = mouse.Name
+            }
+            );
+        }
+
+        foreach (IKeyboard keyboard in silkKeyboards) {
+            keyboards.Add(
+            new FurballKeyboard {
+                Name         = keyboard.Name,
+                GetClipboard = () => keyboard.ClipboardText,
+                SetClipboard = s => keyboard.ClipboardText = s,
+                BeginInput   = () => keyboard.BeginInput(),
+                EndInput     = () => keyboard.EndInput()
+            }
+            );
+        }
 
         double start = stopwatch.Elapsed.TotalMilliseconds;
         while (this._run) {
-            Console.WriteLine($"Input frame clock run");
-            
+            // Console.WriteLine($"Input frame clock run");
+
+            for (int i = 0; i < mice.Count; i++) {
+                FurballMouse mouse = mice[i];
+                
+                if(i < silkMice.Count) {
+                    IMouse silkMouse = silkMice[i];
+
+                    Vector2 newPosition = silkMouse.Position;
+
+                    if (newPosition != mouse.Position) {
+                        writer.WriteAsync(new MouseMoveEvent {
+                            Position = newPosition
+                        });
+                    }
+                    
+                    mouse.Position = newPosition;
+                }
+            }
+
             //Wait the clock 
             if (this._run) {
                 clock.WaitFrame();
                 double elapsed = stopwatch.Elapsed.TotalMilliseconds - start;
-                Console.WriteLine($"Input frame delta {elapsed:N2}ms:{1000d / elapsed:N2} per second");
+                // Console.WriteLine($"Input frame delta {elapsed:N2}ms:{1000d / elapsed:N2} per second");
             }
             start = stopwatch.Elapsed.TotalMilliseconds;
         }
     }
-    
+
     public void RegisterKeybind(Keybind toggleDebugOverlay) {
         // throw new NotImplementedException();
     }
-    
+
     public void UnregisterKeybind(Keybind toggleDebugOverlay) {
         // throw new NotImplementedException();
     }

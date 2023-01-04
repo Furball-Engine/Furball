@@ -2,8 +2,9 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using Silk.NET.Input;
+using ScrollWheel=Furball.Engine.Engine.OldInput.ScrollWheel;
 
-namespace Furball.Engine.Engine.OldInput; 
+namespace Furball.Engine.Engine.Input; 
 
 public class FurballMouse {
     internal struct DragState {
