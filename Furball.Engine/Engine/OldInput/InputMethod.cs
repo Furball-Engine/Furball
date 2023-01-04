@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Furball.Engine.Engine.Input; 
+namespace Furball.Engine.Engine.OldInput; 
 
 public abstract class InputMethod {
     /// <summary>

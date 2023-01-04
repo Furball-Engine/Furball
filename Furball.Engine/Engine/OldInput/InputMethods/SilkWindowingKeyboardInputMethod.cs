@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Silk.NET.Input;
 
-namespace Furball.Engine.Engine.Input.InputMethods;
+namespace Furball.Engine.Engine.OldInput.InputMethods;
 
 public class SilkWindowingKeyboardInputMethod : InputMethod {
     private readonly IInputContext            _inputContext;

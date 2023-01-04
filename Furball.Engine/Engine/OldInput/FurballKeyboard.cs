@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Silk.NET.Input;
 
-namespace Furball.Engine.Engine.Input; 
+namespace Furball.Engine.Engine.OldInput; 
 
 public class FurballKeyboard {
     public string Name;

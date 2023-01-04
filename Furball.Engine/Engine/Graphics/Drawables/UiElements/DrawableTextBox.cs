@@ -150,17 +150,18 @@ public partial class DrawableTextBox : CompositeDrawable, ICharInputHandler {
             this.SelectedRange.Value = new Range(0, 0);
             
         switch(e.Key) {
-            case Key.V when FurballGame.InputManager.HeldKeys.Contains(Key.ControlLeft): {
-                string clipboard = FurballGame.InputManager.Clipboard;
-
-                this.Text                = this.Text.Insert(this.SelectedRange.Value.End, clipboard);
-                this.SelectedRange.Value = new Range(this.SelectedRange.Value.End + clipboard.Length, this.SelectedRange.Value.End + clipboard.Length);
-                this.UpdateCaretPosition(false);
-  
-                this.OnLetterTyped?.Invoke(this, 'v');
-                this.RecalcOutline();
-                break;
-            }
+            //TODO
+            // case Key.V when FurballGame.InputManager.HeldKeys.Contains(Key.ControlLeft): {
+            //     string clipboard = FurballGame.InputManager.Clipboard;
+            //
+            //     this.Text                = this.Text.Insert(this.SelectedRange.Value.End, clipboard);
+            //     this.SelectedRange.Value = new Range(this.SelectedRange.Value.End + clipboard.Length, this.SelectedRange.Value.End + clipboard.Length);
+            //     this.UpdateCaretPosition(false);
+            //
+            //     this.OnLetterTyped?.Invoke(this, 'v');
+            //     this.RecalcOutline();
+            //     break;
+            // }
             case Key.Backspace: {
                 if (this.Text.Length != 0 && this.SelectedRange.Value.Start != 0) {
                     char lastLetter = this.Text[this.SelectedRange.Value.Start - 1];
@@ -175,19 +176,20 @@ public partial class DrawableTextBox : CompositeDrawable, ICharInputHandler {
                 break;
             }
             case Key.Enter: {
-                if (this.LineCount == 1 || (this.LineCount > 1 && FurballGame.InputManager.HeldKeys.Contains(Key.ShiftLeft))) {
-                    this.OnCommit?.Invoke(this, this.Text);
-
-                    if (this.DeselectOnCommit)
-                        FurballGame.InputManager.ReleaseTextFocus(this);
-
-                    if (this.ClearOnCommit) {
-                        this.Text = string.Empty;
-                        this.RecalcOutline();
-                    }
-                } else {
-                    this.HandleChar(new CharInputEvent('\n', e.Keyboard));
-                }
+                //TODO
+                // if (this.LineCount == 1 || (this.LineCount > 1 && FurballGame.InputManager.HeldKeys.Contains(Key.ShiftLeft))) {
+                //     this.OnCommit?.Invoke(this, this.Text);
+                //
+                //     if (this.DeselectOnCommit)
+                //         FurballGame.InputManager.ReleaseTextFocus(this);
+                //
+                //     if (this.ClearOnCommit) {
+                //         this.Text = string.Empty;
+                //         this.RecalcOutline();
+                //     }
+                // } else {
+                //     this.HandleChar(new CharInputEvent('\n', e.Keyboard));
+                // }
                 break;
             }
             case Key.Left: {

@@ -7,7 +7,7 @@ using EvDevSharp.EventArgs;
 using Furball.Engine.Engine.Helpers;
 using Silk.NET.Input;
 
-namespace Furball.Engine.Engine.Input.InputMethods;
+namespace Furball.Engine.Engine.OldInput.InputMethods;
 
 public class EvDevKeyboardInputMethod : InputMethod {
     private readonly List<EvDevDevice> _trackedDevices = new();

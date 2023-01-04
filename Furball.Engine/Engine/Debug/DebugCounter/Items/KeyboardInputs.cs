@@ -12,14 +12,15 @@ internal class KeyboardInputs : DebugCounterItem {
 
         builder.Append("keyboard: {");
 
-        List<FurballKeyboard> keyboards = FurballGame.InputManager.Keyboards;
-        for (int i = 0; i < keyboards.Count; i++) {
-            FurballKeyboard keyboard = keyboards[i];
-            builder.Append($"[{i}]({keyboard.Name}, {string.Join(",", keyboard.PressedKeys)})");
-            if (i != keyboards.Count - 1) {
-                builder.Append('\n');
-            }
-        }
+        //TODO
+        // List<FurballKeyboard> keyboards = FurballGame.InputManager.Keyboards;
+        // for (int i = 0; i < keyboards.Count; i++) {
+        //     FurballKeyboard keyboard = keyboards[i];
+        //     builder.Append($"[{i}]({keyboard.Name}, {string.Join(",", keyboard.PressedKeys)})");
+        //     if (i != keyboards.Count - 1) {
+        //         builder.Append('\n');
+        //     }
+        // }
 
         builder.Append("}");
         return builder.ToString();

@@ -3,7 +3,7 @@ using System.Numerics;
 using System.Runtime.CompilerServices;
 using Silk.NET.Input;
 
-namespace Furball.Engine.Engine.Input; 
+namespace Furball.Engine.Engine.OldInput; 
 
 public class FurballMouse {
     internal struct DragState {

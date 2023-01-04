@@ -170,11 +170,12 @@ public class Builtins {
              (_, _) => {
                  List<Value> arrayList = new();
                      
-                 for (int i = 0; i != FurballGame.InputManager.RegisteredInputMethods.Count; i++) {
-                     InputMethod currentMethod = FurballGame.InputManager.RegisteredInputMethods[i];
-
-                     arrayList.Add(new Value.String(currentMethod.GetType().Name));
-                 }
+                 //TODO
+                 // for (int i = 0; i != FurballGame.InputManager.RegisteredInputMethods.Count; i++) {
+                 //     InputMethod currentMethod = FurballGame.InputManager.RegisteredInputMethods[i];
+                 //
+                 //     arrayList.Add(new Value.String(currentMethod.GetType().Name));
+                 // }
 
                  return new Value.Array(arrayList);
              }),

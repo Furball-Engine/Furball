@@ -47,13 +47,14 @@ public static class ImGuiConsole {
                 UpdateTitle();
             }
             if (Visible) {
-                if (args.Key == Key.V && FurballGame.InputManager.ControlHeld && RuntimeInfo.CurrentPlatform() == OSPlatform.Linux) {
-                    _consoleBuffer = _consoleBuffer.Insert(_cursorPosition, FurballGame.InputManager.Clipboard ?? string.Empty);
-                }
-
-                if (args.Key == Key.C && FurballGame.InputManager.ControlHeld && RuntimeInfo.CurrentPlatform() == OSPlatform.Linux) {
-                    FurballGame.InputManager.Clipboard = _consoleBuffer.Substring(_selectionStart, _selectionEnd);
-                }
+                //TODO
+                // if (args.Key == Key.V && FurballGame.InputManager.ControlHeld && RuntimeInfo.CurrentPlatform() == OSPlatform.Linux) {
+                //     _consoleBuffer = _consoleBuffer.Insert(_cursorPosition, FurballGame.InputManager.Clipboard ?? string.Empty);
+                // }
+                //
+                // if (args.Key == Key.C && FurballGame.InputManager.ControlHeld && RuntimeInfo.CurrentPlatform() == OSPlatform.Linux) {
+                //     FurballGame.InputManager.Clipboard = _consoleBuffer.Substring(_selectionStart, _selectionEnd);
+                // }
             }
         };
 

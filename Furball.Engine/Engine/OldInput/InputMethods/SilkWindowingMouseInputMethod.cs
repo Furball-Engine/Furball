@@ -1,10 +1,9 @@
-using System;
 using System.Collections.Generic;
 using System.Numerics;
 using Furball.Vixie.Helpers.Helpers;
 using Silk.NET.Input;
 
-namespace Furball.Engine.Engine.Input.InputMethods;
+namespace Furball.Engine.Engine.OldInput.InputMethods;
 
 public class SilkWindowingMouseInputMethod : InputMethod {
     private readonly IInputContext         _inputContext;
