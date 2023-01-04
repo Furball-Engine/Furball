@@ -85,7 +85,7 @@ public class SilkWindowingMouseInputMethod : InputMethod {
     private void MouseOnDown(MouseButton button, int i) {
         FurballMouse mouse = this.Mice[i];
 
-        mouse.PressedButtons.Add(button);
+        // mouse.PressedButtons.Add(button);
         mouse.QueuedButtonPresses.Add(button);
 
         this.Mice[i] = mouse;
@@ -94,7 +94,7 @@ public class SilkWindowingMouseInputMethod : InputMethod {
     private void MouseOnUp(MouseButton button, int i) {
         FurballMouse mouse = this.Mice[i];
 
-        mouse.PressedButtons.Remove(button);
+        // mouse.PressedButtons.Remove(button);
         mouse.QueuedButtonReleases.Add(button);
 
         this.Mice[i] = mouse;

@@ -21,7 +21,7 @@ public class FurballMouse {
     internal ScrollWheel TempScrollWheel;
     internal ScrollWheel ScrollWheelCache;
 
-    public List<MouseButton> PressedButtons = new();
+    public bool[] PressedButtons = new bool[12];
 
     internal List<MouseButton> QueuedButtonPresses = new();
     internal List<MouseButton> QueuedButtonReleases = new();
@@ -30,7 +30,4 @@ public class FurballMouse {
 
     internal Vector2 LastKnownSoftwareCursorPosition;
     public   bool    SoftwareCursor;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public bool IsButtonPressed(MouseButton button) => this.PressedButtons.Contains(button);
 }
