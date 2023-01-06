@@ -164,22 +164,22 @@ public class InputManager {
             switch (item.Value) {
                 case MouseMoveEvent mouseMoveEvent: {
                     Console.WriteLine($"Mouse move event: {mouseMoveEvent.Position}");
-                    this.OnMouseMove?.Invoke(this, new MouseMoveEventArgs(mouseMoveEvent.Position, null));//TODO: mouse
+                    this.OnMouseMove?.Invoke(this, new MouseMoveEventArgs(mouseMoveEvent.Position, mouseMoveEvent.MouseId));
                     break;
                 }
                 case MouseUpEvent mouseUpEvent: {
                     Console.WriteLine($"Mouse up event: {mouseUpEvent.Button}");
-                    this.OnMouseUp?.Invoke(this, new MouseButtonEventArgs(mouseUpEvent.Button, null));//TODO: mouse
+                    this.OnMouseUp?.Invoke(this, new MouseButtonEventArgs(mouseUpEvent.Button, mouseUpEvent.MouseId));
                     break;
                 }
                 case MouseDownEvent mouseDownEvent: {
                     Console.WriteLine($"Mouse down event: {mouseDownEvent.Button}");
-                    this.OnMouseDown?.Invoke(this, new MouseButtonEventArgs(mouseDownEvent.Button, null));//TODO: mouse
+                    this.OnMouseDown?.Invoke(this, new MouseButtonEventArgs(mouseDownEvent.Button, mouseDownEvent.MouseId));
                     break;
                 }
                 case MouseScrollEvent mouseScrollEvent: {
                     Console.WriteLine($"Mouse scroll event: {mouseScrollEvent.X}:{mouseScrollEvent.Y}");
-                    this.OnMouseScroll?.Invoke(this, new MouseScrollEventArgs(new Vector2(mouseScrollEvent.X, mouseScrollEvent.Y), null));//TODO: mouse
+                    this.OnMouseScroll?.Invoke(this, new MouseScrollEventArgs(new Vector2(mouseScrollEvent.X, mouseScrollEvent.Y), mouseScrollEvent.MouseId));
                     break;
                 }
             }

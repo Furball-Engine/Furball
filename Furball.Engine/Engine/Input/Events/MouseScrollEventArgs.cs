@@ -5,11 +5,11 @@ using Furball.Engine.Engine.Input;
 namespace Furball.Engine.Engine.Input.Events; 
 
 public class MouseScrollEventArgs : EventArgs {
-    public Vector2      ScrollAmount;
-    public FurballMouse Mouse;
-
-    public MouseScrollEventArgs(Vector2 scrollAmount, FurballMouse mouse) {
+    public Vector2 ScrollAmount;
+    public int     MouseId;
+    
+    public MouseScrollEventArgs(Vector2 scrollAmount, int mouse) {
         this.ScrollAmount = scrollAmount;
-        this.Mouse        = mouse;
+        this.MouseId = mouse;
     }
 }

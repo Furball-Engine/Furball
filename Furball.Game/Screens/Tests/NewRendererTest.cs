@@ -195,7 +195,7 @@ public class NewRendererTest : TestScreen {
         this._mesh.Vertices.Add(
         new Vertex {
             Color    = Color.White,
-            Position = e.Mouse.Position
+            Position = Vector2.Zero, //e.Mouse.Position TODO: mouse pos
         }
         );
 

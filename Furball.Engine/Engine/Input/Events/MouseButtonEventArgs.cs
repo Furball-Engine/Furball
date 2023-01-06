@@ -6,10 +6,10 @@ namespace Furball.Engine.Engine.Input.Events;
 
 public class MouseButtonEventArgs : EventArgs {
     public MouseButton  Button;
-    public FurballMouse Mouse;
+    public int MouseId;
     
-    public MouseButtonEventArgs(MouseButton button, FurballMouse mouse) {
-        this.Button = button;
-        this.Mouse  = mouse;
+    public MouseButtonEventArgs(MouseButton button, int mouse) {
+        this.Button  = button;
+        this.MouseId = mouse;
     }
 }
