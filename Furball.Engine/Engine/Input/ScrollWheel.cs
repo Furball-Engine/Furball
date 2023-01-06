@@ -1,6 +1,6 @@
 using System;
 
-namespace Furball.Engine.Engine.OldInput; 
+namespace Furball.Engine.Engine.Input; 
 
 public struct ScrollWheel {
     public          bool Equals(ScrollWheel other) => this.X.Equals(other.X) && this.Y.Equals(other.Y);

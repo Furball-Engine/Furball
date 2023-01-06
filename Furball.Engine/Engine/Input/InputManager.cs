@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Numerics;
 using System.Threading;
 using System.Threading.Channels;
@@ -137,6 +138,24 @@ public class InputManager {
     }
 
     public void Update() {
+        ChannelWriter<OneOf<MouseScrollUpdate>> writer = this._channelToInput.Writer;
+        if (FurballGame.Instance.WindowManager is SilkWindowManager silkWindowManager) {
+            IReadOnlyList<IMouse> mice = silkWindowManager.InputContext.Mice;
+
+            foreach (IMouse mouse in mice) {
+                if (mouse.ScrollWheels[0].X != 0)
+                    writer.WriteAsync(new MouseScrollUpdate {
+                        X = mouse.ScrollWheels[0].X, 
+                        Mouse = mouse
+                    });
+                if (mouse.ScrollWheels[0].Y != 0)
+                    writer.WriteAsync(new MouseScrollUpdate {
+                        Y = mouse.ScrollWheels[0].Y, 
+                        Mouse = mouse
+                    }); 
+            }
+        }
+        
         // ReSharper disable once SuggestVarOrType_Elsewhere
         var reader = this._channel.Reader;
 
@@ -150,12 +169,17 @@ public class InputManager {
                 }
                 case MouseUpEvent mouseUpEvent: {
                     Console.WriteLine($"Mouse up event: {mouseUpEvent.Button}");
-                    this.OnMouseUp?.Invoke(this, new MouseButtonEventArgs(mouseUpEvent.Button, null));//TODO mouse
+                    this.OnMouseUp?.Invoke(this, new MouseButtonEventArgs(mouseUpEvent.Button, null));//TODO: mouse
                     break;
                 }
                 case MouseDownEvent mouseDownEvent: {
                     Console.WriteLine($"Mouse down event: {mouseDownEvent.Button}");
-                    this.OnMouseDown?.Invoke(this, new MouseButtonEventArgs(mouseDownEvent.Button, null));//TODO mouse
+                    this.OnMouseDown?.Invoke(this, new MouseButtonEventArgs(mouseDownEvent.Button, null));//TODO: mouse
+                    break;
+                }
+                case MouseScrollEvent mouseScrollEvent: {
+                    Console.WriteLine($"Mouse scroll event: {mouseScrollEvent.X}:{mouseScrollEvent.Y}");
+                    this.OnMouseScroll?.Invoke(this, new MouseScrollEventArgs(new Vector2(mouseScrollEvent.X, mouseScrollEvent.Y), null));//TODO: mouse
                     break;
                 }
             }
@@ -177,11 +201,28 @@ public class InputManager {
         public MouseButton Button;
     }
 
-    private readonly Channel<OneOf<MouseMoveEvent, MouseDownEvent, MouseUpEvent>> _channel =
-        Channel.CreateUnbounded<OneOf<MouseMoveEvent, MouseDownEvent, MouseUpEvent>>();
+    private struct MouseScrollEvent {
+        public int   MouseId;
+        public float X;
+        public float Y;
+    }
+
+    private readonly Channel<OneOf<MouseMoveEvent, MouseDownEvent, MouseUpEvent, MouseScrollEvent>> _channel =
+        Channel.CreateUnbounded<OneOf<MouseMoveEvent, MouseDownEvent, MouseUpEvent, MouseScrollEvent>>();
+
+    private struct MouseScrollUpdate {
+        public IMouse Mouse;
+        public float  X;
+        public float  Y;
+    }
+
+    private readonly Channel<OneOf<MouseScrollUpdate>> _channelToInput = Channel.CreateUnbounded<OneOf<MouseScrollUpdate>>();
 
     private void Run() {
         using HighResolutionClock clock = new HighResolutionClock(TimeSpan.FromMilliseconds(10));
+
+        // ReSharper disable once SuggestVarOrType_Elsewhere
+        var reader = this._channelToInput.Reader;
 
         Stopwatch stopwatch = Stopwatch.StartNew();
 
@@ -224,6 +265,26 @@ public class InputManager {
         while (this._run) {
             // Console.WriteLine($"Input frame clock run");
 
+            while (reader.TryRead(out OneOf<MouseScrollUpdate> item)) {
+                item.Switch(
+                update => {
+                    for (int i = 0; i < silkMice.Count; i++) {
+                        IMouse mouse = silkMice[i];
+                        if (mouse == update.Mouse) {
+                            mice[i].ScrollWheel.X += update.X;
+                            mice[i].ScrollWheel.Y += update.Y;
+                            
+                            writer.WriteAsync(new MouseScrollEvent {
+                                MouseId = i, 
+                                X       = update.X, 
+                                Y       = update.Y
+                            });
+                            break;
+                        }
+                    }
+                });
+            }
+
             for (int i = 0; i < mice.Count; i++) {
                 FurballMouse mouse = mice[i];
 
@@ -248,8 +309,31 @@ public class InputManager {
             start = stopwatch.Elapsed.TotalMilliseconds;
         }
     }
-    
-    private static void SilkMouseButtonCheck(bool[] newButtons, IMouse silkMouse, FurballMouse mouse, ChannelWriter<OneOf<MouseMoveEvent, MouseDownEvent, MouseUpEvent>> writer, int i) {
+
+    private static void SilkMouseWheelCheck(
+        Silk.NET.Input.ScrollWheel wheel, FurballMouse mouse, ChannelWriter<OneOf<MouseMoveEvent, MouseDownEvent, MouseUpEvent, MouseScrollEvent>> writer, int i
+    ) {
+        if (wheel.X != mouse.ScrollWheel.X) {
+            writer.WriteAsync(
+            new MouseScrollEvent {
+                MouseId = i,
+                X       = wheel.X - mouse.ScrollWheel.X
+            }
+            );
+        }
+        if (wheel.Y != mouse.ScrollWheel.Y) {
+            writer.WriteAsync(
+            new MouseScrollEvent {
+                MouseId = i,
+                Y       = wheel.Y - mouse.ScrollWheel.Y
+            }
+            );
+        }
+    }
+
+    private static void SilkMouseButtonCheck(
+        bool[] newButtons, IMouse silkMouse, FurballMouse mouse, ChannelWriter<OneOf<MouseMoveEvent, MouseDownEvent, MouseUpEvent, MouseScrollEvent>> writer, int i
+    ) {
         for (int j = 0; j < newButtons.Length; j++) {
             if (silkMouse.IsButtonPressed((MouseButton)j)) {
                 newButtons[j] = true;
@@ -278,7 +362,9 @@ public class InputManager {
             mouse.PressedButtons[j] = newButtons[j];
         }
     }
-    private static void SilkMousePositionCheck(Vector2 newPosition, FurballMouse mouse, ChannelWriter<OneOf<MouseMoveEvent, MouseDownEvent, MouseUpEvent>> writer, int i) {
+    private static void SilkMousePositionCheck(
+        Vector2 newPosition, FurballMouse mouse, ChannelWriter<OneOf<MouseMoveEvent, MouseDownEvent, MouseUpEvent, MouseScrollEvent>> writer, int i
+    ) {
         if (newPosition != mouse.Position) {
             writer.WriteAsync(
             new MouseMoveEvent {

@@ -3,6 +3,7 @@ using System.Numerics;
 using Furball.Engine.Engine.Input;
 using Furball.Vixie.Helpers.Helpers;
 using Silk.NET.Input;
+using ScrollWheel=Furball.Engine.Engine.Input.ScrollWheel;
 
 namespace Furball.Engine.Engine.OldInput.InputMethods;
 
