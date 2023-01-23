@@ -29,7 +29,8 @@ public class FurballTestGame : FurballGame {
         this._screenshotKeybind = new Keybind(
         TestKeybinds.TakeScreenshot,
         "Take Screenshot",
-        Key.F1,
+        Key.F1, 
+        0,
         _ => {
             this.WindowManager.GraphicsBackend.TakeScreenshot();
         }

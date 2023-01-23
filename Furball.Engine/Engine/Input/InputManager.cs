@@ -185,6 +185,14 @@ public class InputManager {
             keyDownEvent => {
                 Console.WriteLine($"Keyboard down event: {keyDownEvent.Key}");
                 this.OnKeyDown?.Invoke(this, new KeyEventArgs(keyDownEvent.Key, keyDownEvent.KeyboardId));
+                
+                foreach (Keybind bind in this._registeredKeybinds) {
+                    //TODO: check modifiers here
+
+                    if (bind.Key == keyDownEvent.Key) {
+                        bind.OnPressed?.Invoke(null); //TODO: put keyboard here
+                    }
+                }
             },
             keyUpEvent => {
                 Console.WriteLine($"Keyboard up event: {keyUpEvent.Key}");
@@ -348,6 +356,8 @@ public class InputManager {
         ChannelWriter<OneOf<MouseMoveEvent, MouseDownEvent, MouseUpEvent, MouseScrollEvent, KeyDownEvent, KeyUpEvent>> writer, int i
     ) {
         for (int j = 0; j < workingKeyboardKeys.Length; j++) {
+            //TODO: either dont use Enum.IsDefined, or cache it manually, performance is dog doo-doo even on net6, and we support net461, so yeah
+            //      stop
             if (!Enum.IsDefined(typeof(Key), j))
                 continue;
             
@@ -426,11 +436,14 @@ public class InputManager {
         }
     }
 
-    public void RegisterKeybind(Keybind toggleDebugOverlay) {
-        // throw new NotImplementedException();
+    private readonly List<Keybind> _registeredKeybinds = new List<Keybind>();
+    
+    public void RegisterKeybind(Keybind bind) {
+        if(!this._registeredKeybinds.Contains(bind))
+            this._registeredKeybinds.Add(bind);
     }
 
-    public void UnregisterKeybind(Keybind toggleDebugOverlay) {
-        // throw new NotImplementedException();
+    public void UnregisterKeybind(Keybind bind) {
+        this._registeredKeybinds.Remove(bind);
     }
 }

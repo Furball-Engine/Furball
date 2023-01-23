@@ -424,12 +424,12 @@ public class FurballGame : Game {
     private Keybind _toggleConsole;
     private Keybind _walkCurrentScreen;
     public virtual void RegisterKeybinds() {
-        this._toggleDebugOverlay = new Keybind(EngineDebugKeybinds.ToggleDebugOverlay, "Toggle Debug Overlay", Key.F11,
+        this._toggleDebugOverlay = new Keybind(EngineDebugKeybinds.ToggleDebugOverlay, "Toggle Debug Overlay", Key.F11, 0,
                                                _ => {
                                                    this._drawDebugOverlay = !this._drawDebugOverlay;
                                                }
         );
-        this._toggleInputOverlay = new Keybind(EngineDebugKeybinds.ToggleInputOverlay, "Toggle Input Overlay", Key.F10,
+        this._toggleInputOverlay = new Keybind(EngineDebugKeybinds.ToggleInputOverlay, "Toggle Input Overlay", Key.F10, 0,
                                                _ => {
                                                    DrawInputOverlay = !DrawInputOverlay;
                                                }
@@ -437,7 +437,7 @@ public class FurballGame : Game {
         this._displayDebugTextureViewer = new Keybind(
         EngineDebugKeybinds.DisplayDebugTextureViewer,
         "Display Debug Texture Viewer",
-        Key.F9,
+        Key.F9, 0,
         _ => {
             if (!this._textureDisplayFormAdded) {
                 DrawableManager.Add(this._textureDisplayForm);
@@ -448,7 +448,7 @@ public class FurballGame : Game {
         this._displaySceneDebugger = new Keybind(
         EngineDebugKeybinds.DisplaySceneDebugger,
         "Display Debug Texture Viewer",
-        Key.F7,
+        Key.F7, 0,
         _ => {
             if (!this._sceneDebuggerFormAdded) {
                 DrawableManager.Add(this._sceneDebuggerForm);
@@ -459,12 +459,12 @@ public class FurballGame : Game {
         this._toggleConsole = new Keybind(
         EngineDebugKeybinds.ToggleConsole,
         "Toggle Console",
-        Key.F12,
+        Key.F12, 0,
         _ => {
             ImGuiConsole.Visible = !ImGuiConsole.Visible;
         }
         );
-        this._walkCurrentScreen = new Keybind(EngineDebugKeybinds.WalkAndPrintCurrentScreen, "Walk and print current screen", Key.F8,
+        this._walkCurrentScreen = new Keybind(EngineDebugKeybinds.WalkAndPrintCurrentScreen, "Walk and print current screen", Key.F8, 0,
                                               _ => {
                                                   if (this.RunningScreen is not null) {
                                                       DrawableTreeWalker.PrintWalkedTree(this.RunningScreen.Manager);
