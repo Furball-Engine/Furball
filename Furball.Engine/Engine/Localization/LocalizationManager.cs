@@ -15,7 +15,7 @@ namespace Furball.Engine.Engine.Localization;
 public class LocalizationManager {
     private static readonly Dictionary<(string translationKey, ISO639_2Code code), string> Translations = new();
 
-    public static Dictionary<ISO639_2Code, Type> Languages = new();
+    public static Dictionary<ISO639_2Code, Language> Languages = new();
 
     public static  Language DefaultLanguage  = new EnglishLanguage();
     private static Language _currentLanguage = DefaultLanguage;
@@ -99,11 +99,10 @@ public class LocalizationManager {
     [Pure]
     [CanBeNull]
     public static Language GetLanguageFromCode(ISO639_2Code code) {
-        if (Languages.TryGetValue(code, out Type type)) {
-            return (Language)Activator.CreateInstance(type);
-        }
+        return Languages.TryGetValue(code, out Language language) 
+                   ? language 
+                   : null;
 
-        return null;
     }
 
     public static void AddDefaultTranslation(object key, string contents) {
@@ -111,16 +110,16 @@ public class LocalizationManager {
     }
         
     public static void ReadTranslations() {
-        Languages.Add(ISO639_2Code.eng, typeof(EnglishLanguage));
-        Languages.Add(ISO639_2Code.jbo, typeof(LojbanLanguage));
-        Languages.Add(ISO639_2Code.epo, typeof(EsperantoLanguage));
-        Languages.Add(ISO639_2Code.pol, typeof(PolishLanguage));
-        Languages.Add(ISO639_2Code.deu, typeof(GermanLanguage));
-        Languages.Add(ISO639_2Code.jpn, typeof(JapaneseLanguage));
-        Languages.Add(ISO639_2Code.spa, typeof(SpanishLanguage));
-        Languages.Add(ISO639_2Code.ara, typeof(ArabicLanguage));
-        Languages.Add(ISO639_2Code.ita, typeof(ItalianLanguage));
-        Languages.Add(ISO639_2Code.fra, typeof(FrenchLanguage));
+        Languages.Add(ISO639_2Code.eng, new EnglishLanguage());
+        Languages.Add(ISO639_2Code.jbo, new LojbanLanguage());
+        Languages.Add(ISO639_2Code.epo, new EsperantoLanguage());
+        Languages.Add(ISO639_2Code.pol, new PolishLanguage());
+        Languages.Add(ISO639_2Code.deu, new GermanLanguage());
+        Languages.Add(ISO639_2Code.jpn, new JapaneseLanguage());
+        Languages.Add(ISO639_2Code.spa, new SpanishLanguage());
+        Languages.Add(ISO639_2Code.ara, new ArabicLanguage());
+        Languages.Add(ISO639_2Code.ita, new ItalianLanguage());
+        Languages.Add(ISO639_2Code.fra, new FrenchLanguage());
 
         string localizationFolder = Path.Combine(FurballGame.AssemblyPath, FurballGame.LocalizationFolder);
             

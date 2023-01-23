@@ -70,7 +70,7 @@ public class FurballGame : Game {
     public const int DEFAULT_WINDOW_WIDTH  = 1280;
     public const int DEFAULT_WINDOW_HEIGHT = 720;
 
-    public static string AssemblyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? throw new Exception("shits fucked man");
+    public static string AssemblyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? Environment.CurrentDirectory;
     public static string DataFolder   = AssemblyPath;
     public static string LocalizationFolder => $"{AssemblyPath}/Localization";
 
