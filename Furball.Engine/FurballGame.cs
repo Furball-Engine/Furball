@@ -135,9 +135,6 @@ public class FurballGame : Game {
     }
 
     protected override void Initialize() {
-        if(RuntimeInfo.CurrentPlatform() == OSPlatform.Windows)
-            Windows.AttachToExistingConsole();
-        
         Profiler.StartProfile("full_furball_initialize");
 
         //If we are in a readonly environment, we should write to another folder which is more likely to not be readonly
@@ -384,6 +381,8 @@ public class FurballGame : Game {
     }
 
     public void Run(Backend backend = Backend.None) {
+        if(RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            Windows.AttachToExistingConsole();
         base.Run(backend);
     }
         

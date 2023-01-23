@@ -7,11 +7,6 @@ public static class Windows {
     private static extern bool AttachConsole(int dwProcessId);
 
     public static void AttachToExistingConsole() {
-        try {
-            AttachConsole(-1);
-        }
-        catch {
-            //ignored
-        }
+        AttachConsole(-1);
     }
 }

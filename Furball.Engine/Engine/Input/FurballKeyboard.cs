@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Runtime.CompilerServices;
 using Silk.NET.Input;
 
 namespace Furball.Engine.Engine.Input; 
@@ -7,14 +9,14 @@ namespace Furball.Engine.Engine.Input;
 public class FurballKeyboard {
     public string Name;
     
-    public readonly List<Key> PressedKeys = new();
+    /// <summary>
+    /// An array of the currently pressed keys
+    /// </summary>
+    public readonly bool[] PressedKeys = new bool[(int)(Key.Menu + 1)];
 
-    internal readonly List<Key> QueuedKeyPresses  = new();
-    internal readonly List<Key> QueuedKeyReleases = new();
-
-    internal List<char> QueuedTextInputs = new();
-    
-    public bool IsKeyPressed(Key k) => this.PressedKeys.Contains(k); 
+    //NOTE: (AggressiveOptimization is not available on NS20, 768 == AggressiveOptimization | AggressiveInlining)
+    [MethodImpl((MethodImplOptions)768)]
+    public bool IsKeyPressed(Key k) => this.PressedKeys[(int)k]; 
     
     public delegate string ClipboardGetter();
     

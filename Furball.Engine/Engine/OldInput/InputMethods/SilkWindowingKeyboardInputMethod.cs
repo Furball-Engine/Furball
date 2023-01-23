@@ -41,22 +41,22 @@ public class SilkWindowingKeyboardInputMethod : InputMethod {
             silkKeyboard.KeyUp   += (_, key, _) => this.OnKeyboardUp(key, j);
 
             //Dont let the list from currKeyboards carry over to here
-            keyboard.QueuedTextInputs = new List<char>();
+            // keyboard.QueuedTextInputs = new List<char>();
             this.Keyboards.Add(keyboard);
         }
     }
 
     private void OnKeyboardDown(Key key, int i) {
-        this.Keyboards[i].PressedKeys.Add(key);
-        this.Keyboards[i].QueuedKeyPresses.Add(key);
+        // this.Keyboards[i].PressedKeys.Add(key);
+        // this.Keyboards[i].QueuedKeyPresses.Add(key);
     }
 
     private void OnKeyboardUp(Key key, int i) {
-        this.Keyboards[i].PressedKeys.Remove(key);
-        this.Keyboards[i].QueuedKeyReleases.Add(key);
+        // this.Keyboards[i].PressedKeys.Remove(key);
+        // this.Keyboards[i].QueuedKeyReleases.Add(key);
     }
 
     private void OnKeyboardChar(char c, int i) {
-        this.Keyboards[i].QueuedTextInputs.Add(c);
+        // this.Keyboards[i].QueuedTextInputs.Add(c);
     }
 }
