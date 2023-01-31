@@ -176,20 +176,19 @@ public partial class DrawableTextBox : CompositeDrawable, ICharInputHandler {
                 break;
             }
             case Key.Enter: {
-                //TODO
-                // if (this.LineCount == 1 || (this.LineCount > 1 && FurballGame.InputManager.HeldKeys.Contains(Key.ShiftLeft))) {
-                //     this.OnCommit?.Invoke(this, this.Text);
-                //
-                //     if (this.DeselectOnCommit)
-                //         FurballGame.InputManager.ReleaseTextFocus(this);
-                //
-                //     if (this.ClearOnCommit) {
-                //         this.Text = string.Empty;
-                //         this.RecalcOutline();
-                //     }
-                // } else {
-                //     this.HandleChar(new CharInputEvent('\n', e.Keyboard));
-                // }
+                if (this.LineCount == 1 || (this.LineCount > 1 && e.Keyboard.IsKeyPressed(Key.ShiftLeft))) {
+                    this.OnCommit?.Invoke(this, this.Text);
+                
+                    if (this.DeselectOnCommit)
+                        FurballGame.InputManager.ReleaseTextFocus(this);
+                
+                    if (this.ClearOnCommit) {
+                        this.Text = string.Empty;
+                        this.RecalcOutline();
+                    }
+                } else {
+                    this.HandleChar(new CharInputEvent('\n', e.Keyboard));
+                }
                 break;
             }
             case Key.Left: {
