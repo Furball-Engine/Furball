@@ -136,7 +136,8 @@ public class InputManager {
     }
 
     public void Update() {
-        ChannelWriter<OneOf<MouseScrollUpdate>> writer = this._channelToInput.Writer;
+        // ReSharper disable once SuggestVarOrType_Elsewhere
+        var writer = this._channelToInput.Writer;
         if (FurballGame.Instance.WindowManager is SilkWindowManager silkWindowManager) {
             IReadOnlyList<IMouse> mice = silkWindowManager.InputContext.Mice;
 
@@ -183,7 +184,7 @@ public class InputManager {
             keyDownEvent => {
                 Console.WriteLine($"Keyboard down event: {keyDownEvent.Key}");
                 this.OnKeyDown?.Invoke(this, new KeyEventArgs(keyDownEvent.Key, keyDownEvent.Keyboard));
-                
+
                 foreach (Keybind bind in this._registeredKeybinds) {
                     // ReSharper disable once LoopCanBeConvertedToQuery
                     foreach (Key bindModifier in bind.Modifiers) {
@@ -193,13 +194,21 @@ public class InputManager {
                     }
 
                     if (bind.Key == keyDownEvent.Key) {
-                        bind.OnPressed?.Invoke(new KeyEventArgs(keyDownEvent.Key, keyDownEvent.Keyboard)); 
+                        bind.OnPressed?.Invoke(new KeyEventArgs(keyDownEvent.Key, keyDownEvent.Keyboard));
                     }
                 }
             },
             keyUpEvent => {
                 Console.WriteLine($"Keyboard up event: {keyUpEvent.Key}");
                 this.OnKeyUp?.Invoke(this, new KeyEventArgs(keyUpEvent.Key, keyUpEvent.Keyboard));
+            },
+            keyCharEvent => {
+                Console.WriteLine($"Key char event: {keyCharEvent.Character}");
+
+                CharInputEvent ev = new CharInputEvent(keyCharEvent.Character, keyCharEvent.Keyboard);
+                
+                this.OnCharInput?.Invoke(this, ev);
+                this.CharInputHandler?.HandleChar(ev);
             }
             );
         }
@@ -212,12 +221,17 @@ public class InputManager {
 
     private struct KeyDownEvent {
         public FurballKeyboard Keyboard;
-        public Key Key;
+        public Key             Key;
     }
 
     private struct KeyUpEvent {
         public FurballKeyboard Keyboard;
-        public Key Key;
+        public Key             Key;
+    }
+
+    private struct KeyCharEvent {
+        public FurballKeyboard Keyboard;
+        public char            Character;
     }
 
     private struct MouseDownEvent {
@@ -236,8 +250,8 @@ public class InputManager {
         public float Y;
     }
 
-    private readonly Channel<OneOf<MouseMoveEvent, MouseDownEvent, MouseUpEvent, MouseScrollEvent, KeyDownEvent, KeyUpEvent>> _channel =
-        Channel.CreateUnbounded<OneOf<MouseMoveEvent, MouseDownEvent, MouseUpEvent, MouseScrollEvent, KeyDownEvent, KeyUpEvent>>();
+    private readonly Channel<OneOf<MouseMoveEvent, MouseDownEvent, MouseUpEvent, MouseScrollEvent, KeyDownEvent, KeyUpEvent, KeyCharEvent>> _channel =
+        Channel.CreateUnbounded<OneOf<MouseMoveEvent, MouseDownEvent, MouseUpEvent, MouseScrollEvent, KeyDownEvent, KeyUpEvent, KeyCharEvent>>();
 
     private struct MouseScrollUpdate {
         public IMouse Mouse;
@@ -245,7 +259,12 @@ public class InputManager {
         public float  Y;
     }
 
-    private readonly Channel<OneOf<MouseScrollUpdate>> _channelToInput = Channel.CreateUnbounded<OneOf<MouseScrollUpdate>>();
+    private struct SilkKeyChar {
+        public IKeyboard Keyboard;
+        public char      Character;
+    }
+
+    private readonly Channel<OneOf<MouseScrollUpdate, SilkKeyChar>> _channelToInput = Channel.CreateUnbounded<OneOf<MouseScrollUpdate, SilkKeyChar>>();
 
     private void Run() {
         using HighResolutionClock clock = new HighResolutionClock(TimeSpan.FromMilliseconds(10));
@@ -286,6 +305,8 @@ public class InputManager {
                 EndInput     = () => keyboard.EndInput()
             }
             );
+
+            keyboard.KeyChar += HandleSilkKeyChar;
         }
 
         bool[] workingMouseButtons = new bool[(int)(MouseButton.Button12 + 1)];
@@ -295,7 +316,8 @@ public class InputManager {
         while (this._run) {
             // Console.WriteLine($"Input frame clock run");
 
-            while (reader.TryRead(out OneOf<MouseScrollUpdate> item)) {
+            // ReSharper disable once SuggestVarOrType_Elsewhere
+            while (reader.TryRead(out var item)) {
                 item.Switch(
                 update => {
                     for (int i = 0; i < silkMice.Count; i++) {
@@ -314,6 +336,22 @@ public class InputManager {
                             break;
                         }
                     }
+                },
+                silkCharEvent => {
+                    for (int i = 0; i < silkKeyboards.Count; i++) {
+                        IKeyboard silkKeyboard = silkKeyboards[i];
+
+                        if (silkKeyboard != silkCharEvent.Keyboard)
+                            continue;
+                        
+                        writer.WriteAsync(
+                        new KeyCharEvent {
+                            Keyboard = keyboards[i], 
+                            Character = silkCharEvent.Character
+                        }
+                        );
+                    }
+
                 }
                 );
             }
@@ -353,6 +391,16 @@ public class InputManager {
         }
     }
 
+    private void HandleSilkKeyChar(IKeyboard keyboard, char character) {
+        //Tell the input thread that we have a new key event from a silk keyboard
+        _ = this._channelToInput.Writer.WriteAsync(
+        new SilkKeyChar {
+            Keyboard  = keyboard,
+            Character = character
+        }
+        );
+    }
+
     /// <summary>
     /// Used to cached Enum.IsDefined calls
     /// </summary>
@@ -367,7 +415,7 @@ public class InputManager {
     // ReSharper disable once SuggestBaseTypeForParameter
     private void SilkKeyboardButtonCheck(
         bool[] workingKeyboardKeys, IKeyboard silkKeyboard, FurballKeyboard keyboard,
-        ChannelWriter<OneOf<MouseMoveEvent, MouseDownEvent, MouseUpEvent, MouseScrollEvent, KeyDownEvent, KeyUpEvent>> writer, int i
+        ChannelWriter<OneOf<MouseMoveEvent, MouseDownEvent, MouseUpEvent, MouseScrollEvent, KeyDownEvent, KeyUpEvent, KeyCharEvent>> writer, int i
     ) {
         for (int j = 0; j < workingKeyboardKeys.Length; j++) {
             //If its not defined in the enum, just continue and do the next key
@@ -379,7 +427,7 @@ public class InputManager {
 
             //The actual state of the key 
             bool pressed = silkKeyboard.IsKeyPressed((Key)j);
-            
+
             //Set the pressed state of the keyboard before sending the event,
             //to prevent the event being processed before the actual update happens to the keyboard state
             keyboard.PressedKeys[j] = pressed;
@@ -394,7 +442,7 @@ public class InputManager {
                     //Write to the stream that a key was pressed
                     writer.WriteAsync(
                     new KeyDownEvent {
-                        Key        = (Key)j,
+                        Key      = (Key)j,
                         Keyboard = keyboard
                     }
                     );
@@ -408,7 +456,7 @@ public class InputManager {
                     //Write to the stream that a key was released
                     writer.WriteAsync(
                     new KeyUpEvent {
-                        Key        = (Key)j,
+                        Key      = (Key)j,
                         Keyboard = keyboard
                     }
                     );
@@ -421,7 +469,7 @@ public class InputManager {
     private static void SilkMouseButtonCheck(
         // ReSharper disable once SuggestBaseTypeForParameter
         bool[] newButtons, IMouse silkMouse, FurballMouse mouse,
-        ChannelWriter<OneOf<MouseMoveEvent, MouseDownEvent, MouseUpEvent, MouseScrollEvent, KeyDownEvent, KeyUpEvent>> writer, int i
+        ChannelWriter<OneOf<MouseMoveEvent, MouseDownEvent, MouseUpEvent, MouseScrollEvent, KeyDownEvent, KeyUpEvent, KeyCharEvent>> writer, int i
     ) {
         for (int j = 0; j < newButtons.Length; j++) {
             if (silkMouse.IsButtonPressed((MouseButton)j)) {
@@ -452,8 +500,8 @@ public class InputManager {
         }
     }
     private static void SilkMousePositionCheck(
-        Vector2 newPosition, FurballMouse mouse, ChannelWriter<OneOf<MouseMoveEvent, MouseDownEvent, MouseUpEvent, MouseScrollEvent, KeyDownEvent, KeyUpEvent>> writer,
-        int     i
+        Vector2                                                                                                                      newPosition, FurballMouse mouse,
+        ChannelWriter<OneOf<MouseMoveEvent, MouseDownEvent, MouseUpEvent, MouseScrollEvent, KeyDownEvent, KeyUpEvent, KeyCharEvent>> writer,      int          i
     ) {
         if (newPosition != mouse.Position) {
             writer.WriteAsync(
@@ -466,9 +514,9 @@ public class InputManager {
     }
 
     private readonly List<Keybind> _registeredKeybinds = new List<Keybind>();
-    
+
     public void RegisterKeybind(Keybind bind) {
-        if(!this._registeredKeybinds.Contains(bind))
+        if (!this._registeredKeybinds.Contains(bind))
             this._registeredKeybinds.Add(bind);
     }
 
