@@ -356,7 +356,13 @@ public class InputManager {
     /// <summary>
     /// Used to cached Enum.IsDefined calls
     /// </summary>
-    private byte[] _definedCache = new byte[(int)(Key.Menu + 1)];
+    private static readonly bool[] DefinedCache = new bool[(int)(Key.Menu + 1)];
+
+    static InputManager() {
+        for (int i = 0; i < DefinedCache.Length; i++) {
+            DefinedCache[i] = Enum.IsDefined(typeof(Key), i);
+        }
+    }
 
     // ReSharper disable once SuggestBaseTypeForParameter
     private void SilkKeyboardButtonCheck(
@@ -364,13 +370,8 @@ public class InputManager {
         ChannelWriter<OneOf<MouseMoveEvent, MouseDownEvent, MouseUpEvent, MouseScrollEvent, KeyDownEvent, KeyUpEvent>> writer, int i
     ) {
         for (int j = 0; j < workingKeyboardKeys.Length; j++) {
-            //If this entry is undefined, get the value
-            if (this._definedCache[j] == 0) {
-                this._definedCache[j] = (byte)(Enum.IsDefined(typeof(Key), j) ? 2 : 1);
-            }
-            
-            //If it is equal to 1, that means that it is not defined, so `continue;`
-            if (this._definedCache[j] == 1)
+            //If its not defined in the enum, just continue and do the next key
+            if (!DefinedCache[j])
                 continue;
 
             //The current cached state of the pressed key
