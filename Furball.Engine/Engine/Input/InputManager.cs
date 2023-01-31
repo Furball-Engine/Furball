@@ -193,7 +193,7 @@ public class InputManager {
                     }
 
                     if (bind.Key == keyDownEvent.Key) {
-                        bind.OnPressed?.Invoke(new KeyEventArgs(keyDownEvent.Key, keyDownEvent.Keyboard)); //TODO: put keyboard here
+                        bind.OnPressed?.Invoke(new KeyEventArgs(keyDownEvent.Key, keyDownEvent.Keyboard)); 
                     }
                 }
             },
@@ -353,26 +353,38 @@ public class InputManager {
         }
     }
 
+    /// <summary>
+    /// Used to cached Enum.IsDefined calls
+    /// </summary>
+    private byte[] _definedCache = new byte[(int)(Key.Menu + 1)];
+
     // ReSharper disable once SuggestBaseTypeForParameter
     private void SilkKeyboardButtonCheck(
         bool[] workingKeyboardKeys, IKeyboard silkKeyboard, FurballKeyboard keyboard,
         ChannelWriter<OneOf<MouseMoveEvent, MouseDownEvent, MouseUpEvent, MouseScrollEvent, KeyDownEvent, KeyUpEvent>> writer, int i
     ) {
         for (int j = 0; j < workingKeyboardKeys.Length; j++) {
-            //TODO: either dont use Enum.IsDefined, or cache it manually, performance is dog doo-doo even on net6, and we support net461, so yeah
-            //      stop
-            if (!Enum.IsDefined(typeof(Key), j))
+            //If this entry is undefined, get the value
+            if (this._definedCache[j] == 0) {
+                this._definedCache[j] = (byte)(Enum.IsDefined(typeof(Key), j) ? 2 : 1);
+            }
+            
+            //If it is equal to 1, that means that it is not defined, so `continue;`
+            if (this._definedCache[j] == 1)
                 continue;
 
-            //The current state of the pressed key
+            //The current cached state of the pressed key
             bool cur = keyboard.PressedKeys[j];
+
+            //The actual state of the key 
+            bool pressed = silkKeyboard.IsKeyPressed((Key)j);
             
             //Set the pressed state of the keyboard before sending the event,
             //to prevent the event being processed before the actual update happens to the keyboard state
-            keyboard.PressedKeys[j] = workingKeyboardKeys[j];
+            keyboard.PressedKeys[j] = pressed;
 
             //If the key is pressed
-            if (silkKeyboard.IsKeyPressed((Key)j)) {
+            if (pressed) {
                 //Set the working key to true
                 workingKeyboardKeys[j] = true;
 
