@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Numerics;
 using System.Threading;
 using System.Threading.Channels;
@@ -13,7 +12,6 @@ using JetBrains.Annotations;
 using Kettu;
 using OneOf;
 using Silk.NET.Input;
-using Silk.NET.Input.Extensions;
 
 namespace Furball.Engine.Engine.Input;
 
@@ -184,19 +182,24 @@ public class InputManager {
             },
             keyDownEvent => {
                 Console.WriteLine($"Keyboard down event: {keyDownEvent.Key}");
-                this.OnKeyDown?.Invoke(this, new KeyEventArgs(keyDownEvent.Key, keyDownEvent.KeyboardId));
+                this.OnKeyDown?.Invoke(this, new KeyEventArgs(keyDownEvent.Key, keyDownEvent.Keyboard));
                 
                 foreach (Keybind bind in this._registeredKeybinds) {
-                    //TODO: check modifiers here
+                    // ReSharper disable once LoopCanBeConvertedToQuery
+                    foreach (Key bindModifier in bind.Modifiers) {
+                        //If one of the modifiers isn't pressed, return out
+                        if (!keyDownEvent.Keyboard.IsKeyPressed(bindModifier))
+                            return;
+                    }
 
                     if (bind.Key == keyDownEvent.Key) {
-                        bind.OnPressed?.Invoke(null); //TODO: put keyboard here
+                        bind.OnPressed?.Invoke(new KeyEventArgs(keyDownEvent.Key, keyDownEvent.Keyboard)); //TODO: put keyboard here
                     }
                 }
             },
             keyUpEvent => {
                 Console.WriteLine($"Keyboard up event: {keyUpEvent.Key}");
-                this.OnKeyUp?.Invoke(this, new KeyEventArgs(keyUpEvent.Key, keyUpEvent.KeyboardId));
+                this.OnKeyUp?.Invoke(this, new KeyEventArgs(keyUpEvent.Key, keyUpEvent.Keyboard));
             }
             );
         }
@@ -208,12 +211,12 @@ public class InputManager {
     }
 
     private struct KeyDownEvent {
-        public int KeyboardId;
+        public FurballKeyboard Keyboard;
         public Key Key;
     }
 
     private struct KeyUpEvent {
-        public int KeyboardId;
+        public FurballKeyboard Keyboard;
         public Key Key;
     }
 
@@ -360,32 +363,45 @@ public class InputManager {
             //      stop
             if (!Enum.IsDefined(typeof(Key), j))
                 continue;
+
+            //The current state of the pressed key
+            bool cur = keyboard.PressedKeys[j];
             
+            //Set the pressed state of the keyboard before sending the event,
+            //to prevent the event being processed before the actual update happens to the keyboard state
+            keyboard.PressedKeys[j] = workingKeyboardKeys[j];
+
+            //If the key is pressed
             if (silkKeyboard.IsKeyPressed((Key)j)) {
+                //Set the working key to true
                 workingKeyboardKeys[j] = true;
 
-                if (!keyboard.PressedKeys[j]) {
+                //If the key was not pressed last frame
+                if (!cur) {
+                    //Write to the stream that a key was pressed
                     writer.WriteAsync(
                     new KeyDownEvent {
                         Key        = (Key)j,
-                        KeyboardId = i
+                        Keyboard = keyboard
                     }
                     );
                 }
             } else {
+                //Set the working key to false
                 workingKeyboardKeys[j] = false;
 
-                if (keyboard.PressedKeys[j]) {
+                //If the key was pressed last frame
+                if (cur) {
+                    //Write to the stream that a key was released
                     writer.WriteAsync(
                     new KeyUpEvent {
                         Key        = (Key)j,
-                        KeyboardId = i
+                        Keyboard = keyboard
                     }
                     );
                 }
             }
 
-            keyboard.PressedKeys[j] = workingKeyboardKeys[j];
         }
     }
 

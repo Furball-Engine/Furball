@@ -1,6 +1,5 @@
 using System;
 using System.Numerics;
-using Furball.Engine.Engine.Input;
 using Silk.NET.Input;
 
 namespace Furball.Engine.Engine.Input.Events; 

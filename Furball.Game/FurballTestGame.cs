@@ -1,8 +1,8 @@
-﻿using Furball.Engine;
+﻿using System;
+using Furball.Engine;
 using Furball.Engine.Engine.Localization;
 using Furball.Engine.Engine.Input;
 using Furball.Game.Screens;
-using Furball.Vixie;
 using Silk.NET.Input;
 using SixLabors.ImageSharp;
 
@@ -30,7 +30,7 @@ public class FurballTestGame : FurballGame {
         TestKeybinds.TakeScreenshot,
         "Take Screenshot",
         Key.F1, 
-        0,
+        Array.Empty<Key>(),
         _ => {
             this.WindowManager.GraphicsBackend.TakeScreenshot();
         }

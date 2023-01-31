@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using System.Threading;
-using Furball.Engine.Engine.Platform;
 using JetBrains.Annotations;
 using Silk.NET.Core.Native;
 using Vanara.PInvoke;

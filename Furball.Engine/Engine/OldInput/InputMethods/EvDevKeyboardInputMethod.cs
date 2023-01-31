@@ -1,12 +1,8 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using EvDevSharp;
 using EvDevSharp.Enums;
-using EvDevSharp.EventArgs;
-using Furball.Engine.Engine.Helpers;
 using Furball.Engine.Engine.Input;
-using Silk.NET.Input;
 
 namespace Furball.Engine.Engine.OldInput.InputMethods;
 

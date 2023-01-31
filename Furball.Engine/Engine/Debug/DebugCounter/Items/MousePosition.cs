@@ -1,5 +1,4 @@
 using System.Text;
-using Furball.Engine.Engine.Input;
 
 namespace Furball.Engine.Engine.Debug.DebugCounter.Items; 
 

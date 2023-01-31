@@ -1,5 +1,3 @@
-using Furball.Vixie;
-
 namespace Furball.Engine.Engine.Debug.DebugCounter.Items;
 
 internal class VramUsage : DebugCounterItem {

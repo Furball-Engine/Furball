@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using System.Numerics;
-using System.Runtime.CompilerServices;
 using Silk.NET.Input;
-using ScrollWheel=Furball.Engine.Engine.Input.ScrollWheel;
 
 namespace Furball.Engine.Engine.Input; 
 

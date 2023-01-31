@@ -1,5 +1,4 @@
 using System;
-using Furball.Engine.Engine.Input;
 
 namespace Furball.Engine.Engine.Input.Events; 
 
