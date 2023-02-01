@@ -48,10 +48,34 @@ public class InputManager {
     /// Called when the cursor scrolls
     /// </summary>
     public event EventHandler<MouseScrollEventArgs> OnMouseScroll;
+    /// <summary>
+    /// Called when the user types a character
+    /// </summary>
     public event EventHandler<CharInputEvent> OnCharInput;
+    
+    public List<FurballKeyboard> Keyboards = new List<FurballKeyboard>();
+    public List<FurballMouse>    Mice      = new List<FurballMouse>();
 
-    public bool ControlHeld;
+    /// <summary>
+    /// How many control keys are being pressed down
+    /// </summary>
+    private int _controlCount = 0;
 
+    /// <summary>
+    /// Whether or not the control key is being held
+    /// </summary>
+    public bool ControlHeld => this._controlCount != 0;
+
+    /// <summary>
+    /// How many shift keys are being pressed down
+    /// </summary>
+    private int _shiftCount = 0;
+
+    /// <summary>
+    /// Whether or not the shift key is being held
+    /// </summary>
+    public bool ShiftHeld => this._shiftCount != 0;
+    
     public InputManager() {
         this._thread = new(this.Run);
     }
@@ -89,7 +113,7 @@ public class InputManager {
         // Tell all keyboard to begin input if we started with nothing in the stack
         // this is to prevent us beginning the input multiple times, which might not behave well on all platform
         if (wasEmpty) {
-            // this.Keyboards.ForEach(x => x.BeginInput());
+            this.Keyboards.ForEach(x => x.BeginInput());
         }
 
         Logger.Log($"{handler.GetType().Name} has taken text focus!", LoggerLevelInput.InstanceInfo);
@@ -111,7 +135,7 @@ public class InputManager {
 
         //If the stack is now empty, end text input
         if (this._charInputHandlers.Count == 0) {
-            // this.Keyboards.ForEach(x => x.EndInput());
+            this.Keyboards.ForEach(x => x.EndInput());
             Logger.Log("The text stack is now empty!", LoggerLevelInput.InstanceInfo);
         } else {
             //Tell the new top of the stack to focus again
@@ -219,21 +243,6 @@ public class InputManager {
         public Vector2 Position;
     }
 
-    private struct KeyDownEvent {
-        public FurballKeyboard Keyboard;
-        public Key             Key;
-    }
-
-    private struct KeyUpEvent {
-        public FurballKeyboard Keyboard;
-        public Key             Key;
-    }
-
-    private struct KeyCharEvent {
-        public FurballKeyboard Keyboard;
-        public char            Character;
-    }
-
     private struct MouseDownEvent {
         public int         MouseId;
         public MouseButton Button;
@@ -248,6 +257,21 @@ public class InputManager {
         public int   MouseId;
         public float X;
         public float Y;
+    }
+    
+    private struct KeyDownEvent {
+        public FurballKeyboard Keyboard;
+        public Key             Key;
+    }
+
+    private struct KeyUpEvent {
+        public FurballKeyboard Keyboard;
+        public Key             Key;
+    }
+
+    private struct KeyCharEvent {
+        public FurballKeyboard Keyboard;
+        public char            Character;
     }
 
     private readonly Channel<OneOf<MouseMoveEvent, MouseDownEvent, MouseUpEvent, MouseScrollEvent, KeyDownEvent, KeyUpEvent, KeyCharEvent>> _channel =
@@ -277,9 +301,6 @@ public class InputManager {
         // ReSharper disable once SuggestVarOrType_Elsewhere
         var writer = this._channel.Writer;
 
-        List<FurballMouse>    mice      = new List<FurballMouse>();
-        List<FurballKeyboard> keyboards = new List<FurballKeyboard>();
-
         IReadOnlyList<IMouse>    silkMice      = new List<IMouse>();
         IReadOnlyList<IKeyboard> silkKeyboards = new List<IKeyboard>();
         if (FurballGame.Instance.WindowManager is SilkWindowManager silkWindowManager) {
@@ -288,7 +309,7 @@ public class InputManager {
         }
 
         foreach (IMouse mouse in silkMice) {
-            mice.Add(
+            this.Mice.Add(
             new FurballMouse() {
                 Name = mouse.Name
             }
@@ -296,7 +317,7 @@ public class InputManager {
         }
 
         foreach (IKeyboard keyboard in silkKeyboards) {
-            keyboards.Add(
+            this.Keyboards.Add(
             new FurballKeyboard {
                 Name         = keyboard.Name,
                 GetClipboard = () => keyboard.ClipboardText,
@@ -323,8 +344,8 @@ public class InputManager {
                     for (int i = 0; i < silkMice.Count; i++) {
                         IMouse mouse = silkMice[i];
                         if (mouse == update.Mouse) {
-                            mice[i].ScrollWheel.X += update.X;
-                            mice[i].ScrollWheel.Y += update.Y;
+                            this.Mice[i].ScrollWheel.X += update.X;
+                            this.Mice[i].ScrollWheel.Y += update.Y;
 
                             writer.WriteAsync(
                             new MouseScrollEvent {
@@ -346,7 +367,7 @@ public class InputManager {
                         
                         writer.WriteAsync(
                         new KeyCharEvent {
-                            Keyboard = keyboards[i], 
+                            Keyboard  = this.Keyboards[i], 
                             Character = silkCharEvent.Character
                         }
                         );
@@ -356,8 +377,8 @@ public class InputManager {
                 );
             }
 
-            for (int i = 0; i < mice.Count; i++) {
-                FurballMouse mouse = mice[i];
+            for (int i = 0; i < this.Mice.Count; i++) {
+                FurballMouse mouse = this.Mice[i];
 
                 if (i < silkMice.Count) {
                     IMouse silkMouse = silkMice[i];
@@ -371,8 +392,8 @@ public class InputManager {
                 }
             }
 
-            for (int i = 0; i < keyboards.Count; i++) {
-                FurballKeyboard keyboard = keyboards[i];
+            for (int i = 0; i < this.Keyboards.Count; i++) {
+                FurballKeyboard keyboard = this.Keyboards[i];
 
                 if (i < silkKeyboards.Count) {
                     IKeyboard silkKeyboard = silkKeyboards[i];
@@ -422,11 +443,13 @@ public class InputManager {
             if (!DefinedCache[j])
                 continue;
 
+            Key key = (Key)j;
+
             //The current cached state of the pressed key
             bool cur = keyboard.PressedKeys[j];
 
             //The actual state of the key 
-            bool pressed = silkKeyboard.IsKeyPressed((Key)j);
+            bool pressed = silkKeyboard.IsKeyPressed(key);
 
             //Set the pressed state of the keyboard before sending the event,
             //to prevent the event being processed before the actual update happens to the keyboard state
@@ -439,13 +462,24 @@ public class InputManager {
 
                 //If the key was not pressed last frame
                 if (!cur) {
+                    
                     //Write to the stream that a key was pressed
                     writer.WriteAsync(
                     new KeyDownEvent {
-                        Key      = (Key)j,
+                        Key      = key,
                         Keyboard = keyboard
                     }
                     );
+
+                    switch (key) {
+                        case Key.ControlLeft or Key.ControlRight:
+                            this._controlCount++;
+                            break;
+                        case Key.ShiftLeft or Key.ShiftRight:
+                            this._shiftCount++;
+                            break;
+                    }
+
                 }
             } else {
                 //Set the working key to false
@@ -456,10 +490,20 @@ public class InputManager {
                     //Write to the stream that a key was released
                     writer.WriteAsync(
                     new KeyUpEvent {
-                        Key      = (Key)j,
+                        Key      = key,
                         Keyboard = keyboard
                     }
                     );
+
+                    switch (key) {
+                        case Key.ControlLeft or Key.ControlRight:
+                            this._controlCount--;
+                            break;
+                        case Key.ShiftLeft or Key.ShiftRight:
+                            this._shiftCount--;
+                            break;
+                    }
+
                 }
             }
 

@@ -20,7 +20,14 @@ internal class KeyboardInputs : DebugCounterItem {
         //     }
         // }
 
-        builder.Append("}");
+        builder.Append("} ");
+
+        builder.Append("shift: ");
+        builder.Append(FurballGame.InputManager.ShiftHeld);
+
+        builder.Append(" ctrl: ");
+        builder.Append(FurballGame.InputManager.ControlHeld);
+        
         return builder.ToString();
     }
 }

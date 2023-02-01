@@ -6,6 +6,8 @@ namespace Furball.Engine.Engine.Input;
 
 public class FurballKeyboard {
     public string Name;
+
+    public bool ControlHeld => this.IsKeyPressed(Key.ControlLeft) || this.IsKeyPressed(Key.ControlRight);
     
     /// <summary>
     /// An array of the currently pressed keys

@@ -165,7 +165,7 @@ public class NewRendererTest : TestScreen {
                     return;
                 }
 
-                if (FurballGame.InputManager.ControlHeld) {
+                if (keyEventArgs.Keyboard.ControlHeld) {
                     this._mesh.Indices.Add((ushort)this._vertexPoints.IndexOf(this._selectedVertices[0]));
                     this._mesh.Indices.Add((ushort)this._vertexPoints.IndexOf(this._selectedVertices[2]));
                     this._mesh.Indices.Add((ushort)this._vertexPoints.IndexOf(this._selectedVertices[1]));
