@@ -1,4 +1,7 @@
+using System.Collections.Generic;
 using System.Text;
+using Furball.Engine.Engine.Input;
+using Silk.NET.Input;
 
 namespace Furball.Engine.Engine.Debug.DebugCounter.Items;
 
@@ -10,15 +13,27 @@ internal class KeyboardInputs : DebugCounterItem {
 
         builder.Append("keyboard: {");
 
-        //TODO
-        // List<FurballKeyboard> keyboards = FurballGame.InputManager.Keyboards;
-        // for (int i = 0; i < keyboards.Count; i++) {
-        //     FurballKeyboard keyboard = keyboards[i];
-        //     builder.Append($"[{i}]({keyboard.Name}, {string.Join(",", keyboard.PressedKeys)})");
-        //     if (i != keyboards.Count - 1) {
-        //         builder.Append('\n');
-        //     }
-        // }
+        List<FurballKeyboard> keyboards = FurballGame.InputManager.Keyboards;
+
+        for (int i = 0; i < keyboards.Count; i++) {
+            FurballKeyboard kb = keyboards[i];
+            builder.Append($"[{i}]({kb.Name}, ");
+
+            builder.Append("{");
+            for (int k = 0; k < kb.PressedKeys.Length; k++) {
+                bool state = kb.PressedKeys[k];
+
+                if (!state)
+                    continue;
+                
+                Key key = (Key)k;
+
+                builder.Append(key.ToString());
+                
+                builder.Append(", ");
+            }
+            builder.Append("})");
+        }
 
         builder.Append("} ");
 
