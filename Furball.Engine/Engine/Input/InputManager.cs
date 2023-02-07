@@ -384,6 +384,8 @@ public class InputManager {
                 
                 if(!inputObject.LastClicked[i] && isClicked[i] != null)
                     inputObject.Drawable.Click(true, new MouseButtonEventArgs((MouseButton)i, isClicked[i]));
+                
+                inputObject.LastClicked[i] = isClicked[i] != null;
             }
         }
 
@@ -486,7 +488,7 @@ public class InputManager {
 
                     SilkMouseButtonCheck(workingMouseButtons, silkMouse, mouse, writer, i);
 
-                    Vector2 newPosition = silkMouse.Position;
+                    Vector2 newPosition = silkMouse.Position / FurballGame.VerticalRatio;
                     SilkMousePositionCheck(newPosition, mouse, writer, i);
 
                     mouse.Position = newPosition;
