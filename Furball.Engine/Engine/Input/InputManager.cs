@@ -54,7 +54,7 @@ public class InputManager {
     /// Called when the user types a character
     /// </summary>
     public event EventHandler<CharInputEvent> OnCharInput;
-    
+
     public List<FurballKeyboard> Keyboards = new List<FurballKeyboard>();
     public List<FurballMouse>    Mice      = new List<FurballMouse>();
 
@@ -77,7 +77,7 @@ public class InputManager {
     /// Whether or not the shift key is being held
     /// </summary>
     public bool ShiftHeld => this._shiftCount != 0;
-    
+
     public InputManager() {
         this._thread = new(this.Run);
     }
@@ -184,100 +184,7 @@ public class InputManager {
                     );
             }
         }
-
-        // ReSharper disable once SuggestVarOrType_Elsewhere
-        var reader = this._channel.Reader;
-
-        // ReSharper disable once SuggestVarOrType_Elsewhere
-        while (reader.TryRead(out var item)) {
-            item.Switch(
-            mouseMoveEvent => {
-                Console.WriteLine($"Mouse move event: {mouseMoveEvent.Position}");
-                this.OnMouseMove?.Invoke(this, new MouseMoveEventArgs(mouseMoveEvent.Position, mouseMoveEvent.Mouse));
-            },
-            mouseDownEvent => {
-                Console.WriteLine($"Mouse down event: {mouseDownEvent.Button}");
-                this.OnMouseDown?.Invoke(this, new MouseButtonEventArgs(mouseDownEvent.Button, mouseDownEvent.Mouse));
-            },
-            mouseUpEvent => {
-                Console.WriteLine($"Mouse up event: {mouseUpEvent.Button}");
-                this.OnMouseUp?.Invoke(this, new MouseButtonEventArgs(mouseUpEvent.Button, mouseUpEvent.Mouse));
-            },
-            mouseScrollEvent => {
-                Console.WriteLine($"Mouse scroll event: {mouseScrollEvent.X}:{mouseScrollEvent.Y}");
-                this.OnMouseScroll?.Invoke(this, new MouseScrollEventArgs(new Vector2(mouseScrollEvent.X, mouseScrollEvent.Y), mouseScrollEvent.Mouse));
-            },
-            keyDownEvent => {
-                Console.WriteLine($"Keyboard down event: {keyDownEvent.Key}");
-                this.OnKeyDown?.Invoke(this, new KeyEventArgs(keyDownEvent.Key, keyDownEvent.Keyboard));
-
-                foreach (Keybind bind in this._registeredKeybinds) {
-                    // ReSharper disable once LoopCanBeConvertedToQuery
-                    foreach (Key bindModifier in bind.Modifiers) {
-                        //If one of the modifiers isn't pressed, return out
-                        if (!keyDownEvent.Keyboard.IsKeyPressed(bindModifier))
-                            return;
-                    }
-
-                    if (bind.Key == keyDownEvent.Key) {
-                        bind.OnPressed?.Invoke(new KeyEventArgs(keyDownEvent.Key, keyDownEvent.Keyboard));
-                    }
-                }
-            },
-            keyUpEvent => {
-                Console.WriteLine($"Keyboard up event: {keyUpEvent.Key}");
-                this.OnKeyUp?.Invoke(this, new KeyEventArgs(keyUpEvent.Key, keyUpEvent.Keyboard));
-            },
-            keyCharEvent => {
-                Console.WriteLine($"Key char event: {keyCharEvent.Character}");
-
-                CharInputEvent ev = new CharInputEvent(keyCharEvent.Character, keyCharEvent.Keyboard);
-                
-                this.OnCharInput?.Invoke(this, ev);
-                this.CharInputHandler?.HandleChar(ev);
-            }
-            );
-        }
     }
-
-    private struct MouseMoveEvent {
-        public FurballMouse Mouse;
-        public Vector2      Position;
-    }
-
-    private struct MouseDownEvent {
-        public FurballMouse Mouse;
-        public MouseButton  Button;
-    }
-
-    private struct MouseUpEvent {
-        public FurballMouse Mouse;
-        public MouseButton  Button;
-    }
-
-    private struct MouseScrollEvent {
-        public FurballMouse Mouse;
-        public float        X;
-        public float        Y;
-    }
-    
-    private struct KeyDownEvent {
-        public FurballKeyboard Keyboard;
-        public Key             Key;
-    }
-
-    private struct KeyUpEvent {
-        public FurballKeyboard Keyboard;
-        public Key             Key;
-    }
-
-    private struct KeyCharEvent {
-        public FurballKeyboard Keyboard;
-        public char            Character;
-    }
-
-    private readonly Channel<OneOf<MouseMoveEvent, MouseDownEvent, MouseUpEvent, MouseScrollEvent, KeyDownEvent, KeyUpEvent, KeyCharEvent>> _channel =
-        Channel.CreateUnbounded<OneOf<MouseMoveEvent, MouseDownEvent, MouseUpEvent, MouseScrollEvent, KeyDownEvent, KeyUpEvent, KeyCharEvent>>();
 
     private struct MouseScrollUpdate {
         public IMouse Mouse;
@@ -311,17 +218,19 @@ public class InputManager {
         inputObject.Size.Y = realSize.Y;
 
         inputObject.Drawable = drawable;
-        
+        inputObject.Depth    = drawable.Depth;
+
         return inputObject;
     }
-    
+
     public void AddInputObject(InputObject inputObject) {
         bool taken = false;
         this.Lock.Enter(ref taken);
-        
-        this._inputObjects.Add(inputObject.Index, inputObject);
-        
-        if(taken)
+
+        this._inputObjects.Add(inputObject);
+        this._inputObjects.Sort(DrawableInputComparer.Instance);
+
+        if (taken)
             this.Lock.Exit();
     }
 
@@ -329,27 +238,37 @@ public class InputManager {
         bool taken = false;
         this.Lock.Enter(ref taken);
 
-        this._inputObjects.Remove(inputObject.Index);
+        this._inputObjects.Remove(inputObject);
 
         if (taken)
             this.Lock.Exit();
     }
-    
-    private readonly Dictionary<int, InputObject> _inputObjects = new Dictionary<int, InputObject>();
+
+    private readonly List<InputObject> _inputObjects     = new List<InputObject>();
+    private          bool              _sortInputObjects = false;
 
     public BreakneckLock Lock = new BreakneckLock();
 
     private readonly Channel<OneOf<MouseScrollUpdate, SilkKeyChar>> _channelToInput = Channel.CreateUnbounded<OneOf<MouseScrollUpdate, SilkKeyChar>>();
 
-    private void CheckForHoversAndClicks() {
+    private void CheckInputObjects() {
         bool taken = false;
         this.Lock.Enter(ref taken);
 
-        foreach (KeyValuePair<int, InputObject> pair in this._inputObjects) {
-            InputObject inputObject = pair.Value;
-
+        if (this._sortInputObjects) {
+            this._inputObjects.Sort(DrawableInputComparer.Instance);
+            this._sortInputObjects = false;
+        }
+        
+        foreach (InputObject inputObject in this._inputObjects) {
+            // ReSharper disable once CompareOfFloatsByEqualityOperator
+            if (inputObject.Depth != inputObject.LastDepth) {
+                this._sortInputObjects = true;
+                inputObject.LastDepth  = inputObject.Depth;
+            }
+            
             FurballMouse[] isClicked = new FurballMouse[(int)(MouseButton.Button12 + 1)];
-            bool   hovered     = false;
+            bool           hovered   = false;
             for (int i = 0; i < this.Mice.Count; i++) {
                 FurballMouse mouse = this.Mice[i];
                 if (inputObject.Contains(mouse.Position)) {
@@ -370,21 +289,21 @@ public class InputManager {
             if (!inputObject.LastHovered && hovered) {
                 inputObject.Drawable.Hover(true);
             }
-            
+
             //Check for new unhover
             if (inputObject.LastHovered && !hovered) {
                 inputObject.Drawable.Hover(false);
             }
 
             inputObject.LastHovered = hovered;
-            
+
             for (int i = 0; i < isClicked.Length; i++) {
-                if(inputObject.LastClicked[i] && isClicked[i] == null)
+                if (inputObject.LastClicked[i] && isClicked[i] == null)
                     inputObject.Drawable.Click(false, new MouseButtonEventArgs((MouseButton)i, isClicked[i]));
-                
-                if(!inputObject.LastClicked[i] && isClicked[i] != null)
+
+                if (!inputObject.LastClicked[i] && isClicked[i] != null)
                     inputObject.Drawable.Click(true, new MouseButtonEventArgs((MouseButton)i, isClicked[i]));
-                
+
                 inputObject.LastClicked[i] = isClicked[i] != null;
             }
         }
@@ -392,7 +311,7 @@ public class InputManager {
         if (taken)
             this.Lock.Exit();
     }
-    
+
     private void Run() {
         using HighResolutionClock clock = new HighResolutionClock(TimeSpan.FromMilliseconds(10));
 
@@ -400,9 +319,6 @@ public class InputManager {
         var reader = this._channelToInput.Reader;
 
         Stopwatch stopwatch = Stopwatch.StartNew();
-
-        // ReSharper disable once SuggestVarOrType_Elsewhere
-        var writer = this._channel.Writer;
 
         IReadOnlyList<IMouse>    silkMice      = new List<IMouse>();
         IReadOnlyList<IKeyboard> silkKeyboards = new List<IKeyboard>();
@@ -450,13 +366,8 @@ public class InputManager {
                             this.Mice[i].ScrollWheel.X += update.X;
                             this.Mice[i].ScrollWheel.Y += update.Y;
 
-                            writer.WriteAsync(
-                            new MouseScrollEvent {
-                                Mouse = this.Mice[i],
-                                X       = update.X,
-                                Y       = update.Y
-                            }
-                            );
+                            this.OnMouseScroll?.Invoke(this, new MouseScrollEventArgs(new Vector2(update.X, update.Y), this.Mice[i]));
+
                             break;
                         }
                     }
@@ -467,13 +378,11 @@ public class InputManager {
 
                         if (silkKeyboard != silkCharEvent.Keyboard)
                             continue;
-                        
-                        writer.WriteAsync(
-                        new KeyCharEvent {
-                            Keyboard  = this.Keyboards[i], 
-                            Character = silkCharEvent.Character
-                        }
-                        );
+
+                        CharInputEvent ev = new CharInputEvent(silkCharEvent.Character, this.Keyboards[i]);
+
+                        this.OnCharInput?.Invoke(this, ev);
+                        this.CharInputHandler?.HandleChar(ev);
                     }
 
                 }
@@ -486,10 +395,10 @@ public class InputManager {
                 if (i < silkMice.Count) {
                     IMouse silkMouse = silkMice[i];
 
-                    SilkMouseButtonCheck(workingMouseButtons, silkMouse, mouse, writer, i);
+                    SilkMouseButtonCheck(workingMouseButtons, silkMouse, mouse, i);
 
                     Vector2 newPosition = silkMouse.Position / FurballGame.VerticalRatio;
-                    SilkMousePositionCheck(newPosition, mouse, writer, i);
+                    SilkMousePositionCheck(newPosition, mouse, i);
 
                     mouse.Position = newPosition;
                 }
@@ -501,11 +410,11 @@ public class InputManager {
                 if (i < silkKeyboards.Count) {
                     IKeyboard silkKeyboard = silkKeyboards[i];
 
-                    SilkKeyboardButtonCheck(workingKeyboardKeys, silkKeyboard, keyboard, writer, i);
+                    SilkKeyboardButtonCheck(workingKeyboardKeys, silkKeyboard, keyboard, i);
                 }
             }
 
-            CheckForHoversAndClicks();
+            this.CheckInputObjects();
 
             //Wait the clock 
             if (this._run) {
@@ -539,10 +448,7 @@ public class InputManager {
     }
 
     // ReSharper disable once SuggestBaseTypeForParameter
-    private void SilkKeyboardButtonCheck(
-        bool[] workingKeyboardKeys, IKeyboard silkKeyboard, FurballKeyboard keyboard,
-        ChannelWriter<OneOf<MouseMoveEvent, MouseDownEvent, MouseUpEvent, MouseScrollEvent, KeyDownEvent, KeyUpEvent, KeyCharEvent>> writer, int i
-    ) {
+    private void SilkKeyboardButtonCheck(bool[] workingKeyboardKeys, IKeyboard silkKeyboard, FurballKeyboard keyboard, int i) {
         for (int j = 0; j < workingKeyboardKeys.Length; j++) {
             //If its not defined in the enum, just continue and do the next key
             if (!DefinedCache[j])
@@ -567,14 +473,20 @@ public class InputManager {
 
                 //If the key was not pressed last frame
                 if (!cur) {
-                    
-                    //Write to the stream that a key was pressed
-                    writer.WriteAsync(
-                    new KeyDownEvent {
-                        Key      = key,
-                        Keyboard = keyboard
+                    this.OnKeyDown?.Invoke(this, new KeyEventArgs(key, keyboard));
+
+                    foreach (Keybind bind in this._registeredKeybinds) {
+                        // ReSharper disable once LoopCanBeConvertedToQuery
+                        foreach (Key bindModifier in bind.Modifiers) {
+                            //If one of the modifiers isn't pressed, return out
+                            if (!keyboard.IsKeyPressed(bindModifier))
+                                return;
+                        }
+
+                        if (bind.Key == key) {
+                            bind.OnPressed?.Invoke(new KeyEventArgs(key, keyboard));
+                        }
                     }
-                    );
 
                     switch (key) {
                         case Key.ControlLeft or Key.ControlRight:
@@ -592,13 +504,7 @@ public class InputManager {
 
                 //If the key was pressed last frame
                 if (cur) {
-                    //Write to the stream that a key was released
-                    writer.WriteAsync(
-                    new KeyUpEvent {
-                        Key      = key,
-                        Keyboard = keyboard
-                    }
-                    );
+                    this.OnKeyUp?.Invoke(this, new KeyEventArgs(key, keyboard));
 
                     switch (key) {
                         case Key.ControlLeft or Key.ControlRight:
@@ -615,50 +521,31 @@ public class InputManager {
         }
     }
 
-    private static void SilkMouseButtonCheck(
+    private void SilkMouseButtonCheck(
         // ReSharper disable once SuggestBaseTypeForParameter
-        bool[] newButtons, IMouse silkMouse, FurballMouse mouse,
-        ChannelWriter<OneOf<MouseMoveEvent, MouseDownEvent, MouseUpEvent, MouseScrollEvent, KeyDownEvent, KeyUpEvent, KeyCharEvent>> writer, int i
+        bool[] newButtons, IMouse silkMouse, FurballMouse mouse, int i
     ) {
         for (int j = 0; j < newButtons.Length; j++) {
             if (silkMouse.IsButtonPressed((MouseButton)j)) {
                 newButtons[j] = true;
 
                 if (!mouse.PressedButtons[j]) {
-                    writer.WriteAsync(
-                    new MouseDownEvent {
-                        Mouse = mouse,
-                        Button  = (MouseButton)j
-                    }
-                    );
+                    this.OnMouseDown?.Invoke(this, new MouseButtonEventArgs((MouseButton)j, mouse));
                 }
             } else {
                 newButtons[j] = false;
 
                 if (mouse.PressedButtons[j]) {
-                    writer.WriteAsync(
-                    new MouseUpEvent {
-                        Mouse = mouse,
-                        Button  = (MouseButton)j
-                    }
-                    );
+                    this.OnMouseUp?.Invoke(this, new MouseButtonEventArgs((MouseButton)j, mouse));
                 }
             }
 
             mouse.PressedButtons[j] = newButtons[j];
         }
     }
-    private static void SilkMousePositionCheck(
-        Vector2                                                                                                                      newPosition, FurballMouse mouse,
-        ChannelWriter<OneOf<MouseMoveEvent, MouseDownEvent, MouseUpEvent, MouseScrollEvent, KeyDownEvent, KeyUpEvent, KeyCharEvent>> writer,      int          i
-    ) {
+    private void SilkMousePositionCheck(Vector2 newPosition, FurballMouse mouse, int i) {
         if (newPosition != mouse.Position) {
-            writer.WriteAsync(
-            new MouseMoveEvent {
-                Mouse  = mouse,
-                Position = newPosition
-            }
-            );
+            this.OnMouseMove?.Invoke(this, new MouseMoveEventArgs(newPosition, mouse));
         }
     }
 

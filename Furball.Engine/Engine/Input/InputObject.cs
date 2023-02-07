@@ -9,6 +9,9 @@ public class InputObject {
     public Vector2 Position = Vector2.Zero;
     public Vector2 Size     = Vector2.Zero;
 
+    public double LastDepth = 0;
+    public double Depth     = 0;
+
     public Drawable Drawable;
     
     //agressive opt + inlining

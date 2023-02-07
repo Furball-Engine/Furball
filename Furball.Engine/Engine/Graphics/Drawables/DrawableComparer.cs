@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Furball.Engine.Engine.Input;
 
 namespace Furball.Engine.Engine.Graphics.Drawables;
 
@@ -18,12 +19,12 @@ public class DrawableDrawComparer : IComparer<Drawable> {
     }
 }
 
-public class DrawableInputComparer : IComparer<Drawable> {
+public class DrawableInputComparer : IComparer<InputObject> {
     public static readonly DrawableInputComparer Instance = new();
     
     private DrawableInputComparer() {}
     
-    public int Compare(Drawable x, Drawable y) {
+    public int Compare(InputObject y, InputObject x) {
         if (ReferenceEquals(x, y))
             return 0;
         if (ReferenceEquals(null, y))

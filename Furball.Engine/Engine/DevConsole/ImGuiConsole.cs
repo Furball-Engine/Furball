@@ -69,6 +69,7 @@ public static class ImGuiConsole {
             Hoverable   = true,
             Depth       = 0
         };
+        _consoleInputCoverDrawable.RegisterForInput();
         
         FurballGame.DrawableManager.Add(_consoleInputCoverDrawable);
         
