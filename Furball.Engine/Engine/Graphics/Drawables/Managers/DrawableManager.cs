@@ -134,7 +134,7 @@ public class DrawableManager : IDisposable {
                 
                 drawable.Draw(time, batch, this._args);
  
-                System.Diagnostics.Debug.Assert(scissorStackItems == batch.ScissorStackItemCount, $"Scissor stack is unbalanced after {drawable}.Draw was called!");
+                Guard.Assert(scissorStackItems == batch.ScissorStackItemCount, $"Scissor stack is unbalanced after {drawable.GetType()}.Draw was called!");
                 if (FurballGame.DrawInputOverlay)
                     switch (drawable.Clickable) {
                         case false when drawable.CoverClicks:

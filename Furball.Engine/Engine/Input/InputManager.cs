@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Numerics;
 using System.Threading;
 using System.Threading.Channels;
+using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Helpers.Logger;
 using Furball.Engine.Engine.Input.Events;
 using Furball.Engine.Engine.Timing;
@@ -11,6 +12,7 @@ using Furball.Vixie.WindowManagement;
 using JetBrains.Annotations;
 using Kettu;
 using OneOf;
+using Silk.NET.Core;
 using Silk.NET.Input;
 
 namespace Furball.Engine.Engine.Input;
@@ -191,19 +193,19 @@ public class InputManager {
             item.Switch(
             mouseMoveEvent => {
                 Console.WriteLine($"Mouse move event: {mouseMoveEvent.Position}");
-                this.OnMouseMove?.Invoke(this, new MouseMoveEventArgs(mouseMoveEvent.Position, mouseMoveEvent.MouseId));
+                this.OnMouseMove?.Invoke(this, new MouseMoveEventArgs(mouseMoveEvent.Position, mouseMoveEvent.Mouse));
             },
             mouseDownEvent => {
                 Console.WriteLine($"Mouse down event: {mouseDownEvent.Button}");
-                this.OnMouseDown?.Invoke(this, new MouseButtonEventArgs(mouseDownEvent.Button, mouseDownEvent.MouseId));
+                this.OnMouseDown?.Invoke(this, new MouseButtonEventArgs(mouseDownEvent.Button, mouseDownEvent.Mouse));
             },
             mouseUpEvent => {
                 Console.WriteLine($"Mouse up event: {mouseUpEvent.Button}");
-                this.OnMouseUp?.Invoke(this, new MouseButtonEventArgs(mouseUpEvent.Button, mouseUpEvent.MouseId));
+                this.OnMouseUp?.Invoke(this, new MouseButtonEventArgs(mouseUpEvent.Button, mouseUpEvent.Mouse));
             },
             mouseScrollEvent => {
                 Console.WriteLine($"Mouse scroll event: {mouseScrollEvent.X}:{mouseScrollEvent.Y}");
-                this.OnMouseScroll?.Invoke(this, new MouseScrollEventArgs(new Vector2(mouseScrollEvent.X, mouseScrollEvent.Y), mouseScrollEvent.MouseId));
+                this.OnMouseScroll?.Invoke(this, new MouseScrollEventArgs(new Vector2(mouseScrollEvent.X, mouseScrollEvent.Y), mouseScrollEvent.Mouse));
             },
             keyDownEvent => {
                 Console.WriteLine($"Keyboard down event: {keyDownEvent.Key}");
@@ -239,24 +241,24 @@ public class InputManager {
     }
 
     private struct MouseMoveEvent {
-        public int     MouseId;
-        public Vector2 Position;
+        public FurballMouse Mouse;
+        public Vector2      Position;
     }
 
     private struct MouseDownEvent {
-        public int         MouseId;
-        public MouseButton Button;
+        public FurballMouse Mouse;
+        public MouseButton  Button;
     }
 
     private struct MouseUpEvent {
-        public int         MouseId;
-        public MouseButton Button;
+        public FurballMouse Mouse;
+        public MouseButton  Button;
     }
 
     private struct MouseScrollEvent {
-        public int   MouseId;
-        public float X;
-        public float Y;
+        public FurballMouse Mouse;
+        public float        X;
+        public float        Y;
     }
     
     private struct KeyDownEvent {
@@ -288,8 +290,107 @@ public class InputManager {
         public char      Character;
     }
 
+    public int InputObjectIndex = 0;
+
+    public InputObject CreateInputObject(Drawable drawable) {
+        int index = this.InputObjectIndex;
+        unchecked {
+            this.InputObjectIndex++;
+        }
+
+        InputObject inputObject = new InputObject(index);
+
+        //Set the position of the input object
+        Vector2 realPos = drawable.RealPosition;
+        inputObject.Position.X = realPos.X;
+        inputObject.Position.Y = realPos.Y;
+
+        //Set the size of the input object
+        Vector2 realSize = drawable.RealSize;
+        inputObject.Size.X = realSize.X;
+        inputObject.Size.Y = realSize.Y;
+
+        inputObject.Drawable = drawable;
+        
+        return inputObject;
+    }
+    
+    public void AddInputObject(InputObject inputObject) {
+        bool taken = false;
+        this.Lock.Enter(ref taken);
+        
+        this._inputObjects.Add(inputObject.Index, inputObject);
+        
+        if(taken)
+            this.Lock.Exit();
+    }
+
+    public void RemoveInputObject(InputObject inputObject) {
+        bool taken = false;
+        this.Lock.Enter(ref taken);
+
+        this._inputObjects.Remove(inputObject.Index);
+
+        if (taken)
+            this.Lock.Exit();
+    }
+    
+    private readonly Dictionary<int, InputObject> _inputObjects = new Dictionary<int, InputObject>();
+
+    public BreakneckLock Lock = new BreakneckLock();
+
     private readonly Channel<OneOf<MouseScrollUpdate, SilkKeyChar>> _channelToInput = Channel.CreateUnbounded<OneOf<MouseScrollUpdate, SilkKeyChar>>();
 
+    private void CheckForHoversAndClicks() {
+        bool taken = false;
+        this.Lock.Enter(ref taken);
+
+        foreach (KeyValuePair<int, InputObject> pair in this._inputObjects) {
+            InputObject inputObject = pair.Value;
+
+            FurballMouse[] isClicked = new FurballMouse[(int)(MouseButton.Button12 + 1)];
+            bool   hovered     = false;
+            for (int i = 0; i < this.Mice.Count; i++) {
+                FurballMouse mouse = this.Mice[i];
+                if (inputObject.Contains(mouse.Position)) {
+                    hovered = true;
+
+                    //Iterate through all buttons on the mouse
+                    for (int j = 0; j < mouse.PressedButtons.Length; j++) {
+                        bool pressed = mouse.PressedButtons[j];
+                        //If the mouse button is being pressed over the input object, mark it as such
+                        if (pressed) {
+                            isClicked[j] = mouse;
+                        }
+                    }
+                }
+            }
+
+            //Check for new hover
+            if (!inputObject.LastHovered && hovered) {
+                inputObject.Drawable.Hover(true);
+            }
+            
+            //Check for new unhover
+            if (inputObject.LastHovered && !hovered) {
+                inputObject.Drawable.Hover(false);
+            }
+
+            inputObject.LastHovered = hovered;
+            
+            for (int i = 0; i < isClicked.Length; i++) {
+                if(inputObject.LastClicked[i] && isClicked[i] == null)
+                    inputObject.Drawable.Click(false, new MouseButtonEventArgs((MouseButton)i, isClicked[i]));
+                
+                if(!inputObject.LastClicked[i] && isClicked[i] != null)
+                    inputObject.Drawable.Click(true, new MouseButtonEventArgs((MouseButton)i, isClicked[i]));
+            }
+        }
+
+        if (taken)
+            this.Lock.Exit();
+    }
+    
     private void Run() {
         using HighResolutionClock clock = new HighResolutionClock(TimeSpan.FromMilliseconds(10));
 
@@ -349,7 +450,7 @@ public class InputManager {
 
                             writer.WriteAsync(
                             new MouseScrollEvent {
-                                MouseId = i,
+                                Mouse = this.Mice[i],
                                 X       = update.X,
                                 Y       = update.Y
                             }
@@ -401,6 +502,8 @@ public class InputManager {
                     SilkKeyboardButtonCheck(workingKeyboardKeys, silkKeyboard, keyboard, writer, i);
                 }
             }
+
+            CheckForHoversAndClicks();
 
             //Wait the clock 
             if (this._run) {
@@ -522,7 +625,7 @@ public class InputManager {
                 if (!mouse.PressedButtons[j]) {
                     writer.WriteAsync(
                     new MouseDownEvent {
-                        MouseId = i,
+                        Mouse = mouse,
                         Button  = (MouseButton)j
                     }
                     );
@@ -533,7 +636,7 @@ public class InputManager {
                 if (mouse.PressedButtons[j]) {
                     writer.WriteAsync(
                     new MouseUpEvent {
-                        MouseId = i,
+                        Mouse = mouse,
                         Button  = (MouseButton)j
                     }
                     );
@@ -550,7 +653,7 @@ public class InputManager {
         if (newPosition != mouse.Position) {
             writer.WriteAsync(
             new MouseMoveEvent {
-                MouseId  = i,
+                Mouse  = mouse,
                 Position = newPosition
             }
             );

@@ -1,14 +1,14 @@
 using System;
 using System.Numerics;
 
-namespace Furball.Engine.Engine.Input.Events; 
+namespace Furball.Engine.Engine.Input.Events;
 
 public class MouseScrollEventArgs : EventArgs {
-    public Vector2 ScrollAmount;
-    public int     MouseId;
-    
-    public MouseScrollEventArgs(Vector2 scrollAmount, int mouse) {
+    public Vector2      ScrollAmount;
+    public FurballMouse Mouse;
+
+    public MouseScrollEventArgs(Vector2 scrollAmount, FurballMouse mouse) {
         this.ScrollAmount = scrollAmount;
-        this.MouseId = mouse;
+        this.Mouse        = mouse;
     }
 }
