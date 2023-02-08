@@ -9,18 +9,18 @@ using Furball.Engine.Engine.Localization;
 using Furball.Game.Screens.Tests;
 using Furball.Vixie.Backends.Shared;
 
-namespace Furball.Game.Screens; 
+namespace Furball.Game.Screens;
 
 public class ScreenSelector : TestScreen {
     private          List<(LocalizationStrings, Type)> _screens;
-    private readonly List<DrawableButton>                _buttons = new();
+    private readonly List<DrawableButton>              _buttons = new();
 
     private TextDrawable _topText;
 
     public override void Relayout(float newWidth, float newHeight) {
         base.Relayout(newWidth, newHeight);
 
-        if(this._topText != null)
+        if (this._topText != null)
             this._topText.Position = new Vector2(newWidth / 2f, 40);
     }
 
@@ -49,12 +49,20 @@ public class ScreenSelector : TestScreen {
             (LocalizationStrings.GMLTest, typeof(GMLTest)),
             (LocalizationStrings.TexturePackerTest, typeof(TexturePackerTest)),
             (LocalizationStrings.BoxBlurTest, typeof(BoxBlurTest)),
-            (LocalizationStrings.TextureFadeTest, typeof(TextureFadeTest))
+            (LocalizationStrings.TextureFadeTest, typeof(TextureFadeTest)),
+            (LocalizationStrings.InputOrderTest, typeof(InputOrderTest))
         };
 
-        this.Manager.Add(this._topText = new TextDrawable(new Vector2(1280f / 2f, 40), FurballGame.DefaultFont, LocalizationManager.GetLocalizedString(LocalizationStrings.ChooseScreen), 48) {
+        this.Manager.Add(
+        this._topText = new TextDrawable(
+        new Vector2(1280f / 2f, 40),
+        FurballGame.DefaultFont,
+        LocalizationManager.GetLocalizedString(LocalizationStrings.ChooseScreen),
+        48
+        ) {
             OriginType = OriginType.Center
-        });
+        }
+        );
 
         int currentY = 90;
         int currentX = 55;
@@ -76,7 +84,7 @@ public class ScreenSelector : TestScreen {
 
             screenButton.OnClick += delegate {
                 ScreenManager.ChangeScreen((Screen)Activator.CreateInstance(screen)!);
-                    
+
                 // FurballGame.Instance.ChangeScreenSize(1600, 900);
             };
 
@@ -91,7 +99,7 @@ public class ScreenSelector : TestScreen {
                 currentY =  90;
             }
         }
-        
+
         this.UpdateTextStrings();
     }
 

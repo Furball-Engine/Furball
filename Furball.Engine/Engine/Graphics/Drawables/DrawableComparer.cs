@@ -24,7 +24,7 @@ public class DrawableInputComparer : IComparer<InputObject> {
     
     private DrawableInputComparer() {}
     
-    public int Compare(InputObject y, InputObject x) {
+    public int Compare(InputObject x, InputObject y) {
         if (ReferenceEquals(x, y))
             return 0;
         if (ReferenceEquals(null, y))

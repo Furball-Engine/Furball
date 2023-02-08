@@ -315,6 +315,7 @@ public abstract class Drawable : IDisposable {
 
             this._inputObject.Position = this.RealPosition;
             this._inputObject.Size     = this.RealSize;
+            this._inputObject.Depth    = this.Depth;
 
             if (taken)
                 FurballGame.InputManager.Lock.Exit();

@@ -259,7 +259,8 @@ public class InputManager {
             this._inputObjects.Sort(DrawableInputComparer.Instance);
             this._sortInputObjects = false;
         }
-        
+
+        bool blocked = false;
         foreach (InputObject inputObject in this._inputObjects) {
             // ReSharper disable once CompareOfFloatsByEqualityOperator
             if (inputObject.Depth != inputObject.LastDepth) {
@@ -272,6 +273,9 @@ public class InputManager {
             for (int i = 0; i < this.Mice.Count; i++) {
                 FurballMouse mouse = this.Mice[i];
                 if (inputObject.Contains(mouse.Position)) {
+                    if (blocked)
+                        break;
+                    
                     hovered = true;
 
                     //Iterate through all buttons on the mouse
@@ -282,6 +286,8 @@ public class InputManager {
                             isClicked[j] = mouse;
                         }
                     }
+
+                    blocked = true;
                 }
             }
 
