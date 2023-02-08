@@ -324,7 +324,7 @@ public class InputManager {
         // ReSharper disable once SuggestVarOrType_Elsewhere
         var reader = this._channelToInput.Reader;
 
-        Stopwatch stopwatch = Stopwatch.StartNew();
+        // Stopwatch stopwatch = Stopwatch.StartNew();
 
         IReadOnlyList<IMouse>    silkMice      = new List<IMouse>();
         IReadOnlyList<IKeyboard> silkKeyboards = new List<IKeyboard>();
@@ -358,7 +358,7 @@ public class InputManager {
         bool[] workingMouseButtons = new bool[(int)(MouseButton.Button12 + 1)];
         bool[] workingKeyboardKeys = new bool[(int)(Key.Menu + 1)];
 
-        double start = stopwatch.Elapsed.TotalMilliseconds;
+        // double start = stopwatch.Elapsed.TotalMilliseconds;
         while (this._run) {
             // Console.WriteLine($"Input frame clock run");
 
@@ -401,10 +401,10 @@ public class InputManager {
                 if (i < silkMice.Count) {
                     IMouse silkMouse = silkMice[i];
 
-                    SilkMouseButtonCheck(workingMouseButtons, silkMouse, mouse, i);
+                    this.SilkMouseButtonCheck(workingMouseButtons, silkMouse, mouse);
 
                     Vector2 newPosition = silkMouse.Position / FurballGame.VerticalRatio;
-                    SilkMousePositionCheck(newPosition, mouse, i);
+                    this.SilkMousePositionCheck(newPosition, mouse);
 
                     mouse.Position = newPosition;
                 }
@@ -416,7 +416,7 @@ public class InputManager {
                 if (i < silkKeyboards.Count) {
                     IKeyboard silkKeyboard = silkKeyboards[i];
 
-                    SilkKeyboardButtonCheck(workingKeyboardKeys, silkKeyboard, keyboard, i);
+                    this.SilkKeyboardButtonCheck(workingKeyboardKeys, silkKeyboard, keyboard);
                 }
             }
 
@@ -425,10 +425,10 @@ public class InputManager {
             //Wait the clock 
             if (this._run) {
                 clock.WaitFrame();
-                double elapsed = stopwatch.Elapsed.TotalMilliseconds - start;
+                // double elapsed = stopwatch.Elapsed.TotalMilliseconds - start;
                 // Console.WriteLine($"Input frame delta {elapsed:N2}ms:{1000d / elapsed:N2} per second");
             }
-            start = stopwatch.Elapsed.TotalMilliseconds;
+            // start = stopwatch.Elapsed.TotalMilliseconds;
         }
     }
 
@@ -454,7 +454,7 @@ public class InputManager {
     }
 
     // ReSharper disable once SuggestBaseTypeForParameter
-    private void SilkKeyboardButtonCheck(bool[] workingKeyboardKeys, IKeyboard silkKeyboard, FurballKeyboard keyboard, int i) {
+    private void SilkKeyboardButtonCheck(bool[] workingKeyboardKeys, IKeyboard silkKeyboard, FurballKeyboard keyboard) {
         for (int j = 0; j < workingKeyboardKeys.Length; j++) {
             //If its not defined in the enum, just continue and do the next key
             if (!DefinedCache[j])
@@ -529,7 +529,7 @@ public class InputManager {
 
     private void SilkMouseButtonCheck(
         // ReSharper disable once SuggestBaseTypeForParameter
-        bool[] newButtons, IMouse silkMouse, FurballMouse mouse, int i
+        bool[] newButtons, IMouse silkMouse, FurballMouse mouse
     ) {
         for (int j = 0; j < newButtons.Length; j++) {
             if (silkMouse.IsButtonPressed((MouseButton)j)) {
@@ -549,7 +549,7 @@ public class InputManager {
             mouse.PressedButtons[j] = newButtons[j];
         }
     }
-    private void SilkMousePositionCheck(Vector2 newPosition, FurballMouse mouse, int i) {
+    private void SilkMousePositionCheck(Vector2 newPosition, FurballMouse mouse) {
         if (newPosition != mouse.Position) {
             this.OnMouseMove?.Invoke(this, new MouseMoveEventArgs(newPosition, mouse));
         }
