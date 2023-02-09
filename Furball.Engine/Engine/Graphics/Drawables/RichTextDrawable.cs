@@ -31,7 +31,7 @@ public class RichTextDrawable : Drawable {
             };
 
             Texture tex = ContentManager.LoadTextureFromFileCached(textureName, ContentSource.User);
-            TextureFragment fragment = new((VixieTexture)tex, new Rectangle(0, 0, tex.Width, tex.Height)) {
+            TextureFragment fragment = new TextureFragment(tex, new Rectangle(0, 0, tex.Width, tex.Height)) {
                 Scale = scale
             };
             return fragment;
