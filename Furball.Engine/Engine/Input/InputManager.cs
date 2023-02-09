@@ -323,7 +323,6 @@ public class InputManager {
                 //If the user is dragging and they let go of the mouse button
                 if (dragState.Mouse != null && !dragState.Mouse.PressedButtons[i] && dragState.Active) {
                     //Stop dragging
-                    Console.WriteLine($"dragging stopped");
                     dragState.Active = false;
                     inputObject.Drawable.DragState(false, new MouseDragEventArgs(dragState.StartPosition, dragState.LastPosition, dragState.Mouse.Position, (MouseButton)i, dragState.Mouse));
                     dragState.Mouse.IsDraggingDrawable = false;
@@ -347,13 +346,11 @@ public class InputManager {
                         if (mouse == null || mouse.IsDraggingDrawable)
                             goto no_mouse_skip;
                         
-                        Console.WriteLine($"dragging started");
                         dragState.Active = true;
                         inputObject.Drawable.DragState(true, new MouseDragEventArgs(dragState.StartPosition, dragState.LastPosition, dragState.Mouse.Position, (MouseButton)i, dragState.Mouse));
                         mouse.IsDraggingDrawable = true;
                     }
                     
-                    Console.WriteLine($"dragging happened");
                     inputObject.Drawable.Drag(new MouseDragEventArgs(dragState.StartPosition, dragState.LastPosition, dragState.Mouse.Position, (MouseButton)i, dragState.Mouse));
                     dragState.LastPosition = dragState.Mouse.Position;
                 }

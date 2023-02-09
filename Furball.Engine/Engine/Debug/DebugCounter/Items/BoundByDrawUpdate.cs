@@ -6,5 +6,5 @@ namespace Furball.Engine.Engine.Debug.DebugCounter.Items;
 internal class BoundByDrawUpdate : DebugCounterItem {
     public override string GetAsString(double time) =>
         $"bound: {(FurballGame.Instance.LastDrawTime > FurballGame.Instance.LastUpdateTime ? "draw" : "update")} " +
-        $"(d: {FurballGame.Instance.LastDrawTime:N2}ms; u: {FurballGame.Instance.LastUpdateTime:N2}ms";
+        $"(d: {FurballGame.Instance.LastDrawTime:N4}ms; u: {FurballGame.Instance.LastUpdateTime:N4}ms";
 }

@@ -614,7 +614,7 @@ public class FurballGame : Game {
         FurballConfig.Instance.Values["screen_height"] = new Value.Number(newSize.Y);
     }
 
-    private Stopwatch _updateWatch = new ();
+    private Stopwatch _updateWatch = Stopwatch.StartNew();
     public double    LastUpdateTime { get; private set; } = 0.0;
 
     // ReSharper disable once InconsistentNaming
@@ -623,12 +623,11 @@ public class FurballGame : Game {
     private bool _loadingScreenChangeOffQueued = false;
     protected override void Update(double deltaTime) {
         Time = _stopwatch.Elapsed.TotalMilliseconds;
-        
+
         if (RuntimeInfo.IsDebug()) {
-            this._updateWatch.Reset();
             this._updateWatch.Start();
         }
-
+        
         if (this._loadingScreen is {
                 LoadingComplete: false
             } && !this._loadingScreen.BackgroundThread.IsAlive) {
@@ -665,8 +664,8 @@ public class FurballGame : Game {
         GameTimeScheduler.Update(Time);
 
         if (RuntimeInfo.IsDebug()) {
-            this._updateWatch.Stop();
             this.LastUpdateTime = this._updateWatch.Elapsed.TotalMilliseconds;
+            this._updateWatch.Reset();
         }
     }
 

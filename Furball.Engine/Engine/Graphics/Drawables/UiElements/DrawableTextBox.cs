@@ -104,6 +104,7 @@ public partial class DrawableTextBox : CompositeDrawable, ICharInputHandler {
 
         this.RegisterHandlers();
         this.RecalcOutline();
+        this.RegisterForInput();
     }
         
     private void UpdateCaretPosition(bool instant) {
