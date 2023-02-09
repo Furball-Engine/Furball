@@ -233,35 +233,37 @@ public class InputManager {
 
     public void AddInputObject(InputObject inputObject) {
         bool taken = false;
-        this.Lock.Enter(ref taken);
+        //If we are not on the input thread, lock the input objects
+        if (this._thread != Thread.CurrentThread)
+            this.InputObjectsLock.Enter(ref taken);
 
         this._inputObjects.Add(inputObject);
         this._inputObjects.Sort(DrawableInputComparer.Instance);
 
         if (taken)
-            this.Lock.Exit();
+            this.InputObjectsLock.Exit();
     }
 
     public void RemoveInputObject(InputObject inputObject) {
         bool taken = false;
-        this.Lock.Enter(ref taken);
+        this.InputObjectsLock.Enter(ref taken);
 
         this._inputObjects.Remove(inputObject);
 
         if (taken)
-            this.Lock.Exit();
+            this.InputObjectsLock.Exit();
     }
 
     private readonly List<InputObject> _inputObjects     = new List<InputObject>();
     private          bool              _sortInputObjects = false;
 
-    public BreakneckLock Lock = new BreakneckLock();
+    public BreakneckLock InputObjectsLock = new BreakneckLock();
 
     private readonly Channel<OneOf<MouseScrollUpdate, SilkKeyChar>> _channelToInput = Channel.CreateUnbounded<OneOf<MouseScrollUpdate, SilkKeyChar>>();
 
     private void CheckInputObjects() {
         bool taken = false;
-        this.Lock.Enter(ref taken);
+        this.InputObjectsLock.Enter(ref taken);
 
         if (this._sortInputObjects) {
             this._inputObjects.Sort(DrawableInputComparer.Instance);
@@ -269,7 +271,8 @@ public class InputManager {
         }
 
         bool blocked = false;
-        foreach (InputObject inputObject in this._inputObjects) {
+        for (int inputIndex = 0; inputIndex < this._inputObjects.Count; inputIndex++) {
+            InputObject inputObject = this._inputObjects[inputIndex];
             // ReSharper disable once CompareOfFloatsByEqualityOperator
             if (inputObject.Depth != inputObject.LastDepth) {
                 this._sortInputObjects = true;
@@ -324,7 +327,10 @@ public class InputManager {
                 if (dragState.Mouse != null && !dragState.Mouse.PressedButtons[i] && dragState.Active) {
                     //Stop dragging
                     dragState.Active = false;
-                    inputObject.Drawable.DragState(false, new MouseDragEventArgs(dragState.StartPosition, dragState.LastPosition, dragState.Mouse.Position, (MouseButton)i, dragState.Mouse));
+                    inputObject.Drawable.DragState(
+                    false,
+                    new MouseDragEventArgs(dragState.StartPosition, dragState.LastPosition, dragState.Mouse.Position, (MouseButton)i, dragState.Mouse)
+                    );
                     dragState.Mouse.IsDraggingDrawable = false;
                     dragState.Mouse                    = null;
                 }
@@ -345,23 +351,28 @@ public class InputManager {
                         //If the mouse is null, that means the mouse button was released, so we can't start dragging, nor continue dragging
                         if (mouse == null || mouse.IsDraggingDrawable)
                             goto no_mouse_skip;
-                        
+
                         dragState.Active = true;
-                        inputObject.Drawable.DragState(true, new MouseDragEventArgs(dragState.StartPosition, dragState.LastPosition, dragState.Mouse.Position, (MouseButton)i, dragState.Mouse));
+                        inputObject.Drawable.DragState(
+                        true,
+                        new MouseDragEventArgs(dragState.StartPosition, dragState.LastPosition, dragState.Mouse.Position, (MouseButton)i, dragState.Mouse)
+                        );
                         mouse.IsDraggingDrawable = true;
                     }
-                    
-                    inputObject.Drawable.Drag(new MouseDragEventArgs(dragState.StartPosition, dragState.LastPosition, dragState.Mouse.Position, (MouseButton)i, dragState.Mouse));
+
+                    inputObject.Drawable.Drag(
+                    new MouseDragEventArgs(dragState.StartPosition, dragState.LastPosition, dragState.Mouse.Position, (MouseButton)i, dragState.Mouse)
+                    );
                     dragState.LastPosition = dragState.Mouse.Position;
                 }
-no_mouse_skip:
-                
+            no_mouse_skip:
+
                 inputObject.LastClicked[i] = mouse != null;
             }
         }
 
         if (taken)
-            this.Lock.Exit();
+            this.InputObjectsLock.Exit();
     }
 
     private void Run() {

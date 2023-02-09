@@ -31,16 +31,17 @@ public class DrawableForm : CompositeDrawable {
         };
         this._closeButton = new TextDrawable(new Vector2(this.Contents.Size.X + 8, 2), FurballGame.DefaultFont, "x", 20) {
             OriginType = OriginType.TopRight,
-            Depth      = 2f
+            Depth      = 0f
         };
         this._titleBar = new RectanglePrimitiveDrawable(new Vector2(0), new Vector2(this.Contents.Size.X + 10, 24), 0, true) {
-            ColorOverride = new Color(45, 45, 45, 175)
+            ColorOverride = new Color(45, 45, 45, 175),
+            Depth         = 2f
         };
 
         //We make the background a little bigger so there is margin
         this._background = new RectanglePrimitiveDrawable(new Vector2(0, 24), this.Contents.Size + new Vector2(10), 0, true) {
             ColorOverride = new Color(30, 30, 30, 175),
-            Depth         = 0f,
+            Depth         = 2f,
             Clickable     = false,
             CoverClicks   = false,
             Hoverable     = false,
@@ -51,7 +52,7 @@ public class DrawableForm : CompositeDrawable {
         this.Contents.Position = new Vector2(5, 29);
 
         //Make sure the contents are above the background
-        this.Contents.Depth = 2f;
+        this.Contents.Depth = 0f;
 
         this.Children!.Add(this._titleBar);
         this.Children.Add(this._title);
@@ -77,9 +78,11 @@ public class DrawableForm : CompositeDrawable {
 
         #region Events
 
+        this._titleBar.RegisterForInput();
         this._titleBar.OnDragBegin += this.OnTitleBarDragBegin;
         this._titleBar.OnDrag      += this.OnTitleBarDrag;
 
+        this._closeButton.RegisterForInput();
         this._closeButton.OnClick += this.OnCloseButtonClick;
 
         #endregion
