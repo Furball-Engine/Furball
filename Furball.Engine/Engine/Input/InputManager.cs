@@ -43,9 +43,17 @@ public class InputManager {
     /// </summary>
     public event EventHandler<MouseMoveEventArgs> OnMouseMove;
     /// <summary>
-    /// Called when a cursor moves
+    /// Called when a cursor drags
     /// </summary>
     public event EventHandler<MouseDragEventArgs> OnMouseDrag;
+    /// <summary>
+    /// Called when a cursor starts a drag
+    /// </summary>
+    public event EventHandler<MouseDragEventArgs> OnMouseDragStart;
+    /// <summary>
+    /// Called when a cursor ends a drag
+    /// </summary>
+    public event EventHandler<MouseDragEventArgs> OnMouseDragEnd;
     /// <summary>
     /// Called when the cursor scrolls
     /// </summary>
@@ -267,7 +275,7 @@ public class InputManager {
                 this._sortInputObjects = true;
                 inputObject.LastDepth  = inputObject.Depth;
             }
-            
+
             FurballMouse[] isClicked = new FurballMouse[(int)(MouseButton.Button12 + 1)];
             bool           hovered   = false;
             for (int i = 0; i < this.Mice.Count; i++) {
@@ -275,7 +283,7 @@ public class InputManager {
                 if (inputObject.Contains(mouse.Position)) {
                     if (blocked)
                         break;
-                    
+
                     hovered = true;
 
                     //Iterate through all buttons on the mouse
@@ -304,13 +312,46 @@ public class InputManager {
             inputObject.LastHovered = hovered;
 
             for (int i = 0; i < isClicked.Length; i++) {
-                if (inputObject.LastClicked[i] && isClicked[i] == null)
+                FurballMouse.DragState dragState = inputObject.DragStates[i];
+                FurballMouse           mouse     = isClicked[i];
+
+                //If they were clicked last input frame and are no longer clicked
+                if (inputObject.LastClicked[i] && mouse == null) {
+                    if (dragState.Active) {
+                        Console.WriteLine($"dragging stopped");
+                        dragState.Active = false;
+                        inputObject.Drawable.DragState(false, new MouseDragEventArgs(dragState.StartPosition, dragState.LastPosition, dragState.Mouse.Position, (MouseButton)i, dragState.Mouse));
+                    }
+
                     inputObject.Drawable.Click(false, new MouseButtonEventArgs((MouseButton)i, isClicked[i]));
+                }
 
-                if (!inputObject.LastClicked[i] && isClicked[i] != null)
+                bool justClicked = false;
+                //If they were not clicked last input frame and are now clicked
+                if (!inputObject.LastClicked[i] && mouse != null) {
+                    //If its just clicked, then set the start and last position
+                    dragState.StartPosition = mouse.Position;
+                    dragState.LastPosition  = mouse.Position;
+
+                    justClicked = true;
+
                     inputObject.Drawable.Click(true, new MouseButtonEventArgs((MouseButton)i, isClicked[i]));
+                }
 
-                inputObject.LastClicked[i] = isClicked[i] != null;
+                if (mouse != null && dragState.LastPosition != mouse.Position) {
+                    if (!dragState.Active) {
+                        Console.WriteLine($"dragging started");
+                        dragState.Active = true;
+                        dragState.Mouse  = mouse;
+                        inputObject.Drawable.DragState(true, new MouseDragEventArgs(dragState.StartPosition, dragState.LastPosition, mouse.Position, (MouseButton)i, mouse));
+                    }
+                    
+                    Console.WriteLine($"dragging happened");
+                    inputObject.Drawable.Drag(new MouseDragEventArgs(dragState.StartPosition, dragState.LastPosition, mouse.Position, (MouseButton)i, mouse));
+                    dragState.LastPosition = mouse.Position;
+                }
+
+                inputObject.LastClicked[i] = mouse != null;
             }
         }
 
@@ -549,8 +590,37 @@ public class InputManager {
             mouse.PressedButtons[j] = newButtons[j];
         }
     }
+
     private void SilkMousePositionCheck(Vector2 newPosition, FurballMouse mouse) {
         if (newPosition != mouse.Position) {
+            for (int i = 0; i < mouse.PressedButtons.Length; i++) {
+                bool                   button    = mouse.PressedButtons[i];
+                FurballMouse.DragState dragState = mouse.DragStates[i];
+
+                //If the user is holding the button down,
+                if (button) {
+                    //If a drag is active
+                    if (dragState.Active) {
+                        //Send the event that the mouse moved with the drag
+                        this.OnMouseDrag?.Invoke(this, new MouseDragEventArgs(dragState.StartPosition, mouse.Position, newPosition, (MouseButton)i, mouse));
+                    } else {
+                        //Else, start a new drag
+                        dragState.Active        = true;
+                        dragState.StartPosition = newPosition;
+
+                        this.OnMouseDragStart?.Invoke(this, new MouseDragEventArgs(dragState.StartPosition, mouse.Position, newPosition, (MouseButton)i, mouse));
+                    }
+                } else {
+                    //Else, if the drag is active
+                    if (dragState.Active) {
+                        //End the drag
+                        dragState.Active = false;
+
+                        this.OnMouseDragEnd?.Invoke(this, new MouseDragEventArgs(dragState.StartPosition, mouse.Position, newPosition, (MouseButton)i, mouse));
+                    }
+                }
+            }
+
             this.OnMouseMove?.Invoke(this, new MouseMoveEventArgs(newPosition, mouse));
         }
     }

@@ -219,6 +219,7 @@ public abstract class Drawable : IDisposable {
 
         this.IsClicked = value;
     }
+    
     public void DragState(bool value, MouseDragEventArgs point) {
         if (value == this.IsDragging) return;
 
@@ -229,11 +230,13 @@ public abstract class Drawable : IDisposable {
 
         this.IsDragging = value;
     }
+    
     public void Drag(MouseDragEventArgs point) {
         if (!this.IsDragging) return;
 
         this.OnDrag?.Invoke(this, point);
     }
+    
     /// <summary>
     ///     Called whenever a cursor hovers over the drawable
     /// </summary>
