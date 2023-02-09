@@ -1,14 +1,16 @@
 using System.Collections.Generic;
 using System.Numerics;
+using JetBrains.Annotations;
 using Silk.NET.Input;
 
 namespace Furball.Engine.Engine.Input;
 
 public class FurballMouse {
     internal class DragState {
-        public bool         Active;
-        public Vector2      StartPosition;
-        public Vector2      LastPosition;
+        public bool    Active;
+        public Vector2 StartPosition;
+        public Vector2 LastPosition;
+        [CanBeNull]
         public FurballMouse Mouse;
     }
 
@@ -17,7 +19,7 @@ public class FurballMouse {
             this.DragStates[i] = new DragState();
         }
     }
-    
+
     public   Vector2     Position;
     public   string      Name;
     public   ScrollWheel ScrollWheel;
@@ -29,6 +31,8 @@ public class FurballMouse {
     internal List<MouseButton> QueuedButtonPresses  = new();
     internal List<MouseButton> QueuedButtonReleases = new();
 
+    internal bool IsDraggingDrawable = false;
+    
     internal DragState[] DragStates = new DragState[(int)(MouseButton.Button12 + 1)];
 
     internal Vector2 LastKnownSoftwareCursorPosition;

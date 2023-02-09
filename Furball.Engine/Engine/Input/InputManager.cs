@@ -317,40 +317,48 @@ public class InputManager {
 
                 //If they were clicked last input frame and are no longer clicked
                 if (inputObject.LastClicked[i] && mouse == null) {
-                    if (dragState.Active) {
-                        Console.WriteLine($"dragging stopped");
-                        dragState.Active = false;
-                        inputObject.Drawable.DragState(false, new MouseDragEventArgs(dragState.StartPosition, dragState.LastPosition, dragState.Mouse.Position, (MouseButton)i, dragState.Mouse));
-                    }
-
                     inputObject.Drawable.Click(false, new MouseButtonEventArgs((MouseButton)i, isClicked[i]));
                 }
 
-                bool justClicked = false;
+                //If the user is dragging and they let go of the mouse button
+                if (dragState.Mouse != null && !dragState.Mouse.PressedButtons[i] && dragState.Active) {
+                    //Stop dragging
+                    Console.WriteLine($"dragging stopped");
+                    dragState.Active = false;
+                    inputObject.Drawable.DragState(false, new MouseDragEventArgs(dragState.StartPosition, dragState.LastPosition, dragState.Mouse.Position, (MouseButton)i, dragState.Mouse));
+                    dragState.Mouse.IsDraggingDrawable = false;
+                    dragState.Mouse                    = null;
+                }
+
                 //If they were not clicked last input frame and are now clicked
                 if (!inputObject.LastClicked[i] && mouse != null) {
                     //If its just clicked, then set the start and last position
                     dragState.StartPosition = mouse.Position;
                     dragState.LastPosition  = mouse.Position;
-
-                    justClicked = true;
+                    dragState.Mouse         = mouse;
 
                     inputObject.Drawable.Click(true, new MouseButtonEventArgs((MouseButton)i, isClicked[i]));
                 }
 
-                if (mouse != null && dragState.LastPosition != mouse.Position) {
+                //If the user is dragging, and the mouse has moved
+                if (dragState.Mouse != null && dragState.LastPosition != dragState.Mouse.Position) {
                     if (!dragState.Active) {
+                        //If the mouse is null, that means the mouse button was released, so we can't start dragging, nor continue dragging
+                        if (mouse == null || mouse.IsDraggingDrawable)
+                            goto no_mouse_skip;
+                        
                         Console.WriteLine($"dragging started");
                         dragState.Active = true;
-                        dragState.Mouse  = mouse;
-                        inputObject.Drawable.DragState(true, new MouseDragEventArgs(dragState.StartPosition, dragState.LastPosition, mouse.Position, (MouseButton)i, mouse));
+                        inputObject.Drawable.DragState(true, new MouseDragEventArgs(dragState.StartPosition, dragState.LastPosition, dragState.Mouse.Position, (MouseButton)i, dragState.Mouse));
+                        mouse.IsDraggingDrawable = true;
                     }
                     
                     Console.WriteLine($"dragging happened");
-                    inputObject.Drawable.Drag(new MouseDragEventArgs(dragState.StartPosition, dragState.LastPosition, mouse.Position, (MouseButton)i, mouse));
-                    dragState.LastPosition = mouse.Position;
+                    inputObject.Drawable.Drag(new MouseDragEventArgs(dragState.StartPosition, dragState.LastPosition, dragState.Mouse.Position, (MouseButton)i, dragState.Mouse));
+                    dragState.LastPosition = dragState.Mouse.Position;
                 }
-
+no_mouse_skip:
+                
                 inputObject.LastClicked[i] = mouse != null;
             }
         }
