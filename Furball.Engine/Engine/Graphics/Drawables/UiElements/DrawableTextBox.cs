@@ -217,8 +217,7 @@ public partial class DrawableTextBox : CompositeDrawable, ICharInputHandler {
     }
 
     public void OnMouseDown(object sender, MouseButtonEventArgs e) {
-        //TODO mouse pos
-        if (this.RealContains(/* e.Mouse.Position */ Vector2.Zero) && this.Visible && this.Clickable) {
+        if (this.RealContains(e.Mouse.Position) && this.Visible && this.Clickable) {
             FurballGame.InputManager.TakeTextFocus(this);
 
             this.Text ??= "";
@@ -253,7 +252,6 @@ public partial class DrawableTextBox : CompositeDrawable, ICharInputHandler {
                 float yStart = this.Font.LineHeight * lineNumber;
                 float yEnd   = this.Font.LineHeight * (lineNumber + 1);
 
-                /* TODO: mouse pos
                 if (e.Mouse.Position.Y < yStart + this.RealPosition.Y || e.Mouse.Position.Y > yEnd + this.RealPosition.Y)
                     continue;
                 
@@ -271,7 +269,6 @@ public partial class DrawableTextBox : CompositeDrawable, ICharInputHandler {
                         return;
                     }
                 }
-                */
             }
         }
         else {
