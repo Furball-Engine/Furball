@@ -46,9 +46,17 @@ public class HighResolutionClock : IDisposable {
                     threadSleep = false;
                 }
             }
-            
-            if(threadSleep)
+
+            if (threadSleep) {
                 Thread.Sleep(toWait);
+                TimeSpan waited     = this._stopwatch.Elapsed - currentMili;
+                TimeSpan leftToWait = toWait - waited;
+                //If we waited less than we should have, spin to wait the rest
+                while(leftToWait.Ticks > 0) {
+                    waited     = this._stopwatch.Elapsed - currentMili;
+                    leftToWait = toWait - waited;
+                }
+            }
         }
 
         this._lastMili = this._stopwatch.Elapsed;

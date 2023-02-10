@@ -379,7 +379,7 @@ public class InputManager {
     internal double LastInputFrameTime = 0;
     
     private void Run() {
-        using HighResolutionClock clock = new HighResolutionClock(TimeSpan.FromMilliseconds(10));
+        using HighResolutionClock clock = new HighResolutionClock(TimeSpan.FromMilliseconds(1));
 
         // ReSharper disable once SuggestVarOrType_Elsewhere
         var reader = this._channelToInput.Reader;
