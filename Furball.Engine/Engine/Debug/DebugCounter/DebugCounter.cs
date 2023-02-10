@@ -19,7 +19,8 @@ public class DebugCounter : TextDrawable {
     public readonly List<DebugCounterItem> Items = new List<DebugCounterItem> {
         new FrameRate(),
         new UpdateRate(),
-        new BoundByDrawUpdate(),
+        new InputUpdateRate(),
+        new UpdateLoops(),
         new GraphicsBackend(),
         new VramUsage(),
         new TrackedVixieResources(),

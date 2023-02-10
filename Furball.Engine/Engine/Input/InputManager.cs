@@ -375,13 +375,16 @@ public class InputManager {
             this.InputObjectsLock.Exit();
     }
 
+    internal int    CountedInputFrames = 0;
+    internal double LastInputFrameTime = 0;
+    
     private void Run() {
         using HighResolutionClock clock = new HighResolutionClock(TimeSpan.FromMilliseconds(10));
 
         // ReSharper disable once SuggestVarOrType_Elsewhere
         var reader = this._channelToInput.Reader;
 
-        // Stopwatch stopwatch = Stopwatch.StartNew();
+        Stopwatch stopwatch = Stopwatch.StartNew();
 
         IReadOnlyList<IMouse>    silkMice      = new List<IMouse>();
         IReadOnlyList<IKeyboard> silkKeyboards = new List<IKeyboard>();
@@ -415,9 +418,9 @@ public class InputManager {
         bool[] workingMouseButtons = new bool[(int)(MouseButton.Button12 + 1)];
         bool[] workingKeyboardKeys = new bool[(int)(Key.Menu + 1)];
 
-        // double start = stopwatch.Elapsed.TotalMilliseconds;
         while (this._run) {
             // Console.WriteLine($"Input frame clock run");
+            double start = stopwatch.Elapsed.TotalMilliseconds;
 
             // ReSharper disable once SuggestVarOrType_Elsewhere
             while (reader.TryRead(out var item)) {
@@ -481,11 +484,11 @@ public class InputManager {
 
             //Wait the clock 
             if (this._run) {
+                Interlocked.Increment(ref this.CountedInputFrames);
+                this.LastInputFrameTime = stopwatch.Elapsed.TotalMilliseconds - start;
                 clock.WaitFrame();
-                // double elapsed = stopwatch.Elapsed.TotalMilliseconds - start;
                 // Console.WriteLine($"Input frame delta {elapsed:N2}ms:{1000d / elapsed:N2} per second");
             }
-            // start = stopwatch.Elapsed.TotalMilliseconds;
         }
     }
 

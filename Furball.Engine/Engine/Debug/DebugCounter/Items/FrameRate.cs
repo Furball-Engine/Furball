@@ -9,7 +9,7 @@ internal class FrameRate : DebugCounterItem {
     private int    _lastUpdatedFramerate;
     private int    _frames;
     private double _deltaTime;
-
+    
     public override void Draw(double time) {
         this._deltaTime += time;
         this._frames++;
@@ -23,5 +23,5 @@ internal class FrameRate : DebugCounterItem {
         base.Draw(time);
     }
 
-    public override string GetAsString(double time) => $"{this._lastUpdatedFramerate:N0}fps ({Math.Round(1000.0 / this._lastUpdatedFramerate, 2):N2}ms)";
+    public override string GetAsString(double time) => $"{this._lastUpdatedFramerate:N0}fps ({1000.0 / this._lastUpdatedFramerate:N2}ms)";
 }
