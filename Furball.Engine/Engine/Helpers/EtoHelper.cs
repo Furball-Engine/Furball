@@ -39,6 +39,7 @@ public static class EtoHelper {
             _app.Run();
         }
         );
+        _thread.SetApartmentState(ApartmentState.STA);
 
         _thread.Start();
 
