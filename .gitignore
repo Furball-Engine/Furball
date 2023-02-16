@@ -13,3 +13,4 @@ AppImages/
 AppDir/
 logs/
 config/
+.flatpak-builder/
