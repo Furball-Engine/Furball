@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using System.Numerics;
+using System.Runtime.InteropServices;
 using Furball.Engine.Engine.Graphics.Drawables;
 using Furball.Engine.Engine.Helpers;
+using Furball.Engine.Engine.Platform;
 using Furball.Vixie.Backends.Shared;
 using Silk.NET.Input;
 #if USE_IMGUI
@@ -44,14 +46,13 @@ public static class ImGuiConsole {
                 UpdateTitle();
             }
             if (Visible) {
-                //TODO
-                // if (args.Key == Key.V && FurballGame.InputManager.ControlHeld && RuntimeInfo.CurrentPlatform() == OSPlatform.Linux) {
-                //     _consoleBuffer = _consoleBuffer.Insert(_cursorPosition, FurballGame.InputManager.Clipboard ?? string.Empty);
-                // }
-                //
-                // if (args.Key == Key.C && FurballGame.InputManager.ControlHeld && RuntimeInfo.CurrentPlatform() == OSPlatform.Linux) {
-                //     FurballGame.InputManager.Clipboard = _consoleBuffer.Substring(_selectionStart, _selectionEnd);
-                // }
+                if (args.Key == Key.V && FurballGame.InputManager.ControlHeld && RuntimeInfo.CurrentPlatform() == OSPlatform.Linux) {
+                    _consoleBuffer = _consoleBuffer.Insert(_cursorPosition, FurballGame.InputManager.Keyboards[0].GetClipboard() ?? string.Empty);
+                }
+                
+                if (args.Key == Key.C && FurballGame.InputManager.ControlHeld && RuntimeInfo.CurrentPlatform() == OSPlatform.Linux) {
+                    FurballGame.InputManager.Keyboards[0].SetClipboard(_consoleBuffer.Substring(_selectionStart, _selectionEnd));
+                }
             }
         };
 
