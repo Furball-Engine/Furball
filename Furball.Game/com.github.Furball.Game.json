@@ -1,0 +1,23 @@
+{
+    "app-id": "com.github.Furball.Game",
+    "runtime": "org.freedesktop.Platform",
+    "runtime-version": "22.08",
+    "sdk": "org.freedesktop.Sdk",
+    "command": "Furball.Game",
+    "finish-args": [ "--share=ipc", "--socket=x11", "--share=ipc", "--device=dri", "--socket=pulseaudio" ],
+    "modules": [
+        {
+            "name": "Furball.Game",
+            "buildsystem": "simple",
+            "build-commands": [
+                "install -D Furball.Game /app/bin/Furball.Game"
+            ],
+            "sources": [
+                {
+                    "type": "file",
+                    "path": "Furball.Game"
+                }
+            ]
+        }
+    ]
+}
