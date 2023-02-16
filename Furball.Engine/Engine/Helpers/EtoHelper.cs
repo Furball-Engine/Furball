@@ -39,7 +39,9 @@ public static class EtoHelper {
             _app.Run();
         }
         );
-        _thread.SetApartmentState(ApartmentState.STA);
+        //If we are on winows, set the apartment state to STA
+        if(RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            _thread.SetApartmentState(ApartmentState.STA);
 
         _thread.Start();
 
