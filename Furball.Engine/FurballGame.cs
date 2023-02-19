@@ -25,6 +25,7 @@ using Furball.Engine.Engine.Helpers.Logger;
 using Furball.Engine.Engine.Localization;
 using Furball.Engine.Engine.Localization.Languages;
 using Furball.Engine.Engine.Input;
+using Furball.Engine.Engine.Input.InputMethods;
 using Furball.Engine.Engine.Platform;
 using Furball.Engine.Engine.Timing;
 using Furball.Engine.Engine.Transitions;
@@ -158,19 +159,16 @@ public class FurballGame : Game {
         
         // bool usingEvDevInput = false;
 
+        //TODO: evdev 
         // //If we are on linux and we are the root user, we can use the EvDev input instead, which can detect multiple keyboards separately
         // if (RuntimeInfo.CurrentPlatform() == OSPlatform.Linux && UnixEnvironment.IsRoot()) {
         //     usingEvDevInput = true;
         //     InputManager.RegisterInputMethod(new EvDevKeyboardInputMethod());
         // }
-        //
-        // if (this.WindowManager is SilkWindowManager silkWindowManager) {
-        //     if(!usingEvDevInput)
-        //         InputManager.RegisterInputMethod(InputManager.SilkWindowingKeyboardInputMethod = new SilkWindowingKeyboardInputMethod(silkWindowManager.InputContext));
-        //
-        //     InputManager.RegisterInputMethod(InputManager.SilkWindowingMouseInputMethod = new SilkWindowingMouseInputMethod(silkWindowManager.InputContext));
-        //     InputManager.SilkWindowingMouseInputMethod.SetRawInputStatus(FurballConfig.Instance.RawMouseInput);
-        // }
+        
+        if (this.WindowManager is SilkWindowManager silkWindowManager) {
+            InputManager.AddInputMethod(new SilkInputMethod());
+        }
 
         Profiler.StartProfile("init_audio_engine");
         //TODO: Add logic to decide on what audio backend to use, and maybe write some code to help change backend on the fly

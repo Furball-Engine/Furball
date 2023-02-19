@@ -3,13 +3,14 @@ using System.Linq;
 using EvDevSharp;
 using EvDevSharp.Enums;
 using Furball.Engine.Engine.Input;
+using Furball.Engine.Engine.Input.InputMethods;
 
 namespace Furball.Engine.Engine.OldInput.InputMethods;
 
 public class EvDevKeyboardInputMethod : InputMethod {
     private readonly List<EvDevDevice> _trackedDevices = new();
 
-    public override void Initialize() {
+    public override void Initialize(InputManager inputManager) {
         List<EvDevDevice> devices = EvDevDevice.GetDevices().Where(x => x.GuessedDeviceType == EvDevGuessedDeviceType.Keyboard).ToList();
 
         for (int i = 0; i < devices.Count; i++) {
@@ -23,7 +24,7 @@ public class EvDevKeyboardInputMethod : InputMethod {
                 SetClipboard = _ => {}
             };
 
-            this.Keyboards.Add(keyboard);
+            // this.Keyboards.Add(keyboard);
             
             device.StartMonitoring();
             this._trackedDevices.Add(device);

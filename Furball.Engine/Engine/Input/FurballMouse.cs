@@ -26,7 +26,8 @@ public class FurballMouse {
     internal Vector2     TempPosition;
     internal ScrollWheel TempScrollWheel;
 
-    public bool[] PressedButtons = new bool[(int)(MouseButton.Button12 + 1)];
+    public readonly bool[] JustPressed    = new bool[(int)(MouseButton.Button12 + 1)];
+    public readonly bool[] PressedButtons = new bool[(int)(MouseButton.Button12 + 1)];
 
     internal List<MouseButton> QueuedButtonPresses  = new();
     internal List<MouseButton> QueuedButtonReleases = new();

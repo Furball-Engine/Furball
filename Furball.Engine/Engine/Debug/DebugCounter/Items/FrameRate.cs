@@ -1,5 +1,3 @@
-using System;
-
 namespace Furball.Engine.Engine.Debug.DebugCounter.Items; 
 
 /// <summary>
