@@ -157,17 +157,16 @@ public class FurballGame : Game {
         InputManager = new InputManager();
         InputManager.Start();
         
-        // bool usingEvDevInput = false;
+        bool usingEvDevInput = false;
 
-        //TODO: evdev 
         // //If we are on linux and we are the root user, we can use the EvDev input instead, which can detect multiple keyboards separately
-        // if (RuntimeInfo.CurrentPlatform() == OSPlatform.Linux && UnixEnvironment.IsRoot()) {
-        //     usingEvDevInput = true;
-        //     InputManager.RegisterInputMethod(new EvDevKeyboardInputMethod());
-        // }
+        if (RuntimeInfo.CurrentPlatform() == OSPlatform.Linux && UnixEnvironment.IsRoot()) {
+            usingEvDevInput = true;
+            InputManager.AddInputMethod(new EvDevInputMethod());
+        }
         
         if (this.WindowManager is SilkWindowManager silkWindowManager) {
-            InputManager.AddInputMethod(new SilkInputMethod());
+            InputManager.AddInputMethod(new SilkInputMethod(usingEvDevInput));
         }
 
         Profiler.StartProfile("init_audio_engine");

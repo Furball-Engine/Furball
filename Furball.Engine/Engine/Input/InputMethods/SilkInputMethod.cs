@@ -37,8 +37,8 @@ public class SilkInputMethod : InputMethod {
         public char      Character;
     }
 
-    public void MainThreadUpdate() {
-        
+    public SilkInputMethod(bool disableKeyboards) {
+        this._disableKeyboards = disableKeyboards;
     }
 
     readonly bool[] _workingMouseButtons = new bool[(int)(MouseButton.Button12 + 1)];
@@ -111,6 +111,7 @@ public class SilkInputMethod : InputMethod {
     private readonly List<(FurballMouse fMouse, IMouse sMouse)>             _mice      = new List<(FurballMouse fMouse, IMouse sMouse)>();
     private readonly List<(FurballKeyboard fKeyboard, IKeyboard sKeyboard)> _keyboards = new List<(FurballKeyboard fKeyboard, IKeyboard sKeyboard)>();
     private          ChannelWriter<OneOf<MouseScrollUpdate, SilkKeyChar>>   _writer;
+    private readonly bool                                                   _disableKeyboards;
 
     public override void Initialize(InputManager inputManager) {
         this._inputManager = inputManager;
@@ -132,6 +133,9 @@ public class SilkInputMethod : InputMethod {
 
             IReadOnlyList<IKeyboard> keyboards = silkWindowManager.InputContext.Keyboards;
 
+            if (this._disableKeyboards)
+                return;
+            
             foreach (IKeyboard keyboard in keyboards) {
                 keyboard.KeyChar += HandleSilkKeyChar;
                 FurballKeyboard fKeyboard = new FurballKeyboard {

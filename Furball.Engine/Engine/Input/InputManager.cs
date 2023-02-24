@@ -178,11 +178,7 @@ public class InputManager {
     }
 
     public void Update() {
-        for (int i = 0; i < this._inputMethods.Count; i++) {
-            InputMethod method = this._inputMethods[i];
-            if (method is SilkInputMethod silkInputMethod)
-                silkInputMethod.MainThreadUpdate();
-        }
+        
     }
 
     public int InputObjectIndex = 0;
