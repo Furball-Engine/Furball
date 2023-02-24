@@ -26,9 +26,6 @@ public static class EtoHelper {
 
             if (RuntimeInfo.CurrentPlatform() == OSPlatform.Windows) {
                 platform = Platforms.WinForms;
-
-                if (RuntimeInformation.FrameworkDescription.Contains("Framework"))
-                    platform = Platforms.Gtk;
             }
 
             Eto.Platform.Initialize(platform);
