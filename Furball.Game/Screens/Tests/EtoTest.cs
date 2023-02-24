@@ -32,12 +32,14 @@ public class EtoTest : TestScreen {
             }, "Test!", MessageBoxButtons.YesNoCancel);
         };
 
-        this.Manager.Add(this._colorPickerButton = new DrawableButton(new Vector2(10, 62), FurballGame.DefaultFont, 24, "Message Dialog", Color.Blue, Color.Black, Color.Black, Vector2.Zero));
+        this.Manager.Add(this._colorPickerButton = new DrawableButton(new Vector2(10, 62), FurballGame.DefaultFont, 24, "Colour Picker", Color.Blue, Color.Black, Color.Black, Vector2.Zero));
         this._colorPickerButton.OnClick += delegate {
             EtoHelper.OpenColorPicker(
-            (_, color) => {
+            (_, args) => {
                 FurballGame.GameTimeScheduler.ScheduleMethod(
                 _ => {
+                    (DialogResult result, Color color) = args;
+                    
                     this._dialogResult.FadeColor(color, 100);
                 });
             }, Color.White);
