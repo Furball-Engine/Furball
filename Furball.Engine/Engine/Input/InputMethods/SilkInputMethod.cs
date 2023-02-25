@@ -230,7 +230,6 @@ public class SilkInputMethod : InputMethod {
                             this._inputManager.AltCount++;
                             break;
                     }
-
                 }
             } else {
                 //Set the working key to false

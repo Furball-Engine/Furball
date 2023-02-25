@@ -312,15 +312,14 @@ public abstract class Drawable : IDisposable {
     /// </summary>
     public void UpdateTweens() {
         if (this._inputObject != null) {
-            bool taken = false;
-            FurballGame.InputManager.InputObjectsLock.Enter(ref taken);
+            bool taken = FurballGame.InputManager.InputObjectsLock.TryEnterWriteLock(1);
 
             this._inputObject.Position = this.RealPosition;
             this._inputObject.Size     = this.RealSize;
             this._inputObject.Depth    = this.Depth;
 
             if (taken)
-                FurballGame.InputManager.InputObjectsLock.Exit();
+                FurballGame.InputManager.InputObjectsLock.ExitWriteLock();
         }
 
         this.Tweens.RemoveAll(tween => tween == null || tween.Terminated && !tween.KeepAlive);

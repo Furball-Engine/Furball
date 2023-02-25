@@ -1,7 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Numerics;
+using System.Threading;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
+using Silk.NET.Core;
 using Color = Furball.Vixie.Backends.Shared.Color;
 
 namespace Furball.Engine.Engine.Graphics.Drawables; 
@@ -41,11 +44,18 @@ public class CompositeDrawable : Drawable {
         }
     }
 
+    public ReaderWriterLock ChildrenLock = new ReaderWriterLock();
+    
     public override void Update(double time) {
-        foreach (Drawable drawable in this.Children!) {
+        this.ChildrenLock.AcquireReaderLock(1);
+
+        for (int i = 0; i < this.Children!.Count; i++) {
+            Drawable drawable = this.Children![i];
             drawable.Update(time);
             drawable.UpdateTweens();
         }
+
+        this.ChildrenLock.ReleaseReaderLock();
     }
 
     public override void Dispose() {
@@ -93,25 +103,6 @@ public class CompositeDrawable : Drawable {
             this._drawableArgs.Scale    = drawable.RealScale = args.Scale * drawable.Scale;
             
             drawable.Draw(time, batch, this._drawableArgs);
-            if (FurballGame.DrawInputOverlay)
-                switch (drawable.Clickable) {
-                    case false when drawable.CoverClicks:
-                        batch.DrawRectangle(
-                        new Vector2(drawable.RealRectangle.X,     drawable.RealRectangle.Y),
-                        new Vector2(drawable.RealRectangle.Width, drawable.RealRectangle.Height),
-                        1,
-                        Color.Red
-                        );
-                        break;
-                    case true when drawable.CoverClicks:
-                        batch.DrawRectangle(
-                        new Vector2(drawable.RealRectangle.X,     drawable.RealRectangle.Y),
-                        new Vector2(drawable.RealRectangle.Width, drawable.RealRectangle.Height),
-                        1,
-                        Color.Green
-                        );
-                        break;
-                }
         }
     }
 }

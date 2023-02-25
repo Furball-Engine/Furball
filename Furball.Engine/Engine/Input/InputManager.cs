@@ -218,46 +218,42 @@ public class InputManager {
     }
 
     public void AddInputObject(InputObject inputObject) {
-        bool taken = false;
         //If we are not on the input thread, lock the input objects
-        if (this._thread != Thread.CurrentThread)
-            this.InputObjectsLock.Enter(ref taken);
+        bool taken = this.InputObjectsLock.TryEnterWriteLock(1);
 
-        this._inputObjects.Add(inputObject);
-        this._inputObjects.Sort(DrawableInputComparer.Instance);
+        this.InputObjects.Add(inputObject);
+        this.InputObjects.Sort(DrawableInputComparer.Instance);
 
         if (taken)
-            this.InputObjectsLock.Exit();
+            this.InputObjectsLock.ExitWriteLock();
     }
 
     public void RemoveInputObject(InputObject inputObject) {
-        bool taken = false;
-        this.InputObjectsLock.Enter(ref taken);
+        bool taken = this.InputObjectsLock.TryEnterWriteLock(1);
 
-        this._inputObjects.Remove(inputObject);
+        this.InputObjects.Remove(inputObject);
 
         if (taken)
-            this.InputObjectsLock.Exit();
+            this.InputObjectsLock.ExitWriteLock();
     }
 
-    private readonly List<InputObject> _inputObjects     = new List<InputObject>();
-    private          bool              _sortInputObjects = false;
+    internal readonly List<InputObject> InputObjects      = new List<InputObject>();
+    private           bool              _sortInputObjects = false;
 
-    public BreakneckLock InputObjectsLock = new BreakneckLock();
+    public ReaderWriterLockSlim InputObjectsLock = new ReaderWriterLockSlim();
 
     readonly FurballMouse[] _isClickedTemp = new FurballMouse[(int)(MouseButton.Button12 + 1)];
     private void CheckInputObjects() {
-        bool taken = false;
-        this.InputObjectsLock.Enter(ref taken);
+        bool taken = this.InputObjectsLock.TryEnterUpgradeableReadLock(1);
 
         if (this._sortInputObjects) {
-            this._inputObjects.Sort(DrawableInputComparer.Instance);
+            this.InputObjects.Sort(DrawableInputComparer.Instance);
             this._sortInputObjects = false;
         }
 
         bool blocked = false;
-        for (int inputIndex = 0; inputIndex < this._inputObjects.Count; inputIndex++) {
-            InputObject inputObject = this._inputObjects[inputIndex];
+        for (int inputIndex = 0; inputIndex < this.InputObjects.Count; inputIndex++) {
+            InputObject inputObject = this.InputObjects[inputIndex];
             // ReSharper disable once CompareOfFloatsByEqualityOperator
             if (inputObject.Depth != inputObject.LastDepth) {
                 this._sortInputObjects = true;
@@ -358,7 +354,7 @@ public class InputManager {
         }
 
         if (taken)
-            this.InputObjectsLock.Exit();
+            this.InputObjectsLock.ExitUpgradeableReadLock();
     }
 
     internal int    CountedInputFrames = 0;

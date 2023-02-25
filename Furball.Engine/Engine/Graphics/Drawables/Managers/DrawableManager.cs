@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Numerics;
+using System.Threading;
 using Furball.Engine.Engine.Helpers;
 using Furball.Vixie;
 using Furball.Vixie.Helpers;
@@ -14,7 +15,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers;
 public class DrawableManager : IDisposable {
     private List<Drawable> _drawables = new();
 
-    public BreakneckLock DrawablesLock = new BreakneckLock();
+    public ReaderWriterLock DrawablesLock = new ReaderWriterLock();
 
     public IReadOnlyList<Drawable> Drawables => this._drawables.AsReadOnly();
 
@@ -73,8 +74,7 @@ public class DrawableManager : IDisposable {
         if (this.EffectedByScaling)
             batch.ScissorPush(this, new Rectangle((int)this.Position.X, (int)this.Position.Y, (int)this.Size.X, (int)this.Size.Y));
 
-        bool taken = false;
-        this.DrawablesLock.Enter(ref taken);
+        this.DrawablesLock.AcquireReaderLock(1);
         
         for (int i = 0; i < tempCount; i++) {
             Drawable drawable = this._drawables[i];
@@ -141,30 +141,10 @@ public class DrawableManager : IDisposable {
                 drawable.Draw(time, batch, this._args);
  
                 Guard.Assert(scissorStackItems == batch.ScissorStackItemCount, $"Scissor stack is unbalanced after {drawable.GetType()}.Draw was called!");
-                if (FurballGame.DrawInputOverlay)
-                    switch (drawable.Clickable) {
-                        case false when drawable.CoverClicks:
-                            batch.DrawRectangle(
-                            new Vector2(drawable.RealRectangle.X,     drawable.RealRectangle.Y),
-                            new Vector2(drawable.RealRectangle.Width, drawable.RealRectangle.Height),
-                            1,
-                            Color.Red
-                            );
-                            break;
-                        case true when drawable.CoverClicks:
-                            batch.DrawRectangle(
-                            new Vector2(drawable.RealRectangle.X,     drawable.RealRectangle.Y),
-                            new Vector2(drawable.RealRectangle.Width, drawable.RealRectangle.Height),
-                            1,
-                            Color.Green
-                            );
-                            break;
-                    }
             }
         }
-        
-        if(taken)
-            this.DrawablesLock.Exit();
+
+        this.DrawablesLock.ReleaseReaderLock();
 
         if(this.EffectedByScaling)
             batch.ScissorPop(this);
@@ -200,24 +180,33 @@ public class DrawableManager : IDisposable {
     }
 
     public void Add(Drawable drawable) {
+        this.DrawablesLock.AcquireWriterLock(1);
         this._drawables.Add(drawable);
         this._sortDrawables = true;
+        this.DrawablesLock.ReleaseWriterLock();
     }
 
     public void Add(List<Drawable> drawables) {
+        this.DrawablesLock.AcquireWriterLock(1);
         this._drawables.AddRange(drawables);
         this._sortDrawables = true;
+        this.DrawablesLock.ReleaseWriterLock();
     }
 
     public void Add(params Drawable[] drawables) {
+        this.DrawablesLock.AcquireWriterLock(1);
         this._drawables.AddRange(drawables);
         this._sortDrawables = true;
+        this.DrawablesLock.ReleaseWriterLock();
     }
+    
     public void Remove(Drawable? drawable) {
         if (drawable == null)
             return;
-        
+
+        this.DrawablesLock.AcquireWriterLock(1);
         this._drawables.Remove(drawable);
+        this.DrawablesLock.ReleaseWriterLock();
     }
 
     private bool _isDisposed = false;
