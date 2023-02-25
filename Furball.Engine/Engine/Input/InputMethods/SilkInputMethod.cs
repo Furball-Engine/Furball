@@ -226,6 +226,9 @@ public class SilkInputMethod : InputMethod {
                         case Key.ShiftLeft or Key.ShiftRight:
                             this._inputManager.ShiftCount++;
                             break;
+                        case Key.AltLeft or Key.AltRight:
+                            this._inputManager.AltCount++;
+                            break;
                     }
 
                 }
@@ -243,6 +246,9 @@ public class SilkInputMethod : InputMethod {
                             break;
                         case Key.ShiftLeft or Key.ShiftRight:
                             this._inputManager.ShiftCount--;
+                            break;
+                        case Key.AltLeft or Key.AltRight:
+                            this._inputManager.AltCount--;
                             break;
                     }
 

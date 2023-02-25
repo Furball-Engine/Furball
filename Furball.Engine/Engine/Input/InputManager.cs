@@ -94,6 +94,16 @@ public class InputManager {
     /// </summary>
     public bool ShiftHeld => this.ShiftCount != 0;
 
+    /// <summary>
+    /// How many shift keys are being pressed down
+    /// </summary>
+    internal int AltCount = 0;
+
+    /// <summary>
+    /// Whether or not the shift key is being held
+    /// </summary>
+    public bool AltHeld => this.AltCount != 0;
+    
     public InputManager() {
         this._thread = new(this.Run);
     }
