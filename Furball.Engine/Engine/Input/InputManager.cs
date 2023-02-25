@@ -354,10 +354,10 @@ public class InputManager {
     internal int    CountedInputFrames = 0;
     internal double LastInputFrameTime = 0;
 
-    private readonly List<InputMethod> _inputMethods = new List<InputMethod>();
+    public readonly List<InputMethod> InputMethods = new List<InputMethod>();
     
     public void AddInputMethod(InputMethod inputMethod) {
-        this._inputMethods.Add(inputMethod);
+        this.InputMethods.Add(inputMethod);
     }
     
     public void RemoveInputMethod(InputMethod inputMethod) {
@@ -389,8 +389,8 @@ public class InputManager {
             // Console.WriteLine($"Input frame clock run");
             double start = stopwatch.Elapsed.TotalMilliseconds;
 
-            for (int i = 0; i < this._inputMethods.Count; i++) {
-                InputMethod inputMethod = this._inputMethods[i];
+            for (int i = 0; i < this.InputMethods.Count; i++) {
+                InputMethod inputMethod = this.InputMethods[i];
                 //If the input method is not initialized, do so and register our events
                 if (!inputMethod.IsInitialized) {
                     inputMethod.IsInitialized = true;
@@ -414,7 +414,7 @@ public class InputManager {
                     inputMethod.MouseAdded      -= this.InputMethodMouseAdded;
                     inputMethod.MouseRemoved    -= this.InputMethodMouseRemoved;
 
-                    this._inputMethods.Remove(inputMethod);
+                    this.InputMethods.Remove(inputMethod);
                 }
                 
                 inputMethod.Update();
