@@ -36,7 +36,7 @@ public static class EtoHelper {
             _app.Run();
         }
         );
-        //If we are on winows, set the apartment state to STA
+        //If we are on Windows, set the apartment state to STA, which is required for WinForms to work
         if(RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             _thread.SetApartmentState(ApartmentState.STA);
 
