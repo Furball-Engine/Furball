@@ -219,22 +219,20 @@ public class InputManager {
 
     public void AddInputObject(InputObject inputObject) {
         //If we are not on the input thread, lock the input objects
-        bool taken = this.InputObjectsLock.TryEnterWriteLock(1);
+        this.InputObjectsLock.EnterWriteLock();
 
         this.InputObjects.Add(inputObject);
         this.InputObjects.Sort(DrawableInputComparer.Instance);
 
-        if (taken)
-            this.InputObjectsLock.ExitWriteLock();
+        this.InputObjectsLock.ExitWriteLock();
     }
 
     public void RemoveInputObject(InputObject inputObject) {
-        bool taken = this.InputObjectsLock.TryEnterWriteLock(1);
+        this.InputObjectsLock.EnterWriteLock();
 
         this.InputObjects.Remove(inputObject);
 
-        if (taken)
-            this.InputObjectsLock.ExitWriteLock();
+        this.InputObjectsLock.ExitWriteLock();
     }
 
     internal readonly List<InputObject> InputObjects      = new List<InputObject>();
@@ -269,14 +267,15 @@ public class InputManager {
 
                     hovered = true;
 
-                    //Iterate through all buttons on the mouse
-                    for (int j = 0; j < mouse.PressedButtons.Length; j++) {
-                        bool pressed = mouse.PressedButtons[j];
-                        //If the mouse button is being pressed over the input object, mark it as such
-                        if (pressed) {
-                            this._isClickedTemp[j] = mouse;
+                    if (inputObject.Clickable)
+                        //Iterate through all buttons on the mouse
+                        for (int j = 0; j < mouse.PressedButtons.Length; j++) {
+                            bool pressed = mouse.PressedButtons[j];
+                            //If the mouse button is being pressed over the input object, mark it as such
+                            if (pressed) {
+                                this._isClickedTemp[j] = mouse;
+                            }
                         }
-                    }
 
                     blocked = true;
                 }

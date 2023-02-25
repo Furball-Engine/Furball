@@ -291,9 +291,19 @@ public abstract class Drawable : IDisposable {
     }
 
     public void RegisterForInput() {
+        //Dont do anything if the drawable is already registered for input
+        if (this._inputObject != null)
+            return;
+        
         this._inputObject = FurballGame.InputManager.CreateInputObject(this);
         
         FurballGame.InputManager.AddInputObject(this._inputObject);
+    }
+
+    public void UnregisterForInput() {
+        if (this._inputObject != null)
+            FurballGame.InputManager.RemoveInputObject(this._inputObject);
+        this._inputObject = null;
     }
     
     public virtual void Dispose() {
@@ -314,9 +324,10 @@ public abstract class Drawable : IDisposable {
         if (this._inputObject != null) {
             bool taken = FurballGame.InputManager.InputObjectsLock.TryEnterWriteLock(1);
 
-            this._inputObject.Position = this.RealPosition;
-            this._inputObject.Size     = this.RealSize;
-            this._inputObject.Depth    = this.Depth;
+            this._inputObject.Position  = this.RealPosition;
+            this._inputObject.Size      = this.RealSize;
+            this._inputObject.Depth     = this.Depth;
+            this._inputObject.Clickable = this.Clickable && this.Visible;
 
             if (taken)
                 FurballGame.InputManager.InputObjectsLock.ExitWriteLock();

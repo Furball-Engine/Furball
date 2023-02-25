@@ -44,10 +44,10 @@ public class CompositeDrawable : Drawable {
         }
     }
 
-    public ReaderWriterLock ChildrenLock = new ReaderWriterLock();
+    public ReaderWriterLockSlim ChildrenLock = new ReaderWriterLockSlim();
     
     public override void Update(double time) {
-        this.ChildrenLock.AcquireReaderLock(1);
+        bool taken = this.ChildrenLock.TryEnterUpgradeableReadLock(1);
 
         for (int i = 0; i < this.Children!.Count; i++) {
             Drawable drawable = this.Children![i];
@@ -55,7 +55,8 @@ public class CompositeDrawable : Drawable {
             drawable.UpdateTweens();
         }
 
-        this.ChildrenLock.ReleaseReaderLock();
+        if (taken)
+            this.ChildrenLock.ExitUpgradeableReadLock();
     }
 
     public override void Dispose() {
@@ -76,6 +77,8 @@ public class CompositeDrawable : Drawable {
             this.SortDrawables = false;
         }
 
+        bool taken = this.ChildrenLock.TryEnterReadLock(1);
+        
         for (int i = 0; i < this.Children!.Count; i++) {
             Drawable drawable = this.Children[i];
 
@@ -104,5 +107,8 @@ public class CompositeDrawable : Drawable {
             
             drawable.Draw(time, batch, this._drawableArgs);
         }
+
+        if (taken)
+            this.ChildrenLock.ExitReadLock();
     }
 }

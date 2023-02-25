@@ -33,4 +33,5 @@ public class InputObject {
 
     internal bool[] LastClicked = new bool[(int)(MouseButton.Button12 + 1)];
     internal bool   LastHovered = false;
+    public   bool   Clickable;
 }

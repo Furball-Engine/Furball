@@ -78,18 +78,28 @@ public class DrawableForm : CompositeDrawable {
 
         #region Events
 
-        this._titleBar.RegisterForInput();
         this._titleBar.OnDragBegin += this.OnTitleBarDragBegin;
         this._titleBar.OnDrag      += this.OnTitleBarDrag;
 
-        this._closeButton.RegisterForInput();
         this._closeButton.OnClick += this.OnCloseButtonClick;
+
+        this.RegisterChildrenForInput();
 
         #endregion
 
         Logger.Log($"Created form with title {title}", LoggerLevelFurballFormInfo.Instance);
     }
 
+    protected void RegisterChildrenForInput() {
+        this._titleBar.RegisterForInput();
+        this._closeButton.RegisterForInput();
+    }
+
+    protected void UnregisterChildrenForInput() {
+        this._titleBar.UnregisterForInput();
+        this._closeButton.UnregisterForInput();
+    }
+    
     private void OnCloseButtonClick(object _, MouseButtonEventArgs mouseButtonEventArgs) {
         if (this.OnTryClose == null) {
             Logger.Log("Unhandled FurballForm close!", LoggerLevelFurballFormInfo.Instance);

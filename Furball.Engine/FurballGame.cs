@@ -771,14 +771,19 @@ public class FurballGame : Game {
         
         #endregion
 
-        #region draw input overlay
+        #region Draw input overlay
 
         if (DrawInputOverlay) {
             if (InputManager.InputObjectsLock.TryEnterReadLock(1)) {
                 CursorDrawableBatch.Begin();
 
                 foreach (InputObject inputObject in InputManager.InputObjects) {
-                    CursorDrawableBatch.DrawRectangle(inputObject.Position, inputObject.Size, 1, Vixie.Backends.Shared.Color.Red);
+                    CursorDrawableBatch.DrawRectangle(
+                    inputObject.Position,
+                    inputObject.Size,
+                    1,
+                    inputObject.Clickable ? Vixie.Backends.Shared.Color.Green : Vixie.Backends.Shared.Color.Red
+                    );
                 }
 
                 CursorDrawableBatch.End();
