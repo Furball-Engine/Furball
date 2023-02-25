@@ -46,7 +46,7 @@ public class ScrollableContainer : CompositeDrawable {
         }
     }
 
-    public float ScrollSpeed = 4.0f;
+    public float ScrollSpeed = 32.0f;
 
     public  bool  InfiniteScrolling = false;
     private float _lastMax          = 0;
