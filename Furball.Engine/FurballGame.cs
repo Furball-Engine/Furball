@@ -159,7 +159,7 @@ public class FurballGame : Game {
         
         bool usingEvDevInput = false;
 
-        // //If we are on linux and we are the root user, we can use the EvDev input instead, which can detect multiple keyboards separately
+        // If we are on linux and we are the root user, we can use the EvDev input instead, which can detect multiple keyboards separately
         if (RuntimeInfo.CurrentPlatform() == OSPlatform.Linux && UnixEnvironment.IsRoot()) {
             usingEvDevInput = true;
             InputManager.AddInputMethod(new EvDevInputMethod());
@@ -689,7 +689,7 @@ public class FurballGame : Game {
 
         DrawableBatch.End();
         
-        // //We want to draw software cursors after everything else in the game, so we do it in here
+        // We want to draw software cursors after everything else in the game, so we do it in here
         #region Draw software cursors
         
         List<FurballMouse> mice = InputManager.Mice;
