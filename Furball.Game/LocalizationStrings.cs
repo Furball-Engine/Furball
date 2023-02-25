@@ -29,5 +29,6 @@ public enum LocalizationStrings {
     GMLTest,
     TexturePackerTest,
     BoxBlurTest,
-    TextureFadeTest
+    TextureFadeTest,
+    InputOrderTest
 }

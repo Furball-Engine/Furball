@@ -1,7 +1,7 @@
 using System;
 using System.Numerics;
 
-namespace Furball.Engine.Engine.Input.Events; 
+namespace Furball.Engine.Engine.Input.Events;
 
 public class MouseScrollEventArgs : EventArgs {
     public Vector2      ScrollAmount;

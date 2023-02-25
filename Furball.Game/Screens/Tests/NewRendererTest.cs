@@ -100,6 +100,7 @@ public class NewRendererTest : TestScreen {
     private readonly ObservableCollection<VertexHandle> _selectedVertices = new();
 
     private DrawableColorPicker _colorPicker;
+    private bool                _recalcNeeded;
 
     public override void Initialize() {
         base.Initialize();
@@ -161,11 +162,11 @@ public class NewRendererTest : TestScreen {
 
                 if (this._mesh.Indices.Count(Match) == 3) {
                     this._mesh.Indices.RemoveAll(Match);
-                    this._mesh.RecalcRender();
+                    this._recalcNeeded = true;
                     return;
                 }
 
-                if (FurballGame.InputManager.ControlHeld) {
+                if (keyEventArgs.Keyboard.ControlHeld) {
                     this._mesh.Indices.Add((ushort)this._vertexPoints.IndexOf(this._selectedVertices[0]));
                     this._mesh.Indices.Add((ushort)this._vertexPoints.IndexOf(this._selectedVertices[2]));
                     this._mesh.Indices.Add((ushort)this._vertexPoints.IndexOf(this._selectedVertices[1]));
@@ -175,7 +176,7 @@ public class NewRendererTest : TestScreen {
                         this._mesh.Indices.Add((ushort)this._vertexPoints.IndexOf(this._selectedVertices[i]));
                 }
 
-                this._mesh.RecalcRender();
+                this._recalcNeeded = true;
 
                 break;
             }
@@ -195,12 +196,21 @@ public class NewRendererTest : TestScreen {
         this._mesh.Vertices.Add(
         new Vertex {
             Color    = Color.White,
-            Position = e.Mouse.Position
+            Position = e.Mouse.Position,
         }
         );
 
-        this._mesh.RecalcRender();
-        this.Recalc();
+        this._recalcNeeded = true;
+    }
+    public override void Update(double gameTime) {
+        base.Update(gameTime);
+
+        if (this._recalcNeeded) {
+            this._mesh.RecalcRender();
+            this.Recalc();
+
+            this._recalcNeeded = false;
+        }
     }
 
     private void OnSelectedChange(object sender, NotifyCollectionChangedEventArgs e) {
@@ -209,7 +219,9 @@ public class NewRendererTest : TestScreen {
     }
 
     private class VertexHandle : TexturedDrawable {
-        public VertexHandle(Vector2 position) : base(FurballGame.WhitePixel, position) {}
+        public VertexHandle(Vector2 position) : base(FurballGame.WhitePixel, position) {
+            this.RegisterForInput();
+        }
     }
 
     private void Recalc() {
@@ -233,8 +245,8 @@ public class NewRendererTest : TestScreen {
                 meshVertex.Position     = e.Position;
                 this._mesh.Vertices[i1] = meshVertex;
 
-                this._mesh.RecalcRender();
-                vertTex.Position = e.Position;
+                this._recalcNeeded = true;
+                vertTex.Position   = e.Position;
             };
 
             vertTex.OnDragBegin += delegate {
@@ -274,8 +286,7 @@ public class NewRendererTest : TestScreen {
 
                         this._mesh.Vertices.RemoveAt(i1);
 
-                        this._mesh.RecalcRender();
-                        this.Recalc();
+                        this._recalcNeeded = true;
 
                         break;
                     }

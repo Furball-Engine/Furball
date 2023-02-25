@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using Furball.Engine.Engine.Graphics;
-using Furball.Engine.Engine.Input;
-using Furball.Vixie.Backends.Shared.Backends;
+using Furball.Engine.Engine.Input.InputMethods;
 using Furball.Volpe.Evaluation;
 using Furball.Volpe.Exceptions;
 
@@ -169,9 +168,9 @@ public class Builtins {
         new ("im_input_methods", paramCount: 0,
              (_, _) => {
                  List<Value> arrayList = new();
-                     
-                 for (int i = 0; i != FurballGame.InputManager.RegisteredInputMethods.Count; i++) {
-                     InputMethod currentMethod = FurballGame.InputManager.RegisteredInputMethods[i];
+
+                 for (int i = 0; i != FurballGame.InputManager.InputMethods.Count; i++) {
+                     InputMethod currentMethod = FurballGame.InputManager.InputMethods[i];
 
                      arrayList.Add(new Value.String(currentMethod.GetType().Name));
                  }

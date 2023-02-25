@@ -61,7 +61,7 @@ public class CompositeDrawable : Drawable {
 
     public override void Draw(double time, DrawableBatch batch, DrawableManagerArgs args) {
         if (this.SortDrawables) {
-            this.Children!.Sort((x, y) => x.Depth.CompareTo(y.Depth));
+            this.Children!.Sort(DrawableDrawComparer.Instance);
 
             this.SortDrawables = false;
         }

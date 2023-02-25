@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Numerics;
 using System.Runtime.InteropServices;
@@ -48,11 +47,11 @@ public static class ImGuiConsole {
             }
             if (Visible) {
                 if (args.Key == Key.V && FurballGame.InputManager.ControlHeld && RuntimeInfo.CurrentPlatform() == OSPlatform.Linux) {
-                    _consoleBuffer = _consoleBuffer.Insert(_cursorPosition, FurballGame.InputManager.Clipboard ?? string.Empty);
+                    _consoleBuffer = _consoleBuffer.Insert(_cursorPosition, FurballGame.InputManager.Keyboards[0].GetClipboard() ?? string.Empty);
                 }
-
+                
                 if (args.Key == Key.C && FurballGame.InputManager.ControlHeld && RuntimeInfo.CurrentPlatform() == OSPlatform.Linux) {
-                    FurballGame.InputManager.Clipboard = _consoleBuffer.Substring(_selectionStart, _selectionEnd);
+                    FurballGame.InputManager.Keyboards[0].SetClipboard(_consoleBuffer.Substring(_selectionStart, _selectionEnd));
                 }
             }
         };
@@ -71,6 +70,7 @@ public static class ImGuiConsole {
             Hoverable   = true,
             Depth       = 0
         };
+        _consoleInputCoverDrawable.RegisterForInput();
         
         FurballGame.DrawableManager.Add(_consoleInputCoverDrawable);
         

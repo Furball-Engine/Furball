@@ -3,23 +3,21 @@ using System.Numerics;
 using Furball.Engine;
 using Furball.Engine.Engine.Graphics;
 using Furball.Engine.Engine.Graphics.Drawables;
-using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Furball.Engine.Engine.Graphics.Drawables.UiElements;
 using Furball.Engine.Engine.Input.Events;
 using Furball.Engine.Engine.Timing;
-using Furball.Vixie;
 using Furball.Vixie.Backends.Shared;
 using Furball.Vixie.Helpers;
 using ManagedBass;
 using sowelipisona;
 using sowelipisona.Effects;
 
-namespace Furball.Game.Screens.Tests; 
+namespace Furball.Game.Screens.Tests;
 
 public class AudioTest : TestScreen {
     private AudioStream _testingStream;
 
-    private TextDrawable     _topText;
+    private TextDrawable        _topText;
     private RawWaveformDrawable _rawWaveform;
 
     public override void Initialize() {
@@ -100,97 +98,122 @@ public class AudioTest : TestScreen {
         this.Manager.Add(reverbPlayButton);
 
         DrawableButton generateWaveform = new DrawableButton(
-            new Vector2(50, currentY),
-            FurballGame.DefaultFont,
-            28,
-            "Generate a waveform of the audio",
-            Color.White,
-            Color.Black,
-            Color.Black,
-            Vector2.Zero, 
-            GenerateWaveform
+        new Vector2(50, currentY),
+        FurballGame.DefaultFont,
+        28,
+        "Generate a waveform of the audio",
+        Color.White,
+        Color.Black,
+        Color.Black,
+        Vector2.Zero,
+        GenerateWaveform
         );
-        
+
         this.Manager.Add(generateWaveform);
     }
-    
+
     private void GenerateWaveform(object sender, MouseButtonEventArgs e) {
-        MemoryStream stream = new MemoryStream(ContentManager.LoadRawAsset("lulkanto.mp3"));
+        FurballGame.GameTimeScheduler.ScheduleMethod(
+        _ => {
+            MemoryStream stream = new MemoryStream(ContentManager.LoadRawAsset("lulkanto.mp3"));
 
-        Waveform waveform = FurballGame.AudioEngine.GetWaveform(stream);
-        
-        Guard.EnsureNonNull(waveform.Points);
+            Waveform waveform = FurballGame.AudioEngine.GetWaveform(stream);
 
-        const int texHeight = 100;
-        
-        this.Manager.Add(this._rawWaveform = new RawWaveformDrawable(waveform, texHeight) {
-            Scale = new Vector2(0.25f, 1)
-        });
+            Guard.EnsureNonNull(waveform.Points);
+
+            const int texHeight = 100;
+
+            this.Manager.Add(
+            this._rawWaveform = new RawWaveformDrawable(waveform, texHeight) {
+                Scale = new Vector2(0.25f, 1)
+            }
+            );
+        }
+        );
     }
 
     private void ReverbPlayOnClick(object sender, MouseButtonEventArgs mouseButtonEventArgs) {
-        if (this._testingStream?.PlaybackState == PlaybackState.Playing) {
-            this._testingStream.Stop();
+        FurballGame.GameTimeScheduler.ScheduleMethod(
+        _ => {
+            if (this._testingStream?.PlaybackState == PlaybackState.Playing) {
+                this._testingStream.Stop();
+            }
+
+            this._testingStream = FurballGame.AudioEngine.CreateStream(ContentManager.LoadRawAsset("lulkanto.mp3"));
+
+            ReverbAudioEffect effect = FurballGame.AudioEngine.CreateReverbEffect(this._testingStream);
+
+            effect.Apply();
+
+            this._testingStream.Volume = 0.4;
+            this._testingStream.Play();
         }
-
-        this._testingStream = FurballGame.AudioEngine.CreateStream(ContentManager.LoadRawAsset("lulkanto.mp3"));
-
-        ReverbAudioEffect effect = FurballGame.AudioEngine.CreateReverbEffect(this._testingStream);
-
-        effect.Apply();
-
-        this._testingStream.Volume = 0.4;
-        this._testingStream.Play();
+        );
     }
 
     public override void Relayout(float newWidth, float newHeight) {
         base.Relayout(newWidth, newHeight);
 
-        if(this._topText != null)
+        if (this._topText != null)
             this._topText.Position.X = newWidth / 2f;
     }
 
     private void LowPassPlayOnClick(object sender, MouseButtonEventArgs mouseButtonEventArgs) {
-        if (this._testingStream?.PlaybackState == PlaybackState.Playing) {
-            this._testingStream.Stop();
+        FurballGame.GameTimeScheduler.ScheduleMethod(
+        _ => {
+            if (this._testingStream?.PlaybackState == PlaybackState.Playing) {
+                this._testingStream.Stop();
+            }
+
+            this._testingStream = FurballGame.AudioEngine.CreateStream(ContentManager.LoadRawAsset("lulkanto.mp3"));
+
+            LowPassFilterAudioEffect effect = FurballGame.AudioEngine.CreateLowPassFilterEffect(this._testingStream);
+
+            effect.Apply();
+
+            effect.FrequencyCutoff = 200;
+
+            this._testingStream.Volume = 0.4;
+            this._testingStream.Play();
         }
+        );
 
-        this._testingStream = FurballGame.AudioEngine.CreateStream(ContentManager.LoadRawAsset("lulkanto.mp3"));
-
-        LowPassFilterAudioEffect effect = FurballGame.AudioEngine.CreateLowPassFilterEffect(this._testingStream);
-
-        effect.Apply();
-
-        effect.FrequencyCutoff = 200;
-
-        this._testingStream.Volume = 0.4;
-        this._testingStream.Play();
     }
 
     private void HighPassPlayOnClick(object sender, MouseButtonEventArgs mouseButtonEventArgs) {
-        if (this._testingStream?.PlaybackState == PlaybackState.Playing)
-            this._testingStream.Stop();
+        FurballGame.GameTimeScheduler.ScheduleMethod(
+        _ => {
+            if (this._testingStream?.PlaybackState == PlaybackState.Playing)
+                this._testingStream.Stop();
 
-        this._testingStream = FurballGame.AudioEngine.CreateStream(ContentManager.LoadRawAsset("lulkanto.mp3"));
+            this._testingStream = FurballGame.AudioEngine.CreateStream(ContentManager.LoadRawAsset("lulkanto.mp3"));
 
-        HighPassFilterAudioEffect effect = FurballGame.AudioEngine.CreateHighPassFilterEffect(this._testingStream);
+            HighPassFilterAudioEffect effect = FurballGame.AudioEngine.CreateHighPassFilterEffect(this._testingStream);
 
-        effect.Apply();
+            effect.Apply();
 
-        this._testingStream.Volume = 0.4;
-        this._testingStream.Play();
+            this._testingStream.Volume = 0.4;
+            this._testingStream.Play();
+        }
+        );
+
     }
 
     private void PlayButtonOnClick(object sender, MouseButtonEventArgs mouseButtonEventArgs) {
-        if (this._testingStream?.PlaybackState == PlaybackState.Playing) {
-            this._testingStream.Stop();
+        FurballGame.GameTimeScheduler.ScheduleMethod(
+        _ => {
+            if (this._testingStream?.PlaybackState == PlaybackState.Playing) {
+                this._testingStream.Stop();
+            }
+
+            this._testingStream        = FurballGame.AudioEngine.CreateStream(ContentManager.LoadRawAsset("lulkanto.mp3"));
+            this._testingStream.Volume = 0.4;
+            this._testingStream.Play();
+
+            if (this._rawWaveform != null)
+                this._rawWaveform.TimeSource = new AudioStreamTimeSource(this._testingStream);
         }
+        );
 
-        this._testingStream        = FurballGame.AudioEngine.CreateStream(ContentManager.LoadRawAsset("lulkanto.mp3"));
-        this._testingStream.Volume = 0.4;
-        this._testingStream.Play();
-
-        if(this._rawWaveform != null)
-            this._rawWaveform.TimeSource = new AudioStreamTimeSource(this._testingStream);
     }
 }

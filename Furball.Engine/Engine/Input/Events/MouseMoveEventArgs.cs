@@ -1,7 +1,7 @@
 using System;
 using System.Numerics;
 
-namespace Furball.Engine.Engine.Input.Events; 
+namespace Furball.Engine.Engine.Input.Events;
 
 public class MouseMoveEventArgs : EventArgs {
     public Vector2      Position;

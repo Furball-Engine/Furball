@@ -1,4 +1,5 @@
 using System.Numerics;
+using Eto.Forms;
 using FontStashSharp;
 using Furball.Engine.Engine.Helpers;
 using Furball.Engine.Engine.Input.Events;
@@ -48,8 +49,10 @@ public class DrawableColorPicker : CompositeDrawable {
 
     private void OnColorDisplayClick(object sender, MouseButtonEventArgs mouseButtonEventArgs) {
         EtoHelper.OpenColorPicker(
-        (_, color) => {
-            this.Color.Value = color;
+        (_, args) => {
+            (DialogResult result, Color color) = args;
+            
+            this.Color.Value                   = color;
         },
         this.Color.Value
         );

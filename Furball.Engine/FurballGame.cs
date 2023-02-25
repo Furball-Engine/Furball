@@ -22,10 +22,10 @@ using Furball.Engine.Engine.Graphics.Drawables.Tweens;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes;
 using Furball.Engine.Engine.Helpers;
 using Furball.Engine.Engine.Helpers.Logger;
-using Furball.Engine.Engine.Input;
-using Furball.Engine.Engine.Input.InputMethods;
 using Furball.Engine.Engine.Localization;
 using Furball.Engine.Engine.Localization.Languages;
+using Furball.Engine.Engine.Input;
+using Furball.Engine.Engine.Input.InputMethods;
 using Furball.Engine.Engine.Platform;
 using Furball.Engine.Engine.Timing;
 using Furball.Engine.Engine.Transitions;
@@ -71,7 +71,7 @@ public class FurballGame : Game {
     public const int DEFAULT_WINDOW_WIDTH  = 1280;
     public const int DEFAULT_WINDOW_HEIGHT = 720;
 
-    public static string AssemblyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? throw new Exception("shits fucked man");
+    public static string AssemblyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? Environment.CurrentDirectory;
     public static string DataFolder   = AssemblyPath;
     public static string LocalizationFolder => $"{AssemblyPath}/Localization";
 
@@ -155,21 +155,18 @@ public class FurballGame : Game {
         _stopwatch.Start();
 
         InputManager = new InputManager();
+        InputManager.Start();
         
         bool usingEvDevInput = false;
 
-        //If we are on linux and we are the root user, we can use the EvDev input instead, which can detect multiple keyboards separately
+        // If we are on linux and we are the root user, we can use the EvDev input instead, which can detect multiple keyboards separately
         if (RuntimeInfo.CurrentPlatform() == OSPlatform.Linux && UnixEnvironment.IsRoot()) {
             usingEvDevInput = true;
-            InputManager.RegisterInputMethod(new EvDevKeyboardInputMethod());
+            InputManager.AddInputMethod(new EvDevInputMethod());
         }
-
-        if (this.WindowManager is SilkWindowManager silkWindowManager) {
-            if(!usingEvDevInput)
-                InputManager.RegisterInputMethod(InputManager.SilkWindowingKeyboardInputMethod = new SilkWindowingKeyboardInputMethod(silkWindowManager.InputContext));
         
-            InputManager.RegisterInputMethod(InputManager.SilkWindowingMouseInputMethod = new SilkWindowingMouseInputMethod(silkWindowManager.InputContext));
-            InputManager.SilkWindowingMouseInputMethod.SetRawInputStatus(FurballConfig.Instance.RawMouseInput);
+        if (this.WindowManager is SilkWindowManager silkWindowManager) {
+            InputManager.AddInputMethod(new SilkInputMethod(usingEvDevInput));
         }
 
         Profiler.StartProfile("init_audio_engine");
@@ -276,8 +273,8 @@ public class FurballGame : Game {
         MonoModCheck();
 
         if (RuntimeInfo.IsDebug()) {
-            this.CreateTextureDebugger();
-            this.CreateSceneViewer();
+            // this.CreateTextureDebugger();
+            // this.CreateSceneViewer();
         }
 
         WindowManager.FramebufferResize += this.OnWindowResize;
@@ -327,12 +324,12 @@ public class FurballGame : Game {
     }
     
     private void CreateTextureDebugger() {
-        ScrollableContainer scrollable = new(new Vector2(400, 500));
+        ScrollableContainer scrollable = new ScrollableContainer(new Vector2(400, 500));
 
         scrollable.ScrollSpeed       *= 2;
         scrollable.InfiniteScrolling =  true;
 
-        DebugTextureDisplayDrawable debug = new();
+        DebugTextureDisplayDrawable debug = new DebugTextureDisplayDrawable();
 
         scrollable.Add(debug);
 
@@ -381,6 +378,8 @@ public class FurballGame : Game {
     }
 
     public void Run(Backend backend = Backend.None) {
+        if(RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            Windows.AttachToExistingConsole();
         base.Run(backend);
     }
         
@@ -391,6 +390,8 @@ public class FurballGame : Game {
         catch { /* */ }
 
         this.UnregisterKeybinds();
+        
+        InputManager.End();
         
         GameTimeScheduler.Dispose(Time);
         EtoHelper.Dispose();
@@ -420,12 +421,12 @@ public class FurballGame : Game {
     private Keybind _toggleConsole;
     private Keybind _walkCurrentScreen;
     public virtual void RegisterKeybinds() {
-        this._toggleDebugOverlay = new Keybind(EngineDebugKeybinds.ToggleDebugOverlay, "Toggle Debug Overlay", Key.F11,
+        this._toggleDebugOverlay = new Keybind(EngineDebugKeybinds.ToggleDebugOverlay, "Toggle Debug Overlay", Key.F11, Array.Empty<Key>(),
                                                _ => {
                                                    this._drawDebugOverlay = !this._drawDebugOverlay;
                                                }
         );
-        this._toggleInputOverlay = new Keybind(EngineDebugKeybinds.ToggleInputOverlay, "Toggle Input Overlay", Key.F10,
+        this._toggleInputOverlay = new Keybind(EngineDebugKeybinds.ToggleInputOverlay, "Toggle Input Overlay", Key.F10, Array.Empty<Key>(),
                                                _ => {
                                                    DrawInputOverlay = !DrawInputOverlay;
                                                }
@@ -433,7 +434,7 @@ public class FurballGame : Game {
         this._displayDebugTextureViewer = new Keybind(
         EngineDebugKeybinds.DisplayDebugTextureViewer,
         "Display Debug Texture Viewer",
-        Key.F9,
+        Key.F9, Array.Empty<Key>(),
         _ => {
             if (!this._textureDisplayFormAdded) {
                 DrawableManager.Add(this._textureDisplayForm);
@@ -444,7 +445,7 @@ public class FurballGame : Game {
         this._displaySceneDebugger = new Keybind(
         EngineDebugKeybinds.DisplaySceneDebugger,
         "Display Debug Texture Viewer",
-        Key.F7,
+        Key.F7, Array.Empty<Key>(),
         _ => {
             if (!this._sceneDebuggerFormAdded) {
                 DrawableManager.Add(this._sceneDebuggerForm);
@@ -455,12 +456,12 @@ public class FurballGame : Game {
         this._toggleConsole = new Keybind(
         EngineDebugKeybinds.ToggleConsole,
         "Toggle Console",
-        Key.F12,
+        Key.F12, Array.Empty<Key>(),
         _ => {
             ImGuiConsole.Visible = !ImGuiConsole.Visible;
         }
         );
-        this._walkCurrentScreen = new Keybind(EngineDebugKeybinds.WalkAndPrintCurrentScreen, "Walk and print current screen", Key.F8,
+        this._walkCurrentScreen = new Keybind(EngineDebugKeybinds.WalkAndPrintCurrentScreen, "Walk and print current screen", Key.F8, Array.Empty<Key>(),
                                               _ => {
                                                   if (this.RunningScreen is not null) {
                                                       DrawableTreeWalker.PrintWalkedTree(this.RunningScreen.Manager);
@@ -611,7 +612,7 @@ public class FurballGame : Game {
         FurballConfig.Instance.Values["screen_height"] = new Value.Number(newSize.Y);
     }
 
-    private Stopwatch _updateWatch = new ();
+    private Stopwatch _updateWatch = Stopwatch.StartNew();
     public double    LastUpdateTime { get; private set; } = 0.0;
 
     // ReSharper disable once InconsistentNaming
@@ -620,12 +621,11 @@ public class FurballGame : Game {
     private bool _loadingScreenChangeOffQueued = false;
     protected override void Update(double deltaTime) {
         Time = _stopwatch.Elapsed.TotalMilliseconds;
-        
+
         if (RuntimeInfo.IsDebug()) {
-            this._updateWatch.Reset();
             this._updateWatch.Start();
         }
-
+        
         if (this._loadingScreen is {
                 LoadingComplete: false
             } && !this._loadingScreen.BackgroundThread.IsAlive) {
@@ -662,8 +662,8 @@ public class FurballGame : Game {
         GameTimeScheduler.Update(Time);
 
         if (RuntimeInfo.IsDebug()) {
-            this._updateWatch.Stop();
             this.LastUpdateTime = this._updateWatch.Elapsed.TotalMilliseconds;
+            this._updateWatch.Reset();
         }
     }
 
@@ -689,19 +689,19 @@ public class FurballGame : Game {
 
         DrawableBatch.End();
         
-        //We want to draw software cursors after everything else in the game, so we do it in here
+        // We want to draw software cursors after everything else in the game, so we do it in here
         #region Draw software cursors
-
+        
         List<FurballMouse> mice = InputManager.Mice;
-
+        
         bool needsRecalc = false;
         foreach (FurballMouse furballMouse in mice) {
             if (furballMouse.LastKnownSoftwareCursorPosition != furballMouse.Position)
                 needsRecalc = true;
-
+        
             furballMouse.LastKnownSoftwareCursorPosition = furballMouse.Position;
         }
-
+        
         // ReSharper disable once CompareOfFloatsByEqualityOperator
         if (this._cursorVerticalRatioCache != VerticalRatio)
             needsRecalc = true;
@@ -710,30 +710,30 @@ public class FurballGame : Game {
         
         if(needsRecalc) {
             CursorDrawableBatch.Begin();
-
+        
             unsafe {
                 foreach (FurballMouse mouse in mice) {
                     if (mouse.SoftwareCursor) {
                         //3 vertices for the head, and 4 for the tail
                         //3 indices for the head, 6 for the tail (2 tris)
                         MappedData map = CursorDrawableBatch.Reserve(3 + 4, 3 + 6, WhitePixel);
-
+        
                         const float mouseWidth  = 15;
                         const float mouseHeight = 25;
                         const float tailWidth   = mouseWidth / 3f;
-
+        
                         float mouseScale = (float)(1 / VerticalRatio * FurballConfig.Instance.SoftwareCursorScale);
-
+        
                         map.VertexPtr[0].Position = Vector2.Zero * mouseScale + mouse.Position;
                         map.VertexPtr[1].Position = new Vector2(0,          mouseHeight) * mouseScale + mouse.Position;
                         map.VertexPtr[2].Position = new Vector2(mouseWidth, mouseHeight) * mouseScale + mouse.Position;
-
+        
                         const float tailLeft         = mouseWidth / 2f - tailWidth / 2f;
                         const float tailRight        = mouseWidth / 2f + tailWidth / 2f;
                         const float tailLength       = 10f;
                         const float tailBottom       = mouseHeight + tailLength;
                         const float tailBottomOffset = 2.5f;
-
+        
                         //Top left corner of the tail
                         map.VertexPtr[3].Position = new Vector2(tailLeft, mouseHeight) * mouseScale + mouse.Position;
                         //Top right corner of the tail
@@ -764,11 +764,11 @@ public class FurballGame : Game {
                     }
                 }
             }
-
+        
             CursorDrawableBatch.SoftEnd();
         }
         CursorDrawableBatch.ManualDraw();
-
+        
         #endregion
 
         DrawCounts.LastVertexCount = Renderer.VertexCount;

@@ -16,7 +16,7 @@ public static class Profiler {
     public static void EndProfileAndPrint(string name) {
         double time = EndProfile(name);
 
-        Kettu.Logger.Log($"Profile {name} took {time}ms!", LoggerLevelProfiler.Instance);
+        System.Diagnostics.Debug.WriteLine($"Profile {name} took {time}ms!");
     }
 
     public static double EndProfile(string name) => ((double)Stopwatch.GetTimestamp() / Stopwatch.Frequency - Profiles[name]) * 1000d;

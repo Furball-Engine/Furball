@@ -38,6 +38,10 @@ public class CatmullTest : TestScreen {
             OriginType = OriginType.Center,
             Clickable  = true,
         };
+        a1.RegisterForInput();
+        a2.RegisterForInput();
+        a3.RegisterForInput();
+        a4.RegisterForInput();
 
         a1.OnDrag += delegate(object _, MouseDragEventArgs e) {
             this._points[0] = e.Position;
@@ -70,10 +74,16 @@ public class CatmullTest : TestScreen {
     }
 
     private void UpdatePath() {
+        bool taken = false;
+        this.Manager.DrawablesLock.Enter(ref taken);
+        
         this.Manager.Remove(this._pathVisualization);
         this._pathVisualization = new CurveDrawable(this._points[0], this._points[1], this._points[2], this._points[3]) {
             Quality = 50, Thickness = 5f, Type = CurveType.CatmullRom
         };
         this.Manager.Add(this._pathVisualization);
+        
+        if(taken)
+            this.Manager.DrawablesLock.Exit();
     }
 }

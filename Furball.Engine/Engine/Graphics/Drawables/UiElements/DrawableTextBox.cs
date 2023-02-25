@@ -104,6 +104,7 @@ public partial class DrawableTextBox : CompositeDrawable, ICharInputHandler {
 
         this.RegisterHandlers();
         this.RecalcOutline();
+        this.RegisterForInput();
     }
         
     private void UpdateCaretPosition(bool instant) {
@@ -150,13 +151,13 @@ public partial class DrawableTextBox : CompositeDrawable, ICharInputHandler {
             this.SelectedRange.Value = new Range(0, 0);
             
         switch(e.Key) {
-            case Key.V when FurballGame.InputManager.HeldKeys.Contains(Key.ControlLeft): {
-                string clipboard = FurballGame.InputManager.Clipboard;
-
+            case Key.V when FurballGame.InputManager.ControlHeld: {
+                string clipboard = e.Keyboard.GetClipboard();
+            
                 this.Text                = this.Text.Insert(this.SelectedRange.Value.End, clipboard);
                 this.SelectedRange.Value = new Range(this.SelectedRange.Value.End + clipboard.Length, this.SelectedRange.Value.End + clipboard.Length);
                 this.UpdateCaretPosition(false);
-  
+            
                 this.OnLetterTyped?.Invoke(this, 'v');
                 this.RecalcOutline();
                 break;
@@ -175,12 +176,12 @@ public partial class DrawableTextBox : CompositeDrawable, ICharInputHandler {
                 break;
             }
             case Key.Enter: {
-                if (this.LineCount == 1 || (this.LineCount > 1 && FurballGame.InputManager.HeldKeys.Contains(Key.ShiftLeft))) {
+                if (this.LineCount == 1 || (this.LineCount > 1 && e.Keyboard.IsKeyPressed(Key.ShiftLeft))) {
                     this.OnCommit?.Invoke(this, this.Text);
-
+                
                     if (this.DeselectOnCommit)
                         FurballGame.InputManager.ReleaseTextFocus(this);
-
+                
                     if (this.ClearOnCommit) {
                         this.Text = string.Empty;
                         this.RecalcOutline();

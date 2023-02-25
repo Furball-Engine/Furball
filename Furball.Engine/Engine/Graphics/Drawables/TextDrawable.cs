@@ -6,7 +6,6 @@ using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Furball.Engine.Engine.Helpers;
 using Furball.Engine.Engine.Helpers.Logger;
 using Furball.Vixie;
-using Furball.Vixie.Backends.Shared.Renderers;
 using Kettu;
 using Silk.NET.Maths;
 

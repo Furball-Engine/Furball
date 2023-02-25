@@ -1,53 +1,102 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Diagnostics;
 using System.Numerics;
-using Furball.Engine.Engine.DevConsole;
+using System.Threading;
 using Furball.Engine.Engine.Graphics.Drawables;
-using Furball.Engine.Engine.Graphics.Drawables.Managers;
-using Furball.Engine.Engine.Helpers;
 using Furball.Engine.Engine.Helpers.Logger;
 using Furball.Engine.Engine.Input.Events;
 using Furball.Engine.Engine.Input.InputMethods;
+using Furball.Engine.Engine.Timing;
 using JetBrains.Annotations;
 using Kettu;
+using Silk.NET.Core;
 using Silk.NET.Input;
 
 namespace Furball.Engine.Engine.Input;
 
 public class InputManager {
-    public SilkWindowingMouseInputMethod    SilkWindowingMouseInputMethod;
-    public SilkWindowingKeyboardInputMethod SilkWindowingKeyboardInputMethod;
+    private Thread _thread;
+
+    private bool _run = true;
 
     /// <summary>
     /// Called when a key is pressed
     /// </summary>
     public event EventHandler<KeyEventArgs> OnKeyDown;
+    internal void InvokeOnKeyDown(KeyEventArgs args) => this.OnKeyDown?.Invoke(this, args);
     /// <summary>
     /// Called when a key is released
     /// </summary>
     public event EventHandler<KeyEventArgs> OnKeyUp;
+    internal void InvokeOnKeyUp(KeyEventArgs args) => this.OnKeyUp?.Invoke(this, args);
     /// <summary>
     /// Called when a mouse button is pressed
     /// </summary>
     public event EventHandler<MouseButtonEventArgs> OnMouseDown;
+    internal void InvokeOnMouseDown(MouseButtonEventArgs args) => this.OnMouseDown?.Invoke(this, args);
     /// <summary>
     /// Called when a mouse button is released
     /// </summary>
     public event EventHandler<MouseButtonEventArgs> OnMouseUp;
+    internal void InvokeOnMouseUp(MouseButtonEventArgs args) => this.OnMouseUp?.Invoke(this, args);
     /// <summary>
     /// Called when a cursor moves
     /// </summary>
     public event EventHandler<MouseMoveEventArgs> OnMouseMove;
+    internal void InvokeOnMouseMove(MouseMoveEventArgs args) => this.OnMouseMove?.Invoke(this, args);
     /// <summary>
-    /// Called when a cursor moves
+    /// Called when a cursor drags
     /// </summary>
     public event EventHandler<MouseDragEventArgs> OnMouseDrag;
+    internal void InvokeOnMouseDrag(MouseDragEventArgs args) => this.OnMouseDrag?.Invoke(this, args);
+    /// <summary>
+    /// Called when a cursor starts a drag
+    /// </summary>
+    public event EventHandler<MouseDragEventArgs> OnMouseDragStart;
+    internal void InvokeOnMouseDragStart(MouseDragEventArgs args) => this.OnMouseDragStart?.Invoke(this, args);
+    /// <summary>
+    /// Called when a cursor ends a drag
+    /// </summary>
+    public event EventHandler<MouseDragEventArgs> OnMouseDragEnd;
+    internal void InvokeOnMouseDragEnd(MouseDragEventArgs args) => this.OnMouseDragEnd?.Invoke(this, args);
     /// <summary>
     /// Called when the cursor scrolls
     /// </summary>
     public event EventHandler<MouseScrollEventArgs> OnMouseScroll;
+    internal void InvokeOnMouseScroll(MouseScrollEventArgs args) => this.OnMouseScroll?.Invoke(this, args);
+    /// <summary>
+    /// Called when the user types a character
+    /// </summary>
     public event EventHandler<CharInputEvent> OnCharInput;
+    internal void InvokeOnCharInput(CharInputEvent args) => this.OnCharInput?.Invoke(this, args);
+    
+    public List<FurballKeyboard> Keyboards = new List<FurballKeyboard>();
+    public List<FurballMouse>    Mice      = new List<FurballMouse>();
+
+    /// <summary>
+    /// How many control keys are being pressed down
+    /// </summary>
+    internal int ControlCount = 0;
+
+    /// <summary>
+    /// Whether or not the control key is being held
+    /// </summary>
+    public bool ControlHeld => this.ControlCount != 0;
+
+    /// <summary>
+    /// How many shift keys are being pressed down
+    /// </summary>
+    internal int ShiftCount = 0;
+
+    /// <summary>
+    /// Whether or not the shift key is being held
+    /// </summary>
+    public bool ShiftHeld => this.ShiftCount != 0;
+
+    public InputManager() {
+        this._thread = new(this.Run);
+    }
 
     [CanBeNull]
     public ICharInputHandler CharInputHandler => this._charInputHandlers.Count == 0 ? null : this._charInputHandlers.Last.Value;
@@ -63,8 +112,8 @@ public class InputManager {
         bool wasEmpty = this._charInputHandlers.Count == 0;
 
         //If the current handler should not be saved in the stack, defocus it and drop it from the stack
-        if (!CharInputHandler?.SaveInStack ?? false) {
-            Logger.Log($"{CharInputHandler.GetType().Name} will not be saved on the stack!", LoggerLevelInput.InstanceInfo);
+        if (!this.CharInputHandler?.SaveInStack ?? false) {
+            Logger.Log($"{this.CharInputHandler.GetType().Name} will not be saved on the stack!", LoggerLevelInput.InstanceInfo);
             this.CharInputHandler.HandleDefocus();
             this._charInputHandlers.RemoveLast();
         } else if (this.CharInputHandler is {
@@ -81,8 +130,9 @@ public class InputManager {
 
         // Tell all keyboard to begin input if we started with nothing in the stack
         // this is to prevent us beginning the input multiple times, which might not behave well on all platform
-        if (wasEmpty)
+        if (wasEmpty) {
             this.Keyboards.ForEach(x => x.BeginInput());
+        }
 
         Logger.Log($"{handler.GetType().Name} has taken text focus!", LoggerLevelInput.InstanceInfo);
     }
@@ -118,443 +168,278 @@ public class InputManager {
         this.ReleaseTextFocus(this.CharInputHandler);
     }
 
-    /// <summary>
-    /// The positions of all cursors and their states
-    /// </summary>
-    public List<FurballMouse> CursorStates {
-        get {
-            List<FurballMouse> temp = new();
+    public void Start() {
+        this._thread.Start();
+    }
 
-            foreach (InputMethod method in this._registeredInputMethods) {
-                temp.AddRange(method.Mice);
+    public void End() {
+        this._run = false;
+        this._thread.Join(1000);
+    }
+
+    public void Update() {
+        
+    }
+
+    public int InputObjectIndex = 0;
+
+    public InputObject CreateInputObject(Drawable drawable) {
+        int index = this.InputObjectIndex;
+        unchecked {
+            this.InputObjectIndex++;
+        }
+
+        InputObject inputObject = new InputObject(index);
+
+        //Set the position of the input object
+        Vector2 realPos = drawable.RealPosition;
+        inputObject.Position.X = realPos.X;
+        inputObject.Position.Y = realPos.Y;
+
+        //Set the size of the input object
+        Vector2 realSize = drawable.RealSize;
+        inputObject.Size.X = realSize.X;
+        inputObject.Size.Y = realSize.Y;
+
+        inputObject.Drawable = drawable;
+        inputObject.Depth    = drawable.Depth;
+
+        return inputObject;
+    }
+
+    public void AddInputObject(InputObject inputObject) {
+        bool taken = false;
+        //If we are not on the input thread, lock the input objects
+        if (this._thread != Thread.CurrentThread)
+            this.InputObjectsLock.Enter(ref taken);
+
+        this._inputObjects.Add(inputObject);
+        this._inputObjects.Sort(DrawableInputComparer.Instance);
+
+        if (taken)
+            this.InputObjectsLock.Exit();
+    }
+
+    public void RemoveInputObject(InputObject inputObject) {
+        bool taken = false;
+        this.InputObjectsLock.Enter(ref taken);
+
+        this._inputObjects.Remove(inputObject);
+
+        if (taken)
+            this.InputObjectsLock.Exit();
+    }
+
+    private readonly List<InputObject> _inputObjects     = new List<InputObject>();
+    private          bool              _sortInputObjects = false;
+
+    public BreakneckLock InputObjectsLock = new BreakneckLock();
+
+    readonly FurballMouse[] _isClickedTemp = new FurballMouse[(int)(MouseButton.Button12 + 1)];
+    private void CheckInputObjects() {
+        bool taken = false;
+        this.InputObjectsLock.Enter(ref taken);
+
+        if (this._sortInputObjects) {
+            this._inputObjects.Sort(DrawableInputComparer.Instance);
+            this._sortInputObjects = false;
+        }
+
+        bool blocked = false;
+        for (int inputIndex = 0; inputIndex < this._inputObjects.Count; inputIndex++) {
+            InputObject inputObject = this._inputObjects[inputIndex];
+            // ReSharper disable once CompareOfFloatsByEqualityOperator
+            if (inputObject.Depth != inputObject.LastDepth) {
+                this._sortInputObjects = true;
+                inputObject.LastDepth  = inputObject.Depth;
             }
 
-            return temp;
-        }
-    }
+            bool hovered = false;
+            for (int i = 0; i < this.Mice.Count; i++) {
+                FurballMouse mouse = this.Mice[i];
+                if (inputObject.Contains(mouse.Position)) {
+                    if (blocked)
+                        break;
 
-    public InputManager() {
-        this.OnMouseDown += DrawableOnMouseDown;
-        this.OnMouseUp   += DrawableOnMouseUp;
-        this.OnMouseDrag += DrawableOnMouseDrag;
-        this.OnMouseMove += DrawableOnMouseMove;
+                    hovered = true;
 
-        this.OnKeyDown += KeybindOnKeyDown;
-    }
-
-    private void KeybindOnKeyDown(object sender, KeyEventArgs keyEventArgs) {
-        foreach (Keybind registeredKeybind in this.RegisteredKeybinds) {
-            if (registeredKeybind.Enabled && registeredKeybind.Key == keyEventArgs.Key)
-                registeredKeybind.OnPressed.Invoke(keyEventArgs.Keyboard);
-        }
-    }
-
-    /// <summary>
-    ///     Recurses composite drawables and adds their drawables to the list
-    /// </summary>
-    /// <param name="drawablesToAddTo">A pre sorted list of drawables</param>
-    /// <param name="compositeDrawableToIterate">The composite drawable to iterate and add</param>
-    /// <param name="indexToAddAt">The index to add them to</param>
-    public static int RecurseCompositeDrawables(ref List<Drawable> drawablesToAddTo, CompositeDrawable compositeDrawableToIterate, int indexToAddAt) {
-        int added = 0;
-
-        for (int i = compositeDrawableToIterate.Children!.Count - 1; i >= 0; i--) {
-            Drawable drawable = compositeDrawableToIterate.Children[i];
-
-            if (drawable is CompositeDrawable compositeDrawable) {
-                if (!compositeDrawable.InvisibleToInput) {
-                    drawablesToAddTo.Insert(indexToAddAt, compositeDrawable);
-                    indexToAddAt++;
-                    added++;
-                }
-                added += RecurseCompositeDrawables(ref drawablesToAddTo, compositeDrawable, indexToAddAt);
-            } else {
-                if (compositeDrawableToIterate.ChildrenInvisibleToInput)
-                    continue;
-
-                drawablesToAddTo.Insert(indexToAddAt, drawable);
-                indexToAddAt++;
-                added++;
-            }
-        }
-
-        return added;
-    }
-
-    private static readonly List<Drawable> KnownHovers = new();
-    private static void DrawableOnMouseMove(object sender, MouseMoveEventArgs e) {
-        List<Drawable> drawables = new();
-        DrawableManager.DrawableManagers.Where(x => x.Visible).ToList().ForEach(x => drawables.AddRange(x.Drawables.Where(y => y.Hoverable)));
-
-        drawables.Sort(DrawableInputComparer.Instance);
-
-        List<Drawable> drawablesTempIterate = new(drawables);
-
-        int fakei = 0;
-
-        for (int i = 0; i < drawablesTempIterate.Count; i++) {
-            Drawable drawable = drawablesTempIterate[i];
-            if (drawable is CompositeDrawable compositeDrawable)
-                fakei += RecurseCompositeDrawables(ref drawables, compositeDrawable, fakei);
-
-            fakei++;
-        }
-
-        drawables.RemoveAll(
-        x => x is CompositeDrawable {
-            InvisibleToInput: true
-        }
-        );
-
-        bool doHover    = true;
-        bool tooltipSet = false;
-        for (int i = 0; i < drawables.Count; i++) {
-            Drawable drawable = drawables[i];
-
-            if (drawable.RealContains(e.Position)) {
-                if (drawable.IsHovered && drawable.CoverHovers) {
-                    // for (int i2 = 0; i2 < _knownHovers.Count; i2++) {
-                    //     ManagedDrawable managedDrawable = _knownHovers[i2];
-                    //     // if (managedDrawable != drawable)
-                    //         // managedDrawable.Hover(false);
-                    // }
-                    // _knownHovers.RemoveAll(x => x != drawable);
-                    doHover = false;
-                }
-
-                if (!drawable.IsHovered && drawable.Hoverable) {
-                    if (doHover) {
-                        KnownHovers.Remove(drawable);
-
-                        KnownHovers.ForEach(x => x.Hover(false));
-                        KnownHovers.Clear();
-
-                        KnownHovers.Add(drawable);
-                        drawable.Hover(true);
+                    //Iterate through all buttons on the mouse
+                    for (int j = 0; j < mouse.PressedButtons.Length; j++) {
+                        bool pressed = mouse.PressedButtons[j];
+                        //If the mouse button is being pressed over the input object, mark it as such
+                        if (pressed) {
+                            this._isClickedTemp[j] = mouse;
+                        }
                     }
 
-                    if (drawable.CoverHovers) {
-                        // for (int i2 = 0; i2 < _knownHovers.Count; i2++) {
-                        //     ManagedDrawable managedDrawable = _knownHovers[i2];
-                        //     // if (managedDrawable != drawable)
-                        //         // managedDrawable.Hover(false);
-                        // }
-                        // _knownHovers.RemoveAll(x => x != drawable);
-                        doHover = false;
+                    blocked = true;
+                }
+            }
+
+            //Check for new hover
+            if (!inputObject.LastHovered && hovered) {
+                inputObject.Drawable.Hover(true);
+            }
+
+            //Check for new unhover
+            if (inputObject.LastHovered && !hovered) {
+                inputObject.Drawable.Hover(false);
+            }
+
+            inputObject.LastHovered = hovered;
+
+            for (int i = 0; i < this._isClickedTemp.Length; i++) {
+                FurballMouse.DragState dragState = inputObject.DragStates[i];
+                FurballMouse           mouse     = this._isClickedTemp[i];
+
+                //If they were clicked last input frame and are no longer clicked
+                if (inputObject.LastClicked[i] && mouse == null) {
+                    inputObject.Drawable.Click(false, new MouseButtonEventArgs((MouseButton)i, this._isClickedTemp[i]));
+                }
+
+                //If the user is dragging and they let go of the mouse button
+                if (dragState.Mouse != null && !dragState.Mouse.PressedButtons[i] && dragState.Active) {
+                    //Stop dragging
+                    dragState.Active = false;
+                    inputObject.Drawable.DragState(
+                    false,
+                    new MouseDragEventArgs(dragState.StartPosition, dragState.LastPosition, dragState.Mouse.Position, (MouseButton)i, dragState.Mouse)
+                    );
+                    dragState.Mouse.IsDraggingDrawable = false;
+                    dragState.Mouse                    = null;
+                }
+
+                //If they were not clicked last input frame and are now clicked, and the user just started clicking that button
+                if (!inputObject.LastClicked[i] && mouse != null && mouse.JustPressed[i]) {
+                    //If its just clicked, then set the start and last position
+                    dragState.StartPosition = mouse.Position;
+                    dragState.LastPosition  = mouse.Position;
+                    dragState.Mouse         = mouse;
+
+                    inputObject.Drawable.Click(true, new MouseButtonEventArgs((MouseButton)i, this._isClickedTemp[i]));
+                }
+
+                //If the user is dragging, and the mouse has moved
+                if (dragState.Mouse != null && dragState.LastPosition != dragState.Mouse.Position) {
+                    if (!dragState.Active) {
+                        //If the mouse is null, that means the mouse button was released, so we can't start dragging, nor continue dragging
+                        if (mouse == null || mouse.IsDraggingDrawable)
+                            goto no_mouse_skip;
+
+                        dragState.Active = true;
+                        inputObject.Drawable.DragState(
+                        true,
+                        new MouseDragEventArgs(dragState.StartPosition, dragState.LastPosition, dragState.Mouse.Position, (MouseButton)i, dragState.Mouse)
+                        );
+                        mouse.IsDraggingDrawable = true;
                     }
+
+                    inputObject.Drawable.Drag(
+                    new MouseDragEventArgs(dragState.StartPosition, dragState.LastPosition, dragState.Mouse.Position, (MouseButton)i, dragState.Mouse)
+                    );
+                    dragState.LastPosition = dragState.Mouse.Position;
                 }
-                if (drawable.Hoverable && !tooltipSet/* && doHover */) {
-                    if (drawable.ToolTip != string.Empty && ConVars.ToolTips) {
-                        FurballGame.TooltipDrawable.SetTooltip(drawable.ToolTip);
-                        FurballGame.TooltipDrawable.Position = e.Position + new Vector2(10f);
-                        FurballGame.TooltipDrawable.Visible = true;
+            no_mouse_skip:
 
-                        tooltipSet = true;
+                inputObject.LastClicked[i] = mouse != null;
 
-                        if (FurballGame.TooltipDrawable.Position.Y + FurballGame.TooltipDrawable.Size.Y < FurballGame.DEFAULT_WINDOW_HEIGHT)
-                            FurballGame.TooltipDrawable.OriginType =
-                                FurballGame.TooltipDrawable.Position.X + FurballGame.TooltipDrawable.Size.X > FurballGame.WindowWidth
-                                    ? OriginType.TopRight
-                                    : OriginType.TopLeft;
-                        else
-                            FurballGame.TooltipDrawable.OriginType =
-                                FurballGame.TooltipDrawable.Position.X + FurballGame.TooltipDrawable.Size.X > FurballGame.WindowWidth
-                                    ? OriginType.BottomRight
-                                    : OriginType.BottomLeft;
+                this._isClickedTemp[i] = null;
+            }
+        }
 
-                    } else {
-                        FurballGame.TooltipDrawable.Visible = false;
-                    }
+        if (taken)
+            this.InputObjectsLock.Exit();
+    }
+
+    internal int    CountedInputFrames = 0;
+    internal double LastInputFrameTime = 0;
+
+    public readonly List<InputMethod> InputMethods = new List<InputMethod>();
+    
+    public void AddInputMethod(InputMethod inputMethod) {
+        this.InputMethods.Add(inputMethod);
+    }
+    
+    public void RemoveInputMethod(InputMethod inputMethod) {
+        inputMethod.Remove = true;
+    }
+    
+    private void InputMethodKeyboardAdded(object sender, FurballKeyboard e) {
+        this.Keyboards.Add(e);
+    }
+    
+    private void InputMethodKeyboardRemoved(object sender, FurballKeyboard e) {
+        this.Keyboards.Remove(e);
+    }
+    
+    private void InputMethodMouseAdded(object sender, FurballMouse e) {
+        this.Mice.Add(e);
+    }
+    
+    private void InputMethodMouseRemoved(object sender, FurballMouse e) {
+        this.Mice.Remove(e);
+    }
+    
+    private void Run() {
+        using HighResolutionClock clock = new HighResolutionClock(TimeSpan.FromMilliseconds(1));
+
+        Stopwatch stopwatch = Stopwatch.StartNew();
+
+        while (this._run) {
+            // Console.WriteLine($"Input frame clock run");
+            double start = stopwatch.Elapsed.TotalMilliseconds;
+
+            for (int i = 0; i < this.InputMethods.Count; i++) {
+                InputMethod inputMethod = this.InputMethods[i];
+                //If the input method is not initialized, do so and register our events
+                if (!inputMethod.IsInitialized) {
+                    inputMethod.IsInitialized = true;
+
+                    inputMethod.KeyboardAdded   += this.InputMethodKeyboardAdded;
+                    inputMethod.KeyboardRemoved += this.InputMethodKeyboardRemoved;
+                    inputMethod.MouseAdded      += this.InputMethodMouseAdded;
+                    inputMethod.MouseRemoved    += this.InputMethodMouseRemoved;
+
+                    inputMethod.Initialize(this);
+                } 
+                //If the input method is scheduled to be removed, do so, and unregister our events
+                else if (inputMethod.Remove) {
+                    inputMethod.IsInitialized = false;
+                    inputMethod.Remove        = false;
+                    
+                    inputMethod.Dispose();
+
+                    inputMethod.KeyboardAdded   -= this.InputMethodKeyboardAdded;
+                    inputMethod.KeyboardRemoved -= this.InputMethodKeyboardRemoved;
+                    inputMethod.MouseAdded      -= this.InputMethodMouseAdded;
+                    inputMethod.MouseRemoved    -= this.InputMethodMouseRemoved;
+
+                    this.InputMethods.Remove(inputMethod);
                 }
-            } else {
-                KnownHovers.Remove(drawable);
-                drawable.Hover(false);
+                
+                inputMethod.Update();
             }
-        }
-        if (!tooltipSet)
-            FurballGame.TooltipDrawable.Visible = false;
-    }
 
-    private static void DrawableOnMouseDrag(object sender, MouseDragEventArgs e) {
-        List<Drawable> drawables = new();
-        DrawableManager.DrawableManagers.Where(x => x.Visible).ToList().ForEach(x => drawables.AddRange(x.Drawables));
+            this.CheckInputObjects();
 
-        List<Drawable> drawablesTempIterate = new(drawables);
-
-        int fakei = 0;
-
-        for (int i = 0; i < drawablesTempIterate.Count; i++) {
-            Drawable drawable = drawablesTempIterate[i];
-            if (drawable is CompositeDrawable compositeDrawable)
-                fakei += RecurseCompositeDrawables(ref drawables, compositeDrawable, fakei);
-
-            fakei++;
-        }
-
-        drawables.RemoveAll(
-        x => x is CompositeDrawable {
-            InvisibleToInput: true
-        }
-        );
-
-        for (int i = 0; i < drawables.Count; i++) {
-            Drawable drawable = drawables[i];
-
-            if (drawable.IsClicked && !drawable.IsDragging)
-                drawable.DragState(true, e);
-
-            if (drawable.IsDragging)
-                drawable.Drag(e);
-        }
-    }
-
-    private static void DrawableOnMouseUp(object _, MouseButtonEventArgs e) {
-        List<Drawable> drawables = new();
-        DrawableManager.DrawableManagers.Where(x => x.Visible).ToList().ForEach(x => drawables.AddRange(x.Drawables));
-
-        List<Drawable> drawablesTempIterate = new(drawables);
-
-        int fakei = 0;
-
-        for (int i = 0; i < drawablesTempIterate.Count; i++) {
-            Drawable drawable = drawablesTempIterate[i];
-            if (drawable is CompositeDrawable compositeDrawable)
-                fakei += RecurseCompositeDrawables(ref drawables, compositeDrawable, fakei);
-
-            fakei++;
-        }
-
-        drawables.RemoveAll(
-        x => x is CompositeDrawable {
-            InvisibleToInput: true
-        }
-        );
-
-        for (int i = 0; i < drawables.Count; i++) {
-            Drawable drawable = drawables[i];
-
-            if (drawable.IsClicked)
-                drawable.Click(false, e);
-            if (drawable.IsDragging)
-                drawable.DragState(false, new MouseDragEventArgs(e.Mouse.DragStates[(int)e.Button].StartPosition, e.Mouse.Position, e.Mouse.Position, e.Button, e.Mouse));
-        }
-    }
-
-    private static void DrawableOnMouseDown(object _, MouseButtonEventArgs e) {
-        List<Drawable> drawables = new();
-        DrawableManager.DrawableManagers.Where(x => x.Visible).ToList().ForEach(
-        x => drawables.AddRange(x.Drawables.Where(y => (y.Clickable || y is CompositeDrawable) && y.Visible))
-        );
-
-        drawables.Sort(DrawableInputComparer.Instance);
-
-        List<Drawable> drawablesTempIterate = new(drawables);
-
-        int fakei = 0;
-
-        for (int i = 0; i < drawablesTempIterate.Count; i++) {
-            Drawable drawable = drawablesTempIterate[i];
-            if (drawable is CompositeDrawable compositeDrawable)
-                fakei += RecurseCompositeDrawables(ref drawables, compositeDrawable, fakei);
-
-            fakei++;
-        }
-
-        drawables.RemoveAll(
-        x => x is CompositeDrawable {
-            InvisibleToInput: true
-        }
-        );
-
-        for (int i = 0; i < drawables.Count; i++) {
-            Drawable drawable = drawables[i];
-
-            if (drawable.RealContains(e.Mouse.Position)) {
-                if (drawable.Clickable)
-                    drawable.Click(true, e);
-
-                if (drawable.CoverClicks) break;
+            //Wait the clock 
+            if (this._run) {
+                Interlocked.Increment(ref this.CountedInputFrames);
+                this.LastInputFrameTime = stopwatch.Elapsed.TotalMilliseconds - start;
+                clock.WaitFrame();
+                // Console.WriteLine($"Input frame delta {elapsed:N2}ms:{1000d / elapsed:N2} per second");
             }
         }
     }
 
-    /// <summary>
-    /// The currently held Keyboard keys
-    /// </summary>
-    public List<Key> HeldKeys {
-        get {
-            List<Key> temp = new();
-
-            foreach (InputMethod method in this._registeredInputMethods) {
-                foreach (FurballKeyboard kb in method.Keyboards) {
-                    temp.AddRange(kb.PressedKeys);
-                }
-            }
-
-            return temp;
-        }
-    }
-
-    public List<FurballKeyboard> Keyboards {
-        get {
-            List<FurballKeyboard> temp = new();
-
-            foreach (InputMethod method in this._registeredInputMethods) {
-                temp.AddRange(method.Keyboards);
-            }
-
-            return temp;
-        }
-    }
-
-    public List<FurballMouse> Mice {
-        get {
-            List<FurballMouse> temp = new();
-
-            foreach (InputMethod method in this._registeredInputMethods) {
-                temp.AddRange(method.Mice);
-            }
-
-            return temp;
-        }
-    }
-
-    public readonly List<Keybind> RegisteredKeybinds = new();
+    internal readonly List<Keybind> RegisteredKeybinds = new List<Keybind>();
 
     public void RegisterKeybind(Keybind bind) {
-        this.RegisteredKeybinds.Add(bind);
-
-        Logger.Log($"Registered keybind for key {bind.Key} (default:{bind.DefaultKey})", LoggerLevelInput.InstanceInfo);
+        if (!this.RegisteredKeybinds.Contains(bind))
+            this.RegisteredKeybinds.Add(bind);
     }
 
     public void UnregisterKeybind(Keybind bind) {
-        if (!this.RegisteredKeybinds.Remove(bind))
-            Logger.Log($"Called unregister with a non-registered keybind {bind.Key} (default:{bind.DefaultKey})!", LoggerLevelInput.InstanceWarning);
-    }
-
-    /// <summary>
-    /// The currently registered InputMethods
-    /// </summary>
-    private readonly List<InputMethod> _registeredInputMethods = new();
-
-    public IReadOnlyList<InputMethod> RegisteredInputMethods {
-        get => this._registeredInputMethods.AsReadOnly();
-    }
-
-    /// <summary>
-    /// Updates all registered InputMethods and calls the necessary events
-    /// </summary>
-    public void Update() {
-        //Create a copy of all the scroll wheels
-        foreach (FurballMouse mouse in this.Mice) {
-            mouse.ScrollWheelCache = mouse.ScrollWheel;
-            mouse.PositionCache    = mouse.Position;
-        }
-
-        for (int i = 0; i < this._registeredInputMethods.Count; i++) {
-            InputMethod method = this._registeredInputMethods[i];
-
-            method.Update();
-        }
-
-        #region OnKeyUp/Down
-
-        foreach (FurballKeyboard keyboard in this.Keyboards) {
-            foreach (char c in keyboard.QueuedTextInputs) {
-                this.OnCharInput?.Invoke(this, new CharInputEvent(c, keyboard));
-                this.CharInputHandler?.HandleChar(new CharInputEvent(c, keyboard));
-            }
-
-            foreach (Key press in keyboard.QueuedKeyPresses) {
-                this.OnKeyDown?.Invoke(this, new KeyEventArgs(press, keyboard));
-            }
-
-            foreach (Key release in keyboard.QueuedKeyReleases) {
-                this.OnKeyUp?.Invoke(this, new KeyEventArgs(release, keyboard));
-            }
-
-            keyboard.QueuedTextInputs.Clear();
-            keyboard.QueuedKeyPresses.Clear();
-            keyboard.QueuedKeyReleases.Clear();
-        }
-
-        #endregion
-
-        #region OnMouseUp/Down/Move/Scroll
-
-        foreach (FurballMouse mouse in this.Mice) {
-            foreach (MouseButton x in mouse.QueuedButtonPresses) {
-                //Set the drag states
-                mouse.DragStates[(int)x].Active        = true;
-                mouse.DragStates[(int)x].Button        = x;
-                mouse.DragStates[(int)x].StartPosition = mouse.Position;
-
-                this.OnMouseDown?.Invoke(this, new MouseButtonEventArgs(x, mouse));
-            }
-            foreach (MouseButton x in mouse.QueuedButtonReleases) {
-                mouse.DragStates[(int)x].Active = false;
-                
-                this.OnMouseUp?.Invoke(this, new MouseButtonEventArgs(x, mouse));
-            }
-
-            if (!mouse.ScrollWheel.Equals(mouse.ScrollWheelCache))
-                this.OnMouseScroll?.Invoke(
-                this,
-                new MouseScrollEventArgs(new Vector2(mouse.ScrollWheel.X - mouse.ScrollWheelCache.X, mouse.ScrollWheel.Y - mouse.ScrollWheelCache.Y), mouse)
-                );
-
-            if (mouse.Position != mouse.PositionCache) {
-                foreach (FurballMouse.DragState dragState in mouse.DragStates) {
-                    if (dragState.Active)
-                        this.OnMouseDrag?.Invoke(this, new MouseDragEventArgs(dragState.StartPosition, mouse.PositionCache, mouse.Position, dragState.Button, mouse));
-                }
-
-                this.OnMouseMove?.Invoke(this, new MouseMoveEventArgs(mouse.Position, mouse));
-            }
-
-            mouse.QueuedButtonPresses.Clear();
-            mouse.QueuedButtonReleases.Clear();
-        }
-
-        #endregion
-
-    }
-
-    /// <summary>
-    /// Registers a new input method and calls its Initialize method
-    /// </summary>
-    /// <param name="method">The InputMethod to add</param>
-    public void RegisterInputMethod(InputMethod method) {
-        Profiler.StartProfile($"register_input_method_{method.GetType().Name}");
-        this._registeredInputMethods.Add(method);
-        method.Initialize();
-        Profiler.EndProfileAndPrint($"register_input_method_{method.GetType().Name}");
-    }
-    /// <summary>
-    /// Removes an input method and calls its Dispose method
-    /// </summary>
-    /// <param name="method">The InputMethod to remove</param>
-    public void RemoveInputMethod(InputMethod method) {
-        method.Dispose();
-        this._registeredInputMethods.Remove(method);
-    }
-
-    public bool ControlHeld => (this.HeldKeys.Contains(Key.ControlLeft) || this.HeldKeys.Contains(Key.ControlRight));
-    public bool ShiftHeld => (this.HeldKeys.Contains(Key.ShiftLeft) || this.HeldKeys.Contains(Key.ShiftRight));
-    public bool AltHeld => (this.HeldKeys.Contains(Key.AltLeft) || this.HeldKeys.Contains(Key.AltRight));
-
-    [NotNull]
-    public string Clipboard {
-        get {
-            foreach (FurballKeyboard keyboard in this.Keyboards)
-                return keyboard.GetClipboard();
-
-            return "";
-        }
-        set {
-            foreach (FurballKeyboard keyboard in this.Keyboards) {
-                keyboard.SetClipboard(value);
-            }
-        }
+        this.RegisteredKeybinds.Remove(bind);
     }
 }

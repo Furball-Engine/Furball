@@ -1,6 +1,3 @@
-using System;
-using System.Runtime.InteropServices;
-
 namespace Furball.Engine.Engine.Graphics.GML;
 
 public enum SizeType {

@@ -10,12 +10,12 @@ using Furball.Volpe.Evaluation;
 using JetBrains.Annotations;
 using Kettu;
 
-namespace Furball.Engine.Engine.Localization; 
+namespace Furball.Engine.Engine.Localization;
 
 public class LocalizationManager {
     private static readonly Dictionary<(string translationKey, ISO639_2Code code), string> Translations = new();
 
-    public static Dictionary<ISO639_2Code, Type> Languages = new();
+    public static Dictionary<ISO639_2Code, Lazy<Language>> Languages = new();
 
     public static  Language DefaultLanguage  = new EnglishLanguage();
     private static Language _currentLanguage = DefaultLanguage;
@@ -27,18 +27,18 @@ public class LocalizationManager {
             FurballConfig.Instance.Values["language"] = new Value.String(value.Iso6392Code().ToString());
 
             CultureInfo = CultureInfo.GetCultureInfoByIetfLanguageTag(value.IetfLanguageTag());
-            
+
             CultureInfo.CurrentUICulture = CultureInfo;
             CultureInfo.CurrentCulture   = CultureInfo;
-            
+
             _currentLanguage = value;
-            
+
             LanguageChanged?.Invoke(null, value);
         }
     }
 
     public static event EventHandler<Language> LanguageChanged;
-    
+
     public static CultureInfo CultureInfo {
         get;
         private set;
@@ -73,7 +73,7 @@ public class LocalizationManager {
         int total    = 0;
         int complete = 0;
 
-        foreach (KeyValuePair<(string translationKey, ISO639_2Code code),string> pair in Translations) {
+        foreach (KeyValuePair<(string translationKey, ISO639_2Code code), string> pair in Translations) {
             if (pair.Key.code == DefaultLanguage.Iso6392Code())
                 total++;
             if (pair.Key.code == code)
@@ -89,7 +89,7 @@ public class LocalizationManager {
 
         foreach (KeyValuePair<(string translationKey, ISO639_2Code code), string> translation in Translations) {
             if (languages.Contains(translation.Key.code)) continue;
-                
+
             languages.Add(translation.Key.code);
         }
 
@@ -99,33 +99,30 @@ public class LocalizationManager {
     [Pure]
     [CanBeNull]
     public static Language GetLanguageFromCode(ISO639_2Code code) {
-        if (Languages.TryGetValue(code, out Type type)) {
-            return (Language)Activator.CreateInstance(type);
-        }
+        return Languages.TryGetValue(code, out Lazy<Language> language) ? language.Value : null;
 
-        return null;
     }
 
     public static void AddDefaultTranslation(object key, string contents) {
         Translations.Add((key.ToString(), DefaultLanguage.Iso6392Code()), contents);
     }
-        
+
     public static void ReadTranslations() {
-        Languages.Add(ISO639_2Code.eng, typeof(EnglishLanguage));
-        Languages.Add(ISO639_2Code.jbo, typeof(LojbanLanguage));
-        Languages.Add(ISO639_2Code.epo, typeof(EsperantoLanguage));
-        Languages.Add(ISO639_2Code.pol, typeof(PolishLanguage));
-        Languages.Add(ISO639_2Code.deu, typeof(GermanLanguage));
-        Languages.Add(ISO639_2Code.jpn, typeof(JapaneseLanguage));
-        Languages.Add(ISO639_2Code.spa, typeof(SpanishLanguage));
-        Languages.Add(ISO639_2Code.ara, typeof(ArabicLanguage));
-        Languages.Add(ISO639_2Code.ita, typeof(ItalianLanguage));
-        Languages.Add(ISO639_2Code.fra, typeof(FrenchLanguage));
+        Languages.Add(ISO639_2Code.eng, new(() => new EnglishLanguage()));
+        Languages.Add(ISO639_2Code.jbo, new(() => new LojbanLanguage()));
+        Languages.Add(ISO639_2Code.epo, new(() => new EsperantoLanguage()));
+        Languages.Add(ISO639_2Code.pol, new(() => new PolishLanguage()));
+        Languages.Add(ISO639_2Code.deu, new(() => new GermanLanguage()));
+        Languages.Add(ISO639_2Code.jpn, new(() => new JapaneseLanguage()));
+        Languages.Add(ISO639_2Code.spa, new(() => new SpanishLanguage()));
+        Languages.Add(ISO639_2Code.ara, new(() => new ArabicLanguage()));
+        Languages.Add(ISO639_2Code.ita, new(() => new ItalianLanguage()));
+        Languages.Add(ISO639_2Code.fra, new(() => new FrenchLanguage()));
 
         string localizationFolder = Path.Combine(FurballGame.AssemblyPath, FurballGame.LocalizationFolder);
-            
+
         DirectoryInfo dirInfo = null;
-            
+
         if (!Directory.Exists(localizationFolder)) {
             try {
                 Directory.CreateDirectory(localizationFolder);
@@ -138,18 +135,18 @@ public class LocalizationManager {
         }
 
         dirInfo ??= new DirectoryInfo(localizationFolder);
-            
+
         IEnumerable<FileInfo> langFiles = dirInfo.EnumerateFiles("*.lang", SearchOption.TopDirectoryOnly);
         foreach (FileInfo file in langFiles) {
             StreamReader stream = file.OpenText();
 
             ISO639_2Code code = ISO639_2Code.und;
-                
+
             string line;
             //Iterate through all lines of file
             while ((line = stream.ReadLine()) != null) {
-                if(line.Trim().Length == 0 || line.StartsWith("#")) continue;
-                    
+                if (line.Trim().Length == 0 || line.StartsWith("#")) continue;
+
                 string[] splitLine = line.Split('=');
 
                 //Checks if the first section is LanguageCode, which defines the language of the file
@@ -158,7 +155,8 @@ public class LocalizationManager {
                         //Parse the language code
                         Enum.TryParse(splitLine[1], true, out code);
                         Logger.Log($"Reading language file for {code}", LoggerLevelLocalizationInfo.Instance);
-                    } catch {
+                    }
+                    catch {
                         break;
                     }
                 } else {

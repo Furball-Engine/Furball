@@ -3,9 +3,6 @@ using System.Numerics;
 using Furball.Engine;
 using Furball.Engine.Engine.Graphics;
 using Furball.Engine.Engine.Graphics.Drawables;
-using Furball.Engine.Engine.Graphics.Drawables.Managers;
-using Furball.Vixie;
-using Furball.Vixie.Backends.Shared;
 using sowelipisona;
 
 namespace Furball.Game.Screens.Tests; 

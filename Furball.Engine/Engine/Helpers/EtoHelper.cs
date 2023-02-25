@@ -26,9 +26,6 @@ public static class EtoHelper {
 
             if (RuntimeInfo.CurrentPlatform() == OSPlatform.Windows) {
                 platform = Platforms.WinForms;
-
-                if (RuntimeInformation.FrameworkDescription.Contains("Framework"))
-                    platform = Platforms.Gtk;
             }
 
             Eto.Platform.Initialize(platform);
@@ -39,6 +36,9 @@ public static class EtoHelper {
             _app.Run();
         }
         );
+        //If we are on Windows, set the apartment state to STA, which is required for WinForms to work
+        if(RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            _thread.SetApartmentState(ApartmentState.STA);
 
         _thread.Start();
 
@@ -69,51 +69,20 @@ public static class EtoHelper {
         );
     }
 
-    public static void OpenColorPicker(EventHandler<Color> callback, Color existingColor, string title = "Color Picker", bool allowAlpha = true) {
-        _app?.Invoke(
+    public static void OpenColorPicker(EventHandler<(DialogResult result, Color color)> callback, Color existingColor, string title = "Color Picker", bool allowAlpha = true) {
+        _app?.InvokeAsync(
         () => {
-            ColorPickerForm form = new ColorPickerForm(title, allowAlpha);
+            ColorDialog dialog = new ColorDialog();
+            dialog.AllowAlpha = allowAlpha;
+            dialog.Color      = existingColor.ToEto();
 
-            form.ColorPicker.Value = new Eto.Drawing.Color(existingColor.R / 255f, existingColor.G / 255f, existingColor.B / 255f, existingColor.A / 255f);
+            DialogResult result = dialog.ShowDialog(_app.MainForm);
 
-            bool preventClosure = true;
-
-            form.Show();
-            form.BringToFront();
-            form.ColorPicker.ValueChanged += (_, _) => {
-                Eto.Drawing.Color color = form.ColorPicker.Value;
-
-                callback.Invoke(_app, new Color(color.Rb, color.Gb, color.Bb, color.Ab));
-
-                preventClosure = false;
-                _app.Invoke(
-                () => {
-                    form.Close();
-                }
-                );
-            };
-            form.Closing += (_, args) => {
-                if (preventClosure)
-                    args.Cancel = true;
-            };
+            callback.Invoke(_app, (result, dialog.Color.ToVixie()));
         }
         );
     }
 
-    private class ColorPickerForm : Form {
-        public ColorPicker ColorPicker;
-
-        public ColorPickerForm(string title = "Color Picker", bool allowAlpha = true) {
-            _app.Invoke(
-            () => {
-                this.Title = title;
-                // ClientSize = new Size(200, 200);
-                this.Content = this.ColorPicker = new ColorPicker {
-                    AllowAlpha = allowAlpha
-                };
-                this.Resizable = false;
-            }
-            );
-        }
-    }
+    public static Eto.Drawing.Color ToEto(this Color color) => new Eto.Drawing.Color(color.Rf, color.Gf, color.Bf, color.Af);
+    public static Color ToVixie(this Eto.Drawing.Color color) => new Color(color.R, color.G, color.B, color.A);
 }

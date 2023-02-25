@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using System.Numerics;
 using FontStashSharp;
 using GMLSharp;
 using Object=GMLSharp.Object;

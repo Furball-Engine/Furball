@@ -1,8 +1,8 @@
-﻿using Furball.Engine;
-using Furball.Engine.Engine.Input;
+﻿using System;
+using Furball.Engine;
 using Furball.Engine.Engine.Localization;
+using Furball.Engine.Engine.Input;
 using Furball.Game.Screens;
-using Furball.Vixie;
 using Silk.NET.Input;
 using SixLabors.ImageSharp;
 
@@ -29,7 +29,8 @@ public class FurballTestGame : FurballGame {
         this._screenshotKeybind = new Keybind(
         TestKeybinds.TakeScreenshot,
         "Take Screenshot",
-        Key.F1,
+        Key.F1, 
+        Array.Empty<Key>(),
         _ => {
             this.WindowManager.GraphicsBackend.TakeScreenshot();
         }
@@ -72,6 +73,7 @@ public class FurballTestGame : FurballGame {
         LocalizationManager.AddDefaultTranslation(LocalizationStrings.TexturePackerTest,    "Texture Packer Test");
         LocalizationManager.AddDefaultTranslation(LocalizationStrings.BoxBlurTest,          "Box Blur Test");
         LocalizationManager.AddDefaultTranslation(LocalizationStrings.TextureFadeTest,      "Texture Fade Test");
+        LocalizationManager.AddDefaultTranslation(LocalizationStrings.InputOrderTest,       "Input Order Test");
 
         LocalizationManager.AddDefaultTranslation(LocalizationStrings.ChooseScreen, "Choose Screen");
     }

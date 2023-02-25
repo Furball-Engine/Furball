@@ -6,12 +6,15 @@ using System.Numerics;
 using Furball.Engine.Engine.Helpers;
 using Furball.Vixie;
 using Furball.Vixie.Helpers;
+using Silk.NET.Core;
 using Color = Furball.Vixie.Backends.Shared.Color;
 
 namespace Furball.Engine.Engine.Graphics.Drawables.Managers; 
 
 public class DrawableManager : IDisposable {
     private List<Drawable> _drawables = new();
+
+    public BreakneckLock DrawablesLock = new BreakneckLock();
 
     public IReadOnlyList<Drawable> Drawables => this._drawables.AsReadOnly();
 
@@ -69,6 +72,9 @@ public class DrawableManager : IDisposable {
 
         if (this.EffectedByScaling)
             batch.ScissorPush(this, new Rectangle((int)this.Position.X, (int)this.Position.Y, (int)this.Size.X, (int)this.Size.Y));
+
+        bool taken = false;
+        this.DrawablesLock.Enter(ref taken);
         
         for (int i = 0; i < tempCount; i++) {
             Drawable drawable = this._drawables[i];
@@ -134,7 +140,7 @@ public class DrawableManager : IDisposable {
                 
                 drawable.Draw(time, batch, this._args);
  
-                System.Diagnostics.Debug.Assert(scissorStackItems == batch.ScissorStackItemCount, $"Scissor stack is unbalanced after {drawable}.Draw was called!");
+                Guard.Assert(scissorStackItems == batch.ScissorStackItemCount, $"Scissor stack is unbalanced after {drawable.GetType()}.Draw was called!");
                 if (FurballGame.DrawInputOverlay)
                     switch (drawable.Clickable) {
                         case false when drawable.CoverClicks:
@@ -156,6 +162,9 @@ public class DrawableManager : IDisposable {
                     }
             }
         }
+        
+        if(taken)
+            this.DrawablesLock.Exit();
 
         if(this.EffectedByScaling)
             batch.ScissorPop(this);

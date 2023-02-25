@@ -155,6 +155,8 @@ public class DrawableButton : CompositeDrawable {
             new ColorTween(TweenType.Color, this.ColorOverride, this.ButtonColor, this.TimeSource.GetCurrentTime(), this.TimeSource.GetCurrentTime() + 150)
             );
         };
+        
+        this.RegisterForInput();
     }
 
     public override void Update(double time) {

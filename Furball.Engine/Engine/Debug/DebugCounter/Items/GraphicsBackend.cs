@@ -1,7 +1,6 @@
 using Furball.Vixie.Backends.OpenGL;
 using Furball.Vixie.Backends.Shared;
 using Furball.Vixie.Backends.Shared.Backends;
-using Furball.Vixie.Backends.Veldrid;
 
 namespace Furball.Engine.Engine.Debug.DebugCounter.Items;
 
@@ -11,9 +10,6 @@ internal class GraphicsBackend : DebugCounterItem {
     //TODO: handle backend changing
     public GraphicsBackend() {
         switch (FurballGame.Instance.WindowManager.GraphicsBackend) {
-            case VeldridBackend veldridBackend:
-                this._stringCache = $"Backend: Veldrid ({veldridBackend.ChosenBackend})";
-                return;
             case OpenGLBackend openGlBackend: {
                 this._stringCache = openGlBackend.CreationBackend == Backend.OpenGL 
                                         ? $"Backend: OpenGL ({Global.LatestSupportedGl.Value.GL.MajorVersion}.{Global.LatestSupportedGl.Value.GL.MinorVersion})" 

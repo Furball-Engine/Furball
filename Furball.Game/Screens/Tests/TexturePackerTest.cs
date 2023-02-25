@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Numerics;
 using FontStashSharp;
@@ -9,7 +8,6 @@ using Furball.Engine.Engine.Graphics.Drawables.Primitives;
 using Furball.Engine.Engine.Graphics.TexturePacker;
 using Furball.Engine.Engine.Helpers;
 using Furball.Vixie;
-using Gdk;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using Color=Furball.Vixie.Backends.Shared.Color;

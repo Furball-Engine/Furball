@@ -27,6 +27,9 @@ public class TexturePacker {
 
     public PackedTexture Pack(int clampSize = 4096) {
         Vector2D<int> size = FurballGame.MaxTextureSize;
+        if (size == Vector2D<int>.Zero) {
+            throw new Exception("We cant pack for 0 size!");
+        }
 
         size.X = size.X.Clamp(0, clampSize);
         size.Y = size.Y.Clamp(0, clampSize);

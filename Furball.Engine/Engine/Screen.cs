@@ -1,7 +1,6 @@
 using System.Numerics;
 using System.Threading;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
-using Furball.Vixie;
 
 namespace Furball.Engine.Engine; 
 

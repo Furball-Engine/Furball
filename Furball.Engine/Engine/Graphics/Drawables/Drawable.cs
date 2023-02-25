@@ -8,6 +8,7 @@ using Furball.Engine.Engine.Graphics.Drawables.Tweens;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes.BezierPathTween;
 using Furball.Engine.Engine.Helpers;
+using Furball.Engine.Engine.Input;
 using Furball.Engine.Engine.Input.Events;
 using Furball.Engine.Engine.Timing;
 using Furball.Vixie.Backends.Shared;
@@ -217,6 +218,7 @@ public abstract class Drawable : IDisposable {
 
         this.IsClicked = value;
     }
+    
     public void DragState(bool value, MouseDragEventArgs point) {
         if (value == this.IsDragging) return;
 
@@ -227,11 +229,13 @@ public abstract class Drawable : IDisposable {
 
         this.IsDragging = value;
     }
+    
     public void Drag(MouseDragEventArgs point) {
         if (!this.IsDragging) return;
 
         this.OnDrag?.Invoke(this, point);
     }
+    
     /// <summary>
     ///     Called whenever a cursor hovers over the drawable
     /// </summary>
@@ -286,17 +290,39 @@ public abstract class Drawable : IDisposable {
         };
     }
 
+    public void RegisterForInput() {
+        this._inputObject = FurballGame.InputManager.CreateInputObject(this);
+        
+        FurballGame.InputManager.AddInputObject(this._inputObject);
+    }
+    
     public virtual void Dispose() {
         //Clear explicitly to make the objects get GC'd sooner
         this.Tweens?.Clear();
+        
+        if(this._inputObject != null)
+            FurballGame.InputManager.RemoveInputObject(this._inputObject);
     }
 
-    private bool _sortTweenScheduled = false;
+    private bool         _sortTweenScheduled = false;
+    private InputObject? _inputObject;
 
     /// <summary>
     ///     Updates the pDrawables Tweens
     /// </summary>
     public void UpdateTweens() {
+        if (this._inputObject != null) {
+            bool taken = false;
+            FurballGame.InputManager.InputObjectsLock.Enter(ref taken);
+
+            this._inputObject.Position = this.RealPosition;
+            this._inputObject.Size     = this.RealSize;
+            this._inputObject.Depth    = this.Depth;
+
+            if (taken)
+                FurballGame.InputManager.InputObjectsLock.Exit();
+        }
+
         this.Tweens.RemoveAll(tween => tween == null || tween.Terminated && !tween.KeepAlive);
 
         if (this._sortTweenScheduled) {
