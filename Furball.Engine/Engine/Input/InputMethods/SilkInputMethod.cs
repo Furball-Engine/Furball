@@ -42,7 +42,7 @@ public class SilkInputMethod : InputMethod {
     }
 
     readonly bool[] _workingMouseButtons = new bool[(int)(MouseButton.Button12 + 1)];
-    readonly bool[] _workingKeyboardKeys  = new bool[(int)(Key.Menu + 1)];
+    readonly bool[] _workingKeyboardKeys = new bool[(int)(Key.Menu             + 1)];
     public override void Update() {
         while (this._reader.TryRead(out var item)) {
             item.Switch(
@@ -52,10 +52,10 @@ public class SilkInputMethod : InputMethod {
                     FurballMouse fMouse = this._mice[i].fMouse;
                     if (mouse == update.Mouse) {
                         fMouse.ScrollWheel.X += update.X;
-                        fMouse.ScrollWheel.Y  += update.Y;
-        
+                        fMouse.ScrollWheel.Y += update.Y;
+
                         this._inputManager.InvokeOnMouseScroll(new MouseScrollEventArgs(new Vector2(update.X, update.Y), fMouse));
-        
+
                         break;
                     }
                 }
@@ -64,33 +64,33 @@ public class SilkInputMethod : InputMethod {
                 for (int i = 0; i < this._keyboards.Count; i++) {
                     IKeyboard       silkKeyboard = this._keyboards[i].sKeyboard;
                     FurballKeyboard fKeyboard    = this._keyboards[i].fKeyboard;
-        
+
                     if (silkKeyboard != silkCharEvent.Keyboard)
                         continue;
-        
+
                     CharInputEvent ev = new CharInputEvent(silkCharEvent.Character, fKeyboard);
-        
+
                     this._inputManager.InvokeOnCharInput(ev);
                     this._inputManager.CharInputHandler?.HandleChar(ev);
                 }
             }
             );
-        } 
-        
+        }
+
         for (int i = 0; i < this._mice.Count; i++) {
             (FurballMouse fMouse, IMouse sMouse) = this._mice[i];
 
             this.SilkMouseButtonCheck(this._workingMouseButtons, sMouse, fMouse);
-    
+
             Vector2 newPosition = sMouse.Position / FurballGame.VerticalRatio;
             this.SilkMousePositionCheck(newPosition, fMouse);
-    
+
             fMouse.Position = newPosition;
         }
-        
+
         for (int i = 0; i < this._keyboards.Count; i++) {
             (FurballKeyboard fKeyboard, IKeyboard sKeyboard) = this._keyboards[i];
- 
+
             this.SilkKeyboardButtonCheck(this._workingKeyboardKeys, sKeyboard, fKeyboard);
         }
     }
@@ -118,7 +118,7 @@ public class SilkInputMethod : InputMethod {
 
         this._reader = this._channelToInput.Reader;
         this._writer = this._channelToInput.Writer;
-        
+
         if (FurballGame.Instance.WindowManager is SilkWindowManager silkWindowManager) {
             IReadOnlyList<IMouse> mice = silkWindowManager.InputContext.Mice;
 
@@ -135,11 +135,11 @@ public class SilkInputMethod : InputMethod {
 
             if (this._disableKeyboards)
                 return;
-            
+
             foreach (IKeyboard keyboard in keyboards) {
                 keyboard.KeyChar += HandleSilkKeyChar;
                 FurballKeyboard fKeyboard = new FurballKeyboard {
-                    Name = keyboard.Name,
+                    Name         = keyboard.Name,
                     GetClipboard = () => keyboard.ClipboardText,
                     SetClipboard = s => keyboard.ClipboardText = s,
                     BeginInput   = () => keyboard.BeginInput(),
@@ -150,7 +150,7 @@ public class SilkInputMethod : InputMethod {
             }
         }
     }
-    
+
     private void HandleSilkMouseScroll(IMouse arg1, Silk.NET.Input.ScrollWheel arg2) {
         if (arg2.X != 0)
             this._writer.WriteAsync(
@@ -211,7 +211,7 @@ public class SilkInputMethod : InputMethod {
                         foreach (Key bindModifier in bind.Modifiers) {
                             //If one of the modifiers isn't pressed, return out
                             if (!keyboard.IsKeyPressed(bindModifier))
-                                return;
+                                break;
                         }
 
                         if (bind.Key == key) {
