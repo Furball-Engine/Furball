@@ -42,6 +42,8 @@ public class DrawableTickbox : CompositeDrawable {
 
         if (!managed)
             this.OnClick += this.OnDrawableClick;
+
+        this.RegisterForInput();
     }
 
     private void OnDrawableClick(object sender, MouseButtonEventArgs mouseButtonEventArgs) {

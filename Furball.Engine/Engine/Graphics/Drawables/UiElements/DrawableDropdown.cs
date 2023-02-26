@@ -55,6 +55,9 @@ public class DrawableDropdown : CompositeDrawable {
     }
 
     public void Update() {
+        foreach (Drawable child in this.Children!) {
+            child.Dispose();
+        }
         this.Children!.Clear();
 
         if (this.Selected) {
@@ -80,6 +83,7 @@ public class DrawableDropdown : CompositeDrawable {
             };
 
             this.Children.Add(element);
+            element.RegisterForInput();
 
             float y = element.Size.Y;
             foreach (KeyValuePair<object, string> item in this.Items) {
@@ -98,6 +102,7 @@ public class DrawableDropdown : CompositeDrawable {
                 };
 
                 this.Children.Add(element);
+                element.RegisterForInput();
 
                 y += element.Size.Y;
             }
@@ -124,6 +129,7 @@ public class DrawableDropdown : CompositeDrawable {
             };
 
             this.Children.Add(element);
+            element.RegisterForInput();
         }
     }
 }

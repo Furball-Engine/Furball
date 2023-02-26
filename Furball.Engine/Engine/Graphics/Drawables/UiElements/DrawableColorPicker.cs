@@ -38,6 +38,8 @@ public class DrawableColorPicker : CompositeDrawable {
 
         this.Children!.Add(this._colorText);
         this.Children.Add(this._colorDisplay);
+
+        this.RegisterForInput();
     }
 
     private void OnColorChange(object sender, Color e) {
