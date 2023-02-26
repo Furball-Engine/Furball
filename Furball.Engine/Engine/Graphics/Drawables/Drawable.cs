@@ -394,7 +394,7 @@ public abstract class Drawable : IDisposable {
         if (this._inputObject != null) {
             bool taken = FurballGame.InputManager.InputObjectsLock.TryEnterWriteLock(1);
 
-            this._inputObject.Position  = this.RealPosition;
+            this._inputObject.Position  = this.RealPosition - this.RotationOrigin;
             this._inputObject.Size      = this.RealSize;
             this._inputObject.Depth     = this.Depth;
             this._inputObject.Clickable = this.Clickable && this.Visible;
