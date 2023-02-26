@@ -242,11 +242,15 @@ public class InputManager {
 
     readonly FurballMouse[] _isClickedTemp = new FurballMouse[(int)(MouseButton.Button12 + 1)];
     private void CheckInputObjects() {
-        bool taken = this.InputObjectsLock.TryEnterUpgradeableReadLock(1);
+        this.InputObjectsLock.EnterUpgradeableReadLock();
 
         if (this._sortInputObjects) {
+            this.InputObjectsLock.EnterWriteLock();
+            
             this.InputObjects.Sort(DrawableInputComparer.Instance);
             this._sortInputObjects = false;
+
+            this.InputObjectsLock.ExitWriteLock();
         }
 
         bool blocked = false;
@@ -352,8 +356,7 @@ public class InputManager {
             }
         }
 
-        if (taken)
-            this.InputObjectsLock.ExitUpgradeableReadLock();
+        this.InputObjectsLock.ExitUpgradeableReadLock();
     }
 
     internal int    CountedInputFrames = 0;
