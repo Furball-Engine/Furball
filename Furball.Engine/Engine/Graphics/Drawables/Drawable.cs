@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Numerics;
+using System.Threading;
 using Furball.Engine.Engine.Graphics.Drawables.Managers;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens;
 using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes;
@@ -15,7 +16,7 @@ using Furball.Vixie.Backends.Shared;
 using Furball.Vixie.Helpers;
 using Color=Furball.Vixie.Backends.Shared.Color;
 
-namespace Furball.Engine.Engine.Graphics.Drawables; 
+namespace Furball.Engine.Engine.Graphics.Drawables;
 
 public enum OriginType {
     TopLeft,
@@ -28,7 +29,7 @@ public enum OriginType {
     LeftCenter,
     RightCenter
 }
-    
+
 /// <summary>
 /// A Basic Drawable
 /// </summary>
@@ -41,7 +42,7 @@ public abstract class Drawable : IDisposable {
     ///     This is the real scale of a drawable, ignoring whether it is inside of a CompositeDrawable or not
     /// </summary>
     public Vector2 RealScale;
-        
+
     // private Vector2 _position = Vector2.Zero;
     /// <summary>
     ///     Radius of the Circle (Used for Click detection and other hitboxes)
@@ -121,6 +122,7 @@ public abstract class Drawable : IDisposable {
     ///     The tooltip to display when hovering over the drawable
     /// </summary>
     public string ToolTip = string.Empty;
+    public ReaderWriterLockSlim TweensLock = new ReaderWriterLockSlim();
     /// <summary>
     ///     List of Tweens
     /// </summary>
@@ -218,7 +220,7 @@ public abstract class Drawable : IDisposable {
 
         this.IsClicked = value;
     }
-    
+
     public void DragState(bool value, MouseDragEventArgs point) {
         if (value == this.IsDragging) return;
 
@@ -229,13 +231,13 @@ public abstract class Drawable : IDisposable {
 
         this.IsDragging = value;
     }
-    
+
     public void Drag(MouseDragEventArgs point) {
         if (!this.IsDragging) return;
 
         this.OnDrag?.Invoke(this, point);
     }
-    
+
     /// <summary>
     ///     Called whenever a cursor hovers over the drawable
     /// </summary>
@@ -294,9 +296,9 @@ public abstract class Drawable : IDisposable {
         //Dont do anything if the drawable is already registered for input
         if (this._inputObject != null)
             return;
-        
+
         this._inputObject = FurballGame.InputManager.CreateInputObject(this);
-        
+
         FurballGame.InputManager.AddInputObject(this._inputObject);
     }
 
@@ -305,12 +307,12 @@ public abstract class Drawable : IDisposable {
             FurballGame.InputManager.RemoveInputObject(this._inputObject);
         this._inputObject = null;
     }
-    
+
     public virtual void Dispose() {
         //Clear explicitly to make the objects get GC'd sooner
         this.Tweens?.Clear();
-        
-        if(this._inputObject != null)
+
+        if (this._inputObject != null)
             FurballGame.InputManager.RemoveInputObject(this._inputObject);
     }
 
@@ -321,27 +323,18 @@ public abstract class Drawable : IDisposable {
     ///     Updates the pDrawables Tweens
     /// </summary>
     public void UpdateTweens() {
-        if (this._inputObject != null) {
-            bool taken = FurballGame.InputManager.InputObjectsLock.TryEnterWriteLock(1);
-
-            this._inputObject.Position  = this.RealPosition;
-            this._inputObject.Size      = this.RealSize;
-            this._inputObject.Depth     = this.Depth;
-            this._inputObject.Clickable = this.Clickable && this.Visible;
-
-            if (taken)
-                FurballGame.InputManager.InputObjectsLock.ExitWriteLock();
-        }
-
+        this.TweensLock.EnterWriteLock();
         this.Tweens.RemoveAll(tween => tween == null || tween.Terminated && !tween.KeepAlive);
 
         if (this._sortTweenScheduled) {
             this.Tweens.Sort((x, y) => (int)(x.StartTime - y.StartTime));
             this._sortTweenScheduled = false;
         }
+        this.TweensLock.ExitWriteLock();
 
         double currentTime = this.TimeSource.GetCurrentTime();
 
+        this.TweensLock.EnterReadLock();
         for (int i = 0; i != this.Tweens.Count; i++) {
             Tween currentTween = this.Tweens[i];
 
@@ -396,40 +389,57 @@ public abstract class Drawable : IDisposable {
                     break;
             }
         }
+        this.TweensLock.ExitReadLock();
+
+        if (this._inputObject != null) {
+            bool taken = FurballGame.InputManager.InputObjectsLock.TryEnterWriteLock(1);
+
+            this._inputObject.Position  = this.RealPosition;
+            this._inputObject.Size      = this.RealSize;
+            this._inputObject.Depth     = this.Depth;
+            this._inputObject.Clickable = this.Clickable && this.Visible;
+
+            if (taken)
+                FurballGame.InputManager.InputObjectsLock.ExitWriteLock();
+        }
     }
 
     #region Tween Helpers
 
     public void FadeColor(Color color, int duration, Easing easing = Easing.None) {
-        lock (this.Tweens) {
-            this.Tweens.RemoveAll(tween => tween.TweenType == TweenType.Color);
-        }
+        this.TweensLock.EnterWriteLock();
+
+        this.Tweens.RemoveAll(tween => tween.TweenType == TweenType.Color);
 
         this.Tweens.Add(
         new ColorTween(TweenType.Color, this.ColorOverride, color, this.TimeSource.GetCurrentTime(), this.TimeSource.GetCurrentTime() + duration, easing)
         );
+
+        this.TweensLock.ExitWriteLock();
     }
 
     public void FlashColor(Color color, int duration, Easing easing = Easing.None) {
         if (this.ColorOverride == color)
             return;
 
-        lock (this.Tweens) {
-            this.Tweens.RemoveAll(tween => tween.TweenType == TweenType.Color);
-        }
+        this.TweensLock.EnterWriteLock();
+
+        this.Tweens.RemoveAll(tween => tween.TweenType == TweenType.Color);
 
         this.Tweens.Add(
         new ColorTween(TweenType.Color, color, this.ColorOverride, this.TimeSource.GetCurrentTime(), this.TimeSource.GetCurrentTime() + duration, easing)
         );
+
+        this.TweensLock.ExitWriteLock();
     }
 
     public void FadeIn(int duration, Easing easing = Easing.None) {
         if (this.ColorOverride.A == 255)
             return;
 
-        lock (this.Tweens) {
-            this.Tweens.RemoveAll(tween => tween.TweenType == TweenType.Color);
-        }
+        this.TweensLock.EnterWriteLock();
+
+        this.Tweens.RemoveAll(tween => tween.TweenType == TweenType.Color);
 
         Color endColor = this.ColorOverride;
         endColor.A = 255;
@@ -437,15 +447,17 @@ public abstract class Drawable : IDisposable {
         this.Tweens.Add(
         new ColorTween(TweenType.Color, this.ColorOverride, endColor, this.TimeSource.GetCurrentTime(), this.TimeSource.GetCurrentTime() + duration, easing)
         );
+
+        this.TweensLock.ExitWriteLock();
     }
 
     public void FadeInFromZero(int duration, Easing easing = Easing.None) {
         if (this.ColorOverride.A == 255)
             return;
 
-        lock (this.Tweens) {
-            this.Tweens.RemoveAll(tween => tween.TweenType == TweenType.Color);
-        }
+        this.TweensLock.EnterWriteLock();
+
+        this.Tweens.RemoveAll(tween => tween.TweenType == TweenType.Color);
 
         Color startColor = this.ColorOverride;
         startColor.A = 0;
@@ -453,18 +465,18 @@ public abstract class Drawable : IDisposable {
         Color endColor = this.ColorOverride;
         endColor.A = 255;
 
-        this.Tweens.Add(
-        new ColorTween(TweenType.Color, startColor, endColor, this.TimeSource.GetCurrentTime(), this.TimeSource.GetCurrentTime() + duration, easing)
-        );
+        this.Tweens.Add(new ColorTween(TweenType.Color, startColor, endColor, this.TimeSource.GetCurrentTime(), this.TimeSource.GetCurrentTime() + duration, easing));
+
+        this.TweensLock.ExitWriteLock();
     }
 
     public void FadeOut(int duration, Easing easing = Easing.None) {
         if (this.ColorOverride.A == 0)
             return;
 
-        lock (this.Tweens) {
-            this.Tweens.RemoveAll(tween => tween.TweenType == TweenType.Color);
-        }
+        this.TweensLock.EnterWriteLock();
+
+        this.Tweens.RemoveAll(tween => tween.TweenType == TweenType.Color);
 
         Color endColor = this.ColorOverride;
         endColor.A = 0;
@@ -472,15 +484,17 @@ public abstract class Drawable : IDisposable {
         this.Tweens.Add(
         new ColorTween(TweenType.Color, this.ColorOverride, endColor, this.TimeSource.GetCurrentTime(), this.TimeSource.GetCurrentTime() + duration, easing)
         );
+
+        this.TweensLock.ExitWriteLock();
     }
 
     public void FadeOutFromOne(int duration, Easing easing = Easing.None) {
         if (this.ColorOverride.A == 0)
             return;
 
-        lock (this.Tweens) {
-            this.Tweens.RemoveAll(tween => tween.TweenType == TweenType.Color);
-        }
+        this.TweensLock.EnterWriteLock();
+
+        this.Tweens.RemoveAll(tween => tween.TweenType == TweenType.Color);
 
         Color startColor = this.ColorOverride;
         startColor.A = 255;
@@ -491,6 +505,8 @@ public abstract class Drawable : IDisposable {
         this.Tweens.Add(
         new ColorTween(TweenType.Color, this.ColorOverride, endColor, this.TimeSource.GetCurrentTime(), this.TimeSource.GetCurrentTime() + duration, easing)
         );
+
+        this.TweensLock.ExitWriteLock();
     }
 
     public void MoveToRelative(Vector2 move, int duration = 0, Easing easing = Easing.None) {
@@ -501,19 +517,21 @@ public abstract class Drawable : IDisposable {
         if (this.Position == dest)
             return;
 
-        lock (this.Tweens) {
-            this.Tweens.RemoveAll(tween => tween.TweenType == TweenType.Movement);
-        }
+        this.TweensLock.EnterWriteLock();
+
+        this.Tweens.RemoveAll(tween => tween.TweenType == TweenType.Movement);
 
         this.Tweens.Add(
         new VectorTween(TweenType.Movement, this.Position, dest, this.TimeSource.GetCurrentTime(), this.TimeSource.GetCurrentTime() + duration, easing)
         );
+
+        this.TweensLock.ExitWriteLock();
     }
 
     public void RotateRelative(float radians, int duration, Easing easing = Easing.None) {
-        lock (this.Tweens) {
-            this.Tweens.RemoveAll(tween => tween.TweenType == TweenType.Rotation);
-        }
+        this.TweensLock.EnterWriteLock();
+
+        this.Tweens.RemoveAll(tween => tween.TweenType == TweenType.Rotation);
 
         this.Tweens.Add(
         new FloatTween(
@@ -525,43 +543,49 @@ public abstract class Drawable : IDisposable {
         easing
         )
         );
+
+        this.TweensLock.ExitWriteLock();
     }
 
     public void Rotate(float radians, int duration, Easing easing = Easing.None) {
-        lock (this.Tweens) {
-            this.Tweens.RemoveAll(tween => tween.TweenType == TweenType.Rotation);
-        }
+        this.TweensLock.EnterWriteLock();
+
+        this.Tweens.RemoveAll(tween => tween.TweenType == TweenType.Rotation);
 
         this.Tweens.Add(
         new FloatTween(TweenType.Rotation, this.Rotation, radians, this.TimeSource.GetCurrentTime(), this.TimeSource.GetCurrentTime() + duration, easing)
         );
+
+        this.TweensLock.ExitWriteLock();
     }
+
     //dumb name because Scale already taken
     public void DirectScale(Vector2 newScale, int duration, Easing easing = Easing.None) {
         if (this.Scale == newScale)
             return;
 
-        lock (this.Tweens) {
-            this.Tweens.RemoveAll(tween => tween.TweenType == TweenType.Scale);
-        }
+        this.TweensLock.EnterWriteLock();
 
-        this.Tweens.Add(
-        new VectorTween(TweenType.Scale, this.Scale, newScale, this.TimeSource.GetCurrentTime(), this.TimeSource.GetCurrentTime() + duration, easing)
-        );
+        this.Tweens.RemoveAll(tween => tween.TweenType == TweenType.Scale);
+
+        this.Tweens.Add(new VectorTween(TweenType.Scale, this.Scale, newScale, this.TimeSource.GetCurrentTime(), this.TimeSource.GetCurrentTime() + duration, easing));
+
+        this.TweensLock.ExitWriteLock();
     }
 
     public void ScaleRelative(Vector2 increase, int duration, Easing easing = Easing.None) {
-        lock (this.Tweens) {
-            this.Tweens.RemoveAll(tween => tween.TweenType == TweenType.Scale);
-        }
+        this.TweensLock.EnterWriteLock();
+
+        this.Tweens.RemoveAll(tween => tween.TweenType == TweenType.Scale);
 
         this.Tweens.Add(
         new VectorTween(TweenType.Scale, this.Scale, this.Scale + increase, this.TimeSource.GetCurrentTime(), this.TimeSource.GetCurrentTime() + duration, easing)
         );
+
+        this.TweensLock.ExitWriteLock();
     }
 
     #endregion
-
     /// <summary>
     ///     Method for Drawing the Drawable,
     ///     Gets called every Draw
@@ -580,4 +604,5 @@ public abstract class Drawable : IDisposable {
     ~Drawable() {
         DisposeQueue.Enqueue(this);
     }
+
 }

@@ -15,7 +15,7 @@ namespace Furball.Engine.Engine.Graphics.Drawables.Managers;
 public class DrawableManager : IDisposable {
     private List<Drawable> _drawables = new();
 
-    public ReaderWriterLock DrawablesLock = new ReaderWriterLock();
+    public ReaderWriterLockSlim DrawablesLock = new ReaderWriterLockSlim();
 
     public IReadOnlyList<Drawable> Drawables => this._drawables.AsReadOnly();
 
@@ -63,9 +63,11 @@ public class DrawableManager : IDisposable {
     
     public void Draw(double time, DrawableBatch batch) {
         if (this._sortDrawables) {
+            this.DrawablesLock.EnterWriteLock();
             this._drawables.Sort(DrawableDrawComparer.Instance);
 
             this._sortDrawables = false;
+            this.DrawablesLock.ExitWriteLock();
         }
 
         int tempCount = this._drawables.Count;
@@ -74,7 +76,7 @@ public class DrawableManager : IDisposable {
         if (this.EffectedByScaling)
             batch.ScissorPush(this, new Rectangle((int)this.Position.X, (int)this.Position.Y, (int)this.Size.X, (int)this.Size.Y));
 
-        this.DrawablesLock.AcquireReaderLock(1);
+        this.DrawablesLock.EnterReadLock();
         
         for (int i = 0; i < tempCount; i++) {
             Drawable drawable = this._drawables[i];
@@ -144,7 +146,7 @@ public class DrawableManager : IDisposable {
             }
         }
 
-        this.DrawablesLock.ReleaseReaderLock();
+        this.DrawablesLock.ExitReadLock();
 
         if(this.EffectedByScaling)
             batch.ScissorPop(this);
@@ -170,43 +172,46 @@ public class DrawableManager : IDisposable {
     }
 
     public virtual void Update(double time) {
-        int tempCount = this._drawables.Count;
-        for (int i = 0; i < tempCount; i++) {
+        this.DrawablesLock.EnterUpgradeableReadLock();
+
+        for (int i = 0; i < this._drawables.Count; i++) {
             Drawable currentDrawable = this._drawables[i];
 
             currentDrawable.UpdateTweens();
             currentDrawable.Update(time);
         }
+
+        this.DrawablesLock.ExitUpgradeableReadLock();
     }
 
     public void Add(Drawable drawable) {
-        this.DrawablesLock.AcquireWriterLock(1);
+        this.DrawablesLock.EnterWriteLock();
         this._drawables.Add(drawable);
         this._sortDrawables = true;
-        this.DrawablesLock.ReleaseWriterLock();
+        this.DrawablesLock.ExitWriteLock();
     }
 
     public void Add(List<Drawable> drawables) {
-        this.DrawablesLock.AcquireWriterLock(1);
+        this.DrawablesLock.EnterWriteLock();
         this._drawables.AddRange(drawables);
         this._sortDrawables = true;
-        this.DrawablesLock.ReleaseWriterLock();
+        this.DrawablesLock.ExitWriteLock();
     }
 
     public void Add(params Drawable[] drawables) {
-        this.DrawablesLock.AcquireWriterLock(1);
+        this.DrawablesLock.EnterWriteLock();
         this._drawables.AddRange(drawables);
         this._sortDrawables = true;
-        this.DrawablesLock.ReleaseWriterLock();
+        this.DrawablesLock.ExitWriteLock();
     }
     
     public void Remove(Drawable? drawable) {
         if (drawable == null)
             return;
 
-        this.DrawablesLock.AcquireWriterLock(1);
+        this.DrawablesLock.EnterWriteLock();
         this._drawables.Remove(drawable);
-        this.DrawablesLock.ReleaseWriterLock();
+        this.DrawablesLock.ExitWriteLock();
     }
 
     private bool _isDisposed = false;

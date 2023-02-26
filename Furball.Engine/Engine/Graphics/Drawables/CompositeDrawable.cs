@@ -72,9 +72,11 @@ public class CompositeDrawable : Drawable {
 
     public override void Draw(double time, DrawableBatch batch, DrawableManagerArgs args) {
         if (this.SortDrawables) {
+            this.ChildrenLock.EnterWriteLock();
             this.Children!.Sort(DrawableDrawComparer.Instance);
 
             this.SortDrawables = false;
+            this.ChildrenLock.ExitWriteLock();
         }
 
         bool taken = this.ChildrenLock.TryEnterReadLock(1);
@@ -82,6 +84,11 @@ public class CompositeDrawable : Drawable {
         for (int i = 0; i < this.Children!.Count; i++) {
             Drawable drawable = this.Children[i];
 
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+            if (drawable == null)
+                // ReSharper disable once HeuristicUnreachableCode
+                continue;
+            
             // ReSharper disable once CompareOfFloatsByEqualityOperator
             if (drawable.Depth != drawable.DrawablesLastKnownDepth)
                 this.SortDrawables = true;
