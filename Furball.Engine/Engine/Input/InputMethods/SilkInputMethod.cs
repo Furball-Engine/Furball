@@ -207,14 +207,17 @@ public class SilkInputMethod : InputMethod {
                     this._inputManager.InvokeOnKeyDown(new KeyEventArgs(key, keyboard));
 
                     foreach (Keybind bind in this._inputManager.RegisteredKeybinds) {
+                        bool bad = false;
                         // ReSharper disable once LoopCanBeConvertedToQuery
                         foreach (Key bindModifier in bind.Modifiers) {
                             //If one of the modifiers isn't pressed, return out
-                            if (!keyboard.IsKeyPressed(bindModifier))
+                            if (!keyboard.IsKeyPressed(bindModifier)) {
+                                bad = true;
                                 break;
+                            }
                         }
 
-                        if (bind.Key == key) {
+                        if (!bad && bind.Key == key) {
                             bind.OnPressed?.Invoke(new KeyEventArgs(key, keyboard));
                         }
                     }
