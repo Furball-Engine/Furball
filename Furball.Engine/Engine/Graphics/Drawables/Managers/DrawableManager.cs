@@ -211,6 +211,7 @@ public class DrawableManager : IDisposable {
 
         this.DrawablesLock.EnterWriteLock();
         this._drawables.Remove(drawable);
+        drawable.Dispose();
         this.DrawablesLock.ExitWriteLock();
     }
 
