@@ -32,6 +32,8 @@ using Furball.Engine.Engine.Transitions;
 using Furball.Vixie;
 using Furball.Vixie.Backends.Shared.Backends;
 using Furball.Vixie.Backends.Shared.Renderers;
+using Furball.Vixie.Backends.Shared.Tracy;
+using Furball.Vixie.Backends.Shared.Tracy.Structs;
 using Furball.Vixie.WindowManagement;
 using Furball.Volpe.Evaluation;
 using JetBrains.Annotations;
@@ -133,6 +135,9 @@ public class FurballGame : Game {
         this._startScreen = startScreen;
 
         FontSystemDefaults.PremultiplyAlpha = false;
+
+        Tracy.StartupProfiler();
+        Tracy.SetThreadName("main thread");
     }
 
     protected override void Initialize() {
@@ -403,6 +408,8 @@ public class FurballGame : Game {
         Logger.Update().Wait();
         
         base.OnClosing();
+
+        Tracy.ShutdownProfiler();
     }
 
     private enum EngineDebugKeybinds {
@@ -620,6 +627,7 @@ public class FurballGame : Game {
         
     private bool _loadingScreenChangeOffQueued = false;
     protected override void Update(double deltaTime) {
+        TracyCZoneContext zoneContext = Tracy.Zone(1);
         Time = _stopwatch.Elapsed.TotalMilliseconds;
 
         if (RuntimeInfo.IsDebug()) {
@@ -665,12 +673,14 @@ public class FurballGame : Game {
             this.LastUpdateTime = this._updateWatch.Elapsed.TotalMilliseconds;
             this._updateWatch.Reset();
         }
+        Tracy.EndZone(zoneContext);
     }
 
     private Stopwatch _drawWatch = new();
     public double LastDrawTime { get; private set; } = 0.0;
 
     protected override void PreDraw(double deltaTime) {
+        TracyCZoneContext zoneContext = Tracy.Zone(1);
         base.PreDraw(deltaTime);
 
         Debug.Assert(DrawableBatch.ScissorStackItemCount == 0, "Scissor Stack not empty at start of frame!");
@@ -679,10 +689,12 @@ public class FurballGame : Game {
         Renderer.IndexCount  = 0;
         
         DrawableBatch.Begin();
+        Tracy.EndZone(zoneContext);
     }
 
     private float _cursorVerticalRatioCache;
     protected override void PostDraw(double deltaTime) {
+        TracyCZoneContext zoneContext = Tracy.Zone(1);
         base.PostDraw(deltaTime);
 
         Debug.Assert(DrawableBatch.ScissorStackItemCount == 0, "Scissor Stack not empty at end of frame!");
@@ -796,9 +808,11 @@ public class FurballGame : Game {
         
         DrawCounts.LastVertexCount = Renderer.VertexCount;
         DrawCounts.LastIndexCount  = Renderer.IndexCount;
+        Tracy.EndZone(zoneContext);
     }
 
     protected override void Draw(double gameTime) {
+        TracyCZoneContext zoneContext = Tracy.Zone(1);
         if (RuntimeInfo.IsDebug()) {
             this._drawWatch.Reset();
             this._drawWatch.Start();
@@ -829,6 +843,7 @@ public class FurballGame : Game {
             this._drawWatch.Stop();
             this.LastDrawTime = this._drawWatch.Elapsed.TotalMilliseconds;
         }
+        Tracy.EndZone(zoneContext);
     }
 
     private void DrawSceneLoadingScreen() {
