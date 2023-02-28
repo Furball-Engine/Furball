@@ -25,8 +25,8 @@ public class Scheduler {
             }
             if (time > method.Time) {
                 Kettu.Logger.Log($"ScheduledMethod invoked at {time}", LoggerLevelSchedulerInfo.Instance);
-                method.MethodToRun.Invoke(time);
                 this._scheduledMethods.Remove(method);
+                method.MethodToRun.Invoke(time);
             }
         }
     }
@@ -44,6 +44,12 @@ public class Scheduler {
 
         for (int i = 0; i < this._scheduledMethods.Count; i++) {
             ScheduledMethod method = this._scheduledMethods[i];
+
+            this._scheduledMethods.RemoveAt(i);
+
+            i--;
+            if (i < 0) i = 0;
+            
             Kettu.Logger.Log($"ScheduledMethod invoked at {time} during dispose", LoggerLevelSchedulerInfo.Instance);
             method.MethodToRun.Invoke(time);
         }
