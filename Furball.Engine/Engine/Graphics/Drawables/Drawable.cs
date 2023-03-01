@@ -309,8 +309,10 @@ public abstract class Drawable : IDisposable {
     }
 
     public virtual void Dispose() {
+        this.TweensLock.EnterWriteLock();
         //Clear explicitly to make the objects get GC'd sooner
         this.Tweens?.Clear();
+        this.TweensLock.ExitWriteLock();
 
         if (this._inputObject != null)
             FurballGame.InputManager.RemoveInputObject(this._inputObject);
