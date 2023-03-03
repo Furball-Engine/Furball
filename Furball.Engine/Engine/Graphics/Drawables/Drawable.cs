@@ -18,18 +18,6 @@ using Color=Furball.Vixie.Backends.Shared.Color;
 
 namespace Furball.Engine.Engine.Graphics.Drawables;
 
-public enum OriginType {
-    TopLeft,
-    TopRight,
-    BottomLeft,
-    BottomRight,
-    Center,
-    TopCenter,
-    BottomCenter,
-    LeftCenter,
-    RightCenter
-}
-
 /// <summary>
 /// A Basic Drawable
 /// </summary>
