@@ -627,7 +627,7 @@ public class FurballGame : Game {
         
     private bool _loadingScreenChangeOffQueued = false;
     protected override void Update(double deltaTime) {
-        TracyCZoneContext zoneContext = Tracy.Zone(1);
+        TracyCZoneContext zoneContext = Tracy.Zone(1, "Update");
         Time = _stopwatch.Elapsed.TotalMilliseconds;
 
         if (RuntimeInfo.IsDebug()) {
@@ -680,7 +680,7 @@ public class FurballGame : Game {
     public double LastDrawTime { get; private set; } = 0.0;
 
     protected override void PreDraw(double deltaTime) {
-        TracyCZoneContext zoneContext = Tracy.Zone(1);
+        TracyCZoneContext zoneContext = Tracy.Zone(1, "PreDraw");
         base.PreDraw(deltaTime);
 
         Debug.Assert(DrawableBatch.ScissorStackItemCount == 0, "Scissor Stack not empty at start of frame!");
@@ -694,7 +694,7 @@ public class FurballGame : Game {
 
     private float _cursorVerticalRatioCache;
     protected override void PostDraw(double deltaTime) {
-        TracyCZoneContext zoneContext = Tracy.Zone(1);
+        TracyCZoneContext zoneContext = Tracy.Zone(1, "PostDraw");
         base.PostDraw(deltaTime);
 
         Debug.Assert(DrawableBatch.ScissorStackItemCount == 0, "Scissor Stack not empty at end of frame!");
@@ -812,7 +812,7 @@ public class FurballGame : Game {
     }
 
     protected override void Draw(double gameTime) {
-        TracyCZoneContext zoneContext = Tracy.Zone(1);
+        TracyCZoneContext zoneContext = Tracy.Zone(1, "Draw");
         if (RuntimeInfo.IsDebug()) {
             this._drawWatch.Reset();
             this._drawWatch.Start();
