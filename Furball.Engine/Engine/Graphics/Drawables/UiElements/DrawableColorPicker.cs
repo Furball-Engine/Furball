@@ -1,60 +1,84 @@
 using System.Numerics;
 using Eto.Forms;
 using FontStashSharp;
+using Furball.Engine.Engine.Graphics.Drawables.Managers;
+using Furball.Engine.Engine.Graphics.Drawables.Tweens;
+using Furball.Engine.Engine.Graphics.Drawables.Tweens.TweenTypes;
 using Furball.Engine.Engine.Helpers;
 using Furball.Engine.Engine.Input.Events;
 using Furball.Vixie.Backends.Shared;
 
-namespace Furball.Engine.Engine.Graphics.Drawables.UiElements; 
+namespace Furball.Engine.Engine.Graphics.Drawables.UiElements;
 
-public class DrawableColorPicker : CompositeDrawable {
+public class DrawableColorPicker : Drawable {
+    private readonly float             _fontSize;
+    private readonly DynamicSpriteFont _spriteFont;
+
+    private string _text = "";
+
     public readonly Bindable<Color> Color;
 
-    private readonly TexturedDrawable _colorDisplay;
-    private readonly TextDrawable     _colorText;
+    private ColorTween _colorSquareTween;
 
-    public DrawableColorPicker(Vector2 position, FontSystem font, int fontSize, Color initialColor) {
+    private const float GAP = 5;
+
+    public override Vector2 Size => (this._spriteFont.MeasureString(this._text) + new Vector2(GAP + this._fontSize, 0)) * this.Scale;
+
+    public DrawableColorPicker(Vector2 position, FontSystem font, float fontSize, Color initialColor) {
+        this._fontSize   = fontSize;
+        this._spriteFont = font.GetFont(this._fontSize);
+
         this.Position = position;
         this.Color    = new Bindable<Color>(initialColor);
-
-        this._colorText = new TextDrawable(new Vector2(0), font, this.Color.Value.ToHexString(), fontSize) {
-            Clickable   = false,
-            CoverClicks = false,
-            Hoverable   = false,
-            CoverHovers = false
-        };
-        this._colorDisplay = new TexturedDrawable(FurballGame.WhitePixel, new Vector2(this._colorText.Size.X + 10, 0)) {
-            Scale         = new Vector2(this._colorText.Size.Y),
-            ColorOverride = this.Color,
-            Clickable     = false,
-            CoverClicks   = false,
-            Hoverable     = false,
-            CoverHovers   = false
-        };
 
         this.OnClick += this.OnColorDisplayClick;
 
         this.Color.OnChange += this.OnColorChange;
 
-        this.Children!.Add(this._colorText);
-        this.Children.Add(this._colorDisplay);
+        this.OnColorChange(this, this.Color);
 
         this.RegisterForInput();
     }
 
-    private void OnColorChange(object sender, Color e) {
-        this._colorDisplay.FadeColor(e, 100);
-        this._colorText.Text = e.ToHexString();
+    public override void Update(double time) {
+        base.Update(time);
 
-        this._colorDisplay.MoveTo(new Vector2(this._colorText.Size.X + 10, 0));
+        this._colorSquareTween.Update(this.DrawableTime);
+    }
+
+    private void OnColorChange(object sender, Color e) {
+        this._text = e.ToHexString();
+
+        this._colorSquareTween = new ColorTween(
+        TweenType.Color,
+        this._colorSquareTween?.GetCurrent() ?? this.Color,
+        this.Color,
+        this.DrawableTime,
+        this.DrawableTime + 100
+        );
+    }
+
+    public override void Draw(double time, DrawableBatch batch, DrawableManagerArgs args) {
+        //Draw the text
+        batch.DrawString(this._spriteFont, this._text, args.Position, args.Color, args.Rotation, args.Scale);
+        //Draw the square
+        batch.Draw(
+        FurballGame.WhitePixel,
+        args.Position + new Vector2(this._spriteFont.MeasureString(this._text).X + GAP, 0) * args.Scale,
+        args.Scale * this._fontSize,
+        this._colorSquareTween.GetCurrent()
+        );
     }
 
     private void OnColorDisplayClick(object sender, MouseButtonEventArgs mouseButtonEventArgs) {
         EtoHelper.OpenColorPicker(
         (_, args) => {
             (DialogResult result, Color color) = args;
-            
-            this.Color.Value                   = color;
+
+            if (result != DialogResult.Ok)
+                return;
+
+            this.Color.Value = color;
         },
         this.Color.Value
         );
